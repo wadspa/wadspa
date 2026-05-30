@@ -207,7 +207,7 @@ const SYNTH_META = {
 const EFFECTS = [
   {
     id: 'amp', label: 'Amp', category: 'Dynamics',
-    wasmFile: 'amp.wasm', jsFile: 'amp.js', processorFile: 'amp-processor.js',
+    wasmFile: 'amp.wasm', processorFile: 'processor.js',
     meta: { label:'amp', ports:[
       {index:0,name:'Gain (dB)',dir:'input', type:'control',min:-70,max:70, default:0},
       {index:1,name:'Input',    dir:'input', type:'audio'},
@@ -216,7 +216,7 @@ const EFFECTS = [
   },
   {
     id: 'sc4', label: 'Compressor', category: 'Dynamics',
-    wasmFile: 'sc4.wasm', jsFile: 'sc4.js', processorFile: 'sc4-processor.js',
+    wasmFile: 'sc4.wasm', processorFile: 'processor.js',
     meta: { label:'sc4', ports:[
       {index:0,name:'RMS/peak',   dir:'input', type:'control',min:0,   max:1,   default:0},
       {index:1,name:'Attack',     dir:'input', type:'control',min:1.5, max:400, default:101.125},
@@ -232,7 +232,7 @@ const EFFECTS = [
   },
   {
     id: 'dyson_compress', label: 'Dyson Compress', category: 'Dynamics',
-    wasmFile: 'dyson_compress.wasm', jsFile: 'dyson_compress.js', processorFile: 'dyson_compress-processor.js',
+    wasmFile: 'dysonCompress.wasm', processorFile: 'processor.js',
     meta: { label:'dyson_compress', ports:[
       {index:0,name:'Peak limit', dir:'input', type:'control',min:0,max:1,default:1},
       {index:1,name:'Release time',dir:'input',type:'control',min:0,max:1,default:0.25},
@@ -244,7 +244,7 @@ const EFFECTS = [
   },
   {
     id: 'dj_eq', label: 'DJ EQ', category: 'EQ',
-    wasmFile: 'dj_eq.wasm', jsFile: 'dj_eq.js', processorFile: 'dj_eq-processor.js',
+    wasmFile: 'dj_eq_mono.wasm', processorFile: 'processor.js',
     meta: { label:'dj_eq', ports:[
       {index:0,name:'Lo gain (dB)', dir:'input', type:'control',min:-70,max:6,default:0},
       {index:1,name:'Mid gain (dB)',dir:'input', type:'control',min:-70,max:6,default:0},
@@ -256,7 +256,7 @@ const EFFECTS = [
   },
   {
     id: 'svf', label: 'State Variable Filter', category: 'EQ',
-    wasmFile: 'svf.wasm', jsFile: 'svf.js', processorFile: 'svf-processor.js',
+    wasmFile: 'svf.wasm', processorFile: 'processor.js',
     meta: { label:'svf', ports:[
       {index:0,name:'Cutoff freq', dir:'input', type:'control',min:16,  max:20000,default:440},
       {index:1,name:'Q factor',    dir:'input', type:'control',min:0.5, max:200,  default:0.707},
@@ -267,7 +267,7 @@ const EFFECTS = [
   },
   {
     id: 'valve', label: 'Valve Saturation', category: 'Distortion',
-    wasmFile: 'valve.wasm', jsFile: 'valve.js', processorFile: 'valve-processor.js',
+    wasmFile: 'valve.wasm', processorFile: 'processor.js',
     meta: { label:'valve', ports:[
       {index:0,name:'Distortion', dir:'input', type:'control',min:0,  max:100,default:0},
       {index:1,name:'Level out',  dir:'input', type:'control',min:-70,max:20, default:0},
@@ -277,7 +277,7 @@ const EFFECTS = [
   },
   {
     id: 'flanger', label: 'Flanger', category: 'Modulation',
-    wasmFile: 'flanger.wasm', jsFile: 'flanger.js', processorFile: 'flanger-processor.js',
+    wasmFile: 'flanger.wasm', processorFile: 'processor.js',
     meta: { label:'flanger', ports:[
       {index:0,name:'Delay base',   dir:'input', type:'control',min:0.1,  max:25,  default:6.25},
       {index:1,name:'Max slowdown', dir:'input', type:'control',min:0.0,  max:10,  default:2.5},
@@ -289,7 +289,7 @@ const EFFECTS = [
   },
   {
     id: 'chorus', label: 'Chorus', category: 'Modulation',
-    wasmFile: 'multivoiceChorus.wasm', jsFile: 'multivoiceChorus.js', processorFile: 'multivoiceChorus-processor.js',
+    wasmFile: 'multivoiceChorus.wasm', processorFile: 'processor.js',
     meta: { label:'multivoiceChorus', ports:[
       {index:0,name:'Voices',     dir:'input', type:'control',min:1,    max:8,   default:2},
       {index:1,name:'Delay base', dir:'input', type:'control',min:10,   max:40,  default:25},
@@ -303,7 +303,7 @@ const EFFECTS = [
   },
   {
     id: 'tape_delay', label: 'Tape Delay', category: 'Delay',
-    wasmFile: 'tape_delay.wasm', jsFile: 'tape_delay.js', processorFile: 'tape_delay-processor.js',
+    wasmFile: 'tapeDelay.wasm', processorFile: 'processor.js',
     meta: { label:'tape_delay', ports:[
       {index:0,name:'Delay time', dir:'input', type:'control',min:0.2, max:2,   default:0.5},
       {index:1,name:'Dry level',  dir:'input', type:'control',min:0,   max:1,   default:0.5},
@@ -316,7 +316,7 @@ const EFFECTS = [
   },
   {
     id: 'plate', label: 'Plate Reverb', category: 'Reverb',
-    wasmFile: 'plate.wasm', jsFile: 'plate.js', processorFile: 'plate-processor.js',
+    wasmFile: 'plate.wasm', processorFile: 'processor.js',
     meta: { label:'plate', ports:[
       {index:0,name:'Reverb time', dir:'input', type:'control',min:0.01,max:8.75,default:3.5},
       {index:1,name:'Tail level',  dir:'input', type:'control',min:0,   max:1,   default:0.25},
@@ -327,7 +327,7 @@ const EFFECTS = [
   },
   {
     id: 'gverb', label: 'Room Reverb', category: 'Reverb',
-    wasmFile: 'gverb.wasm', jsFile: 'gverb.js', processorFile: 'gverb-processor.js',
+    wasmFile: 'gverb.wasm', processorFile: 'processor.js',
     meta: { label:'gverb', ports:[
       {index:0,name:'Room size',  dir:'input', type:'control',min:1,   max:300, default:30},
       {index:1,name:'Rev time',   dir:'input', type:'control',min:0.1, max:30,  default:7},
@@ -343,7 +343,7 @@ const EFFECTS = [
   },
   {
     id: 'vynil', label: 'Vinyl Sim', category: 'Character',
-    wasmFile: 'vynil.wasm', jsFile: 'vynil.js', processorFile: 'vynil-processor.js',
+    wasmFile: 'vynil.wasm', processorFile: 'processor.js',
     meta: { label:'vynil', ports:[
       {index:0,name:'Year',       dir:'input', type:'control',min:1900,max:1990,default:1960},
       {index:1,name:'RPM',        dir:'input', type:'control',min:33,  max:78,  default:33},
