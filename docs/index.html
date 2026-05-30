@@ -33,6 +33,23 @@
     }
     #start-btn:hover { background: #5588ff; }
     #start-btn:disabled { background: var(--surface); color: var(--muted); cursor: default; }
+
+    /* ── Start overlay ──────────────────────────────────────── */
+    #start-overlay {
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(14,14,14,0.92);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 1rem;
+    }
+    #start-overlay h2 { font-size: 1.5rem; letter-spacing: 0.1em; color: var(--text); }
+    #start-overlay p  { font-size: 0.82rem; color: var(--muted); }
+    #start-overlay-btn {
+      margin-top: 0.5rem;
+      padding: 0.9rem 2.8rem; font-family: monospace; font-size: 1.1rem;
+      background: var(--accent); color: #fff; border: none; border-radius: 5px;
+      cursor: pointer; letter-spacing: 0.04em;
+    }
+    #start-overlay-btn:hover { background: #5588ff; }
     #status { font-size: 0.75rem; color: var(--muted); }
 
     /* ── Main layout ─────────────────────────────────────────── */
@@ -142,11 +159,19 @@
 </head>
 <body>
 
+<!-- ── Start overlay ─────────────────────────────────────── -->
+<div id="start-overlay">
+  <h2>wadspa</h2>
+  <p>C audio plugins compiled to WebAssembly — running in your browser</p>
+  <button id="start-overlay-btn">Start audio</button>
+  <p id="overlay-status" style="font-size:0.75rem;color:var(--muted);min-height:1.2em"></p>
+</div>
+
 <header>
   <h1>wadspa</h1>
   <a href="https://github.com/wadspa/wadspa" target="_blank">github</a>
-  <span id="status">click Start to begin</span>
-  <button id="start-btn">Start audio</button>
+  <span id="status"></span>
+  <button id="start-btn" style="display:none">Start audio</button>
 </header>
 
 <main>
@@ -635,22 +660,28 @@ buildDropdown();
 // ── Start ──────────────────────────────────────────────────────
 function setStatus(msg) { document.getElementById('status').textContent = msg; }
 
-document.getElementById('start-btn').addEventListener('click', async () => {
-  document.getElementById('start-btn').disabled = true;
-  setStatus('loading synth…');
+async function startAudio() {
+  const overlayStatus = document.getElementById('overlay-status');
+  const overlayBtn    = document.getElementById('start-overlay-btn');
+  overlayBtn.disabled = true;
+  overlayStatus.textContent = 'loading synth…';
   try {
     ctx   = new AudioContext();
     synth = await loadPlugin(ctx, synthModule());
     synth.output.connect(ctx.destination);
     buildSynthControls(synth);
     renderChain();
-    setStatus('ready — click piano or use keyboard');
+    document.getElementById('start-overlay').style.display = 'none';
+    setStatus('ready');
   } catch (e) {
-    setStatus('ERROR: ' + e.message);
+    overlayStatus.textContent = 'ERROR: ' + e.message;
     console.error(e);
-    document.getElementById('start-btn').disabled = false;
+    overlayBtn.disabled = false;
   }
-});
+}
+
+document.getElementById('start-overlay-btn').addEventListener('click', startAudio);
+document.getElementById('start-btn').addEventListener('click', startAudio);
 </script>
 </body>
 </html>
