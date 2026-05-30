@@ -145,9 +145,11 @@ export function generateProcessor(descriptor, label) {
     }
 
     if (stereoOut) {
+        // Two separate mono outputs, merged into stereo by core.js via ChannelMergerNode.
+        // Avoids outputChannelCount:[2] which Safari does not reliably honour.
         outputCopies = [
             `        outputs[0][0].set(mod.HEAPF32.subarray(outPtrs[0], outPtrs[0] + 128));`,
-            `        outputs[0][1].set(mod.HEAPF32.subarray(outPtrs[1], outPtrs[1] + 128));`,
+            `        outputs[1][0].set(mod.HEAPF32.subarray(outPtrs[1], outPtrs[1] + 128));`,
         ].join('\n');
     } else {
         outputCopies = audioOut.map((_, i) =>

@@ -34,11 +34,14 @@ export async function loadPlugin(ctx, pluginModule) {
 
     const stereoOut = audioOut.length === 2;
     const stereoIn  = stereoOut && audioIn.length === 2;
-    const nIn = audioIn.length === 0 ? 0 : (stereoIn ? 1 : audioIn.length);
+    const nIn  = audioIn.length === 0 ? 0 : (stereoIn ? 1 : audioIn.length);
+    // Stereo plugins get 2 separate mono outputs merged via ChannelMergerNode.
+    // Using outputChannelCount:[2] on a single output is unreliable in Safari.
+    const nOut = stereoOut ? 2 : (audioOut.length || 1);
     const workletNode = new AudioWorkletNode(ctx, `wadspa-${meta.label}`, {
         numberOfInputs:     nIn,
-        numberOfOutputs:    stereoOut ? 1 : (audioOut.length || 1),
-        outputChannelCount: stereoOut ? [2] : Array(audioOut.length || 1).fill(1),
+        numberOfOutputs:    nOut,
+        outputChannelCount: Array(nOut).fill(1),
         ...(stereoIn ? { channelCount: 2, channelCountMode: 'explicit' } : {}),
     });
 
@@ -61,7 +64,16 @@ export async function loadPlugin(ctx, pluginModule) {
         );
     });
 
-    return new WadspNode(workletNode, meta, hasMidi);
+    // For stereo plugins, merge the two mono outputs into a stereo node.
+    let outputNode = workletNode;
+    if (stereoOut) {
+        const merger = ctx.createChannelMerger(2);
+        workletNode.connect(merger, 0, 0);
+        workletNode.connect(merger, 1, 1);
+        outputNode = merger;
+    }
+
+    return new WadspNode(workletNode, outputNode, meta, hasMidi);
 }
 
 class WadspNode {
@@ -70,7 +82,7 @@ class WadspNode {
     #controls;
     #hasMidi;
 
-    constructor(workletNode, meta, hasMidi = false) {
+    constructor(workletNode, outputNode, meta, hasMidi = false) {
         this.#node     = workletNode;
         this.#meta     = meta;
         this.#hasMidi  = hasMidi;
@@ -80,7 +92,7 @@ class WadspNode {
                 .map(p => [normalizeKey(p.name), p])
         );
         this.input  = workletNode;
-        this.output = workletNode;
+        this.output = outputNode;
     }
 
     set(portName, value) {
