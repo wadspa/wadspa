@@ -3,19 +3,13 @@ node_modules/
 # Generated shim files (recreated by `wadspa build`)
 **/_wadspa_shim.c
 
-# Plugin-dir root build artifacts (dist/ is tracked)
-amp/amp.js
-amp/amp.wasm
-amp/processor.js
-dj_eq/dj_eq.js
-dj_eq/dj_eq.wasm
-dj_eq/processor.js
+# Plugin-dir root build artifacts (dist/ is tracked, root-level artifacts are not)
+plugins/*/*.js
+plugins/*/*.wasm
 
 # Old test/scratch files
-amp/test.mjs
-amp/index.html
-dj_eq/test.mjs
-dj_eq/index.html
+plugins/*/test.mjs
+plugins/*/index.html
 
 # Superseded processor approach (per-plugin static-import is used instead)
 core/src/processor.js

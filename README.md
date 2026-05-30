@@ -145,13 +145,14 @@ Requires `AudioWorklet` and `WebAssembly` — available in all modern evergreen 
 
 ```
 wadspa/
-  core/          @wadspa/core — runtime host (97 lines)
-  toolchain/     @wadspa/toolchain — build CLI
-  amp/           Simple Amplifier plugin source + dist/
-  dj_eq/         DJ EQ mono plugin source + dist/
-  demo/          browser demo: osc → dj_eq → amp → output
-  docs/          guides: porting plugins, architecture
-  swh-plugins/   Steve Harris LADSPA collection (reference source)
+  core/              @wadspa/core — runtime host
+  toolchain/         @wadspa/toolchain — build CLI
+  plugins/
+    amp/             Simple Amplifier — source + dist/
+    dj_eq/           DJ EQ mono — source + dist/
+  demo/              browser demo: osc → dj_eq → amp → output
+  docs/              guides: porting plugins, architecture
+  swh-plugins/       Steve Harris LADSPA collection (reference source)
 ```
 
 ---

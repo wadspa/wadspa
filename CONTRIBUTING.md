@@ -71,8 +71,8 @@ The generated `_wadspa_shim.c` is excluded from git (see `.gitignore`). It is re
 After rebuilding, copy the updated files to `demo/` if you want to test in the browser demo:
 
 ```sh
-cp amp/dist/amp.js amp/dist/amp.wasm amp/dist/processor.js demo/
-# rename processor.js → amp-processor.js in demo/
+cp plugins/amp/dist/amp.js plugins/amp/dist/amp.wasm demo/
+cp plugins/amp/dist/processor.js demo/amp-processor.js
 ```
 
 ---
