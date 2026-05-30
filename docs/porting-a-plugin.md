@@ -1,187 +1,229 @@
-# Porting a LADSPA Plugin to wadspa
+# Porting a Plugin to wadspa
 
-This guide walks through porting a real LADSPA plugin from the [Steve Harris SWH collection](https://github.com/swh/ladspa) to a published wadspa npm package.
+There are two paths depending on what kind of plugin you're porting:
 
-We'll use the **DJ EQ (mono)** plugin as the working example — it has external utility headers, a `config.h` dependency, and uses biquad filters, so it covers all the common complications.
-
----
-
-## Prerequisites
-
-- Emscripten installed and on `$PATH` (`emcc --version` works)
-- `@wadspa/toolchain` installed globally (`wadspa build` works)
-- The `swh-plugins` source tree cloned somewhere (used for utility headers)
+- **SWH LADSPA plugin** — use the automated bulk-build pipeline (`scripts/build-all.js`)
+- **Custom LADSPA plugin** — use `wadspa build` directly
+- **LV2 instrument** — use `wadspa build-lv2`
 
 ---
 
-## Step 1: Find the plugin source
+## Path 1: SWH LADSPA plugin (automated)
 
-SWH plugins are generated from XML descriptors. Each plugin is a single `<label>.c` file inside the build output. For `dj_eq_mono`, the relevant files are:
+The [Steve Harris SWH collection](https://github.com/swh/ladspa) is already wired into the build pipeline. Adding a plugin takes one manifest entry and one command.
 
-```
-swh-plugins/
-  dj_eq_1901.xml          descriptor (ports, metadata)
-  ladspa-util.h           utility macros used by many plugins
-  util/
-    biquad.h              biquad filter implementation
-```
+### 1. Add an entry to `plugins/manifest.json`
 
-The generated `.c` file (`dj_eq_mono_1907.c` or similar) is what you'd get from running the SWH build system. For wadspa we write or adapt it directly, since we don't run `make`.
-
----
-
-## Step 2: Set up the plugin directory
-
-```
-dj_eq/
-  ladspa.h          copy from wadspa/amp/ladspa.h
-  ladspa-util.h     copy from swh-plugins/ladspa-util.h
-  config.h          stub (see below)
-  dj_eq.c           plugin implementation
-  util/
-    biquad.h        copy from swh-plugins/util/biquad.h
+```json
+{
+  "id": "my_plugin",
+  "xml": "my_plugin_1234.xml",
+  "npmName": "@wadspa/my-plugin"
+}
 ```
 
-**`config.h` stub** — the SWH plugins assume autotools generated this. For WASM we don't need it, but the headers `#include` it. Create a stub:
+Fields:
 
-```c
-/* config.h — stub for wadspa (WASM is always little-endian) */
-```
+| Field | Required | Description |
+|-------|----------|-------------|
+| `id` | yes | Directory name under `plugins/` |
+| `xml` | yes | XML filename in `swh-plugins/` |
+| `npmName` | yes | npm package name |
+| `util` | no | Header files to copy from `plugins/shared/util/` (e.g. `["biquad.h"]`) |
+| `utilSrc` | no | C source files to compile from `plugins/shared/util/` (e.g. `["db.c","rms.c"]`) |
 
----
-
-## Step 3: Handle biquad float precision
-
-The `util/biquad.h` uses `BIQUAD_TYPE` (defaulting to `float`) for its filter coefficients. At typical audio sample rates, low-frequency bands involve differences between nearly-equal numbers — this causes catastrophic cancellation with 32-bit floats.
-
-Two changes are required:
-
-**a)** Pass `--define BIQUAD_TYPE=double` to the build (the toolchain does this automatically with `-DBIQUAD_TYPE=double`).
-
-**b)** Replace `float` literals in `biquad.h` with `double` literals — Emscripten won't promote them automatically:
-
-```c
-// Before
-#define B_BUTTER_SHIFT(b,xn) (...)
-  c->b1 = 2.0f * (k * k - 1.0f) * ...
-
-// After
-#define B_BUTTER_SHIFT(b,xn) (...)
-  c->b1 = 2.0 * (k * k - 1.0) * ...
-```
-
-Run a global find-and-replace in `util/biquad.h`: `0.0f` → `0.0`, `1.0f` → `1.0`, `2.0f` → `2.0`, `0.5f` → `0.5`.
-
----
-
-## Step 4: Build
+### 2. Run the build script
 
 ```sh
-wadspa build ./dj_eq --include ./dj_eq --name @wadspa/dj-eq-mono
+# build just this plugin
+node scripts/build-all.js --only my_plugin
+
+# build everything not yet built
+node scripts/build-all.js --skip-existing
+
+# build everything from scratch
+node scripts/build-all.js
 ```
 
-The `--include ./dj_eq` tells the compiler where to find `ladspa-util.h` and `config.h` when they're included from within `dj_eq.c`.
+The script handles everything automatically:
+- Generates C source from the XML descriptor via `makestub.pl`
+- Copies `ladspa.h`, `ladspa-util.h`, and `config.h` from `plugins/shared/`
+- Copies any `util/` headers and C sources listed in the manifest
+- Runs `wadspa build` with the right flags
+- Writes the compiled package to `plugins/<id>/dist/`
 
-Expected output:
+### Common `util` dependencies
+
+| Plugin type | `util` | `utilSrc` |
+|-------------|--------|-----------|
+| Filters / EQ | `["biquad.h"]` | — |
+| Compressor / dynamics | `["db.h","rms.h"]` | `["db.c","rms.c"]` |
+| Waveguide / physical | `["waveguide_nl.h"]` | — |
+
+All these files live in `plugins/shared/util/` and are already patched (biquad uses `double` literals; no float-precision surprises).
+
+---
+
+## Path 2: Custom LADSPA plugin
+
+For plugins not in the SWH collection — third-party C code, original effects, etc.
+
+### 1. Create the plugin directory
+
+```
+plugins/my_plugin/
+  my_plugin.c       LADSPA plugin source
+  ladspa.h          copy from plugins/shared/ladspa.h
+  config.h          copy from plugins/shared/config.h (if needed)
+```
+
+Any headers the plugin uses must be reachable. If they live alongside the C file, `--include` points there automatically. For extra directories, pass additional `--include` flags.
+
+### 2. Build
+
+```sh
+wadspa build plugins/my_plugin --name @wadspa/my-plugin
+```
+
+The toolchain:
+1. Loads the compiled `.so` natively to inspect ports
+2. Generates a C shim exposing `shim_init`, `shim_run`, and typed getters/setters
+3. Compiles the plugin + shim with `emcc` to `.js` + `.wasm`
+4. Writes `dist/` with `index.js`, `processor.js`, `package.json`
+
+Output:
 
 ```
 → Inspecting plugin...
-  DJ EQ (mono) (id=1907, 6 ports)
-  [0] input  control  Lo gain (dB) (-70..6, default=0)
-  [1] input  control  Mid gain (dB) (-70..6, default=0)
-  [2] input  control  Hi gain (dB) (-70..6, default=0)
-  [3] input  audio    Input
-  [4] output audio    Output
-  [5] output control  Latency
+  My Plugin (id=1234, 4 ports)
+  [0] input  control  Gain (dB) (-70..6, default=0)
+  ...
 → Generating shim.c...
 → Compiling to WASM...
-  dj_eq_mono.js  (81KB)
-  dj_eq_mono.wasm  (5KB)
-→ Package written to ./dj_eq/dist
-  @wadspa/dj-eq-mono
+  my_plugin.js   (8KB)
+  my_plugin.wasm (5KB)
+→ Package written to plugins/my_plugin/dist
+  @wadspa/my-plugin
 ```
 
 ---
 
-## Step 5: Test in the browser
+## Path 3: LV2 instrument
 
-Serve the `dist/` directory (or copy the files to a demo page) and load the plugin:
+LV2 instruments (synthesizers, samplers) take MIDI in and produce audio out. The toolchain reads their Turtle (`.ttl`) metadata directly — no native binary inspection needed.
+
+### 1. Write the plugin
+
+A minimal LV2 instrument directory:
+
+```
+plugins/my_synth/
+  manifest.ttl      declares the plugin URI and binary
+  my_synth.ttl      declares all ports
+  my_synth.c        LV2 plugin implementation
+```
+
+`manifest.ttl`:
+```turtle
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<https://wadspa.org/plugins/my_synth>
+    a lv2:Plugin ;
+    lv2:binary <my_synth.so> ;
+    rdfs:seeAlso <my_synth.ttl> .
+```
+
+`my_synth.ttl` — declare ports with `lv2:index`, `lv2:symbol`, direction, and type. MIDI input uses `atom:AtomPort` + `atom:supports midi:MidiEvent`.
+
+Required LV2 features: `urid:map`. The shim provides a minimal URID map implementation — your plugin does not need to bundle one.
+
+### 2. Build
+
+```sh
+wadspa build-lv2 plugins/my_synth --include /opt/homebrew/include
+```
+
+The `--include` path must contain the LV2 headers (`lv2/`, `lv2.h`). On macOS with Homebrew: `/opt/homebrew/include`. On Linux: `/usr/include`.
+
+The toolchain:
+1. Parses the `.ttl` files to discover all ports
+2. Generates a C shim with a URID map, MIDI atom buffer, and typed accessors
+3. Compiles to `.js` + `.wasm`
+4. Writes `dist/` with `index.js`, `processor.js`, `package.json`
+
+### 3. Use in the browser
 
 ```js
 import { loadPlugin } from '@wadspa/core';
-import * as djEq from './dj_eq/dist/index.js';
 
-const ctx = new AudioContext();
-const eq  = await loadPlugin(ctx, djEq);
+const ctx  = new AudioContext();
+const synth = await loadPlugin(ctx, mySynthModule);
 
-eq.set('Lo gain (dB)',  -6);
-eq.set('Mid gain (dB)',  0);
-eq.set('Hi gain (dB)',   3);
+synth.output.connect(ctx.destination);
 
-source.connect(eq.input);
-eq.output.connect(ctx.destination);
+// MIDI
+synth.noteOn(60, 100);   // middle C, velocity 100
+synth.noteOff(60);
+
+// Controls
+synth.set('Filter Cutoff', 0.7);
+synth.set('Attack', 0.05);
 ```
 
 ---
 
-## Step 6: Publish to npm
+## Shared headers (`plugins/shared/`)
 
-```sh
-cd dj_eq/dist
-npm publish --access public
-```
+All canonical headers live here. Never edit them inside individual plugin directories — patch `plugins/shared/` instead.
 
-After publishing, users can install and use it directly:
+| File | Notes |
+|------|-------|
+| `ladspa.h` | Standard LADSPA API |
+| `ladspa-util.h` | SWH utility macros |
+| `config.h` | Autotools stub (empty, WASM is always little-endian) |
+| `util/biquad.h` | Fully patched — all float literals replaced with double |
+| `util/iir.h/c` | IIR filter implementation |
+| `util/rms.h/c` | RMS envelope follower |
+| `util/db.h/c` | dB conversion utilities |
+| `util/buffer.h/c` | Ring buffer |
+| `util/waveguide_nl.h` | Nonlinear waveguide |
 
-```sh
-npm install @wadspa/core @wadspa/dj-eq-mono
-```
-
-```js
-import { loadPlugin } from '@wadspa/core';
-import * as djEq from '@wadspa/dj-eq-mono';
-```
+The biquad patch (`double` literals throughout) prevents catastrophic cancellation at low frequencies. The toolchain also passes `-DBIQUAD_TYPE=double` automatically.
 
 ---
 
-## Common issues
+## Troubleshooting
 
-### `config.h: No such file or directory`
+**`emcc: requires python 3.10 or above`** — a Python virtualenv with an older Python is active. The toolchain strips venv paths from `PATH` before invoking `emcc`, but if you hit this manually, deactivate the venv first.
 
-Some SWH plugins include `config.h`. Create the stub file in the plugin directory:
+**`ladspa_descriptor returned NULL`** — the native inspector calls `ladspa_descriptor(0)`. Make sure your plugin exports that symbol and index 0 returns a valid descriptor.
 
-```c
-/* config.h — stub for wadspa */
-```
+**Plugin sounds wrong at low frequencies** — float precision in biquad. Confirm you're using the `biquad.h` from `plugins/shared/util/` (already patched) and not a fresh copy from the SWH repo.
 
-### `ladspa-util.h: No such file or directory`
+**LV2 port count is wrong** — the TTL parser matches all `[...]` blocks in the `.ttl` file. Make sure each port block contains `lv2:index`, `lv2:symbol`, and a direction/type triple.
 
-Pass the directory containing `ladspa-util.h` as `--include`:
-
-```sh
-wadspa build ./my-plugin --include ./my-plugin
-```
-
-### Plugin compiles but sounds wrong at low frequencies
-
-Float32 precision issue in biquad filters. See Step 3 above. The toolchain always passes `-DBIQUAD_TYPE=double`, but you also need to change the float literals in `biquad.h` itself.
-
-### `ladspa_descriptor returned NULL`
-
-The native inspector calls `ladspa_descriptor(0)`. If your plugin only exports index > 0, or the symbol name is different, the build will fail. Make sure the symbol is exactly `ladspa_descriptor` and index `0` returns a valid descriptor.
-
-### Plugin has no audio ports / wrong port count
-
-Check that the `PortDescriptors` array in your `LADSPA_Descriptor` struct matches the actual `PortCount`. A mismatch causes the inspector to misread the port list.
+**Stuck notes (LV2 synth)** — if rapid re-clicks cause notes to sustain indefinitely, check that `note_on` prefers to retrigger an existing voice for that MIDI note before allocating a new one. See `plugins/wadspa_synth/wadspa_synth.c` for the reference implementation.
 
 ---
 
 ## Porting checklist
 
-- [ ] `ladspa.h` is in the plugin directory
-- [ ] `ladspa_descriptor(0)` is exported and returns a valid descriptor
-- [ ] External headers (e.g. `ladspa-util.h`) are accessible via `--include`
-- [ ] `config.h` stub exists if the plugin headers require it
-- [ ] Float literals in biquad.h replaced with double literals (if applicable)
-- [ ] Plugin sounds correct in browser at multiple sample rates
-- [ ] `dist/` has been tested with `@wadspa/core` in Chrome and Safari
+**LADSPA (SWH)**
+- [ ] Entry added to `plugins/manifest.json`
+- [ ] `util` / `utilSrc` fields set for any external headers
+- [ ] `node scripts/build-all.js --only <id>` succeeds
+- [ ] Plugin tested in browser (Chrome + Safari)
+
+**LADSPA (custom)**
+- [ ] `ladspa_descriptor(0)` exported and returns a valid descriptor
+- [ ] All headers reachable from the build dir
+- [ ] `wadspa build` succeeds and port list looks correct
+- [ ] Plugin tested in browser
+
+**LV2**
+- [ ] `manifest.ttl` and plugin `.ttl` present and parseable
+- [ ] All ports have `lv2:index`, `lv2:symbol`, direction, and type
+- [ ] `wadspa build-lv2 --include <lv2-headers>` succeeds
+- [ ] MIDI note-on/off tested in browser (Chrome + Safari)
+- [ ] Controls respond to `synth.set()`
