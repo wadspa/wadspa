@@ -47,6 +47,8 @@ export async function loadPlugin(ctx, pluginModule) {
         ctrlIn.map(p => [p.index, `_shim_set_${symbolName(p.name)}`])
     );
 
+    const hasMidi = meta.ports.some(p => p.type === 'midi' && p.dir === 'input');
+
     await new Promise((resolve, reject) => {
         workletNode.port.onmessage = ({ data }) => {
             if (data.type === 'ready') resolve();
@@ -58,17 +60,19 @@ export async function loadPlugin(ctx, pluginModule) {
         );
     });
 
-    return new WadspNode(workletNode, meta);
+    return new WadspNode(workletNode, meta, hasMidi);
 }
 
 class WadspNode {
     #node;
     #meta;
     #controls;
+    #hasMidi;
 
-    constructor(workletNode, meta) {
-        this.#node = workletNode;
-        this.#meta = meta;
+    constructor(workletNode, meta, hasMidi = false) {
+        this.#node     = workletNode;
+        this.#meta     = meta;
+        this.#hasMidi  = hasMidi;
         this.#controls = new Map(
             meta.ports
                 .filter(p => p.type === 'control' && p.dir === 'input')
@@ -80,12 +84,44 @@ class WadspNode {
 
     set(portName, value) {
         const port = this.#resolve(portName);
-        this.#node.port.postMessage({ type: 'set', index: port.index, value: Number(value) });
+        // LV2 controls use symbol; LADSPA controls use index
+        const msg = port.symbol
+            ? { type: 'set', symbol: port.symbol, value: Number(value) }
+            : { type: 'set', index:  port.index,  value: Number(value) };
+        this.#node.port.postMessage(msg);
         return this;
     }
 
-    get node()  { return this.#node; }
-    get ports() { return this.#meta.ports; }
+    // Send a raw MIDI message to an LV2 instrument.
+    // status: MIDI status byte (e.g. 0x90 for note-on ch 0)
+    // data1, data2: MIDI data bytes
+    midi(status, data1, data2 = 0) {
+        if (!this.#hasMidi) throw new Error('This plugin does not have a MIDI input port');
+        this.#node.port.postMessage({ type: 'midi', status, data1, data2 });
+        return this;
+    }
+
+    noteOn(note, velocity = 100, channel = 0) {
+        return this.midi(0x90 | channel, note, velocity);
+    }
+
+    noteOff(note, channel = 0) {
+        return this.midi(0x80 | channel, note, 0);
+    }
+
+    cc(controller, value, channel = 0) {
+        return this.midi(0xB0 | channel, controller, value);
+    }
+
+    pitchBend(semitones, channel = 0) {
+        const bend = Math.round(semitones * 8192 / 2) + 8192;
+        const clamped = Math.max(0, Math.min(16383, bend));
+        return this.midi(0xE0 | channel, clamped & 0x7F, clamped >> 7);
+    }
+
+    get node()     { return this.#node; }
+    get ports()    { return this.#meta.ports; }
+    get hasMidi()  { return this.#hasMidi; }
 
     #resolve(name) {
         const port = this.#controls.get(normalizeKey(name));
