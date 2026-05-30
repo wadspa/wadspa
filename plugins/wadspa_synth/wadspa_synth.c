@@ -98,7 +98,11 @@ static Voice *find_voice_for_note(Synth *s, int note) {
 }
 
 static void note_on(Synth *s, uint8_t note, uint8_t vel) {
-    Voice *v = find_free_voice(s);
+    /* Retrigger the existing voice for this note if one is still active
+       (even in release), so rapid re-clicks can't strand a previous voice
+       in sustain while note_off goes to a different voice. */
+    Voice *v = find_voice_for_note(s, note);
+    if (!v) v = find_free_voice(s);
     v->note      = note;
     v->freq      = midi_note_to_hz(note);
     v->velocity  = vel / 127.0f;
