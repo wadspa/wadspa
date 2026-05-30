@@ -1,0 +1,149 @@
+[
+  {
+    "id": "amp",
+    "xml": "amp_1181.xml",
+    "npmName": "@wadspa/amp"
+  },
+  {
+    "id": "dj_eq",
+    "xml": "dj_eq_1901.xml",
+    "npmName": "@wadspa/dj-eq-mono",
+    "util": ["biquad.h"]
+  },
+  {
+    "id": "plate",
+    "xml": "plate_1423.xml",
+    "npmName": "@wadspa/plate",
+    "util": ["waveguide_nl.h"]
+  },
+  {
+    "id": "sc4",
+    "xml": "sc4_1882.xml",
+    "npmName": "@wadspa/sc4",
+    "utilSrc": ["db.c", "rms.c"],
+    "util": ["db.h", "rms.h"]
+  },
+  {
+    "id": "fast_lookahead_limiter",
+    "xml": "fast_lookahead_limiter_1913.xml",
+    "npmName": "@wadspa/fast-lookahead-limiter"
+  },
+  {
+    "id": "dc_remove",
+    "xml": "dc_remove_1207.xml",
+    "npmName": "@wadspa/dc-remove"
+  },
+  {
+    "id": "decimator",
+    "xml": "decimator_1202.xml",
+    "npmName": "@wadspa/decimator"
+  },
+  {
+    "id": "declip",
+    "xml": "declip_1195.xml",
+    "npmName": "@wadspa/declip"
+  },
+  {
+    "id": "hard_limiter",
+    "xml": "hard_limiter_1413.xml",
+    "npmName": "@wadspa/hard-limiter"
+  },
+  {
+    "id": "satan_maximiser",
+    "xml": "satan_maximiser_1408.xml",
+    "npmName": "@wadspa/satan-maximiser"
+  },
+  {
+    "id": "crossover_dist",
+    "xml": "crossover_dist_1404.xml",
+    "npmName": "@wadspa/crossover-dist"
+  },
+  {
+    "id": "diode",
+    "xml": "diode_1185.xml",
+    "npmName": "@wadspa/diode"
+  },
+  {
+    "id": "foverdrive",
+    "xml": "foverdrive_1196.xml",
+    "npmName": "@wadspa/foverdrive"
+  },
+  {
+    "id": "highpass_iir",
+    "xml": "highpass_iir_1890.xml",
+    "npmName": "@wadspa/highpass-iir",
+    "util": ["iir.h"],
+    "utilSrc": ["iir.c"]
+  },
+  {
+    "id": "lowpass_iir",
+    "xml": "lowpass_iir_1891.xml",
+    "npmName": "@wadspa/lowpass-iir",
+    "util": ["iir.h"],
+    "utilSrc": ["iir.c"]
+  },
+  {
+    "id": "bandpass_iir",
+    "xml": "bandpass_iir_1892.xml",
+    "npmName": "@wadspa/bandpass-iir",
+    "util": ["iir.h"],
+    "utilSrc": ["iir.c"]
+  },
+  {
+    "id": "notch_iir",
+    "xml": "notch_iir_1894.xml",
+    "npmName": "@wadspa/notch-iir",
+    "util": ["iir.h"],
+    "utilSrc": ["iir.c"]
+  },
+  {
+    "id": "butterworth",
+    "xml": "butterworth_1902.xml",
+    "npmName": "@wadspa/butterworth",
+    "util": ["iir.h", "buffer.h"],
+    "utilSrc": ["iir.c", "buffer.c"]
+  },
+  {
+    "id": "single_para",
+    "xml": "single_para_1203.xml",
+    "npmName": "@wadspa/single-para",
+    "util": ["biquad.h"]
+  },
+  {
+    "id": "triple_para",
+    "xml": "triple_para_1204.xml",
+    "npmName": "@wadspa/triple-para",
+    "util": ["biquad.h"]
+  },
+  {
+    "id": "flanger",
+    "xml": "flanger_1191.xml",
+    "npmName": "@wadspa/flanger"
+  },
+  {
+    "id": "retro_flange",
+    "xml": "retro_flange_1208.xml",
+    "npmName": "@wadspa/retro-flange"
+  },
+  {
+    "id": "comb",
+    "xml": "comb_1190.xml",
+    "npmName": "@wadspa/comb"
+  },
+  {
+    "id": "delay",
+    "xml": "delay_1898.xml",
+    "npmName": "@wadspa/delay"
+  },
+  {
+    "id": "gate",
+    "xml": "gate_1921.xml",
+    "npmName": "@wadspa/gate",
+    "util": ["biquad.h"]
+  },
+  {
+    "id": "dyson_compress",
+    "xml": "dyson_compress_1403.xml",
+    "npmName": "@wadspa/dyson-compress"
+  }
+]
