@@ -12,7 +12,7 @@
  */
 
 import { execSync }                                          from 'child_process';
-import { existsSync, mkdirSync, readFileSync, writeFileSync, copyFileSync } from 'fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync, copyFileSync } from 'fs';
 import { join, dirname }                                     from 'path';
 import { fileURLToPath }                                     from 'url';
 
@@ -82,8 +82,23 @@ for (const entry of manifest) {
             copyIfMissing(join(SHARED, 'util', s), join(dir, 'util', s));
         }
 
-        // 6. Build
-        const extraSources = (entry.utilSrc ?? []).map(s => `util/${s}`).join(',');
+        // 5b. Copy extra subdirectories (e.g. gverb/) from plugins/shared/
+        for (const d of entry.extraDirs ?? []) {
+            const srcD  = join(SHARED, d);
+            const destD = join(dir, d);
+            mkdirSync(destD, { recursive: true });
+            run(`cp -rn "${srcD}/." "${destD}/"`);
+        }
+
+        // 6. Build — collect all extra C sources (util/ + extraDir/ *.c files)
+        const extraSources = [
+            ...(entry.utilSrc ?? []).map(s => `util/${s}`),
+            ...(entry.extraDirs ?? []).flatMap(d =>
+                readdirSync(join(dir, d))
+                    .filter(f => f.endsWith('.c') && !f.includes('test'))
+                    .map(f => `${d}/${f}`)
+            ),
+        ].join(',');
         const sourcesFlag  = extraSources ? `--sources ${entry.id}.c,${extraSources}` : '';
         const nameFlag     = `--name ${entry.npmName}`;
 

@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>wadspa — browser audio plugin demo</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:      #0e0e0e;
+      --surface: #1a1a1a;
+      --border:  #2e2e2e;
+      --accent:  #4477ee;
+      --accent2: #33cc88;
+      --text:    #dddddd;
+      --muted:   #666;
+      --danger:  #cc4444;
+    }
+    body { font-family: monospace; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* ── Header ─────────────────────────────────────────────── */
+    header {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 0.9rem 1.4rem; border-bottom: 1px solid var(--border);
+    }
+    header h1 { font-size: 1rem; letter-spacing: 0.05em; }
+    header a   { font-size: 0.75rem; color: var(--muted); text-decoration: none; }
+    header a:hover { color: var(--text); }
+    #start-btn {
+      margin-left: auto;
+      padding: 0.4rem 1.1rem; font-family: monospace; font-size: 0.82rem;
+      background: var(--accent); color: #fff; border: none; border-radius: 3px; cursor: pointer;
+    }
+    #start-btn:hover { background: #5588ff; }
+    #start-btn:disabled { background: var(--surface); color: var(--muted); cursor: default; }
+    #status { font-size: 0.75rem; color: var(--muted); }
+
+    /* ── Main layout ─────────────────────────────────────────── */
+    main { display: grid; grid-template-rows: auto 1fr; height: calc(100vh - 46px); }
+
+    /* ── Synth + keyboard section ────────────────────────────── */
+    #synth-section {
+      border-bottom: 1px solid var(--border);
+      display: flex; gap: 0; flex-wrap: wrap;
+    }
+
+    /* ── Effects chain ───────────────────────────────────────── */
+    #chain-section {
+      padding: 1rem 1.4rem;
+      overflow-y: auto;
+    }
+    #chain-header {
+      display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.8rem;
+    }
+    #chain-header h2 { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+    .add-btn {
+      position: relative; display: inline-block;
+    }
+    .add-btn > button {
+      padding: 0.3rem 0.8rem; font-family: monospace; font-size: 0.78rem;
+      background: var(--surface); color: var(--text); border: 1px solid var(--border);
+      border-radius: 3px; cursor: pointer;
+    }
+    .add-btn > button:hover { border-color: var(--accent); }
+    .dropdown {
+      display: none; position: absolute; top: calc(100% + 4px); left: 0; z-index: 20;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+      min-width: 200px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    .dropdown.open { display: block; }
+    .dropdown-item {
+      padding: 0.45rem 0.8rem; font-size: 0.8rem; cursor: pointer; white-space: nowrap;
+    }
+    .dropdown-item:hover { background: var(--border); color: #fff; }
+    .dropdown-sep { border-top: 1px solid var(--border); margin: 0.2rem 0; }
+
+    /* ── Plugin cards ─────────────────────────────────────────── */
+    #chain-cards {
+      display: flex; align-items: flex-start; flex-wrap: wrap; gap: 0.6rem;
+    }
+    .arrow { align-self: center; font-size: 1rem; color: var(--muted); flex-shrink: 0; margin-top: -1.5rem; }
+    .out-badge {
+      align-self: center; font-size: 0.72rem; color: var(--accent2); border: 1px solid var(--accent2);
+      padding: 0.2rem 0.5rem; border-radius: 3px; flex-shrink: 0; margin-top: -1.5rem;
+    }
+
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 6px; padding: 0.7rem 0.8rem; min-width: 160px; max-width: 220px;
+      flex-shrink: 0; position: relative;
+    }
+    .card.loading { opacity: 0.5; }
+    .card-title {
+      font-size: 0.75rem; font-weight: bold; color: var(--accent);
+      margin-bottom: 0.6rem; display: flex; align-items: center; justify-content: space-between;
+    }
+    .card-title span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .remove-btn {
+      background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.9rem;
+      padding: 0 0.1rem; line-height: 1; flex-shrink: 0;
+    }
+    .remove-btn:hover { color: var(--danger); }
+
+    /* ── Sliders in cards ─────────────────────────────────────── */
+    .ctrl-row { margin-top: 0.4rem; }
+    .ctrl-row label { display: block; font-size: 0.65rem; color: var(--muted); margin-bottom: 1px; }
+    .ctrl-row .ctrl-line { display: flex; align-items: center; gap: 0.4rem; }
+    .ctrl-row input[type=range] { flex: 1; accent-color: var(--accent); height: 3px; }
+    .ctrl-row .val { font-size: 0.62rem; color: #aaa; min-width: 3rem; text-align: right; }
+
+    /* ── Synth card (special) ─────────────────────────────────── */
+    #synth-card {
+      padding: 0.8rem 1.2rem 0.8rem 1.4rem; border-right: 1px solid var(--border);
+      min-width: 340px;
+    }
+    #synth-card .card-title { font-size: 0.82rem; color: var(--accent2); margin-bottom: 0.5rem; }
+
+    /* ── Piano ────────────────────────────────────────────────── */
+    #piano-wrap { margin: 0.5rem 0 0.4rem; }
+    .oct-row { display: flex; align-items: center; gap: 0.4rem; font-size: 0.72rem; color: var(--muted); margin-bottom: 0.35rem; }
+    .oct-row button { padding: 0.1rem 0.45rem; font-size: 0.8rem; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 2px; cursor: pointer; }
+    .piano { position: relative; display: flex; height: 80px; user-select: none; }
+    .wk {
+      width: 30px; height: 80px; background: #e0e0e0; border: 1px solid #888;
+      border-radius: 0 0 3px 3px; cursor: pointer; flex-shrink: 0;
+      display: flex; align-items: flex-end; justify-content: center; padding-bottom: 4px;
+      font-size: 0.52rem; color: #aaa;
+    }
+    .wk.on { background: #7aaaf5; }
+    .bk {
+      position: absolute; width: 20px; height: 48px; background: #181818;
+      border: 1px solid #000; border-radius: 0 0 2px 2px; cursor: pointer; z-index: 2;
+      display: flex; align-items: flex-end; justify-content: center; padding-bottom: 3px;
+      font-size: 0.5rem; color: #555;
+    }
+    .bk.on { background: #2a4a99; }
+
+    /* ── Synth sliders ────────────────────────────────────────── */
+    #synth-ctrls { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; margin-top: 0.4rem; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>wadspa</h1>
+  <a href="https://github.com/wadspa/wadspa" target="_blank">github</a>
+  <span id="status">click Start to begin</span>
+  <button id="start-btn">Start audio</button>
+</header>
+
+<main>
+  <!-- ── Synth + keyboard ──────────────────────────────── -->
+  <div id="synth-section">
+    <div id="synth-card">
+      <div class="card-title">wadspa synth — 8-voice polyphonic saw</div>
+      <div id="piano-wrap">
+        <div class="oct-row">
+          <button id="oct-dn">−</button>
+          <span id="oct-lbl">octave 4</span>
+          <button id="oct-up">+</button>
+          <span style="margin-left:0.5rem;font-size:0.65rem">A–J / W E T Y U · −= octave</span>
+        </div>
+        <div class="piano" id="piano"></div>
+      </div>
+      <div id="synth-ctrls"></div>
+    </div>
+  </div>
+
+  <!-- ── Effects chain ─────────────────────────────────── -->
+  <div id="chain-section">
+    <div id="chain-header">
+      <h2>effects chain</h2>
+      <div class="add-btn" id="add-wrap">
+        <button id="add-btn">+ add effect ▾</button>
+        <div class="dropdown" id="dropdown"></div>
+      </div>
+    </div>
+    <div id="chain-cards">
+      <div class="out-badge" id="out-badge">▶ output</div>
+    </div>
+  </div>
+</main>
+
+<script type="module">
+import { loadPlugin } from './core.js';
+
+// ── Plugin catalogue ────────────────────────────────────────────
+// meta.ports drives both the loadPlugin call and the UI sliders.
+// All ports listed here appear as sliders in the card.
+
+const SYNTH_META = {
+  label: 'wadspa_synth',
+  ports: [
+    { index:0, name:'MIDI In',       symbol:'midi_in', dir:'input',  type:'midi' },
+    { index:1, name:'Audio Out L',   symbol:'out_l',   dir:'output', type:'audio' },
+    { index:2, name:'Audio Out R',   symbol:'out_r',   dir:'output', type:'audio' },
+    { index:3, name:'Cutoff',        symbol:'cutoff',  dir:'input',  type:'control', min:0,     max:1,   default:0.5  },
+    { index:4, name:'Attack',        symbol:'attack',  dir:'input',  type:'control', min:0.001, max:4,   default:0.01 },
+    { index:5, name:'Decay',         symbol:'decay',   dir:'input',  type:'control', min:0.001, max:4,   default:0.1  },
+    { index:6, name:'Sustain',       symbol:'sustain', dir:'input',  type:'control', min:0,     max:1,   default:0.7  },
+    { index:7, name:'Release',       symbol:'release', dir:'input',  type:'control', min:0.001, max:8,   default:0.3  },
+    { index:8, name:'Gain',          symbol:'gain',    dir:'input',  type:'control', min:0,     max:1,   default:0.7  },
+  ]
+};
+
+const EFFECTS = [
+  {
+    id: 'amp', label: 'Amp', category: 'Dynamics',
+    wasmFile: 'amp.wasm', jsFile: 'amp.js', processorFile: 'amp-processor.js',
+    meta: { label:'amp', ports:[
+      {index:0,name:'Gain (dB)',dir:'input', type:'control',min:-70,max:70, default:0},
+      {index:1,name:'Input',    dir:'input', type:'audio'},
+      {index:2,name:'Output',   dir:'output',type:'audio'},
+    ]}
+  },
+  {
+    id: 'sc4', label: 'Compressor', category: 'Dynamics',
+    wasmFile: 'sc4.wasm', jsFile: 'sc4.js', processorFile: 'sc4-processor.js',
+    meta: { label:'sc4', ports:[
+      {index:0,name:'RMS/peak',   dir:'input', type:'control',min:0,   max:1,   default:0},
+      {index:1,name:'Attack',     dir:'input', type:'control',min:1.5, max:400, default:101.125},
+      {index:2,name:'Release',    dir:'input', type:'control',min:2,   max:800, default:401},
+      {index:3,name:'Threshold',  dir:'input', type:'control',min:-30, max:0,   default:-20},
+      {index:4,name:'Ratio',      dir:'input', type:'control',min:1,   max:20,  default:4},
+      {index:5,name:'Knee radius',dir:'input', type:'control',min:1,   max:10,  default:3.25},
+      {index:6,name:'Makeup gain',dir:'input', type:'control',min:0,   max:24,  default:0},
+      {index:7,name:'Input',      dir:'input', type:'audio'},
+      {index:8,name:'Output',     dir:'output',type:'audio'},
+      {index:9,name:'Amplitude',  dir:'output',type:'control'},
+    ]}
+  },
+  {
+    id: 'dyson_compress', label: 'Dyson Compress', category: 'Dynamics',
+    wasmFile: 'dyson_compress.wasm', jsFile: 'dyson_compress.js', processorFile: 'dyson_compress-processor.js',
+    meta: { label:'dyson_compress', ports:[
+      {index:0,name:'Peak limit', dir:'input', type:'control',min:0,max:1,default:1},
+      {index:1,name:'Release time',dir:'input',type:'control',min:0,max:1,default:0.25},
+      {index:2,name:'Fast compression',dir:'input',type:'control',min:0,max:1,default:0.5},
+      {index:3,name:'Attenuation',dir:'input',type:'control',min:0,max:1,default:1},
+      {index:4,name:'Input', dir:'input', type:'audio'},
+      {index:5,name:'Output',dir:'output',type:'audio'},
+    ]}
+  },
+  {
+    id: 'dj_eq', label: 'DJ EQ', category: 'EQ',
+    wasmFile: 'dj_eq.wasm', jsFile: 'dj_eq.js', processorFile: 'dj_eq-processor.js',
+    meta: { label:'dj_eq', ports:[
+      {index:0,name:'Lo gain (dB)', dir:'input', type:'control',min:-70,max:6,default:0},
+      {index:1,name:'Mid gain (dB)',dir:'input', type:'control',min:-70,max:6,default:0},
+      {index:2,name:'Hi gain (dB)', dir:'input', type:'control',min:-70,max:6,default:0},
+      {index:3,name:'Input',        dir:'input', type:'audio'},
+      {index:4,name:'Output',       dir:'output',type:'audio'},
+      {index:5,name:'Latency',      dir:'output',type:'control'},
+    ]}
+  },
+  {
+    id: 'svf', label: 'State Variable Filter', category: 'EQ',
+    wasmFile: 'svf.wasm', jsFile: 'svf.js', processorFile: 'svf-processor.js',
+    meta: { label:'svf', ports:[
+      {index:0,name:'Cutoff freq', dir:'input', type:'control',min:16,  max:20000,default:440},
+      {index:1,name:'Q factor',    dir:'input', type:'control',min:0.5, max:200,  default:0.707},
+      {index:2,name:'Filter mode', dir:'input', type:'control',min:0,   max:3,    default:0},
+      {index:3,name:'Input',       dir:'input', type:'audio'},
+      {index:4,name:'Output',      dir:'output',type:'audio'},
+    ]}
+  },
+  {
+    id: 'valve', label: 'Valve Saturation', category: 'Distortion',
+    wasmFile: 'valve.wasm', jsFile: 'valve.js', processorFile: 'valve-processor.js',
+    meta: { label:'valve', ports:[
+      {index:0,name:'Distortion', dir:'input', type:'control',min:0,  max:100,default:0},
+      {index:1,name:'Level out',  dir:'input', type:'control',min:-70,max:20, default:0},
+      {index:2,name:'Input',      dir:'input', type:'audio'},
+      {index:3,name:'Output',     dir:'output',type:'audio'},
+    ]}
+  },
+  {
+    id: 'flanger', label: 'Flanger', category: 'Modulation',
+    wasmFile: 'flanger.wasm', jsFile: 'flanger.js', processorFile: 'flanger-processor.js',
+    meta: { label:'flanger', ports:[
+      {index:0,name:'Delay base',   dir:'input', type:'control',min:0.1,  max:25,  default:6.25},
+      {index:1,name:'Max slowdown', dir:'input', type:'control',min:0.0,  max:10,  default:2.5},
+      {index:2,name:'LFO rate',     dir:'input', type:'control',min:0.05, max:40,  default:0.5},
+      {index:3,name:'Feedback',     dir:'input', type:'control',min:-1,   max:1,   default:0},
+      {index:4,name:'Input',        dir:'input', type:'audio'},
+      {index:5,name:'Output',       dir:'output',type:'audio'},
+    ]}
+  },
+  {
+    id: 'chorus', label: 'Chorus', category: 'Modulation',
+    wasmFile: 'multivoiceChorus.wasm', jsFile: 'multivoiceChorus.js', processorFile: 'multivoiceChorus-processor.js',
+    meta: { label:'multivoiceChorus', ports:[
+      {index:0,name:'Voices',     dir:'input', type:'control',min:1,    max:8,   default:2},
+      {index:1,name:'Delay base', dir:'input', type:'control',min:10,   max:40,  default:25},
+      {index:2,name:'Voice spread',dir:'input',type:'control',min:0,    max:1,   default:0.5},
+      {index:3,name:'LFO rate',   dir:'input', type:'control',min:0.01, max:2,   default:0.5},
+      {index:4,name:'LFO depth',  dir:'input', type:'control',min:0,    max:10,  default:3},
+      {index:5,name:'Output attenuation',dir:'input',type:'control',min:0,max:1, default:0.5},
+      {index:6,name:'Input',      dir:'input', type:'audio'},
+      {index:7,name:'Output',     dir:'output',type:'audio'},
+    ]}
+  },
+  {
+    id: 'tape_delay', label: 'Tape Delay', category: 'Delay',
+    wasmFile: 'tape_delay.wasm', jsFile: 'tape_delay.js', processorFile: 'tape_delay-processor.js',
+    meta: { label:'tape_delay', ports:[
+      {index:0,name:'Delay time', dir:'input', type:'control',min:0.2, max:2,   default:0.5},
+      {index:1,name:'Dry level',  dir:'input', type:'control',min:0,   max:1,   default:0.5},
+      {index:2,name:'Wet level',  dir:'input', type:'control',min:0,   max:1,   default:0.25},
+      {index:3,name:'Feedback',   dir:'input', type:'control',min:0,   max:1,   default:0.25},
+      {index:4,name:'Tape speed', dir:'input', type:'control',min:0.1, max:10,  default:1},
+      {index:5,name:'Input',      dir:'input', type:'audio'},
+      {index:6,name:'Output',     dir:'output',type:'audio'},
+    ]}
+  },
+  {
+    id: 'plate', label: 'Plate Reverb', category: 'Reverb',
+    wasmFile: 'plate.wasm', jsFile: 'plate.js', processorFile: 'plate-processor.js',
+    meta: { label:'plate', ports:[
+      {index:0,name:'Reverb time', dir:'input', type:'control',min:0.01,max:8.75,default:3.5},
+      {index:1,name:'Tail level',  dir:'input', type:'control',min:0,   max:1,   default:0.25},
+      {index:2,name:'Input',       dir:'input', type:'audio'},
+      {index:3,name:'Left output', dir:'output',type:'audio'},
+      {index:4,name:'Right output',dir:'output',type:'audio'},
+    ]}
+  },
+  {
+    id: 'gverb', label: 'Room Reverb', category: 'Reverb',
+    wasmFile: 'gverb.wasm', jsFile: 'gverb.js', processorFile: 'gverb-processor.js',
+    meta: { label:'gverb', ports:[
+      {index:0,name:'Room size',  dir:'input', type:'control',min:1,   max:300, default:30},
+      {index:1,name:'Rev time',   dir:'input', type:'control',min:0.1, max:30,  default:7},
+      {index:2,name:'Damping',    dir:'input', type:'control',min:0,   max:1,   default:0.5},
+      {index:3,name:'Input bw',   dir:'input', type:'control',min:0,   max:1,   default:0.75},
+      {index:4,name:'Dry level',  dir:'input', type:'control',min:-70, max:0,   default:-70},
+      {index:5,name:'Early level',dir:'input', type:'control',min:-70, max:0,   default:0},
+      {index:6,name:'Tail level', dir:'input', type:'control',min:-70, max:0,   default:-17},
+      {index:7,name:'Input',      dir:'input', type:'audio'},
+      {index:8,name:'Left out',   dir:'output',type:'audio'},
+      {index:9,name:'Right out',  dir:'output',type:'audio'},
+    ]}
+  },
+  {
+    id: 'vynil', label: 'Vinyl Sim', category: 'Character',
+    wasmFile: 'vynil.wasm', jsFile: 'vynil.js', processorFile: 'vynil-processor.js',
+    meta: { label:'vynil', ports:[
+      {index:0,name:'Year',       dir:'input', type:'control',min:1900,max:1990,default:1960},
+      {index:1,name:'RPM',        dir:'input', type:'control',min:33,  max:78,  default:33},
+      {index:2,name:'Surface',    dir:'input', type:'control',min:0,   max:1,   default:0},
+      {index:3,name:'Clickiness', dir:'input', type:'control',min:0,   max:10,  default:0},
+      {index:4,name:'Warp',       dir:'input', type:'control',min:0,   max:1,   default:0},
+      {index:5,name:'Left in',    dir:'input', type:'audio'},
+      {index:6,name:'Right in',   dir:'input', type:'audio'},
+      {index:7,name:'Left out',   dir:'output',type:'audio'},
+      {index:8,name:'Right out',  dir:'output',type:'audio'},
+    ]}
+  },
+];
+
+// ── Plugin URL helpers ──────────────────────────────────────────
+const BASE = new URL('./plugins/', import.meta.url).href;
+
+function pluginModule(dir, eff) {
+  return {
+    meta: eff.meta,
+    wasmUrl:      `${BASE}${dir}/${eff.wasmFile}`,
+    processorUrl: `${BASE}${dir}/${eff.processorFile}`,
+  };
+}
+
+function synthModule() {
+  return {
+    meta: SYNTH_META,
+    wasmUrl:      `${BASE}wadspa_synth/wadspa_synth.wasm`,
+    processorUrl: `${BASE}wadspa_synth/processor.js`,
+  };
+}
+
+// ── Audio state ─────────────────────────────────────────────────
+let ctx    = null;
+let synth  = null;
+const chain = [];   // array of { eff, node }
+
+async function rewire() {
+  if (!ctx || !synth) return;
+  synth.output.disconnect();
+  for (const { node } of chain) node.output.disconnect();
+
+  let prev = synth;
+  for (const { node } of chain) {
+    prev.output.connect(node.input);
+    prev = node;
+  }
+  prev.output.connect(ctx.destination);
+}
+
+// ── Piano ────────────────────────────────────────────────────────
+const WHITE  = [0,2,4,5,7,9,11];
+const WNAMES = ['C','D','E','F','G','A','B'];
+const BLACK  = [{semi:1,left:20},{semi:3,left:50},{semi:6,left:110},{semi:8,left:140},{semi:10,left:170}];
+const KLABEL = ['A','W','S','E','D','F','T','G','Y','H','U','J'];
+const KMAP   = {a:0,w:1,s:2,e:3,d:4,f:5,t:6,g:7,y:8,h:9,u:10,j:11};
+
+let octave = 4;
+let mouseHeld = null;
+const kbActive = new Map();
+const pressedKeys = new Set();
+
+function midiNote(semi) { return (octave + 1) * 12 + semi; }
+
+function markKey(semi, on) {
+  document.querySelectorAll(`[data-semi="${semi}"]`).forEach(el => el.classList.toggle('on', on));
+}
+
+function mousePress(semi) {
+  if (mouseHeld) { if (mouseHeld.semi === semi) return; mouseRelease(); }
+  const note = midiNote(semi);
+  mouseHeld = { semi, note };
+  markKey(semi, true);
+  synth?.noteOn(note, 100);
+}
+function mouseRelease() {
+  if (!mouseHeld) return;
+  const { semi, note } = mouseHeld; mouseHeld = null;
+  markKey(semi, false); synth?.noteOff(note);
+}
+document.addEventListener('mouseup', mouseRelease);
+
+function buildPiano() {
+  const piano = document.getElementById('piano');
+  piano.innerHTML = '';
+  WHITE.forEach((semi, i) => {
+    const el = document.createElement('div');
+    el.className = 'wk'; el.dataset.semi = semi;
+    el.textContent = KLABEL[semi];
+    el.addEventListener('mousedown',  e => { e.preventDefault(); mousePress(semi); });
+    el.addEventListener('mouseenter', e => { if (e.buttons & 1) mousePress(semi); });
+    piano.appendChild(el);
+  });
+  BLACK.forEach(({ semi, left }) => {
+    const el = document.createElement('div');
+    el.className = 'bk'; el.dataset.semi = semi;
+    el.style.left = left + 'px';
+    el.textContent = KLABEL[semi];
+    el.addEventListener('mousedown',  e => { e.preventDefault(); mousePress(semi); });
+    el.addEventListener('mouseenter', e => { if (e.buttons & 1) mousePress(semi); });
+    piano.appendChild(el);
+  });
+}
+
+window.addEventListener('keydown', e => {
+  if (e.repeat || e.metaKey || e.ctrlKey) return;
+  const k = e.key.toLowerCase();
+  if (k === '-') { if (octave > 0) { octave--; document.getElementById('oct-lbl').textContent = `octave ${octave}`; } return; }
+  if (k === '=') { if (octave < 8) { octave++; document.getElementById('oct-lbl').textContent = `octave ${octave}`; } return; }
+  if (k in KMAP && !pressedKeys.has(k)) {
+    pressedKeys.add(k);
+    const semi = KMAP[k], note = midiNote(semi);
+    kbActive.set(k, { semi, note });
+    markKey(semi, true); synth?.noteOn(note, 100);
+  }
+});
+window.addEventListener('keyup', e => {
+  const k = e.key.toLowerCase();
+  if (k in KMAP) {
+    pressedKeys.delete(k);
+    const entry = kbActive.get(k);
+    if (entry) { kbActive.delete(k); markKey(entry.semi, false); synth?.noteOff(entry.note); }
+  }
+});
+
+document.getElementById('oct-dn').onclick = () => { if (octave > 0) { octave--; document.getElementById('oct-lbl').textContent = `octave ${octave}`; } };
+document.getElementById('oct-up').onclick = () => { if (octave < 8) { octave++; document.getElementById('oct-lbl').textContent = `octave ${octave}`; } };
+
+buildPiano();
+
+// ── Synth controls (built after loadPlugin) ───────────────────
+function buildSynthControls(node) {
+  const ctrls = document.getElementById('synth-ctrls');
+  const ctrlPorts = SYNTH_META.ports.filter(p => p.type === 'control' && p.dir === 'input');
+  ctrls.innerHTML = '';
+  for (const p of ctrlPorts) {
+    const row = document.createElement('div');
+    row.className = 'ctrl-row';
+    const fmt = p.max <= 1 ? v => v.toFixed(2) : p.max <= 10 ? v => v.toFixed(3) + ' s' : v => v.toFixed(1);
+    row.innerHTML = `<label>${p.name}</label>
+      <div class="ctrl-line">
+        <input type="range" min="${p.min}" max="${p.max}" step="${(p.max-p.min)/200}" value="${p.default}">
+        <span class="val">${fmt(p.default)}</span>
+      </div>`;
+    const slider = row.querySelector('input');
+    const val    = row.querySelector('.val');
+    slider.addEventListener('input', () => {
+      const v = parseFloat(slider.value); val.textContent = fmt(v);
+      node.set(p.name, v);
+    });
+    ctrls.appendChild(row);
+  }
+}
+
+// ── Effects chain UI ──────────────────────────────────────────
+function cardFmt(p, v) {
+  if (p.max - p.min > 100) return v.toFixed(0);
+  if (p.max <= 1)  return v.toFixed(2);
+  if (p.max <= 10) return v.toFixed(2);
+  return v.toFixed(1);
+}
+
+function renderChain() {
+  const container = document.getElementById('chain-cards');
+  const outBadge  = document.getElementById('out-badge');
+  container.innerHTML = '';
+
+  for (let i = 0; i < chain.length; i++) {
+    const { eff, node } = chain[i];
+
+    if (i > 0) {
+      const arrow = document.createElement('div');
+      arrow.className = 'arrow'; arrow.textContent = '→';
+      container.appendChild(arrow);
+    }
+
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    const ctrlPorts = eff.meta.ports.filter(p => p.type === 'control' && p.dir === 'input');
+
+    card.innerHTML = `
+      <div class="card-title">
+        <span>${eff.label}</span>
+        <button class="remove-btn" title="remove">×</button>
+      </div>
+      ${ctrlPorts.map(p => `
+        <div class="ctrl-row">
+          <label>${p.name}</label>
+          <div class="ctrl-line">
+            <input type="range" min="${p.min}" max="${p.max}"
+                   step="${(p.max-p.min)/200}" value="${p.default}"
+                   data-port="${p.name}">
+            <span class="val">${cardFmt(p, p.default)}</span>
+          </div>
+        </div>`).join('')}
+    `;
+
+    card.querySelector('.remove-btn').addEventListener('click', async () => {
+      chain.splice(i, 1);
+      node.output.disconnect();
+      node.node.disconnect();
+      renderChain();
+      rewire();
+    });
+
+    for (const p of ctrlPorts) {
+      const slider = card.querySelector(`[data-port="${p.name}"]`);
+      const valEl  = slider.closest('.ctrl-line').querySelector('.val');
+      slider.addEventListener('input', () => {
+        const v = parseFloat(slider.value);
+        valEl.textContent = cardFmt(p, v);
+        node.set(p.name, v);
+      });
+    }
+
+    container.appendChild(card);
+  }
+
+  if (chain.length > 0) {
+    const arrow = document.createElement('div');
+    arrow.className = 'arrow'; arrow.textContent = '→';
+    container.appendChild(arrow);
+  }
+  container.appendChild(outBadge);
+}
+
+async function addEffect(eff) {
+  closeDropdown();
+  setStatus(`loading ${eff.label}…`);
+
+  // placeholder card while loading
+  const placeholder = document.createElement('div');
+  placeholder.className = 'card loading';
+  placeholder.innerHTML = `<div class="card-title"><span>${eff.label}</span></div><div style="font-size:0.7rem;color:var(--muted)">loading…</div>`;
+  const container = document.getElementById('chain-cards');
+  const outBadge  = document.getElementById('out-badge');
+  if (chain.length > 0) {
+    const arrow = document.createElement('div'); arrow.className = 'arrow'; arrow.textContent = '→';
+    container.insertBefore(arrow, outBadge);
+  }
+  container.insertBefore(placeholder, outBadge);
+
+  try {
+    const mod  = pluginModule(eff.id, eff);
+    const node = await loadPlugin(ctx, mod);
+    chain.push({ eff, node });
+    await rewire();
+    renderChain();
+    setStatus(`${eff.label} added`);
+  } catch (e) {
+    placeholder.remove();
+    setStatus(`ERROR: ${e.message}`);
+    console.error(e);
+  }
+}
+
+// ── Dropdown ──────────────────────────────────────────────────
+function buildDropdown() {
+  const dd = document.getElementById('dropdown');
+  const categories = [...new Set(EFFECTS.map(e => e.category))];
+  dd.innerHTML = '';
+  for (const cat of categories) {
+    const sep = document.createElement('div');
+    sep.className = 'dropdown-sep';
+    const lbl = document.createElement('div');
+    lbl.style.cssText = 'font-size:0.62rem;color:var(--muted);padding:0.3rem 0.8rem 0.1rem;text-transform:uppercase;letter-spacing:0.06em';
+    lbl.textContent = cat;
+    dd.appendChild(sep); dd.appendChild(lbl);
+    for (const eff of EFFECTS.filter(e => e.category === cat)) {
+      const item = document.createElement('div');
+      item.className = 'dropdown-item';
+      item.textContent = eff.label;
+      item.addEventListener('click', () => addEffect(eff));
+      dd.appendChild(item);
+    }
+  }
+}
+
+function closeDropdown() { document.getElementById('dropdown').classList.remove('open'); }
+document.getElementById('add-btn').addEventListener('click', e => {
+  e.stopPropagation();
+  document.getElementById('dropdown').classList.toggle('open');
+});
+document.addEventListener('click', closeDropdown);
+buildDropdown();
+
+// ── Start ──────────────────────────────────────────────────────
+function setStatus(msg) { document.getElementById('status').textContent = msg; }
+
+document.getElementById('start-btn').addEventListener('click', async () => {
+  document.getElementById('start-btn').disabled = true;
+  setStatus('loading synth…');
+  try {
+    ctx   = new AudioContext();
+    synth = await loadPlugin(ctx, synthModule());
+    synth.output.connect(ctx.destination);
+    buildSynthControls(synth);
+    renderChain();
+    setStatus('ready — click piano or use keyboard');
+  } catch (e) {
+    setStatus('ERROR: ' + e.message);
+    console.error(e);
+    document.getElementById('start-btn').disabled = false;
+  }
+});
+</script>
+</body>
+</html>

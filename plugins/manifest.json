@@ -145,5 +145,37 @@
     "id": "dyson_compress",
     "xml": "dyson_compress_1403.xml",
     "npmName": "@wadspa/dyson-compress"
+  },
+  {
+    "id": "chorus",
+    "xml": "multivoice_chorus_1201.xml",
+    "npmName": "@wadspa/chorus"
+  },
+  {
+    "id": "gverb",
+    "xml": "gverb_1216.xml",
+    "npmName": "@wadspa/gverb",
+    "extraDirs": ["gverb"]
+  },
+  {
+    "id": "vynil",
+    "xml": "vynil_1905.xml",
+    "npmName": "@wadspa/vynil",
+    "util": ["biquad.h"]
+  },
+  {
+    "id": "valve",
+    "xml": "valve_1209.xml",
+    "npmName": "@wadspa/valve"
+  },
+  {
+    "id": "tape_delay",
+    "xml": "tape_delay_1211.xml",
+    "npmName": "@wadspa/tape-delay"
+  },
+  {
+    "id": "svf",
+    "xml": "svf_1214.xml",
+    "npmName": "@wadspa/svf"
   }
 ]
