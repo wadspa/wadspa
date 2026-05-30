@@ -163,9 +163,40 @@
 
     let octave = 4;
     let synth  = null;
-    const activeNotes = new Set();
 
     function midiNote(semi) { return (octave + 1) * 12 + semi; }
+
+    // ── Mouse note tracking ────────────────────────────────────────────────
+    // We snapshot the MIDI note at press time so that an octave shift mid-hold
+    // can't orphan the note. A single document mouseup guarantees release even
+    // when the cursor leaves the key before the button comes up.
+    let mouseHeld = null; // { semi, note } or null
+
+    function mousePress(semi) {
+      if (mouseHeld) {
+        if (mouseHeld.semi === semi) return; // same key, already held
+        mouseRelease();                       // sliding to new key
+      }
+      const note = midiNote(semi);
+      mouseHeld = { semi, note };
+      markKey(semi, true);
+      if (synth) synth.noteOn(note, 100);
+    }
+
+    function mouseRelease() {
+      if (!mouseHeld) return;
+      const { semi, note } = mouseHeld;
+      mouseHeld = null;
+      markKey(semi, false);
+      if (synth) synth.noteOff(note);
+    }
+
+    function markKey(semi, on) {
+      document.querySelectorAll(`[data-semi="${semi}"]`)
+        .forEach(el => el.classList.toggle('active', on));
+    }
+
+    document.addEventListener('mouseup', mouseRelease);
 
     function buildPiano() {
       const piano = document.getElementById('piano');
@@ -176,42 +207,26 @@
         el.className = 'white-key';
         el.dataset.semi = semi;
         el.innerHTML = `<span>${WHITE_NAMES[i]}<br>${KEY_LABEL[semi]}</span>`;
-        el.addEventListener('mousedown', e => { e.preventDefault(); noteOn(semi); });
-        el.addEventListener('mouseup',   () => noteOff(semi));
-        el.addEventListener('mouseleave',() => noteOff(semi));
+        el.addEventListener('mousedown',  e => { e.preventDefault(); mousePress(semi); });
+        el.addEventListener('mouseenter', e => { if (e.buttons & 1) mousePress(semi); });
         piano.appendChild(el);
       });
 
-      BLACK.forEach(({ semi, left, name }) => {
+      BLACK.forEach(({ semi, left }) => {
         const el = document.createElement('div');
         el.className = 'black-key';
         el.dataset.semi = semi;
         el.style.left = left + 'px';
         el.innerHTML = KEY_LABEL[semi];
-        el.addEventListener('mousedown', e => { e.preventDefault(); noteOn(semi); });
-        el.addEventListener('mouseup',   () => noteOff(semi));
-        el.addEventListener('mouseleave',() => noteOff(semi));
+        el.addEventListener('mousedown',  e => { e.preventDefault(); mousePress(semi); });
+        el.addEventListener('mouseenter', e => { if (e.buttons & 1) mousePress(semi); });
         piano.appendChild(el);
       });
     }
 
-    function noteOn(semi) {
-      const note = midiNote(semi);
-      if (activeNotes.has(note)) return;
-      activeNotes.add(note);
-      document.querySelectorAll(`[data-semi="${semi}"]`).forEach(el => el.classList.add('active'));
-      if (synth) synth.noteOn(note, 100);
-    }
-
-    function noteOff(semi) {
-      const note = midiNote(semi);
-      if (!activeNotes.has(note)) return;
-      activeNotes.delete(note);
-      document.querySelectorAll(`[data-semi="${semi}"]`).forEach(el => el.classList.remove('active'));
-      if (synth) synth.noteOff(note);
-    }
-
     // ── Computer keyboard ──────────────────────────────────────────────────
+    // Keyboard notes are tracked separately from mouse notes.
+    const kbActive = new Map(); // key → { semi, note }
     const pressedKeys = new Set();
     window.addEventListener('keydown', e => {
       if (e.repeat || e.ctrlKey || e.metaKey) return;
@@ -220,12 +235,24 @@
       if (k === '=') { if (octave < 8) { octave++; document.getElementById('oct-label').textContent = `octave ${octave}`; } return; }
       if (k in KEY_MAP && !pressedKeys.has(k)) {
         pressedKeys.add(k);
-        noteOn(KEY_MAP[k]);
+        const semi = KEY_MAP[k];
+        const note = midiNote(semi);
+        kbActive.set(k, { semi, note });
+        markKey(semi, true);
+        if (synth) synth.noteOn(note, 100);
       }
     });
     window.addEventListener('keyup', e => {
       const k = e.key.toLowerCase();
-      if (k in KEY_MAP) { pressedKeys.delete(k); noteOff(KEY_MAP[k]); }
+      if (k in KEY_MAP) {
+        pressedKeys.delete(k);
+        const entry = kbActive.get(k);
+        if (entry) {
+          kbActive.delete(k);
+          markKey(entry.semi, false);
+          if (synth) synth.noteOff(entry.note);
+        }
+      }
     });
 
     document.getElementById('oct-down').addEventListener('click', () => {
