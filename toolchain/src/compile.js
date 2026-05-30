@@ -52,8 +52,17 @@ export function compilePlugin({
     const srcList = sources.map(s => `"${s}"`).join(' ');
     const cmd = `"${emcc}" ${srcList} ${flags.join(' ')} -o "${outJs}"`;
 
+    // Strip any active Python virtualenv — emcc requires Python 3.10+ and a
+    // venv on an older Python will cause "requires python 3.10 or above" errors.
+    const env = { ...process.env };
+    delete env.VIRTUAL_ENV;
+    delete env.VIRTUAL_ENV_PROMPT;
+    if (env.PATH) {
+        env.PATH = env.PATH.split(':').filter(p => !p.includes('/.venv/')).join(':');
+    }
+
     try {
-        execSync(cmd, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] });
+        execSync(cmd, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'], env });
     } catch (e) {
         throw new Error(`emcc compilation failed:\n${e.stderr || e.message}`);
     }

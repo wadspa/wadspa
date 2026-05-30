@@ -122,22 +122,34 @@ export function generateProcessor(descriptor, label) {
     const outBufs = audioOut.map(p => `_shim_output_buf_${symbolName(p.name)}`);
     const setterMap = Object.fromEntries(ctrlIn.map(p => [p.index, `_shim_set_${symbolName(p.name)}`]));
 
-    const isStereo = audioIn.length === 2 && audioOut.length === 2;
+    // Stereo output: any plugin with exactly 2 audio output ports gets a single
+    // stereo output channel. Stereo input applies only when both in/out are 2.
+    const stereoOut = audioOut.length === 2;
+    const stereoIn  = stereoOut && audioIn.length === 2;
 
     let inputCopies, outputCopies;
-    if (isStereo) {
+    if (stereoIn) {
+        // 2-in / 2-out: inputs[0] is a 2-channel (L, R) stereo input
         inputCopies = [
             `        const _cL = inputs[0]?.[0]; if (_cL && _cL.length) mod.HEAPF32.set(_cL, inPtrs[0]);`,
             `        const _cR = inputs[0]?.[1]; if (_cR && _cR.length) mod.HEAPF32.set(_cR, inPtrs[1]);`,
         ].join('\n');
+    } else if (stereoOut) {
+        // 1-in / 2-out: mono input, stereo output (e.g. plate reverb)
+        inputCopies = `        const _c0 = inputs[0]?.[0]; if (_c0 && _c0.length) mod.HEAPF32.set(_c0, inPtrs[0]);`;
+    } else {
+        // General case: N mono inputs
+        inputCopies = audioIn.map((_, i) =>
+            `        const _c${i} = inputs[${i}]?.[0]; if (_c${i} && _c${i}.length) mod.HEAPF32.set(_c${i}, inPtrs[${i}]);`
+        ).join('\n');
+    }
+
+    if (stereoOut) {
         outputCopies = [
             `        outputs[0][0].set(mod.HEAPF32.subarray(outPtrs[0], outPtrs[0] + 128));`,
             `        outputs[0][1].set(mod.HEAPF32.subarray(outPtrs[1], outPtrs[1] + 128));`,
         ].join('\n');
     } else {
-        inputCopies = audioIn.map((_, i) =>
-            `        const _c${i} = inputs[${i}]?.[0]; if (_c${i} && _c${i}.length) mod.HEAPF32.set(_c${i}, inPtrs[${i}]);`
-        ).join('\n');
         outputCopies = audioOut.map((_, i) =>
             `        outputs[${i}][0].set(mod.HEAPF32.subarray(outPtrs[${i}], outPtrs[${i}] + 128));`
         ).join('\n');

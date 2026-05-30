@@ -32,11 +32,13 @@ export async function loadPlugin(ctx, pluginModule) {
     const audioOut = meta.ports.filter(p => p.type === 'audio' && p.dir === 'output');
     const ctrlIn   = meta.ports.filter(p => p.type === 'control' && p.dir === 'input');
 
-    const isStereo = audioIn.length === 2 && audioOut.length === 2;
+    const stereoOut = audioOut.length === 2;
+    const stereoIn  = stereoOut && audioIn.length === 2;
     const workletNode = new AudioWorkletNode(ctx, `wadspa-${meta.label}`, {
-        numberOfInputs:     isStereo ? 1 : (audioIn.length  || 1),
-        numberOfOutputs:    isStereo ? 1 : (audioOut.length || 1),
-        outputChannelCount: isStereo ? [2] : Array(audioOut.length || 1).fill(1),
+        numberOfInputs:     stereoOut ? 1 : (audioIn.length  || 1),
+        numberOfOutputs:    stereoOut ? 1 : (audioOut.length || 1),
+        outputChannelCount: stereoOut ? [2] : Array(audioOut.length || 1).fill(1),
+        ...(stereoIn ? { channelCount: 2, channelCountMode: 'explicit' } : {}),
     });
 
     const inBufs  = audioIn.map(p  => `_shim_input_buf_${symbolName(p.name)}`);
