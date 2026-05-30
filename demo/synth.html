@@ -113,7 +113,7 @@
   <div id="log">waiting...</div>
 
   <script type="module">
-    import { loadPlugin } from './core.js';
+    import { loadPlugin } from './core.js?v=2';
 
     const synthPlugin = {
       meta: {
@@ -130,8 +130,8 @@
           { index: 8, name: 'Master Gain',   symbol: 'gain',    dir: 'input',  type: 'control', min: 0, max: 1, default: 0.7 },
         ]
       },
-      wasmUrl:      new URL('./wadspa_synth.wasm',         import.meta.url).href,
-      processorUrl: new URL('./wadspa_synth-processor.js', import.meta.url).href,
+      wasmUrl:      new URL('./wadspa_synth.wasm',            import.meta.url).href,
+      processorUrl: new URL('./wadspa_synth-processor.js?v=2', import.meta.url).href,
     };
 
     // ── Piano layout ───────────────────────────────────────────────────────
