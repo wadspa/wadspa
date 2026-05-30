@@ -34,8 +34,9 @@ export async function loadPlugin(ctx, pluginModule) {
 
     const stereoOut = audioOut.length === 2;
     const stereoIn  = stereoOut && audioIn.length === 2;
+    const nIn = audioIn.length === 0 ? 0 : (stereoIn ? 1 : audioIn.length);
     const workletNode = new AudioWorkletNode(ctx, `wadspa-${meta.label}`, {
-        numberOfInputs:     stereoOut ? 1 : (audioIn.length  || 1),
+        numberOfInputs:     nIn,
         numberOfOutputs:    stereoOut ? 1 : (audioOut.length || 1),
         outputChannelCount: stereoOut ? [2] : Array(audioOut.length || 1).fill(1),
         ...(stereoIn ? { channelCount: 2, channelCountMode: 'explicit' } : {}),
