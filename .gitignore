@@ -1,0 +1,27 @@
+node_modules/
+
+# Generated shim files (recreated by `wadspa build`)
+**/_wadspa_shim.c
+
+# Plugin-dir root build artifacts (dist/ is tracked)
+amp/amp.js
+amp/amp.wasm
+amp/processor.js
+dj_eq/dj_eq.js
+dj_eq/dj_eq.wasm
+dj_eq/processor.js
+
+# Old test/scratch files
+amp/test.mjs
+amp/index.html
+dj_eq/test.mjs
+dj_eq/index.html
+
+# Superseded processor approach (per-plugin static-import is used instead)
+core/src/processor.js
+
+# swh-plugins is a separate upstream repo (add as submodule if needed)
+swh-plugins/
+
+# macOS
+.DS_Store

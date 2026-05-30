@@ -1,0 +1,126 @@
+#!/usr/bin/env node
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'fs';
+import { join, resolve, basename, dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { inspectPlugin } from '../src/inspect.js';
+import { generateShim, exportedFunctions, generateProcessor } from '../src/shim.js';
+import { compilePlugin } from '../src/compile.js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+function usage() {
+    console.log(`
+wadspa build <plugin-dir> [options]
+
+Options:
+  --out <dir>        Output directory (default: <plugin-dir>/dist)
+  --name <name>      npm package name (default: @wadspa/<label>)
+  --include <dir>    Extra include directory (repeatable)
+  --define <D>       Extra preprocessor define (repeatable)
+  --sources <files>  Comma-separated .c source files (default: all *.c in plugin-dir)
+`);
+    process.exit(1);
+}
+
+const args = process.argv.slice(2);
+if (args[0] !== 'build' || !args[1]) usage();
+
+const pluginDir = resolve(args[1]);
+if (!existsSync(pluginDir)) {
+    console.error(`Plugin directory not found: ${pluginDir}`);
+    process.exit(1);
+}
+
+// Parse flags
+const opts = { includes: [], defines: [], sources: null, out: null, name: null };
+for (let i = 2; i < args.length; i++) {
+    if      (args[i] === '--out')     opts.out     = resolve(args[++i]);
+    else if (args[i] === '--name')    opts.name    = args[++i];
+    else if (args[i] === '--include') opts.includes.push(resolve(args[++i]));
+    else if (args[i] === '--define')  opts.defines.push(args[++i]);
+    else if (args[i] === '--sources') opts.sources = args[++i].split(',').map(s => resolve(pluginDir, s.trim()));
+    else { console.error(`Unknown option: ${args[i]}`); usage(); }
+}
+
+const SHIM_NAMES = new Set(['shim.c', '_wadspa_shim.c']);
+
+// Auto-detect sources (exclude any hand-written or generated shim files)
+const sourceFiles = opts.sources ?? readdirSync(pluginDir)
+    .filter(f => f.endsWith('.c') && !SHIM_NAMES.has(f))
+    .map(f => join(pluginDir, f));
+
+if (sourceFiles.length === 0) {
+    console.error('No .c source files found. Use --sources to specify them.');
+    process.exit(1);
+}
+
+// Step 1: inspect
+console.log('→ Inspecting plugin...');
+const descriptor = inspectPlugin(pluginDir, sourceFiles, [
+    pluginDir,
+    ...opts.includes,
+]);
+console.log(`  ${descriptor.name} (id=${descriptor.id}, ${descriptor.ports.length} ports)`);
+descriptor.ports.forEach(p =>
+    console.log(`  [${p.index}] ${p.dir} ${p.type.padEnd(7)} ${p.name}${p.type === 'control' ? ` (${p.min ?? '?'}..${p.max ?? '?'}, default=${p.default})` : ''}`)
+);
+
+// Step 2: generate shim
+console.log('→ Generating shim.c...');
+const shimSrc  = generateShim(descriptor);
+const shimPath = join(pluginDir, '_wadspa_shim.c');
+writeFileSync(shimPath, shimSrc);
+
+// Step 3: compile
+const outDir = opts.out ?? join(pluginDir, 'dist');
+mkdirSync(outDir, { recursive: true });
+const label      = descriptor.label;
+const exportName = 'create' + label.replace(/[^a-zA-Z0-9]/g, '_') + 'Plugin';
+const outJs      = join(outDir, label + '.js');
+
+console.log('→ Compiling to WASM...');
+compilePlugin({
+    sources:      [...sourceFiles, shimPath],
+    outJs,
+    exportedFns:  exportedFunctions(descriptor),
+    includeFlags: [pluginDir, ...opts.includes],
+    defines:      opts.defines,
+    exportName,
+});
+console.log(`  ${label}.js  (${Math.round(readFileSync(outJs).length / 1024)}KB)`);
+console.log(`  ${label}.wasm  (${Math.round(readFileSync(outJs.replace('.js', '.wasm')).length / 1024)}KB)`);
+
+// Step 4: emit package artifacts
+const pkgName = opts.name ?? `@wadspa/${label}`;
+const meta = {
+    id:          descriptor.id,
+    label:       descriptor.label,
+    name:        descriptor.name,
+    maker:       descriptor.maker,
+    exportName,
+    ports:       descriptor.ports,
+};
+
+// processor.js: static-import AudioWorklet processor (works in Chrome + Safari)
+writeFileSync(join(outDir, 'processor.js'), generateProcessor(descriptor, label));
+
+// index.js: re-exports the factory + exposes URLs for @wadspa/core
+const indexJs = `\
+export { default } from './${label}.js';
+export const meta         = ${JSON.stringify(meta, null, 2)};
+export const jsUrl        = new URL('./${label}.js',    import.meta.url).href;
+export const wasmUrl      = new URL('./${label}.wasm',  import.meta.url).href;
+export const processorUrl = new URL('./processor.js',   import.meta.url).href;
+`;
+writeFileSync(join(outDir, 'index.js'), indexJs);
+
+writeFileSync(join(outDir, 'package.json'), JSON.stringify({
+    name:    pkgName,
+    version: '0.1.0',
+    type:    'module',
+    main:    './index.js',
+    exports: { '.': './index.js' },
+}, null, 2));
+
+console.log(`→ Package written to ${outDir}`);
+console.log(`  ${pkgName}`);

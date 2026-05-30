@@ -1,0 +1,12 @@
+{
+  "name": "wadspa",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "core",
+    "toolchain"
+  ],
+  "scripts": {
+    "link-toolchain": "npm link --workspace=toolchain"
+  }
+}

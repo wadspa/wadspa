@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>wadspa demo — amp + dj_eq_mono</title>
+  <style>
+    body { font-family: monospace; padding: 2rem; background: #111; color: #eee; max-width: 480px; }
+    h1   { font-size: 1.1rem; margin-bottom: 0.5rem; }
+    h2   { font-size: 0.95rem; color: #aaa; margin: 1.4rem 0 0.6rem; }
+    button { padding: 0.5rem 1.2rem; cursor: pointer; font-family: monospace; }
+    .row { margin-top: 0.8rem; display: flex; align-items: center; gap: 0.8rem; }
+    .row label { width: 4rem; font-size: 0.85rem; color: #aaa; }
+    input[type=range] { flex: 1; }
+    .val { width: 4.5rem; text-align: right; font-size: 0.85rem; }
+    #log { margin-top: 1.4rem; font-size: 0.8rem; color: #777; }
+  </style>
+</head>
+<body>
+  <h1>wadspa</h1>
+  <button id="start">Start</button>
+
+  <div id="ui" style="display:none">
+    <h2>amp</h2>
+    <div class="row">
+      <label>Gain</label>
+      <input type="range" id="amp-gain" min="-70" max="70" value="0" step="0.5">
+      <span class="val" id="amp-gain-val">0 dB</span>
+    </div>
+
+    <h2>dj_eq_mono</h2>
+    <div class="row">
+      <label>Lo</label>
+      <input type="range" id="eq-lo" min="-70" max="6" value="0" step="0.5">
+      <span class="val" id="eq-lo-val">0 dB</span>
+    </div>
+    <div class="row">
+      <label>Mid</label>
+      <input type="range" id="eq-mid" min="-70" max="6" value="0" step="0.5">
+      <span class="val" id="eq-mid-val">0 dB</span>
+    </div>
+    <div class="row">
+      <label>Hi</label>
+      <input type="range" id="eq-hi" min="-70" max="6" value="0" step="0.5">
+      <span class="val" id="eq-hi-val">0 dB</span>
+    </div>
+  </div>
+
+  <div id="log">waiting...</div>
+
+  <script type="module">
+    import { loadPlugin } from './core.js';
+
+    const ampPlugin = {
+      meta: {
+        id: 1181, label: 'amp', name: 'Simple Amplifier', maker: 'wadspa',
+        ports: [
+          { index: 0, name: 'Gain (dB)', dir: 'input',  type: 'control', min: -70, max: 70, default: '0' },
+          { index: 1, name: 'Input',     dir: 'input',  type: 'audio' },
+          { index: 2, name: 'Output',    dir: 'output', type: 'audio' },
+        ]
+      },
+      wasmUrl:      new URL('./amp.wasm',           import.meta.url).href,
+      processorUrl: new URL('./amp-processor.js',   import.meta.url).href,
+    };
+
+    const eqPlugin = {
+      meta: {
+        id: 1907, label: 'dj_eq_mono', name: 'DJ EQ (mono)', maker: 'wadspa',
+        ports: [
+          { index: 0, name: 'Lo gain (dB)',  dir: 'input',  type: 'control', min: -70, max: 6, default: '0' },
+          { index: 1, name: 'Mid gain (dB)', dir: 'input',  type: 'control', min: -70, max: 6, default: '0' },
+          { index: 2, name: 'Hi gain (dB)',  dir: 'input',  type: 'control', min: -70, max: 6, default: '0' },
+          { index: 3, name: 'Input',         dir: 'input',  type: 'audio' },
+          { index: 4, name: 'Output',        dir: 'output', type: 'audio' },
+          { index: 5, name: 'Latency',       dir: 'output', type: 'control' },
+        ]
+      },
+      wasmUrl:      new URL('./dj_eq_mono.wasm',          import.meta.url).href,
+      processorUrl: new URL('./dj_eq_mono-processor.js',  import.meta.url).href,
+    };
+
+    const log = msg => document.getElementById('log').textContent = msg;
+
+    function bindSlider(id, label, onInput) {
+      const slider = document.getElementById(id);
+      const valEl  = document.getElementById(id + '-val');
+      slider.addEventListener('input', () => {
+        const v = parseFloat(slider.value);
+        valEl.textContent = v + ' dB';
+        onInput(v);
+      });
+    }
+
+    document.getElementById('start').addEventListener('click', async () => {
+      document.getElementById('start').disabled = true;
+      try {
+        const ctx = new AudioContext();
+        log('loading amp...');
+        const amp = await loadPlugin(ctx, ampPlugin);
+        log('loading dj_eq_mono...');
+        const eq  = await loadPlugin(ctx, eqPlugin);
+
+        // chain: oscillator → eq → amp → output
+        const osc = ctx.createOscillator();
+        osc.type = 'sawtooth';
+        osc.frequency.value = 220;
+        osc.start();
+
+        osc.connect(eq.input);
+        eq.output.connect(amp.input);
+        amp.output.connect(ctx.destination);
+
+        bindSlider('amp-gain', 'Gain', v => amp.set('Gain (dB)', v));
+        bindSlider('eq-lo',   'Lo',   v => eq.set('Lo gain (dB)', v));
+        bindSlider('eq-mid',  'Mid',  v => eq.set('Mid gain (dB)', v));
+        bindSlider('eq-hi',   'Hi',   v => eq.set('Hi gain (dB)', v));
+
+        document.getElementById('ui').style.display = 'block';
+        log('running — osc → dj_eq_mono → amp → output');
+      } catch (e) {
+        log('ERROR: ' + e.message);
+        console.error(e);
+        document.getElementById('start').disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

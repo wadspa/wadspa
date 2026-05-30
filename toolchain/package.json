@@ -1,0 +1,10 @@
+{
+  "name": "@wadspa/toolchain",
+  "version": "0.1.0",
+  "description": "Build toolchain for compiling LADSPA plugins to WASM npm packages",
+  "type": "module",
+  "bin": {
+    "wadspa": "./bin/wadspa.js"
+  },
+  "dependencies": {}
+}
