@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>wadspa synth — virtual piano</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: monospace; padding: 2rem; background: #111; color: #eee; max-width: 600px; }
+    h1   { font-size: 1.1rem; margin-bottom: 0.3rem; }
+    h2   { font-size: 0.9rem; color: #888; margin: 1.4rem 0 0.6rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    p    { font-size: 0.8rem; color: #666; margin: 0 0 1rem; }
+    button { padding: 0.4rem 1rem; cursor: pointer; font-family: monospace; background: #333; color: #eee; border: 1px solid #555; border-radius: 3px; }
+    button:hover { background: #444; }
+    button:disabled { opacity: 0.4; cursor: default; }
+
+    /* ── Piano ─────────────────────────────────────────────────────────── */
+    .piano-wrap { margin: 0.8rem 0 1.2rem; }
+    .octave-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 0.8rem; color: #888; }
+    .octave-row button { padding: 0.15rem 0.55rem; font-size: 0.85rem; }
+    #oct-label { min-width: 4rem; }
+
+    .piano { position: relative; display: flex; user-select: none; height: 120px; }
+
+    .white-key {
+      width: 44px; height: 120px;
+      background: #e8e8e8; border: 1px solid #999;
+      border-radius: 0 0 4px 4px;
+      cursor: pointer;
+      display: flex; align-items: flex-end; justify-content: center;
+      padding-bottom: 6px; font-size: 0.62rem; color: #999;
+      flex-shrink: 0;
+    }
+    .white-key span { display: flex; flex-direction: column; align-items: center; line-height: 1.3; }
+    .white-key.active { background: #93b8f5; }
+    .white-key:active  { background: #93b8f5; }
+
+    .black-key {
+      position: absolute;
+      width: 28px; height: 72px;
+      background: #1a1a1a; border: 1px solid #000;
+      border-radius: 0 0 3px 3px;
+      cursor: pointer;
+      display: flex; align-items: flex-end; justify-content: center;
+      padding-bottom: 4px; font-size: 0.58rem; color: #666;
+      z-index: 2;
+    }
+    .black-key.active { background: #2a4a99; }
+    .black-key:active  { background: #2a4a99; }
+
+    /* ── Controls ──────────────────────────────────────────────────────── */
+    .row { margin-top: 0.7rem; display: flex; align-items: center; gap: 0.8rem; }
+    .row label { width: 4.5rem; font-size: 0.82rem; color: #aaa; }
+    input[type=range] { flex: 1; accent-color: #5588ee; }
+    .val { width: 4.5rem; text-align: right; font-size: 0.82rem; color: #ccc; }
+
+    #log { margin-top: 1.2rem; font-size: 0.78rem; color: #666; min-height: 1.2em; }
+    #ui  { margin-top: 1rem; }
+  </style>
+</head>
+<body>
+  <h1>wadspa synth</h1>
+  <p>8-voice polyphonic sawtooth with ADSR and lowpass filter</p>
+  <button id="start">Start audio</button>
+
+  <div id="ui" style="display:none">
+    <h2>keyboard</h2>
+    <p>Click keys or use A–J / W E T Y U. − / + to shift octave.</p>
+
+    <div class="piano-wrap">
+      <div class="octave-row">
+        <button id="oct-down">−</button>
+        <span id="oct-label">octave 4</span>
+        <button id="oct-up">+</button>
+      </div>
+      <div class="piano" id="piano"></div>
+    </div>
+
+    <h2>ADSR</h2>
+    <div class="row">
+      <label>Attack</label>
+      <input type="range" id="attack"  min="0.001" max="4.0"  value="0.01"  step="0.001">
+      <span class="val" id="attack-val">0.010 s</span>
+    </div>
+    <div class="row">
+      <label>Decay</label>
+      <input type="range" id="decay"   min="0.001" max="4.0"  value="0.1"   step="0.001">
+      <span class="val" id="decay-val">0.100 s</span>
+    </div>
+    <div class="row">
+      <label>Sustain</label>
+      <input type="range" id="sustain" min="0.0"   max="1.0"  value="0.7"   step="0.01">
+      <span class="val" id="sustain-val">0.70</span>
+    </div>
+    <div class="row">
+      <label>Release</label>
+      <input type="range" id="release" min="0.001" max="8.0"  value="0.3"   step="0.001">
+      <span class="val" id="release-val">0.300 s</span>
+    </div>
+
+    <h2>filter + gain</h2>
+    <div class="row">
+      <label>Cutoff</label>
+      <input type="range" id="cutoff"  min="0.0"   max="1.0"  value="0.5"   step="0.01">
+      <span class="val" id="cutoff-val">0.50</span>
+    </div>
+    <div class="row">
+      <label>Gain</label>
+      <input type="range" id="gain"    min="0.0"   max="1.0"  value="0.7"   step="0.01">
+      <span class="val" id="gain-val">0.70</span>
+    </div>
+  </div>
+
+  <div id="log">waiting...</div>
+
+  <script type="module">
+    import { loadPlugin } from './core.js';
+
+    const synthPlugin = {
+      meta: {
+        label: 'wadspa_synth',
+        ports: [
+          { index: 0, name: 'MIDI In',       symbol: 'midi_in', dir: 'input',  type: 'midi' },
+          { index: 1, name: 'Audio Out L',   symbol: 'out_l',   dir: 'output', type: 'audio' },
+          { index: 2, name: 'Audio Out R',   symbol: 'out_r',   dir: 'output', type: 'audio' },
+          { index: 3, name: 'Filter Cutoff', symbol: 'cutoff',  dir: 'input',  type: 'control', min: 0, max: 1, default: 0.5 },
+          { index: 4, name: 'Attack',        symbol: 'attack',  dir: 'input',  type: 'control', min: 0.001, max: 4, default: 0.01 },
+          { index: 5, name: 'Decay',         symbol: 'decay',   dir: 'input',  type: 'control', min: 0.001, max: 4, default: 0.1 },
+          { index: 6, name: 'Sustain',       symbol: 'sustain', dir: 'input',  type: 'control', min: 0, max: 1, default: 0.7 },
+          { index: 7, name: 'Release',       symbol: 'release', dir: 'input',  type: 'control', min: 0.001, max: 8, default: 0.3 },
+          { index: 8, name: 'Master Gain',   symbol: 'gain',    dir: 'input',  type: 'control', min: 0, max: 1, default: 0.7 },
+        ]
+      },
+      wasmUrl:      new URL('./wadspa_synth.wasm',         import.meta.url).href,
+      processorUrl: new URL('./wadspa_synth-processor.js', import.meta.url).href,
+    };
+
+    // ── Piano layout ───────────────────────────────────────────────────────
+    // Semitone offsets from C for white keys and black keys
+    const WHITE = [0, 2, 4, 5, 7, 9, 11];   // C D E F G A B
+    const WHITE_NAMES = ['C','D','E','F','G','A','B'];
+    // Black key positions: semitone offset + left-edge px (W=44, bw=28)
+    //   C#: boundary at 1*44=44 → left = 44-14 = 30
+    //   D#: boundary at 2*44=88 → left = 88-14 = 74
+    //   F#: boundary at 4*44=176→ left = 176-14= 162
+    //   G#: boundary at 5*44=220→ left = 220-14= 206
+    //   A#: boundary at 6*44=264→ left = 264-14= 250
+    const BLACK = [
+      { semi: 1,  left: 30,  name: 'C#' },
+      { semi: 3,  left: 74,  name: 'D#' },
+      { semi: 6,  left: 162, name: 'F#' },
+      { semi: 8,  left: 206, name: 'G#' },
+      { semi: 10, left: 250, name: 'A#' },
+    ];
+
+    // Computer key → semitone mapping
+    const KEY_MAP = {
+      'a': 0,  'w': 1,  's': 2,  'e': 3,  'd': 4,
+      'f': 5,  't': 6,  'g': 7,  'y': 8,  'h': 9,
+      'u': 10, 'j': 11,
+    };
+    // Semitone → keyboard label
+    const KEY_LABEL = ['A','W','S','E','D','F','T','G','Y','H','U','J'];
+
+    let octave = 4;
+    let synth  = null;
+    const activeNotes = new Set();
+
+    function midiNote(semi) { return (octave + 1) * 12 + semi; }
+
+    function buildPiano() {
+      const piano = document.getElementById('piano');
+      piano.innerHTML = '';
+
+      WHITE.forEach((semi, i) => {
+        const el = document.createElement('div');
+        el.className = 'white-key';
+        el.dataset.semi = semi;
+        el.innerHTML = `<span>${WHITE_NAMES[i]}<br>${KEY_LABEL[semi]}</span>`;
+        el.addEventListener('mousedown', e => { e.preventDefault(); noteOn(semi); });
+        el.addEventListener('mouseup',   () => noteOff(semi));
+        el.addEventListener('mouseleave',() => noteOff(semi));
+        piano.appendChild(el);
+      });
+
+      BLACK.forEach(({ semi, left, name }) => {
+        const el = document.createElement('div');
+        el.className = 'black-key';
+        el.dataset.semi = semi;
+        el.style.left = left + 'px';
+        el.innerHTML = KEY_LABEL[semi];
+        el.addEventListener('mousedown', e => { e.preventDefault(); noteOn(semi); });
+        el.addEventListener('mouseup',   () => noteOff(semi));
+        el.addEventListener('mouseleave',() => noteOff(semi));
+        piano.appendChild(el);
+      });
+    }
+
+    function noteOn(semi) {
+      const note = midiNote(semi);
+      if (activeNotes.has(note)) return;
+      activeNotes.add(note);
+      document.querySelectorAll(`[data-semi="${semi}"]`).forEach(el => el.classList.add('active'));
+      if (synth) synth.noteOn(note, 100);
+    }
+
+    function noteOff(semi) {
+      const note = midiNote(semi);
+      if (!activeNotes.has(note)) return;
+      activeNotes.delete(note);
+      document.querySelectorAll(`[data-semi="${semi}"]`).forEach(el => el.classList.remove('active'));
+      if (synth) synth.noteOff(note);
+    }
+
+    // ── Computer keyboard ──────────────────────────────────────────────────
+    const pressedKeys = new Set();
+    window.addEventListener('keydown', e => {
+      if (e.repeat || e.ctrlKey || e.metaKey) return;
+      const k = e.key.toLowerCase();
+      if (k === '-') { if (octave > 0) { octave--; document.getElementById('oct-label').textContent = `octave ${octave}`; } return; }
+      if (k === '=') { if (octave < 8) { octave++; document.getElementById('oct-label').textContent = `octave ${octave}`; } return; }
+      if (k in KEY_MAP && !pressedKeys.has(k)) {
+        pressedKeys.add(k);
+        noteOn(KEY_MAP[k]);
+      }
+    });
+    window.addEventListener('keyup', e => {
+      const k = e.key.toLowerCase();
+      if (k in KEY_MAP) { pressedKeys.delete(k); noteOff(KEY_MAP[k]); }
+    });
+
+    document.getElementById('oct-down').addEventListener('click', () => {
+      if (octave > 0) { octave--; document.getElementById('oct-label').textContent = `octave ${octave}`; }
+    });
+    document.getElementById('oct-up').addEventListener('click', () => {
+      if (octave < 8) { octave++; document.getElementById('oct-label').textContent = `octave ${octave}`; }
+    });
+
+    buildPiano();
+
+    // ── Sliders ────────────────────────────────────────────────────────────
+    function bindSlider(id, portName, fmt) {
+      const slider = document.getElementById(id);
+      const valEl  = document.getElementById(id + '-val');
+      slider.addEventListener('input', () => {
+        const v = parseFloat(slider.value);
+        valEl.textContent = fmt(v);
+        if (synth) synth.set(portName, v);
+      });
+    }
+
+    // ── Start ──────────────────────────────────────────────────────────────
+    const log = msg => document.getElementById('log').textContent = msg;
+
+    document.getElementById('start').addEventListener('click', async () => {
+      document.getElementById('start').disabled = true;
+      log('loading wadspa synth...');
+      try {
+        const ctx = new AudioContext();
+        synth = await loadPlugin(ctx, synthPlugin);
+        synth.output.connect(ctx.destination);
+
+        bindSlider('attack',  'Attack',        v => v.toFixed(3) + ' s');
+        bindSlider('decay',   'Decay',         v => v.toFixed(3) + ' s');
+        bindSlider('sustain', 'Sustain',       v => v.toFixed(2));
+        bindSlider('release', 'Release',       v => v.toFixed(3) + ' s');
+        bindSlider('cutoff',  'Filter Cutoff', v => v.toFixed(2));
+        bindSlider('gain',    'Master Gain',   v => v.toFixed(2));
+
+        document.getElementById('ui').style.display = 'block';
+        log('ready — click keys or use keyboard (A–J / W E T Y U) · − / = to shift octave');
+      } catch (e) {
+        log('ERROR: ' + e.message);
+        console.error(e);
+        document.getElementById('start').disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

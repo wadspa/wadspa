@@ -36,9 +36,12 @@ export function parseLv2Ttl(pluginDir) {
     const labelMatch = ttlSrc.match(/doap:name\s+"([^"]+)"/);
     const label      = labelMatch ? labelMatch[1] : pluginUri.split('/').pop();
 
-    // Extract ports — each port is a bracketed block with lv2:index
+    // Extract ports — match ALL [...] blocks in the file; parsePortBlock
+    // returns null for blocks that don't contain lv2:index, so non-port
+    // blocks are safely ignored. This handles the `lv2:port [...] , [...]`
+    // multi-port Turtle syntax where only the first block follows lv2:port.
     const ports = [];
-    const portBlockRe = /lv2:port\s*\[([^\]]+)\]/gs;
+    const portBlockRe = /\[([^\]]+)\]/gs;
     let portMatch;
     while ((portMatch = portBlockRe.exec(ttlSrc)) !== null) {
         const block = portMatch[1];
@@ -160,6 +163,12 @@ export function generateLv2Shim(descriptor) {
     lines.push('static const LV2_Descriptor *g_desc   = NULL;');
     lines.push('static LV2_Handle            g_handle = NULL;');
     lines.push('');
+
+    // Forward declaration so shim_init can call shim_midi_clear before it is defined
+    if (midiIn.length > 0) {
+        lines.push('void shim_midi_clear(void);');
+        lines.push('');
+    }
 
     // shim_init
     lines.push('EMSCRIPTEN_KEEPALIVE void shim_init(unsigned long sample_rate) {');
