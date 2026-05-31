@@ -7,7 +7,7 @@
  *
  * After each successful build (or when skipping an already-built plugin):
  *   - Copies dist/ to docs/plugins/<id>/
- *   - Updates docs/plugins/catalogue.json
+ *   - Updates docs/plugins/catalog.json
  *
  * Requirements:
  *   - emcc on PATH (or EMCC env var)
@@ -56,7 +56,7 @@ function resolveDefault(def, min, max) {
     return isNaN(n) ? min : n;
 }
 
-// Read the generated dist/index.js and build a catalogue entry.
+// Read the generated dist/index.js and build a catalog entry.
 function buildCatalogueEntry(manifestEntry, distDir) {
     const indexPath = join(distDir, 'index.js');
     if (!existsSync(indexPath)) return null;
@@ -85,14 +85,14 @@ function buildCatalogueEntry(manifestEntry, distDir) {
     };
 }
 
-// Copy dist/ to docs/plugins/<id>/ and update catalogue list.
-function deploy(manifestEntry, distDir, catalogueEntries) {
+// Copy dist/ to docs/plugins/<id>/ and update catalog list.
+function deploy(manifestEntry, distDir, catalogEntries) {
     const entry = buildCatalogueEntry(manifestEntry, distDir);
     if (!entry) {
-        console.warn(`   ⚠ Could not read meta from ${distDir}/index.js — skipping catalogue`);
+        console.warn(`   ⚠ Could not read meta from ${distDir}/index.js — skipping catalog`);
         return;
     }
-    catalogueEntries.push(entry);
+    catalogEntries.push(entry);
 
     if (!existsSync(DOCS_PLUGINS)) return;
     const dest = join(DOCS_PLUGINS, manifestEntry.id);
@@ -103,7 +103,7 @@ function deploy(manifestEntry, distDir, catalogueEntries) {
 // ---
 
 let passed = 0, failed = 0, skipped = 0;
-const catalogueEntries = [];
+const catalogEntries = [];
 
 for (const entry of manifest) {
     if (onlyId && entry.id !== onlyId) continue;
@@ -113,7 +113,7 @@ for (const entry of manifest) {
 
     if (skipExisting && existsSync(distDir)) {
         console.log(`⏭  ${entry.id} — skipping (dist/ exists)`);
-        deploy(entry, distDir, catalogueEntries);
+        deploy(entry, distDir, catalogEntries);
         skipped++;
         continue;
     }
@@ -171,7 +171,7 @@ for (const entry of manifest) {
         const out = run(cmd, { cwd: dir });
         console.log(out.trim().split('\n').map(l => '   ' + l).join('\n'));
 
-        deploy(entry, distDir, catalogueEntries);
+        deploy(entry, distDir, catalogEntries);
         passed++;
 
     } catch (e) {
@@ -180,13 +180,13 @@ for (const entry of manifest) {
     }
 }
 
-// Write catalogue
-if (catalogueEntries.length > 0 && existsSync(DOCS_PLUGINS)) {
+// Write catalog
+if (catalogEntries.length > 0 && existsSync(DOCS_PLUGINS)) {
     writeFileSync(
-        join(DOCS_PLUGINS, 'catalogue.json'),
-        JSON.stringify(catalogueEntries, null, 2)
+        join(DOCS_PLUGINS, 'catalog.json'),
+        JSON.stringify(catalogEntries, null, 2)
     );
-    console.log(`\nCatalogue: ${catalogueEntries.length} plugins → docs/plugins/catalogue.json`);
+    console.log(`\nCatalogue: ${catalogEntries.length} plugins → docs/plugins/catalog.json`);
 }
 
 console.log(`\n${'─'.repeat(50)}`);

@@ -77,13 +77,13 @@ function buildCatalogueEntry(manifestEntry, distDir) {
     };
 }
 
-function deploy(manifestEntry, distDir, catalogueEntries) {
+function deploy(manifestEntry, distDir, catalogEntries) {
     const entry = buildCatalogueEntry(manifestEntry, distDir);
     if (!entry) {
         console.warn(`   ⚠ Could not read meta from ${distDir}/index.js`);
         return;
     }
-    catalogueEntries.push(entry);
+    catalogEntries.push(entry);
 
     if (!existsSync(DOCS_PLUGINS)) return;
     const dest = join(DOCS_PLUGINS, manifestEntry.id);
@@ -92,7 +92,7 @@ function deploy(manifestEntry, distDir, catalogueEntries) {
 }
 
 let passed = 0, failed = 0, skipped = 0;
-const catalogueEntries = [];
+const catalogEntries = [];
 
 for (const entry of instruments) {
     if (onlyId && entry.id !== onlyId) continue;
@@ -102,7 +102,7 @@ for (const entry of instruments) {
 
     if (skipExisting && existsSync(distDir)) {
         console.log(`⏭  ${entry.id} — skipping (dist/ exists)`);
-        deploy(entry, distDir, catalogueEntries);
+        deploy(entry, distDir, catalogEntries);
         skipped++;
         continue;
     }
@@ -113,7 +113,7 @@ for (const entry of instruments) {
         const out = run(cmd, { cwd: dir });
         console.log(out.trim().split('\n').map(l => '   ' + l).join('\n'));
 
-        deploy(entry, distDir, catalogueEntries);
+        deploy(entry, distDir, catalogEntries);
         passed++;
     } catch (e) {
         console.error(`   ✗ FAILED: ${e.message.split('\n')[0]}`);
@@ -121,12 +121,12 @@ for (const entry of instruments) {
     }
 }
 
-if (catalogueEntries.length > 0) {
+if (catalogEntries.length > 0) {
     writeFileSync(
         join(ROOT, 'docs', 'instruments.json'),
-        JSON.stringify(catalogueEntries, null, 2)
+        JSON.stringify(catalogEntries, null, 2)
     );
-    console.log(`\nInstruments catalogue: ${catalogueEntries.length} → docs/instruments.json`);
+    console.log(`\nInstruments catalog: ${catalogEntries.length} → docs/instruments.json`);
 }
 
 console.log(`\n${'─'.repeat(50)}`);

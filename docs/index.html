@@ -242,7 +242,7 @@
 <script type="module">
 import { loadPlugin } from './core.js';
 
-// ── Plugin catalogue ────────────────────────────────────────────
+// ── Plugin catalog ────────────────────────────────────────────
 // meta.ports drives both the loadPlugin call and the UI sliders.
 // All ports listed here appear as sliders in the card.
 
@@ -259,12 +259,12 @@ try {
 
 let EFFECTS = [];
 try {
-  EFFECTS = await fetch('./plugins/catalogue.json').then(r => {
+  EFFECTS = await fetch('./plugins/catalog.json').then(r => {
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     return r.json();
   });
 } catch (e) {
-  console.error('Failed to load catalogue.json:', e);
+  console.error('Failed to load catalog.json:', e);
 }
 
 // ── Plugin URL helpers ──────────────────────────────────────────
