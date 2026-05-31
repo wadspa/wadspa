@@ -11,6 +11,7 @@ export const meta         = {
       "name": "Control",
       "dir": "input",
       "type": "midi",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -21,6 +22,7 @@ export const meta         = {
       "name": "Notify",
       "dir": "output",
       "type": "atom",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -31,6 +33,7 @@ export const meta         = {
       "name": "Left",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -41,6 +44,7 @@ export const meta         = {
       "name": "Right",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -51,6 +55,7 @@ export const meta         = {
       "name": "Amp Attack",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 2.5,
       "default": 0
@@ -61,6 +66,7 @@ export const meta         = {
       "name": "Amp Decay",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 2.5,
       "default": 0
@@ -71,6 +77,7 @@ export const meta         = {
       "name": "Amp Sustain",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 1
@@ -81,6 +88,7 @@ export const meta         = {
       "name": "Amp Release",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 2.5,
       "default": 0
@@ -91,6 +99,7 @@ export const meta         = {
       "name": "Osc1 Waveform",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 4,
       "default": 2
@@ -101,6 +110,7 @@ export const meta         = {
       "name": "Filter Attack",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 2.5,
       "default": 0
@@ -111,6 +121,7 @@ export const meta         = {
       "name": "Filter Decay",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 2.5,
       "default": 0
@@ -121,6 +132,7 @@ export const meta         = {
       "name": "Filter Sustain",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 1
@@ -131,6 +143,7 @@ export const meta         = {
       "name": "Filter Release",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 2.5,
       "default": 0
@@ -141,6 +154,7 @@ export const meta         = {
       "name": "Filter Resonance",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 0.97,
       "default": 0
@@ -151,6 +165,7 @@ export const meta         = {
       "name": "Filter Env Amount",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -16,
       "max": 16,
       "default": 0
@@ -161,6 +176,7 @@ export const meta         = {
       "name": "Filter Cutoff",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -0.5,
       "max": 1.5,
       "default": 1.5
@@ -171,6 +187,7 @@ export const meta         = {
       "name": "Osc2 Detune",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -1,
       "max": 1,
       "default": 0
@@ -181,6 +198,7 @@ export const meta         = {
       "name": "Osc2 Waveform",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 4,
       "default": 2
@@ -191,6 +209,7 @@ export const meta         = {
       "name": "Master Vol",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0.67
@@ -201,6 +220,7 @@ export const meta         = {
       "name": "LFO Freq",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 7.5,
       "default": 0
@@ -211,6 +231,7 @@ export const meta         = {
       "name": "LFO Waveform",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 6,
       "default": 0
@@ -221,6 +242,7 @@ export const meta         = {
       "name": "Osc2 Range",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -3,
       "max": 4,
       "default": 0
@@ -231,6 +253,7 @@ export const meta         = {
       "name": "Osc Mix",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -1,
       "max": 1,
       "default": 0
@@ -241,6 +264,7 @@ export const meta         = {
       "name": "Freq Mod Amount",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1.259921,
       "default": 0
@@ -251,6 +275,7 @@ export const meta         = {
       "name": "Filter Mod Amount",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -1,
       "max": 1,
       "default": -1
@@ -261,6 +286,7 @@ export const meta         = {
       "name": "Amp Mod Amount",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -1,
       "max": 1,
       "default": -1
@@ -271,6 +297,7 @@ export const meta         = {
       "name": "Ring Mod",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0
@@ -281,6 +308,7 @@ export const meta         = {
       "name": "Osc1 Pulsewidth",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 1
@@ -291,6 +319,7 @@ export const meta         = {
       "name": "Osc2 Pulsewidth",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 1
@@ -301,6 +330,7 @@ export const meta         = {
       "name": "Reverb Roomsize",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0
@@ -311,6 +341,7 @@ export const meta         = {
       "name": "Reverb Damp",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0
@@ -321,6 +352,7 @@ export const meta         = {
       "name": "Reverb Wet",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0
@@ -331,6 +363,7 @@ export const meta         = {
       "name": "Reverb Width",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 1
@@ -341,6 +374,7 @@ export const meta         = {
       "name": "Distortion Crunch",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 0.9,
       "default": 0
@@ -351,6 +385,7 @@ export const meta         = {
       "name": "Osc2 Sync",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0
@@ -361,6 +396,7 @@ export const meta         = {
       "name": "Portamento Time",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0
@@ -371,6 +407,7 @@ export const meta         = {
       "name": "Keyboard Mode",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 2,
       "default": 0
@@ -381,6 +418,7 @@ export const meta         = {
       "name": "Osc2 Pitch",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -12,
       "max": 12,
       "default": 0
@@ -391,6 +429,7 @@ export const meta         = {
       "name": "Filter Type",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 2,
       "default": 0
@@ -401,6 +440,7 @@ export const meta         = {
       "name": "Filter Slope",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 1
@@ -411,6 +451,7 @@ export const meta         = {
       "name": "Freq Mod to Oscillator",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 2,
       "default": 0
@@ -421,6 +462,7 @@ export const meta         = {
       "name": "Filter Key Track",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 1
@@ -431,6 +473,7 @@ export const meta         = {
       "name": "Filter Velocity Track",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 1
@@ -441,6 +484,7 @@ export const meta         = {
       "name": "Amp Velocity Amount",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 1
@@ -451,6 +495,7 @@ export const meta         = {
       "name": "Portamento Mode",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0

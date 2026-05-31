@@ -1,0 +1,241 @@
+#pragma once
+#include "qglobal.h"
+#include "QList"
+#include <map>
+#include <unordered_map>
+#include <set>
+#include <utility>
+#include <functional>
+
+// ── Qt-style iterator wrapper for std::map / std::unordered_map ─────────────
+// Adds .key() and .value() so Qt code like "it.key()", "it.value()" works.
+template<typename StdIter>
+struct QtMapIterator {
+    StdIter it;
+    QtMapIterator() = default;
+    QtMapIterator(StdIter i) : it(i) {}
+    auto &key()   const { return it->first; }
+    auto &value()       { return it->second; }
+    auto &value() const { return it->second; }
+    // Qt semantics: range-for on QMap yields values (not pairs)
+    auto &operator*()   { return it->second; }
+    auto &operator*() const { return it->second; }
+    auto *operator->()  { return &it->second; }
+    QtMapIterator &operator++()    { ++it; return *this; }
+    QtMapIterator  operator++(int) { auto t = *this; ++it; return t; }
+    QtMapIterator &operator--()    { --it; return *this; }
+    QtMapIterator  operator--(int) { auto t = *this; --it; return t; }
+    bool operator==(const QtMapIterator &o) const { return it == o.it; }
+    bool operator!=(const QtMapIterator &o) const { return it != o.it; }
+};
+
+// ── QMap — Qt-compatible ordered map wrapping std::map ──────────────────────
+template<typename K, typename V>
+class QMap {
+    std::map<K, V> m;
+public:
+    using key_type       = K;
+    using mapped_type    = V;
+    using value_type     = std::pair<const K, V>;
+    using iterator       = QtMapIterator<typename std::map<K,V>::iterator>;
+    using const_iterator = QtMapIterator<typename std::map<K,V>::const_iterator>;
+    using Iterator       = iterator;
+    using ConstIterator  = const_iterator;
+
+    QMap() = default;
+    QMap(std::initializer_list<std::pair<K,V>> l) { for (auto &p : l) m.insert(p); }
+
+    // Size
+    bool   isEmpty() const { return m.empty(); }
+    bool   empty()   const { return m.empty(); }
+    int    size()    const { return (int)m.size(); }
+    int    count()   const { return size(); }
+    void   clear()         { m.clear(); }
+
+    // Lookup
+    bool   contains(const K &k) const { return m.count(k) > 0; }
+    V      value(const K &k, const V &def = V{}) const {
+        auto it = m.find(k); return it != m.end() ? it->second : def;
+    }
+    V &operator[](const K &k)       { return m[k]; }
+    const V &operator[](const K &k) const { return m.at(k); }
+    V      at(const K &k) const { return value(k); }
+
+    // Mutation
+    void   insert(const K &k, const V &v) { m[k] = v; }
+    void   insert(const K &k, V &&v)      { m[k] = std::move(v); }
+    QMap  &unite(const QMap &o) { for (auto &p : o.m) m[p.first] = p.second; return *this; }
+    int    remove(const K &k) { return (int)m.erase(k); }
+    V      take(const K &k) {
+        auto it = m.find(k);
+        if (it == m.end()) return V{};
+        V v = std::move(it->second); m.erase(it); return v;
+    }
+
+    // Keys / values
+    QList<K> keys() const {
+        QList<K> r; for (auto &p : m) r.push_back(p.first); return r;
+    }
+    QList<V> values() const {
+        QList<V> r; for (auto &p : m) r.push_back(p.second); return r;
+    }
+    QList<K> uniqueKeys() const { return keys(); }
+
+    // Iterators
+    iterator begin()              { return {m.begin()}; }
+    iterator end()                { return {m.end()}; }
+    const_iterator begin()  const { return {m.begin()}; }
+    const_iterator end()    const { return {m.end()}; }
+    const_iterator cbegin() const { return {m.cbegin()}; }
+    const_iterator cend()   const { return {m.cend()}; }
+    iterator find(const K &k)              { return {m.find(k)}; }
+    const_iterator find(const K &k) const  { return {m.find(k)}; }
+    const_iterator constFind(const K &k) const { return {m.find(k)}; }
+    iterator lowerBound(const K &k) { return {m.lower_bound(k)}; }
+    iterator upperBound(const K &k) { return {m.upper_bound(k)}; }
+    const_iterator constBegin() const { return {m.cbegin()}; }
+    const_iterator constEnd()   const { return {m.cend()}; }
+
+    bool operator==(const QMap &o) const { return m == o.m; }
+    bool operator!=(const QMap &o) const { return m != o.m; }
+};
+
+// ── QHash — Qt-compatible hash map ──────────────────────────────────────────
+template<typename K, typename V, typename Hash = std::hash<K>>
+class QHash {
+    std::unordered_map<K, V, Hash> m;
+public:
+    using iterator       = QtMapIterator<typename std::unordered_map<K,V,Hash>::iterator>;
+    using const_iterator = QtMapIterator<typename std::unordered_map<K,V,Hash>::const_iterator>;
+    using Iterator       = iterator;
+    using ConstIterator  = const_iterator;
+
+    QHash() = default;
+
+    bool isEmpty()   const { return m.empty(); }
+    int  size()      const { return (int)m.size(); }
+    int  count()     const { return size(); }
+    void clear()           { m.clear(); }
+
+    bool contains(const K &k) const { return m.count(k) > 0; }
+    V    value(const K &k, const V &def = V{}) const {
+        auto it = m.find(k); return it != m.end() ? it->second : def;
+    }
+    V &operator[](const K &k)       { return m[k]; }
+    const V &at(const K &k)   const { return m.at(k); }
+
+    void insert(const K &k, const V &v) { m[k] = v; }
+    int  remove(const K &k) { return (int)m.erase(k); }
+    V    take(const K &k) {
+        auto it = m.find(k);
+        if (it == m.end()) return V{};
+        V v = std::move(it->second); m.erase(it); return v;
+    }
+
+    QList<K> keys()   const { QList<K> r; for (auto &p:m) r.push_back(p.first); return r; }
+    QList<V> values() const { QList<V> r; for (auto &p:m) r.push_back(p.second); return r; }
+    int      count(const K &k) const { return (int)m.count(k); }
+
+    iterator begin()              { return {m.begin()}; }
+    iterator end()                { return {m.end()}; }
+    const_iterator begin()  const { return {m.begin()}; }
+    const_iterator end()    const { return {m.end()}; }
+    const_iterator cbegin() const { return {m.cbegin()}; }
+    const_iterator cend()   const { return {m.cend()}; }
+    iterator find(const K &k)              { return {m.find(k)}; }
+    const_iterator find(const K &k) const  { return {m.find(k)}; }
+    const_iterator constFind(const K &k) const { return {m.find(k)}; }
+    const_iterator constBegin() const { return {m.cbegin()}; }
+    const_iterator constEnd()   const { return {m.cend()}; }
+};
+
+// ── QMultiMap ────────────────────────────────────────────────────────────────
+template<typename K, typename V>
+class QMultiMap {
+    std::multimap<K, V> m;
+public:
+    using iterator       = QtMapIterator<typename std::multimap<K,V>::iterator>;
+    using const_iterator = QtMapIterator<typename std::multimap<K,V>::const_iterator>;
+    using Iterator       = iterator;
+    using ConstIterator  = const_iterator;
+
+    bool isEmpty() const { return m.empty(); }
+    int  size()    const { return (int)m.size(); }
+    void clear()         { m.clear(); }
+
+    bool contains(const K &k) const { return m.count(k) > 0; }
+    void insert(const K &k, const V &v) { m.insert({k, v}); }
+    int  remove(const K &k) { return (int)m.erase(k); }
+    QList<V> values(const K &k) const {
+        QList<V> r;
+        auto [lo, hi] = m.equal_range(k);
+        for (auto it = lo; it != hi; ++it) r.push_back(it->second);
+        return r;
+    }
+    QList<K> keys() const { QList<K> r; for (auto &p:m) r.push_back(p.first); return r; }
+
+    iterator begin()              { return {m.begin()}; }
+    iterator end()                { return {m.end()}; }
+    const_iterator begin()  const { return {m.begin()}; }
+    const_iterator end()    const { return {m.end()}; }
+};
+
+// ── QSet ─────────────────────────────────────────────────────────────────────
+template<typename T>
+class QSet {
+    std::set<T> s;
+public:
+    using iterator       = typename std::set<T>::iterator;
+    using const_iterator = typename std::set<T>::const_iterator;
+    using Iterator       = iterator;
+    using ConstIterator  = const_iterator;
+
+    QSet() = default;
+    QSet(std::initializer_list<T> l) : s(l) {}
+
+    bool isEmpty()   const { return s.empty(); }
+    int  size()      const { return (int)s.size(); }
+    int  count()     const { return size(); }
+    void clear()           { s.clear(); }
+
+    bool contains(const T &v) const { return s.count(v) > 0; }
+    void insert(const T &v)         { s.insert(v); }
+    bool remove(const T &v)         { return s.erase(v) > 0; }
+    QSet &unite(const QSet &o)      { for (const T &v : o.s) s.insert(v); return *this; }
+    QSet &intersect(const QSet &o) {
+        for (auto it = s.begin(); it != s.end();)
+            it = o.s.count(*it) ? ++it : s.erase(it);
+        return *this;
+    }
+    QList<T> values() const { QList<T> r(s.begin(), s.end()); return r; }
+    QList<T> toList() const { return values(); }
+
+    iterator begin()        { return s.begin(); }
+    iterator end()          { return s.end(); }
+    const_iterator begin()  const { return s.begin(); }
+    const_iterator end()    const { return s.end(); }
+    const_iterator cbegin() const { return s.cbegin(); }
+    const_iterator cend()   const { return s.cend(); }
+
+    bool operator==(const QSet &o) const { return s == o.s; }
+};
+
+// ── QPair ─────────────────────────────────────────────────────────────────────
+template<typename K, typename V>
+using QPair = std::pair<K, V>;
+
+template<typename K, typename V>
+inline QPair<K,V> qMakePair(const K &k, const V &v) { return {k, v}; }
+
+// Include QList/QVector so keys()/values() return types work
+#include "QVector"
+
+// qDeleteAll overload for QMap<K, V*> — deletes all map values
+template<typename K, typename V>
+inline void qDeleteAll(QMap<K, V*> &map) {
+    for (auto it = map.begin(); it != map.end(); ++it) delete it.value();
+}
+template<typename K, typename V>
+inline void qDeleteAll(const QMap<K, V*> &map) {
+    for (auto it = map.begin(); it != map.end(); ++it) delete it.value();
+}

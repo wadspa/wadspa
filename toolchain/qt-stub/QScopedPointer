@@ -1,0 +1,35 @@
+#pragma once
+#include "qglobal.h"
+#include <memory>
+
+template<typename T, typename Cleanup = std::default_delete<T>>
+class QScopedPointer {
+    std::unique_ptr<T, Cleanup> m_ptr;
+public:
+    explicit QScopedPointer(T *p = nullptr) : m_ptr(p) {}
+
+    T *data()  const { return m_ptr.get(); }
+    T *get()   const { return m_ptr.get(); }
+    bool isNull() const { return !m_ptr; }
+    void reset(T *p = nullptr) { m_ptr.reset(p); }
+    T *take() { return m_ptr.release(); }
+
+    T *operator->() const { return m_ptr.get(); }
+    T &operator*()  const { return *m_ptr; }
+    operator bool() const { return (bool)m_ptr; }
+    bool operator!() const { return !m_ptr; }
+
+    Q_DISABLE_COPY(QScopedPointer)
+};
+
+template<typename T>
+class QScopedArrayPointer {
+    std::unique_ptr<T[]> m_ptr;
+public:
+    explicit QScopedArrayPointer(T *p = nullptr) : m_ptr(p) {}
+    T &operator[](int i) { return m_ptr[i]; }
+    T *data()  const { return m_ptr.get(); }
+    bool isNull() const { return !m_ptr; }
+    void reset(T *p = nullptr) { m_ptr.reset(p); }
+    Q_DISABLE_COPY(QScopedArrayPointer)
+};

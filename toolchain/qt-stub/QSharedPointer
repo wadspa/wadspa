@@ -1,0 +1,55 @@
+#pragma once
+#include "qglobal.h"
+#include <memory>
+
+template<typename T>
+class QSharedPointer {
+    std::shared_ptr<T> m_ptr;
+public:
+    QSharedPointer() = default;
+    explicit QSharedPointer(T *p) : m_ptr(p) {}
+    QSharedPointer(std::nullptr_t) {}
+    QSharedPointer(std::shared_ptr<T> p) : m_ptr(std::move(p)) {}
+
+    T *data()  const { return m_ptr.get(); }
+    T *get()   const { return m_ptr.get(); }
+    bool isNull() const { return !m_ptr; }
+    void reset()        { m_ptr.reset(); }
+    void reset(T *p)    { m_ptr.reset(p); }
+
+    T *operator->() const { return m_ptr.get(); }
+    T &operator*()  const { return *m_ptr; }
+    operator bool() const { return (bool)m_ptr; }
+    bool operator!() const { return !m_ptr; }
+    bool operator==(const QSharedPointer &o) const { return m_ptr == o.m_ptr; }
+    bool operator!=(const QSharedPointer &o) const { return m_ptr != o.m_ptr; }
+    bool operator==(std::nullptr_t) const { return !m_ptr; }
+    bool operator!=(std::nullptr_t) const { return (bool)m_ptr; }
+
+    template<typename U>
+    QSharedPointer<U> staticCast() const
+        { return QSharedPointer<U>(std::static_pointer_cast<U>(m_ptr)); }
+    template<typename U>
+    QSharedPointer<U> dynamicCast() const
+        { return QSharedPointer<U>(std::dynamic_pointer_cast<U>(m_ptr)); }
+
+    template<typename U>
+    static QSharedPointer<T> create(U &&...args)
+        { return QSharedPointer<T>(std::make_shared<T>(std::forward<U>(args)...)); }
+};
+
+template<typename T>
+class QWeakPointer {
+    std::weak_ptr<T> m_ptr;
+public:
+    QWeakPointer() = default;
+    QWeakPointer(const QSharedPointer<T> &p) : m_ptr(p.m_ptr) {}
+    bool isNull() const { return m_ptr.expired(); }
+    QSharedPointer<T> toStrongRef() const
+        { return QSharedPointer<T>(m_ptr.lock()); }
+    QSharedPointer<T> lock() const { return toStrongRef(); }
+};
+
+template<typename T, typename ...Args>
+QSharedPointer<T> QMakeShared(Args &&...args)
+    { return QSharedPointer<T>(new T(std::forward<Args>(args)...)); }

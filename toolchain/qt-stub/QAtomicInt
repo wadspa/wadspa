@@ -1,0 +1,54 @@
+#pragma once
+#include "qglobal.h"
+#include <atomic>
+
+// WASM is single-threaded — std::atomic<int> is fine (no contention).
+class QAtomicInt {
+    int m_val;
+public:
+    QAtomicInt(int v = 0) : m_val(v) {}
+    int load()  const { return m_val; }
+    int loadAcquire() const { return m_val; }
+    int fetchAndAddOrdered(int n) { int old = m_val; m_val += n; return old; }
+    int fetchAndAddRelaxed(int n) { return fetchAndAddOrdered(n); }
+    int fetchAndAddAcquire(int n) { return fetchAndAddOrdered(n); }
+    int fetchAndAddRelease(int n) { return fetchAndAddOrdered(n); }
+    void store(int v) { m_val = v; }
+    void storeRelease(int v) { m_val = v; }
+    bool testAndSetOrdered(int expected, int newVal) {
+        if (m_val == expected) { m_val = newVal; return true; } return false;
+    }
+    bool testAndSetRelaxed(int e, int n)  { return testAndSetOrdered(e, n); }
+    bool testAndSetAcquire(int e, int n)  { return testAndSetOrdered(e, n); }
+    bool testAndSetRelease(int e, int n)  { return testAndSetOrdered(e, n); }
+    QAtomicInt &operator=(int v) { m_val = v; return *this; }
+    operator int() const { return m_val; }
+    int operator++()    { return ++m_val; }
+    int operator++(int) { return m_val++; }
+    int operator--()    { return --m_val; }
+    int operator--(int) { return m_val--; }
+    int operator+=(int n) { m_val += n; return m_val; }
+    int operator-=(int n) { m_val -= n; return m_val; }
+};
+
+template<typename T>
+class QAtomicPointer {
+    T *m_ptr;
+public:
+    QAtomicPointer(T *p = nullptr) : m_ptr(p) {}
+    T *load()  const { return m_ptr; }
+    T *loadAcquire() const { return m_ptr; }
+    void store(T *p) { m_ptr = p; }
+    void storeRelease(T *p) { m_ptr = p; }
+    T *fetchAndStoreOrdered(T *p) { T *old = m_ptr; m_ptr = p; return old; }
+    bool testAndSetOrdered(T *expected, T *newPtr) {
+        if (m_ptr == expected) { m_ptr = newPtr; return true; } return false;
+    }
+    QAtomicPointer &operator=(T *p) { m_ptr = p; return *this; }
+    T *operator->() const { return m_ptr; }
+    operator T*() const { return m_ptr; }
+};
+
+using QBasicAtomicInt = QAtomicInt;
+template<typename T>
+using QBasicAtomicPointer = QAtomicPointer<T>;

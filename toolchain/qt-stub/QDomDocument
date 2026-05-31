@@ -1,0 +1,127 @@
+#pragma once
+#include "QString"
+#include "QList"
+#include "QFile"   // for QIODevice
+
+// Minimal DOM stubs — enough for code to compile; no actual XML parsing.
+// In a WASM build there is no persistent storage, so preset save/load is a no-op.
+
+class QDomNode;
+class QDomElement;
+class QDomAttr;
+class QDomText;
+class QDomNodeList;
+class QDomNamedNodeMap;
+
+class QDomNodeList {
+public:
+    int length() const { return 0; }
+    int count()  const { return 0; }
+    bool isEmpty() const { return true; }
+    QDomNode at(int) const;
+    QDomNode item(int) const;
+};
+
+class QDomNamedNodeMap {
+public:
+    int length() const { return 0; }
+    bool contains(const QString &) const { return false; }
+    QDomNode namedItem(const QString &) const;
+};
+
+class QDomNode {
+public:
+    enum NodeType { ElementNode = 1, AttributeNode = 2, TextNode = 3,
+                    CDATASectionNode = 4, DocumentNode = 9 };
+    QDomNode() = default;
+    bool isNull()    const { return true; }
+    bool isElement() const { return false; }
+    bool isText()    const { return false; }
+    bool isAttr()    const { return false; }
+    QString nodeName()  const { return {}; }
+    QString nodeValue() const { return {}; }
+    NodeType nodeType() const { return ElementNode; }
+    QDomNode firstChild()     const { return {}; }
+    QDomNode lastChild()      const { return {}; }
+    QDomNode nextSibling()    const { return {}; }
+    QDomNode previousSibling()const { return {}; }
+    QDomNode parentNode()     const { return {}; }
+    QDomNodeList childNodes() const { return {}; }
+    QDomNamedNodeMap attributes() const { return {}; }
+    QDomNode appendChild(const QDomNode &) { return {}; }
+    QDomNode insertBefore(const QDomNode &, const QDomNode &) { return {}; }
+    QDomNode removeChild(const QDomNode &) { return {}; }
+    bool hasChildNodes() const { return false; }
+    bool hasAttributes() const { return false; }
+    QDomElement toElement() const;
+    QDomText    toText()    const;
+    QDomAttr    toAttr()    const;
+    QString     toDocument_text() const { return {}; }
+};
+
+class QDomAttr : public QDomNode {
+public:
+    QString name()  const { return {}; }
+    QString value() const { return {}; }
+    void setValue(const QString &) {}
+};
+
+class QDomText : public QDomNode {
+public:
+    QString data() const { return {}; }
+    void setData(const QString &) {}
+};
+
+class QDomElement : public QDomNode {
+public:
+    bool isNull() const { return true; }
+    QString tagName() const { return {}; }
+    void setTagName(const QString &) {}
+    QString attribute(const QString &, const QString &def = {}) const { return def; }
+    void setAttribute(const QString &, const QString &) {}
+    void setAttribute(const QString &, int)             {}
+    void setAttribute(const QString &, uint)            {}
+    void setAttribute(const QString &, long)            {}
+    void setAttribute(const QString &, ulong)           {}
+    void setAttribute(const QString &, qint64)          {}
+    void setAttribute(const QString &, quint64)         {}
+    void setAttribute(const QString &, float)           {}
+    void setAttribute(const QString &, double)          {}
+    bool hasAttribute(const QString &) const { return false; }
+    void removeAttribute(const QString &) {}
+    QDomNodeList elementsByTagName(const QString &) const { return {}; }
+    QDomElement firstChildElement(const QString & = {}) const { return {}; }
+    QDomElement nextSiblingElement(const QString & = {}) const { return {}; }
+    QDomElement lastChildElement(const QString & = {}) const { return {}; }
+    QString text() const { return {}; }
+};
+
+// Out-of-line conversions
+inline QDomElement QDomNode::toElement() const { return {}; }
+inline QDomText    QDomNode::toText()    const { return {}; }
+inline QDomAttr    QDomNode::toAttr()    const { return {}; }
+inline QDomNode    QDomNodeList::at(int) const { return {}; }
+inline QDomNode    QDomNodeList::item(int) const { return {}; }
+inline QDomNode    QDomNamedNodeMap::namedItem(const QString &) const { return {}; }
+
+class QDomDocument : public QDomNode {
+public:
+    QDomDocument() = default;
+    explicit QDomDocument(const QString &) {}
+
+    bool setContent(const QString &, QString *err = nullptr, int *l = nullptr, int *c = nullptr)
+        { (void)err;(void)l;(void)c; return false; }
+    bool setContent(const QByteArray &, QString *err = nullptr, int *l = nullptr, int *c = nullptr)
+        { (void)err;(void)l;(void)c; return false; }
+    bool setContent(QIODevice *, QString *err = nullptr, int *l = nullptr, int *c = nullptr)
+        { (void)err;(void)l;(void)c; return false; }
+
+    QDomElement documentElement() const { return {}; }
+    QDomElement createElement(const QString &) { return {}; }
+    QDomText    createTextNode(const QString &) { return {}; }
+    QDomAttr    createAttribute(const QString &) { return {}; }
+
+    QByteArray  toByteArray(int = 1) const { return {}; }
+    QString     toString(int = 1)    const { return {}; }
+};
+

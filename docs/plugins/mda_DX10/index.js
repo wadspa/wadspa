@@ -11,6 +11,7 @@ export const meta         = {
       "name": "Attack",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 2.5,
       "max": 4000,
       "default": 2.5
@@ -21,6 +22,7 @@ export const meta         = {
       "name": "Decay",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 46.5,
       "max": 7000,
       "default": 6124
@@ -31,6 +33,7 @@ export const meta         = {
       "name": "Release",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 46.5,
       "max": 7000,
       "default": 424.42
@@ -41,6 +44,7 @@ export const meta         = {
       "name": "Coarse",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 40,
       "default": 28
@@ -51,6 +55,7 @@ export const meta         = {
       "name": "Fine",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0.001,
       "max": 0.75,
       "default": 0.24675
@@ -61,6 +66,7 @@ export const meta         = {
       "name": "Mod Init",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 100,
       "default": 23
@@ -71,6 +77,7 @@ export const meta         = {
       "name": "Mod Dec",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 17,
       "max": 7000,
       "default": 4600
@@ -81,6 +88,7 @@ export const meta         = {
       "name": "Mod Sus",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 100,
       "default": 5
@@ -91,6 +99,7 @@ export const meta         = {
       "name": "Mod Rel",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 46.5,
       "max": 7000,
       "default": 6485
@@ -101,6 +110,7 @@ export const meta         = {
       "name": "Mod Vel",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 100,
       "default": 90
@@ -111,6 +121,7 @@ export const meta         = {
       "name": "Vibrato",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 100,
       "default": 0
@@ -121,6 +132,7 @@ export const meta         = {
       "name": "Octave",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -3,
       "max": 3,
       "default": 0
@@ -131,6 +143,7 @@ export const meta         = {
       "name": "FineTune",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -100,
       "max": 100,
       "default": 0
@@ -141,6 +154,7 @@ export const meta         = {
       "name": "Waveform",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 100,
       "default": 44.7
@@ -151,6 +165,7 @@ export const meta         = {
       "name": "Mod Thru",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 100,
       "default": 0
@@ -161,6 +176,7 @@ export const meta         = {
       "name": "LFO Rate",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 25,
       "default": 10.35
@@ -171,6 +187,7 @@ export const meta         = {
       "name": "Left Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -181,6 +198,7 @@ export const meta         = {
       "name": "Right Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -191,6 +209,7 @@ export const meta         = {
       "name": "Event In",
       "dir": "input",
       "type": "midi",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null

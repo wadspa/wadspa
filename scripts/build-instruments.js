@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 /**
- * Build all LV2 instruments listed in plugins/instruments.json.
+ * Build all LV2 plugins listed in plugins/lv2.json.
  *
  * Usage:
  *   node scripts/build-instruments.js [--only <id>] [--skip-existing]
  *
- * After each build (or when skipping an already-built instrument):
+ * After each build (or when skipping an already-built plugin):
  *   - Copies dist/ to docs/plugins/<id>/
- *   - Updates docs/instruments.json
+ *   - Updates docs/instruments.json with MIDI-driven instruments
+ *   - Appends audio-driven LV2 plugins to docs/plugins/catalog.json
  *
  * Requirements:
  *   - emcc on PATH (or EMCC env var)
@@ -16,15 +17,16 @@
  */
 
 import { execSync }                                                    from 'child_process';
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'fs';
 import { join, dirname }                                               from 'path';
 import { fileURLToPath }                                               from 'url';
+import { readLv2Registry }                                             from './lib/lv2-registry.js';
 
 const ROOT         = join(dirname(fileURLToPath(import.meta.url)), '..');
 const PLUGINS      = join(ROOT, 'plugins');
 const DOCS_PLUGINS = join(ROOT, 'docs', 'plugins');
 
-const instruments = JSON.parse(readFileSync(join(PLUGINS, 'instruments.json'), 'utf8'));
+const lv2Plugins = readLv2Registry(ROOT);
 
 const args         = process.argv.slice(2);
 const onlyId       = args.includes('--only') ? args[args.indexOf('--only') + 1] : null;
@@ -36,6 +38,16 @@ const LV2_INCLUDE = ['/opt/homebrew/include', '/usr/local/include', '/usr/includ
 
 function run(cmd, opts = {}) {
     return execSync(cmd, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'], ...opts });
+}
+
+function copyDirContents(srcDir, destDir) {
+    mkdirSync(destDir, { recursive: true });
+    for (const entry of readdirSync(srcDir, { withFileTypes: true })) {
+        const src = join(srcDir, entry.name);
+        const dest = join(destDir, entry.name);
+        if (entry.isDirectory()) copyDirContents(src, dest);
+        else if (entry.isFile()) writeFileSync(dest, readFileSync(src));
+    }
 }
 
 function resolveDefault(def, min, max) {
@@ -63,11 +75,14 @@ function buildCatalogueEntry(manifestEntry, distDir) {
     const wasmFile = readdirSync(distDir).find(f => f.endsWith('.wasm'));
     if (!wasmFile) return null;
 
+    const hasMidiInput = meta.ports.some(p => p.type === 'midi' && p.dir === 'input');
+
     return {
         id:            manifestEntry.id,
         label:         meta.label,
         name:          meta.name,
         description:   manifestEntry.description ?? '',
+        category:      manifestEntry.category ?? (hasMidiInput ? 'LV2 Instruments' : 'LV2 Effects'),
         wasmFile,
         processorFile: 'processor.js',
         ports: meta.ports.map(p => {
@@ -77,38 +92,49 @@ function buildCatalogueEntry(manifestEntry, distDir) {
     };
 }
 
-function deploy(manifestEntry, distDir, catalogEntries) {
+function hasMidiInput(entry) {
+    return entry.ports.some(p => p.type === 'midi' && p.dir === 'input');
+}
+
+function deploy(manifestEntry, distDir, instrumentEntries, effectEntries) {
     const entry = buildCatalogueEntry(manifestEntry, distDir);
     if (!entry) {
         console.warn(`   ⚠ Could not read meta from ${distDir}/index.js`);
         return;
     }
-    catalogEntries.push(entry);
+
+    if (hasMidiInput(entry)) instrumentEntries.push(entry);
+    else effectEntries.push(entry);
 
     if (!existsSync(DOCS_PLUGINS)) return;
     const dest = join(DOCS_PLUGINS, manifestEntry.id);
-    mkdirSync(dest, { recursive: true });
-    run(`cp -r "${distDir}/." "${dest}/"`);
+    rmSync(dest, { recursive: true, force: true });
+    copyDirContents(distDir, dest);
 }
 
 let passed = 0, failed = 0, skipped = 0;
-const catalogEntries = [];
+const instrumentEntries = [];
+const effectEntries = [];
+const processedIds = [];
 
-for (const entry of instruments) {
+for (const entry of lv2Plugins) {
     if (onlyId && entry.id !== onlyId) continue;
+    processedIds.push(entry.id);
 
     const dir     = join(PLUGINS, entry.id);
     const distDir = join(dir, 'dist');
 
     if (skipExisting && existsSync(distDir)) {
         console.log(`⏭  ${entry.id} — skipping (dist/ exists)`);
-        deploy(entry, distDir, catalogEntries);
+        deploy(entry, distDir, instrumentEntries, effectEntries);
         skipped++;
         continue;
     }
 
     console.log(`\n▶  ${entry.id}`);
     try {
+        if (existsSync(distDir)) rmSync(distDir, { recursive: true, force: true });
+
         const flags = [`--include "${LV2_INCLUDE}"`];
         if (entry.threads)       flags.push('--threads');
         if (entry.memoryGrowth)  flags.push('--memory-growth');
@@ -125,7 +151,7 @@ for (const entry of instruments) {
         const out = run(cmd, { cwd: dir });
         console.log(out.trim().split('\n').map(l => '   ' + l).join('\n'));
 
-        deploy(entry, distDir, catalogEntries);
+        deploy(entry, distDir, instrumentEntries, effectEntries);
         passed++;
     } catch (e) {
         console.error(`   ✗ FAILED: ${e.message.split('\n')[0]}`);
@@ -133,12 +159,25 @@ for (const entry of instruments) {
     }
 }
 
-if (catalogEntries.length > 0) {
+if (instrumentEntries.length > 0 || !onlyId) {
     writeFileSync(
         join(ROOT, 'docs', 'instruments.json'),
-        JSON.stringify(catalogEntries, null, 2)
+        JSON.stringify(instrumentEntries, null, 2)
     );
-    console.log(`\nInstruments catalog: ${catalogEntries.length} → docs/instruments.json`);
+    console.log(`\nInstruments catalog: ${instrumentEntries.length} → docs/instruments.json`);
+}
+
+if (effectEntries.length > 0 || (!onlyId && processedIds.length > 0)) {
+    const catalogPath = join(DOCS_PLUGINS, 'catalog.json');
+    let effectsCatalog = [];
+    if (existsSync(catalogPath)) {
+        effectsCatalog = JSON.parse(readFileSync(catalogPath, 'utf8'));
+    }
+    const processed = new Set(processedIds);
+    effectsCatalog = effectsCatalog.filter(entry => !processed.has(entry.id));
+    effectsCatalog.push(...effectEntries);
+    writeFileSync(catalogPath, JSON.stringify(effectsCatalog, null, 2));
+    console.log(`LV2 effects catalog: ${effectEntries.length} → docs/plugins/catalog.json`);
 }
 
 console.log(`\n${'─'.repeat(50)}`);

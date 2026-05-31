@@ -1,0 +1,56 @@
+#pragma once
+#include "QString"
+
+// QDebug — swallows all output.
+class QDebug {
+public:
+    QDebug(const char *) {}
+    QDebug &operator<<(const char *)    { return *this; }
+    QDebug &operator<<(const QString &) { return *this; }
+    QDebug &operator<<(int)             { return *this; }
+    QDebug &operator<<(uint)            { return *this; }
+    QDebug &operator<<(long)            { return *this; }
+    QDebug &operator<<(ulong)           { return *this; }
+    QDebug &operator<<(double)          { return *this; }
+    QDebug &operator<<(float)           { return *this; }
+    QDebug &operator<<(bool)            { return *this; }
+    QDebug &operator<<(void *)          { return *this; }
+    QDebug &space()                     { return *this; }
+    QDebug &nospace()                   { return *this; }
+    QDebug &maybeSpace()                { return *this; }
+    QDebug &noquote()                   { return *this; }
+    QDebug &quote()                     { return *this; }
+    template<typename T>
+    QDebug &operator<<(const T &)       { return *this; }
+};
+
+inline QDebug qDebug()    { return QDebug("debug");    }
+inline QDebug qInfo()     { return QDebug("info");     }
+inline QDebug qWarning()  { return QDebug("warning");  }
+inline QDebug qCritical() { return QDebug("critical"); }
+
+// QLoggingCategory
+class QLoggingCategory {
+public:
+    QLoggingCategory(const char *, QtMsgType = QtDebugMsg) {}
+    bool isEnabled(QtMsgType) const { return false; }
+    bool isDebugEnabled()     const { return false; }
+    bool isInfoEnabled()      const { return false; }
+    bool isWarningEnabled()   const { return false; }
+    bool isCriticalEnabled()  const { return false; }
+    const char *categoryName() const { return ""; }
+    static QLoggingCategory &defaultCategory() {
+        static QLoggingCategory c(""); return c;
+    }
+};
+#define Q_LOGGING_CATEGORY(cat, ...) inline QLoggingCategory &cat() { static QLoggingCategory c(__VA_ARGS__); return c; }
+#define Q_DECLARE_LOGGING_CATEGORY(cat) extern QLoggingCategory &cat();
+#define qCDebug(cat, ...)    if(false) qDebug()
+#define qCInfo(cat, ...)     if(false) qDebug()
+#define qCWarning(cat, ...)  if(false) qDebug()
+#define qCCritical(cat, ...) if(false) qDebug()
+
+// QtMsgType (needed for QLoggingCategory)
+#ifndef QtMsgType
+enum QtMsgType { QtDebugMsg, QtInfoMsg, QtWarningMsg, QtCriticalMsg, QtFatalMsg };
+#endif

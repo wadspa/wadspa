@@ -1,0 +1,281 @@
+export { default } from './MDA_JX10.js';
+export const meta         = {
+  "uri": "http://moddevices.com/plugins/mda/JX10",
+  "label": "MDA_JX10",
+  "name": "MDA JX10",
+  "exportName": "createMDA_JX10Plugin",
+  "ports": [
+    {
+      "index": 0,
+      "symbol": "osc_mix",
+      "name": "OSC Mix",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 1,
+      "default": 1
+    },
+    {
+      "index": 1,
+      "symbol": "osc_tune",
+      "name": "OSC Tune",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 1,
+      "default": 0.37
+    },
+    {
+      "index": 2,
+      "symbol": "osc_fine",
+      "name": "OSC Fine",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 1,
+      "default": 0.25
+    },
+    {
+      "index": 3,
+      "symbol": "glide",
+      "name": "Glide",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 1,
+      "default": 0.3
+    },
+    {
+      "index": 4,
+      "symbol": "gld_rate",
+      "name": "Gld Rate",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 1,
+      "default": 0.32
+    },
+    {
+      "index": 5,
+      "symbol": "gld_bend",
+      "name": "Gld Bend",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 1,
+      "default": 0.5
+    },
+    {
+      "index": 6,
+      "symbol": "vcf_freq",
+      "name": "VCF Freq",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 1,
+      "default": 0.9
+    },
+    {
+      "index": 7,
+      "symbol": "vcf_reso",
+      "name": "VCF Reso",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 1,
+      "default": 0.6
+    },
+    {
+      "index": 8,
+      "symbol": "vcf_env",
+      "name": "VCF Env",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 1,
+      "default": 0.12
+    },
+    {
+      "index": 9,
+      "symbol": "vcf_lfo",
+      "name": "VCF LFO",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 1,
+      "default": 0
+    },
+    {
+      "index": 10,
+      "symbol": "vcf_vel",
+      "name": "VCF Vel",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 1,
+      "default": 0.5
+    },
+    {
+      "index": 11,
+      "symbol": "vcf_att",
+      "name": "VCF Att",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 1,
+      "default": 0.9
+    },
+    {
+      "index": 12,
+      "symbol": "vcf_dec",
+      "name": "VCF Dec",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 1,
+      "default": 0.89
+    },
+    {
+      "index": 13,
+      "symbol": "vcf_sus",
+      "name": "VCF Sus",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 1,
+      "default": 0.9
+    },
+    {
+      "index": 14,
+      "symbol": "vcf_rel",
+      "name": "VCF Rel",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 1,
+      "default": 0.73
+    },
+    {
+      "index": 15,
+      "symbol": "env_att",
+      "name": "ENV Att",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 1,
+      "default": 0
+    },
+    {
+      "index": 16,
+      "symbol": "env_dec",
+      "name": "ENV Dec",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 1,
+      "default": 0.5
+    },
+    {
+      "index": 17,
+      "symbol": "env_sus",
+      "name": "ENV Sus",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 1,
+      "default": 1
+    },
+    {
+      "index": 18,
+      "symbol": "env_rel",
+      "name": "ENV Rel",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 1,
+      "default": 0.71
+    },
+    {
+      "index": 19,
+      "symbol": "lfo_rate",
+      "name": "LFO Rate",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 1,
+      "default": 0.81
+    },
+    {
+      "index": 20,
+      "symbol": "vibrato",
+      "name": "Vibrato",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 1,
+      "default": 0.65
+    },
+    {
+      "index": 21,
+      "symbol": "noise",
+      "name": "Noise",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 1,
+      "default": 0
+    },
+    {
+      "index": 22,
+      "symbol": "octave",
+      "name": "Octave",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 1,
+      "default": 0.5
+    },
+    {
+      "index": 23,
+      "symbol": "tuning",
+      "name": "Tuning",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 1,
+      "default": 0.5
+    },
+    {
+      "index": 24,
+      "symbol": "left_out",
+      "name": "Left Out",
+      "dir": "output",
+      "type": "audio",
+      "min": null,
+      "max": null,
+      "default": null
+    },
+    {
+      "index": 25,
+      "symbol": "right_out",
+      "name": "Right Out",
+      "dir": "output",
+      "type": "audio",
+      "min": null,
+      "max": null,
+      "default": null
+    },
+    {
+      "index": 26,
+      "symbol": "event_in",
+      "name": "Event In",
+      "dir": "input",
+      "type": "midi",
+      "min": null,
+      "max": null,
+      "default": null
+    }
+  ]
+};
+export const wasmUrl      = new URL('./MDA_JX10.wasm',  import.meta.url).href;
+export const processorUrl = new URL('./processor.js',      import.meta.url).href;

@@ -1,0 +1,64 @@
+#pragma once
+#include "QVariant"
+#include "QStringList"
+#include "QObject"
+
+// QSettings stub — acts as a no-op persistent key-value store.
+// Inheritable by plugin config classes (e.g. drumkv1_config : public QSettings).
+// All reads return invalid QVariants (plugins fall through to their defaults).
+class QSettings : public QObject {
+public:
+    enum Scope  { UserScope = 0, SystemScope = 1 };
+    enum Format { NativeFormat = 0, IniFormat = 1, InvalidFormat = 16 };
+    enum Status { NoError = 0, AccessError = 1, FormatError = 2 };
+
+    explicit QSettings(QObject *parent = nullptr) : QObject(parent) {}
+    QSettings(Format, Scope, const QString &, const QString & = {}, QObject *parent = nullptr)
+        : QObject(parent) {}
+    QSettings(const QString &, const QString & = {}, QObject *parent = nullptr)
+        : QObject(parent) {}
+    QSettings(Scope, const QString &, const QString & = {}, QObject *parent = nullptr)
+        : QObject(parent) {}
+    QSettings(const QString &, Format = NativeFormat, QObject *parent = nullptr)
+        : QObject(parent) {}
+    ~QSettings() override = default;
+
+    // Group navigation — no-op
+    void beginGroup(const QString &) {}
+    void endGroup() {}
+    QString group() const { return {}; }
+
+    // Array navigation — no-op
+    int  beginReadArray(const QString &)          { return 0; }
+    void beginWriteArray(const QString &, int = -1) {}
+    void endArray() {}
+    void setArrayIndex(int) {}
+
+    // Value access — always return default / invalid
+    void     setValue(const QString &, const QVariant &) {}
+    QVariant value(const QString &, const QVariant &defaultVal = {}) const
+        { return defaultVal; }
+
+    bool contains(const QString &) const { return false; }
+    void remove(const QString &) {}
+    QStringList childKeys()  const { return {}; }
+    QStringList childGroups() const { return {}; }
+    QStringList allKeys()    const { return {}; }
+
+    // Status / sync — no-op
+    Status status() const { return NoError; }
+    void   sync() {}
+    void   clear() {}
+    bool   isAtomicSyncRequired() const { return false; }
+
+    QString fileName() const { return {}; }
+    Format  format()   const { return NativeFormat; }
+    Scope   scope()    const { return UserScope; }
+    QString organizationName() const { return {}; }
+    QString applicationName()  const { return {}; }
+
+    // Static application defaults — no-op
+    static void setDefaultFormat(Format) {}
+    static Format defaultFormat() { return NativeFormat; }
+    static void setPath(Format, Scope, const QString &) {}
+};

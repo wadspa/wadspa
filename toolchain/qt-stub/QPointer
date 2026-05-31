@@ -1,0 +1,22 @@
+#pragma once
+#include "QObject"
+
+// QPointer — weakly tracks a QObject (stub: just wraps a raw pointer).
+template<typename T>
+class QPointer {
+    T *m_ptr;
+public:
+    QPointer() : m_ptr(nullptr) {}
+    QPointer(T *p) : m_ptr(p) {}
+    T *data()  const { return m_ptr; }
+    T *get()   const { return m_ptr; }
+    bool isNull() const { return !m_ptr; }
+    void clear()       { m_ptr = nullptr; }
+    T *operator->() const { return m_ptr; }
+    T &operator*()  const { return *m_ptr; }
+    operator T*() const { return m_ptr; }
+    QPointer &operator=(T *p) { m_ptr = p; return *this; }
+    bool operator==(T *p) const { return m_ptr == p; }
+    bool operator!=(T *p) const { return m_ptr != p; }
+    operator bool() const { return m_ptr != nullptr; }
+};

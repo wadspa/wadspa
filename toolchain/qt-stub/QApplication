@@ -1,0 +1,79 @@
+#pragma once
+#include "QObject"
+#include "QString"
+
+// Minimal QCoreApplication / QApplication stubs.
+// In WASM there is no event loop and no GUI — everything is a no-op.
+
+class QCoreApplication : public QObject {
+public:
+    QCoreApplication(int &, char **) {}
+    static QCoreApplication *instance() { return nullptr; }
+    static void processEvents() {}
+    static void quit() {}
+    static void exit(int = 0) {}
+    static int exec() { return 0; }
+    static QString applicationName()    { return {}; }
+    static QString organizationName()   { return {}; }
+    static QString organizationDomain() { return {}; }
+    static QString applicationVersion() { return {}; }
+    static QString applicationDirPath() { return {}; }
+    static QString applicationFilePath(){ return {}; }
+    static QStringList arguments()      { return {}; }
+    static void setApplicationName(const QString &)    {}
+    static void setOrganizationName(const QString &)   {}
+    static void setOrganizationDomain(const QString &) {}
+    static void setApplicationVersion(const QString &) {}
+    static void installTranslator(void *) {}
+    static bool sendEvent(QObject *, void *) { return false; }
+    static void postEvent(QObject *, void *, int = 0) {}
+};
+
+class QApplication : public QCoreApplication {
+public:
+    enum ApplicationAttribute {
+        AA_ImmediateWidgetCreation = 0,
+        AA_MSWindowsUseDirect3DByDefault = 1,
+        AA_DontShowIconsInMenus = 2,
+        AA_NativeWindows = 3,
+        AA_DontCreateNativeWidgetSiblings = 4,
+        AA_PluginApplication = 5,
+        AA_DontUseNativeMenuBar = 6,
+        AA_MacDontSwapCtrlAndMeta = 7,
+        AA_Use96Dpi = 8,
+        AA_SynthesizeTouchForUnhandledMouseEvents = 11,
+        AA_SynthesizeMouseForUnhandledTouchEvents = 12,
+        AA_UseHighDpiPixmaps = 13,
+        AA_ForceRasterWidgets = 14,
+        AA_UseDesktopOpenGL = 15,
+        AA_UseOpenGLES = 16,
+        AA_UseSoftwareOpenGL = 17,
+        AA_ShareOpenGLContexts = 18,
+        AA_SetPalette = 19,
+        AA_EnableHighDpiScaling = 20,
+        AA_DisableHighDpiScaling = 21,
+        AA_UseStyleSheetPropagationInWidgetStyles = 22,
+        AA_DontUseNativeDialogs = 23,
+        AA_SynthesizeTouchForUnhandledMouseEvents2 = 24,
+    };
+    QApplication(int &argc, char **argv) : QCoreApplication(argc, argv) {}
+    static int exec()  { return 0; }
+    static void setStyle(const QString &) {}
+    static void setStyle(void *) {}
+    static void *style() { return nullptr; }
+    static void setWindowIcon(void *) {}
+    static void setPalette(void *) {}
+    static void setAttribute(ApplicationAttribute, bool = true) {}
+    static void setAttribute(Qt::ApplicationAttribute, bool = true) {}
+    static bool testAttribute(ApplicationAttribute) { return false; }
+    static bool testAttribute(Qt::ApplicationAttribute) { return false; }
+};
+
+class QGuiApplication : public QCoreApplication {
+public:
+    QGuiApplication(int &argc, char **argv) : QCoreApplication(argc, argv) {}
+    static int exec() { return 0; }
+};
+
+// qApp macro
+#define qApp (static_cast<QCoreApplication *>(nullptr))

@@ -1,0 +1,111 @@
+#pragma once
+#include "QString"
+#include "QVector"
+#include <string>
+
+class QStringList : public std::vector<QString> {
+    using Base = std::vector<QString>;
+public:
+    QStringList() = default;
+    QStringList(const QString &s)    { push_back(s); }
+    QStringList(std::initializer_list<QString> l) : Base(l) {}
+    QStringList(Base &&v)            : Base(std::move(v)) {}
+
+    void append(const QString &s)    { push_back(s); }
+    void append(const QStringList &l){ insert(end(), l.begin(), l.end()); }
+    void prepend(const QString &s)   { insert(begin(), s); }
+    void removeAll(const QString &s) {
+        erase(std::remove(begin(), end(), s), end());
+    }
+    bool contains(const QString &s, Qt::CaseSensitivity cs = Qt::CaseSensitive) const {
+        for (const auto &e : *this) if (e == s) return true;
+        return false;
+    }
+    int indexOf(const QString &s) const {
+        for (int i = 0; i < (int)size(); ++i) if ((*this)[i] == s) return i;
+        return -1;
+    }
+    QStringList filter(const QString &str, Qt::CaseSensitivity = Qt::CaseSensitive) const {
+        QStringList r;
+        for (const auto &s : *this) if (s.contains(str)) r.push_back(s);
+        return r;
+    }
+    QString join(const QString &sep) const {
+        std::string r;
+        for (size_t i = 0; i < size(); ++i) {
+            if (i) r += sep.toStdString();
+            r += (*this)[i].toStdString();
+        }
+        return QString(r);
+    }
+    QString join(QChar sep) const { return join(QString(sep)); }
+    QString join(const char *sep) const { return join(QString(sep)); }
+    void sort(Qt::CaseSensitivity = Qt::CaseSensitive)
+        { std::sort(begin(), end()); }
+    QStringList &operator<<(const QString &s) { push_back(s); return *this; }
+    QStringList &operator<<(const QStringList &l) { append(l); return *this; }
+    int count() const { return (int)size(); }
+    int length() const { return (int)size(); }
+    bool isEmpty() const { return empty(); }
+    QString first() const { return empty() ? QString{} : front(); }
+    QString last()  const { return empty() ? QString{} : back(); }
+    QString takeFirst() { QString s = front(); erase(begin()); return s; }
+    QString takeLast()  { QString s = back(); pop_back(); return s; }
+    void removeDuplicates() {
+        QStringList seen;
+        erase(std::remove_if(begin(), end(), [&](const QString &s){
+            if (seen.contains(s)) return true;
+            seen.push_back(s); return false;
+        }), end());
+    }
+};
+
+// Out-of-line definitions for QString::split()
+inline QStringList QString::split(const QString &sep, Qt::CaseSensitivity) const {
+    QStringList result;
+    const std::string &s = m_s, &d = sep.toStdString();
+    if (d.empty()) { for (char c : s) result.push_back(QString(1, QChar(c))); return result; }
+    size_t pos = 0, found;
+    while ((found = s.find(d, pos)) != std::string::npos) {
+        result.push_back(QString(s.substr(pos, found - pos)));
+        pos = found + d.size();
+    }
+    result.push_back(QString(s.substr(pos)));
+    return result;
+}
+inline QStringList QString::split(QChar sep, Qt::CaseSensitivity cs) const {
+    return split(QString(sep), cs);
+}
+inline QStringList QString::split(const char *sep, Qt::CaseSensitivity cs) const {
+    return split(QString(sep), cs);
+}
+
+// Java-style iterators
+class QStringListIterator {
+    const QStringList &m_list;
+    int m_pos;
+public:
+    QStringListIterator(const QStringList &l) : m_list(l), m_pos(0) {}
+    bool hasNext()  const { return m_pos < (int)m_list.size(); }
+    bool hasPrevious() const { return m_pos > 0; }
+    const QString &next()  { return m_list[m_pos++]; }
+    const QString &previous() { return m_list[--m_pos]; }
+    void toFront() { m_pos = 0; }
+    void toBack()  { m_pos = (int)m_list.size(); }
+    const QString &peekNext() const { return m_list[m_pos]; }
+};
+
+template<typename Container>
+class QListIterator {
+    const Container &m_c;
+    int m_pos;
+public:
+    using Value = typename Container::value_type;
+    QListIterator(const Container &c) : m_c(c), m_pos(0) {}
+    bool hasNext() const { return m_pos < (int)m_c.size(); }
+    bool hasPrevious() const { return m_pos > 0; }
+    const Value &next() { return m_c[m_pos++]; }
+    const Value &previous() { return m_c[--m_pos]; }
+    void toFront() { m_pos = 0; }
+    void toBack()  { m_pos = (int)m_c.size(); }
+};

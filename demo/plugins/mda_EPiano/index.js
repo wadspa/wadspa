@@ -1,0 +1,161 @@
+export { default } from './MDA_ePiano.js';
+export const meta         = {
+  "uri": "http://moddevices.com/plugins/mda/EPiano",
+  "label": "MDA_ePiano",
+  "name": "MDA ePiano",
+  "exportName": "createMDA_ePianoPlugin",
+  "ports": [
+    {
+      "index": 0,
+      "symbol": "env_decay",
+      "name": "Envelope Decay",
+      "dir": "input",
+      "type": "control",
+      "min": 3,
+      "max": 23,
+      "default": 8.5
+    },
+    {
+      "index": 1,
+      "symbol": "env_release",
+      "name": "Envelope Release",
+      "dir": "input",
+      "type": "control",
+      "min": 0.01,
+      "max": 1.4,
+      "default": 0.12
+    },
+    {
+      "index": 2,
+      "symbol": "hardness",
+      "name": "Hardness",
+      "dir": "input",
+      "type": "control",
+      "min": -50,
+      "max": 50,
+      "default": 0
+    },
+    {
+      "index": 3,
+      "symbol": "treble_boost",
+      "name": "Treble Boost",
+      "dir": "input",
+      "type": "control",
+      "min": -50,
+      "max": 50,
+      "default": 0
+    },
+    {
+      "index": 4,
+      "symbol": "modulation",
+      "name": "Modulation",
+      "dir": "input",
+      "type": "control",
+      "min": -100,
+      "max": 100,
+      "default": 0
+    },
+    {
+      "index": 5,
+      "symbol": "lfo_rate",
+      "name": "LFO Rate",
+      "dir": "input",
+      "type": "control",
+      "min": 0.1,
+      "max": 37,
+      "default": 4
+    },
+    {
+      "index": 6,
+      "symbol": "vel_sense",
+      "name": "Velocity Sense",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 100,
+      "default": 0
+    },
+    {
+      "index": 7,
+      "symbol": "stereo_width",
+      "name": "Stereo Width",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 200,
+      "default": 100
+    },
+    {
+      "index": 8,
+      "symbol": "polyphonic",
+      "name": "Polyphonic",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 1,
+      "default": 1
+    },
+    {
+      "index": 9,
+      "symbol": "fine_tuning",
+      "name": "Fine Tuning",
+      "dir": "input",
+      "type": "control",
+      "min": -50,
+      "max": 50,
+      "default": 0
+    },
+    {
+      "index": 10,
+      "symbol": "random_tuning",
+      "name": "Random Tuning",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 50,
+      "default": 7.3
+    },
+    {
+      "index": 11,
+      "symbol": "overdrive",
+      "name": "Overdrive",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 100,
+      "default": 0
+    },
+    {
+      "index": 12,
+      "symbol": "left_out",
+      "name": "Left Out",
+      "dir": "output",
+      "type": "audio",
+      "min": null,
+      "max": null,
+      "default": null
+    },
+    {
+      "index": 13,
+      "symbol": "right_out",
+      "name": "Right Out",
+      "dir": "output",
+      "type": "audio",
+      "min": null,
+      "max": null,
+      "default": null
+    },
+    {
+      "index": 14,
+      "symbol": "event_in",
+      "name": "Event In",
+      "dir": "input",
+      "type": "midi",
+      "min": null,
+      "max": null,
+      "default": null
+    }
+  ]
+};
+export const wasmUrl      = new URL('./MDA_ePiano.wasm',  import.meta.url).href;
+export const processorUrl = new URL('./processor.js',      import.meta.url).href;

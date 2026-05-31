@@ -15,8 +15,7 @@
     "id": "drumkv1",
     "git": "https://github.com/rncbc/drumkv1.git",
     "setup": "setup-drumkv1",
-    "description": "drumkv1 — sample-based drum synthesizer LV2",
-    "notes": "requires audio sample files embedded via --embed-file"
+    "description": "drumkv1 — sample-based drum synthesizer LV2"
   },
   {
     "id": "amsynth",
@@ -28,8 +27,13 @@
     "id": "So-synth-LV2",
     "git": "https://github.com/lvtk/so-synth-lv2.git",
     "setup": "setup-so-synth",
-    "description": "SO-synth — bass and piano synths (old LV2 event API)",
-    "notes": "uses pre-atom LV2 event port API — shim needs old-style MIDI delivery"
+    "description": "SO-synth — bass and piano synths (old LV2 event API)"
+  },
+  {
+    "id": "padthv1",
+    "git": "https://github.com/rncbc/padthv1.git",
+    "setup": "setup-padthv1",
+    "description": "padthv1 — polyphonic additive (PADsynth) synthesizer LV2"
   },
   {
     "id": "swh-plugins",

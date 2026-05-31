@@ -1,0 +1,52 @@
+#pragma once
+#include "qglobal.h"
+#include "QString"
+#include "QVariant"
+
+// Minimal QObject — enough to serve as a base class. No Qt event loop, no
+// signals/slots machinery; those are no-ops via the macros in qglobal.h.
+class QObject {
+public:
+    explicit QObject(QObject *parent = nullptr) : m_parent(parent) {}
+    virtual ~QObject() = default;
+
+    virtual const char *metaObject() const { return "QObject"; }
+
+    QObject *parent() const { return m_parent; }
+    void setParent(QObject *p) { m_parent = p; }
+
+    QString objectName() const { return m_name; }
+    void setObjectName(const QString &n) { m_name = n; }
+
+    // Stub connect/disconnect — do nothing
+    static bool connect(const QObject *, const char *,
+                        const QObject *, const char *,
+                        Qt::ConnectionType = Qt::AutoConnection) { return true; }
+    static bool disconnect(const QObject *, const char *,
+                           const QObject *, const char *) { return true; }
+
+    bool blockSignals(bool) { return false; }
+    bool signalsBlocked() const { return false; }
+
+    void moveToThread(void *) {}
+    void deleteLater() { delete this; }
+
+    // Property system stubs
+    bool setProperty(const char *, const QVariant &) { return false; }
+    QVariant property(const char *) const { return {}; }
+
+    void installEventFilter(QObject *) {}
+    void removeEventFilter(QObject *) {}
+
+    // childCount / findChild — return null
+    template<typename T>
+    T *findChild(const QString & = QString()) const { return nullptr; }
+
+private:
+    QObject *m_parent = nullptr;
+    QString  m_name;
+};
+
+// SIGNAL / SLOT macros for connect() calls
+#define SIGNAL(x) #x
+#define SLOT(x)   #x

@@ -1,0 +1,50 @@
+import createpadthv1Plugin from './padthv1.js';
+
+let mod = null;
+const inPtrs  = [0, 0];
+const outPtrs = [0, 0];
+const SETTERS = {"GEN1_SAMPLE1":"_shim_set_GEN1_SAMPLE1","GEN1_WIDTH1":"_shim_set_GEN1_WIDTH1","GEN1_SCALE1":"_shim_set_GEN1_SCALE1","GEN1_NH1":"_shim_set_GEN1_NH1","GEN1_APOD1":"_shim_set_GEN1_APOD1","GEN1_DETUNE1":"_shim_set_GEN1_DETUNE1","GEN1_GLIDE1":"_shim_set_GEN1_GLIDE1","GEN1_SAMPLE2":"_shim_set_GEN1_SAMPLE2","GEN1_WIDTH2":"_shim_set_GEN1_WIDTH2","GEN1_SCALE2":"_shim_set_GEN1_SCALE2","GEN1_NH2":"_shim_set_GEN1_NH2","GEN1_APOD2":"_shim_set_GEN1_APOD2","GEN1_DETUNE2":"_shim_set_GEN1_DETUNE2","GEN1_GLIDE2":"_shim_set_GEN1_GLIDE2","GEN1_BALANCE":"_shim_set_GEN1_BALANCE","GEN1_PHASE":"_shim_set_GEN1_PHASE","GEN1_RINGMOD":"_shim_set_GEN1_RINGMOD","GEN1_OCTAVE":"_shim_set_GEN1_OCTAVE","GEN1_TUNING":"_shim_set_GEN1_TUNING","GEN1_ENVTIME":"_shim_set_GEN1_ENVTIME","DCF1_ENABLED":"_shim_set_DCF1_ENABLED","DCF1_CUTOFF":"_shim_set_DCF1_CUTOFF","DCF1_RESO":"_shim_set_DCF1_RESO","DCF1_TYPE":"_shim_set_DCF1_TYPE","DCF1_SLOPE":"_shim_set_DCF1_SLOPE","DCF1_ENVELOPE":"_shim_set_DCF1_ENVELOPE","DCF1_ATTACK":"_shim_set_DCF1_ATTACK","DCF1_DECAY":"_shim_set_DCF1_DECAY","DCF1_SUSTAIN":"_shim_set_DCF1_SUSTAIN","DCF1_RELEASE":"_shim_set_DCF1_RELEASE","LFO1_ENABLED":"_shim_set_LFO1_ENABLED","LFO1_SHAPE":"_shim_set_LFO1_SHAPE","LFO1_WIDTH":"_shim_set_LFO1_WIDTH","LFO1_BPM":"_shim_set_LFO1_BPM","LFO1_RATE":"_shim_set_LFO1_RATE","LFO1_SYNC":"_shim_set_LFO1_SYNC","LFO1_SWEEP":"_shim_set_LFO1_SWEEP","LFO1_PITCH":"_shim_set_LFO1_PITCH","LFO1_BALANCE":"_shim_set_LFO1_BALANCE","LFO1_RINGMOD":"_shim_set_LFO1_RINGMOD","LFO1_CUTOFF":"_shim_set_LFO1_CUTOFF","LFO1_RESO":"_shim_set_LFO1_RESO","LFO1_PANNING":"_shim_set_LFO1_PANNING","LFO1_VOLUME":"_shim_set_LFO1_VOLUME","LFO1_ATTACK":"_shim_set_LFO1_ATTACK","LFO1_DECAY":"_shim_set_LFO1_DECAY","LFO1_SUSTAIN":"_shim_set_LFO1_SUSTAIN","LFO1_RELEASE":"_shim_set_LFO1_RELEASE","DCA1_VOLUME":"_shim_set_DCA1_VOLUME","DCA1_ATTACK":"_shim_set_DCA1_ATTACK","DCA1_DECAY":"_shim_set_DCA1_DECAY","DCA1_SUSTAIN":"_shim_set_DCA1_SUSTAIN","DCA1_RELEASE":"_shim_set_DCA1_RELEASE","OUT1_WIDTH":"_shim_set_OUT1_WIDTH","OUT1_PANNING":"_shim_set_OUT1_PANNING","OUT1_FXSEND":"_shim_set_OUT1_FXSEND","OUT1_VOLUME":"_shim_set_OUT1_VOLUME","DEF1_PITCHBEND":"_shim_set_DEF1_PITCHBEND","DEF1_MODWHEEL":"_shim_set_DEF1_MODWHEEL","DEF1_PRESSURE":"_shim_set_DEF1_PRESSURE","DEF1_VELOCITY":"_shim_set_DEF1_VELOCITY","DEF1_CHANNEL":"_shim_set_DEF1_CHANNEL","DEF1_MONO":"_shim_set_DEF1_MONO","CHO1_WET":"_shim_set_CHO1_WET","CHO1_DELAY":"_shim_set_CHO1_DELAY","CHO1_FEEDB":"_shim_set_CHO1_FEEDB","CHO1_RATE":"_shim_set_CHO1_RATE","CHO1_MOD":"_shim_set_CHO1_MOD","FLA1_WET":"_shim_set_FLA1_WET","FLA1_DELAY":"_shim_set_FLA1_DELAY","FLA1_FEEDB":"_shim_set_FLA1_FEEDB","FLA1_DAFT":"_shim_set_FLA1_DAFT","PHA1_WET":"_shim_set_PHA1_WET","PHA1_RATE":"_shim_set_PHA1_RATE","PHA1_FEEDB":"_shim_set_PHA1_FEEDB","PHA1_DEPTH":"_shim_set_PHA1_DEPTH","PHA1_DAFT":"_shim_set_PHA1_DAFT","DEL1_WET":"_shim_set_DEL1_WET","DEL1_DELAY":"_shim_set_DEL1_DELAY","DEL1_FEEDB":"_shim_set_DEL1_FEEDB","DEL1_BPM":"_shim_set_DEL1_BPM","REV1_WET":"_shim_set_REV1_WET","REV1_ROOM":"_shim_set_REV1_ROOM","REV1_DAMP":"_shim_set_REV1_DAMP","REV1_FEEDB":"_shim_set_REV1_FEEDB","REV1_WIDTH":"_shim_set_REV1_WIDTH","DYN1_COMPRESS":"_shim_set_DYN1_COMPRESS","DYN1_LIMITER":"_shim_set_DYN1_LIMITER","KEY1_LOW":"_shim_set_KEY1_LOW","KEY1_HIGH":"_shim_set_KEY1_HIGH"};
+
+class WadspProcessor extends AudioWorkletProcessor {
+    constructor() {
+        super();
+        this.port.onmessage = async ({ data }) => {
+            if (data.type === 'setup') {
+                try {
+                    mod = await createpadthv1Plugin({ wasmBinary: data.wasm, locateFile: (p, d) => d + p });
+                    mod._shim_init(sampleRate);
+                    inPtrs[0]  = mod._shim_input_buf_in_L() >> 2;
+                    inPtrs[1]  = mod._shim_input_buf_in_R() >> 2;
+                    outPtrs[0] = mod._shim_output_buf_Out_L() >> 2;
+                    outPtrs[1] = mod._shim_output_buf_Out_R() >> 2;
+                    this.port.postMessage({ type: 'ready' });
+                } catch (e) {
+                    this.port.postMessage({ type: 'error', message: e.message });
+                }
+            } else if (data.type === 'midi') {
+                if (!mod) return;
+                const { status, data1, data2 } = data;
+                const type = status & 0xF0;
+                const ch   = status & 0x0F;
+                if      (type === 0x90 && data2 > 0) mod._shim_midi_note_on(ch, data1, data2);
+                else if (type === 0x80 || (type === 0x90 && data2 === 0)) mod._shim_midi_note_off(ch, data1);
+                else if (type === 0xB0) mod._shim_midi_cc(ch, data1, data2);
+                else if (type === 0xE0) mod._shim_midi_pitch_bend(ch, ((data2 << 7) | data1) - 8192);
+            } else if (data.type === 'set') {
+                if (mod) { const fn = SETTERS[data.symbol]; if (fn) mod[fn](data.value); }
+            }
+        };
+    }
+
+    process(inputs, outputs) {
+        if (!mod) return true;
+        const _cL = inputs[0]?.[0]; if (_cL && _cL.length) mod.HEAPF32.set(_cL, inPtrs[0]);
+        const _cR = inputs[0]?.[1]; if (_cR && _cR.length) mod.HEAPF32.set(_cR, inPtrs[1]);
+        mod._shim_run(128);
+        outputs[0][0].set(mod.HEAPF32.subarray(outPtrs[0], outPtrs[0] + 128));
+        outputs[1][0].set(mod.HEAPF32.subarray(outPtrs[1], outPtrs[1] + 128));
+        return true;
+    }
+}
+
+registerProcessor('wadspa-padthv1', WadspProcessor);

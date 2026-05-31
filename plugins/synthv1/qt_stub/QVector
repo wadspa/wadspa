@@ -1,0 +1,7 @@
+#pragma once
+#include <vector>
+// Map QVector<T> directly to std::vector<T>.
+// std::vector provides the same interface used in synthv1_tuning:
+//   clear(), push_back(), empty(), size(), at(), operator[].
+template<typename T>
+using QVector = std::vector<T>;

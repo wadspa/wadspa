@@ -1,0 +1,15 @@
+#pragma once
+#include "qglobal.h"
+#include <vector>
+
+template <typename T>
+using QVector = std::vector<T>;
+
+template <typename T>
+using QList = std::vector<T>;
+
+template <typename T>
+using QQueue = std::vector<T>;
+
+template <typename T>
+using QStack = std::vector<T>;

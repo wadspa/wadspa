@@ -11,6 +11,7 @@ export const meta         = {
       "name": "Hat Thr",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -40,
       "max": 0,
       "default": -38
@@ -21,6 +22,7 @@ export const meta         = {
       "name": "Hat Rate",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 40,
       "max": 240,
       "default": 130
@@ -31,6 +33,7 @@ export const meta         = {
       "name": "Hat Mix",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -24,
       "max": 12,
       "default": 0
@@ -41,6 +44,7 @@ export const meta         = {
       "name": "Kik Thr",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -40,
       "max": 0,
       "default": -20
@@ -51,6 +55,7 @@ export const meta         = {
       "name": "Kik Trig",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 22,
       "max": 3494,
       "default": 300
@@ -61,6 +66,7 @@ export const meta         = {
       "name": "Kik Mix",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -24,
       "max": 12,
       "default": 0
@@ -71,6 +77,7 @@ export const meta         = {
       "name": "Snr Thr",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -40,
       "max": 0,
       "default": -20
@@ -81,6 +88,7 @@ export const meta         = {
       "name": "Snr Trig",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 22,
       "max": 3494,
       "default": 527.4
@@ -91,6 +99,7 @@ export const meta         = {
       "name": "Snr Mix",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -24,
       "max": 12,
       "default": 0
@@ -101,6 +110,7 @@ export const meta         = {
       "name": "Dynamics",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 1,
       "max": 100,
       "default": 50
@@ -111,6 +121,7 @@ export const meta         = {
       "name": "Record",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 4,
       "default": 0
@@ -121,6 +132,7 @@ export const meta         = {
       "name": "Thru Mix",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -45,
       "max": 0,
       "default": -45
@@ -131,6 +143,7 @@ export const meta         = {
       "name": "Left In",
       "dir": "input",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -141,6 +154,7 @@ export const meta         = {
       "name": "Right In",
       "dir": "input",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -151,6 +165,7 @@ export const meta         = {
       "name": "Left Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -161,6 +176,7 @@ export const meta         = {
       "name": "Right Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null

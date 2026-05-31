@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>wadspa — browser audio plugin demo</title>
+  <title>wadspa — browser plugin test page</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -20,14 +20,19 @@
 
     /* ── Header ─────────────────────────────────────────────── */
     header {
-      display: flex; align-items: center; gap: 1rem;
+      display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
       padding: 0.9rem 1.4rem; border-bottom: 1px solid var(--border);
     }
     header h1 { font-size: 1rem; letter-spacing: 0.05em; }
     header a   { font-size: 0.75rem; color: var(--muted); text-decoration: none; }
     header a:hover { color: var(--text); }
-    #start-btn {
+    #catalog-stats {
       margin-left: auto;
+      font-size: 0.72rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    #start-btn {
       padding: 0.4rem 1.1rem; font-family: monospace; font-size: 0.82rem;
       background: var(--accent); color: #fff; border: none; border-radius: 3px; cursor: pointer;
     }
@@ -187,7 +192,7 @@
 <!-- ── Start overlay ─────────────────────────────────────── -->
 <div id="start-overlay">
   <h2>wadspa</h2>
-  <p>C audio plugins compiled to WebAssembly — running in your browser</p>
+  <p>LADSPA and LV2 plugins compiled to WebAssembly — running in your browser</p>
   <button id="start-overlay-btn">Start audio</button>
   <p id="overlay-status" style="font-size:0.75rem;color:var(--muted);min-height:1.2em"></p>
 </div>
@@ -195,6 +200,7 @@
 <header>
   <h1>wadspa</h1>
   <a href="https://github.com/wadspa/wadspa" target="_blank">github</a>
+  <span id="catalog-stats">loading catalog…</span>
   <span id="status"></span>
   <button id="start-btn" style="display:none">Start audio</button>
 </header>
@@ -227,9 +233,9 @@
   <!-- ── Effects chain ─────────────────────────────────── -->
   <div id="chain-section">
     <div id="chain-header">
-      <h2>effects chain</h2>
+      <h2>effects / plugins chain</h2>
       <div class="add-btn" id="add-wrap">
-        <button id="add-btn">+ add effect ▾</button>
+        <button id="add-btn">+ add effect/plugin ▾</button>
         <div class="dropdown" id="dropdown"></div>
       </div>
     </div>
@@ -255,7 +261,8 @@ import { loadPlugin } from './core.js';
 // meta.ports drives both the loadPlugin call and the UI sliders.
 // All ports listed here appear as sliders in the card.
 
-// Loaded from docs/instruments.json by build-instruments.js
+// Loaded from docs/instruments.json by build-instruments.js.
+// MIDI-driven LV2 plugins appear here; audio-driven LV2 plugins appear in the effects catalog.
 let INSTRUMENTS = [];
 try {
   INSTRUMENTS = await fetch('./instruments.json').then(r => {
@@ -275,6 +282,12 @@ try {
 } catch (e) {
   console.error('Failed to load catalog.json:', e);
 }
+
+const catalogStats = document.getElementById('catalog-stats');
+const totalPlugins = INSTRUMENTS.length + EFFECTS.length;
+catalogStats.textContent = totalPlugins
+  ? `${totalPlugins} plugins: ${INSTRUMENTS.length} instruments, ${EFFECTS.length} effects`
+  : 'catalog unavailable';
 
 // ── Plugin URL helpers ──────────────────────────────────────────
 const BASE = new URL('./plugins/', import.meta.url).href;
@@ -543,7 +556,11 @@ async function addEffect(eff) {
 // ── Dropdown ──────────────────────────────────────────────────
 function buildDropdown() {
   const dd = document.getElementById('dropdown');
-  const categories = [...new Set(EFFECTS.map(e => e.category))];
+  const categories = [...new Set(EFFECTS.map(e => e.category))].sort((a, b) => {
+    if (a === 'LV2 Effects') return -1;
+    if (b === 'LV2 Effects') return 1;
+    return a.localeCompare(b);
+  });
   dd.innerHTML = '';
   for (const cat of categories) {
     const sep = document.createElement('div');

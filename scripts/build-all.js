@@ -16,7 +16,7 @@
  */
 
 import { execSync }                                                              from 'child_process';
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync, copyFileSync } from 'fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'fs';
 import { join, dirname }                                                          from 'path';
 import { fileURLToPath }                                                          from 'url';
 
@@ -41,7 +41,17 @@ function run(cmd, opts = {}) {
 }
 
 function copyIfMissing(src, dest) {
-    if (!existsSync(dest)) copyFileSync(src, dest);
+    if (!existsSync(dest)) writeFileSync(dest, readFileSync(src));
+}
+
+function copyDirContents(srcDir, destDir) {
+    mkdirSync(destDir, { recursive: true });
+    for (const entry of readdirSync(srcDir, { withFileTypes: true })) {
+        const src = join(srcDir, entry.name);
+        const dest = join(destDir, entry.name);
+        if (entry.isDirectory()) copyDirContents(src, dest);
+        else if (entry.isFile()) writeFileSync(dest, readFileSync(src));
+    }
 }
 
 // Resolve LADSPA default hint strings to numeric values.
@@ -96,8 +106,8 @@ function deploy(manifestEntry, distDir, catalogEntries) {
 
     if (!existsSync(DOCS_PLUGINS)) return;
     const dest = join(DOCS_PLUGINS, manifestEntry.id);
-    mkdirSync(dest, { recursive: true });
-    run(`cp -r "${distDir}/." "${dest}/"`);
+    rmSync(dest, { recursive: true, force: true });
+    copyDirContents(distDir, dest);
 }
 
 // ---

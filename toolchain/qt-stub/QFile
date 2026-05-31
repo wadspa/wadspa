@@ -1,0 +1,149 @@
+#pragma once
+#include "QObject"
+#include "QByteArray"
+#include "QStringList"
+
+class QIODevice : public QObject {
+public:
+    enum OpenModeFlag { NotOpen = 0, ReadOnly = 1, WriteOnly = 2, ReadWrite = 3,
+                        Append = 4, Truncate = 8, Text = 16, Unbuffered = 32 };
+    using OpenMode = unsigned int;
+    QIODevice(QObject *parent = nullptr) : QObject(parent) {}
+    virtual bool open(OpenMode) { return false; }
+    virtual void close() {}
+    virtual bool isOpen() const { return false; }
+    virtual bool isReadable() const { return false; }
+    virtual bool isWritable() const { return false; }
+    virtual qint64 read(char *, qint64) { return -1; }
+    virtual qint64 write(const char *, qint64) { return -1; }
+    virtual qint64 write(const QByteArray &) { return -1; }
+    virtual bool atEnd() const { return true; }
+    virtual qint64 bytesAvailable() const { return 0; }
+    virtual qint64 pos() const { return 0; }
+    virtual bool seek(qint64) { return false; }
+    virtual QByteArray readAll() { return {}; }
+    virtual QByteArray readLine(qint64 = 0) { return {}; }
+    QString errorString() const { return {}; }
+};
+
+class QFile : public QIODevice {
+    QString m_path;
+public:
+    QFile() = default;
+    explicit QFile(const QString &path, QObject *parent = nullptr)
+        : QIODevice(parent), m_path(path) {}
+    void setFileName(const QString &path) { m_path = path; }
+    QString fileName() const { return m_path; }
+    bool open(OpenMode) override { return false; }
+    void close() override {}
+    bool exists() const { return false; }
+    bool remove() { return false; }
+    bool rename(const QString &) { return false; }
+    bool copy(const QString &) { return false; }
+    static bool exists(const QString &) { return false; }
+    static bool remove(const QString &) { return false; }
+    static bool rename(const QString &, const QString &) { return false; }
+    static bool copy(const QString &, const QString &) { return false; }
+    static bool link(const QString &, const QString &) { return false; }
+    bool link(const QString &) { return false; }
+    qint64 size() const { return 0; }
+};
+
+class QDir {
+    QString m_path;
+public:
+    QDir() = default;
+    explicit QDir(const QString &path) : m_path(path) {}
+    QString path() const { return m_path; }
+    QString absolutePath() const { return m_path; }
+    bool exists() const { return false; }
+    bool mkdir(const QString &) const { return false; }
+    bool mkpath(const QString &) const { return false; }
+    QStringList entryList(const QStringList & = {}, unsigned = 0, unsigned = 0) const { return {}; }
+    static QString currentPath() { return {}; }
+    static QString homePath()    { return {}; }
+    static QString tempPath()    { return {}; }
+    static bool setCurrent(const QString &) { return false; }
+    static QDir current()  { return {}; }
+    static QDir home()     { return {}; }
+    static QDir temp()     { return {}; }
+    QString separator() const { return "/"; }
+    static QChar separator_char() { return QChar('/'); }
+    QString filePath(const QString &f) const { return m_path + "/" + f; }
+    QString absoluteFilePath(const QString &f) const { return filePath(f); }
+    QString relativeFilePath(const QString &) const { return {}; }
+    QString cleanPath(const QString &p) const { return p; }
+    static QString cleanPath_s(const QString &p) { return p; }
+    static QString toNativeSeparators(const QString &p) { return p; }
+    static QString fromNativeSeparators(const QString &p) { return p; }
+};
+
+class QTextStream {
+public:
+    QTextStream() = default;
+    explicit QTextStream(QIODevice *) {}
+    explicit QTextStream(QString *) {}
+    template<typename T>
+    QTextStream &operator<<(const T &) { return *this; }
+    template<typename T>
+    QTextStream &operator>>(T &)       { return *this; }
+    void setCodec(const char *) {}
+    bool atEnd() const { return true; }
+    QString readLine() { return {}; }
+    QString readAll()  { return {}; }
+    void flush() {}
+};
+
+class QFileInfo {
+    QString m_path;
+public:
+    QFileInfo() = default;
+    explicit QFileInfo(const QString &path) : m_path(path) {}
+    explicit QFileInfo(const QFile &f) : m_path(f.fileName()) {}
+    void setFile(const QString &path) { m_path = path; }
+    void setFile(const QDir &, const QString &fn) { m_path = fn; }
+    bool exists() const { return false; }
+    bool isFile() const { return false; }
+    bool isDir()  const { return false; }
+    bool isSymLink() const { return false; }
+    bool isAbsolute() const { return !m_path.isEmpty() && m_path.at(0) == QChar('/'); }
+    bool isRelative() const { return !isAbsolute(); }
+    QString filePath()    const { return m_path; }
+    QString absoluteFilePath() const { return m_path; }
+    QString canonicalFilePath() const { return m_path; }
+    QString absolutePath()     const {
+        auto p = m_path.lastIndexOf(QChar('/'));
+        return p <= 0 ? QString("/") : m_path.left(p);
+    }
+    QString canonicalPath() const { return absolutePath(); }
+    QString path() const { return absolutePath(); }
+    QString fileName() const {
+        auto p = m_path.lastIndexOf(QChar('/'));
+        return p < 0 ? m_path : m_path.mid(p + 1);
+    }
+    QString baseName() const {
+        QString fn = fileName();
+        auto p = fn.indexOf(QChar('.'));
+        return p < 0 ? fn : fn.left(p);
+    }
+    QString completeBaseName() const {
+        QString fn = fileName();
+        auto p = fn.lastIndexOf(QChar('.'));
+        return p < 0 ? fn : fn.left(p);
+    }
+    QString suffix() const {
+        QString fn = fileName();
+        auto p = fn.lastIndexOf(QChar('.'));
+        return p < 0 ? QString{} : fn.mid(p + 1);
+    }
+    QString completeSuffix() const {
+        QString fn = fileName();
+        auto p = fn.indexOf(QChar('.'));
+        return p < 0 ? QString{} : fn.mid(p + 1);
+    }
+    QString symLinkTarget() const { return {}; }
+    QDir    dir()           const { return QDir(absolutePath()); }
+    qint64  size()          const { return 0; }
+    QString owner()         const { return {}; }
+    QString group()         const { return {}; }
+};

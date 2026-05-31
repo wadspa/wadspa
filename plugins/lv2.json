@@ -319,5 +319,91 @@
       "freeverb/comb.cpp",
       "core/filesystem.cpp"
     ]
+  },
+  {
+    "id": "drumkv1",
+    "description": "drumkv1 — sample-based drum synthesizer with per-pad synthesis and effects",
+    "category": "Instruments",
+    "includes": [
+      "toolchain/qt-stub"
+    ],
+    "sources": [
+      "drumkv1.cpp",
+      "drumkv1_param.cpp",
+      "drumkv1_programs.cpp",
+      "drumkv1_controls.cpp",
+      "drumkv1_tuning.cpp",
+      "drumkv1_formant.cpp",
+      "drumkv1_wave.cpp",
+      "drumkv1_resampler.cpp",
+      "drumkv1_config.cpp",
+      "drumkv1_sched_wasm.cpp",
+      "drumkv1_sample_stub.cpp",
+      "drumkv1_lv2.cpp"
+    ]
+  },
+  {
+    "id": "so-404",
+    "description": "SO-404 Bass Synthesizer — TB-303-style bass synth clone",
+    "category": "Instruments",
+    "sources": [
+      "so-404.c",
+      "lv2_entry.c"
+    ]
+  },
+  {
+    "id": "so-kl5",
+    "description": "SO-kl5 Piano Synthesizer — electric piano clone",
+    "category": "Instruments",
+    "sources": [
+      "so-kl5.c",
+      "lv2_entry.c"
+    ]
+  },
+  {
+    "id": "so-666",
+    "description": "SO-666 Feedback Synthesizer — feedback oscillator synth",
+    "category": "Instruments",
+    "sources": [
+      "so-666.c",
+      "lv2_entry.c"
+    ]
+  },
+  {
+    "id": "padthv1",
+    "description": "padthv1 — polyphonic additive (PADsynth) synthesizer",
+    "category": "Instruments",
+    "includes": [
+      "toolchain/qt-stub"
+    ],
+    "sources": [
+      "padthv1.cpp",
+      "padthv1_param.cpp",
+      "padthv1_programs.cpp",
+      "padthv1_controls.cpp",
+      "padthv1_tuning.cpp",
+      "padthv1_formant.cpp",
+      "padthv1_wave.cpp",
+      "padthv1_sample.cpp",
+      "padthv1_config.cpp",
+      "padthv1_sched_wasm.cpp",
+      "padthv1_lv2.cpp"
+    ]
+  },
+  {
+    "id": "synthv1",
+    "description": "synthv1 — dual-oscillator polyphonic analog synthesizer",
+    "category": "Instruments",
+    "includes": [
+      "plugins/synthv1/qt_stub"
+    ],
+    "sources": [
+      "synthv1.cpp",
+      "synthv1_wave.cpp",
+      "synthv1_formant.cpp",
+      "synthv1_tuning_stub.cpp",
+      "synthv1_sched_wasm.cpp",
+      "synthv1_wasm_lv2.cpp"
+    ]
   }
 ]

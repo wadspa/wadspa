@@ -1,0 +1,73 @@
+#pragma once
+#include "QString"
+#include "QStringList"
+
+// Minimal QVariant — stores a string internally; numeric conversions parse it.
+// Enough to support QSettings::value(key, default).toString(), .toInt(), etc.
+class QVariant {
+public:
+    enum Type { Invalid = 0, Bool = 1, Int = 2, UInt = 3, LongLong = 4,
+                ULongLong = 5, Double = 6, Char = 7, String = 10, StringList = 11,
+                ByteArray = 12, BitArray = 13 };
+
+private:
+    Type    m_type = Invalid;
+    QString m_str;
+    double  m_num = 0.0;
+
+public:
+    QVariant() = default;
+    QVariant(bool v)               : m_type(Bool),      m_num(v?1.0:0.0) {}
+    QVariant(int v)                : m_type(Int),        m_num(v) {}
+    QVariant(uint v)               : m_type(UInt),       m_num(v) {}
+    QVariant(qint64 v)             : m_type(LongLong),   m_num((double)v) {}
+    QVariant(quint64 v)            : m_type(ULongLong),  m_num((double)v) {}
+    QVariant(double v)             : m_type(Double),     m_num(v) {}
+    QVariant(float v)              : m_type(Double),     m_num(v) {}
+    QVariant(const char *s)        : m_type(String),     m_str(s) {}
+    QVariant(const QString &s)     : m_type(String),     m_str(s) {}
+    QVariant(const QByteArray &b)  : m_type(ByteArray),  m_str(b.constData()) {}
+    QVariant(const QStringList &)  : m_type(StringList) {}
+
+    bool    isValid() const   { return m_type != Invalid; }
+    bool    isNull()  const   { return m_type == Invalid || (m_type==String && m_str.isEmpty()); }
+    Type    type()    const   { return m_type; }
+
+    QString toString() const {
+        if (m_type == String)  return m_str;
+        if (m_type == Invalid) return {};
+        if (m_type == Bool)    return m_num ? QLatin1String("true") : QLatin1String("false");
+        return QString::number(m_num);
+    }
+    QStringList toStringList() const { return {}; }
+    bool    toBool()   const { return m_type==Bool ? m_num!=0.0 :
+                                      m_type==String ? (m_str=="true"||m_str=="1") :
+                                      m_num != 0.0; }
+    int     toInt(bool *ok=nullptr)    const { if(ok)*ok=isValid(); return (int)m_num; }
+    uint    toUInt(bool *ok=nullptr)   const { if(ok)*ok=isValid(); return (uint)m_num; }
+    qint64  toLongLong(bool *ok=nullptr) const { if(ok)*ok=isValid(); return (qint64)m_num; }
+    double  toDouble(bool *ok=nullptr) const { if(ok)*ok=isValid(); return m_num; }
+    float   toFloat(bool *ok=nullptr)  const { if(ok)*ok=isValid(); return (float)m_num; }
+    QByteArray toByteArray() const { return QByteArray(toString().toUtf8()); }
+
+    bool operator==(const QVariant &o) const { return toString() == o.toString(); }
+    bool operator!=(const QVariant &o) const { return !(*this == o); }
+
+    template<typename T>
+    T value() const { return T{}; }
+
+    bool canConvert(int) const { return true; }
+};
+
+// Specialize value<T> for common types
+template<> inline QString     QVariant::value<QString>()   const { return toString(); }
+template<> inline int         QVariant::value<int>()       const { return toInt(); }
+template<> inline bool        QVariant::value<bool>()      const { return toBool(); }
+template<> inline double      QVariant::value<double>()    const { return toDouble(); }
+template<> inline float       QVariant::value<float>()     const { return toFloat(); }
+template<> inline QByteArray  QVariant::value<QByteArray>() const { return toByteArray(); }
+template<> inline QStringList QVariant::value<QStringList>() const { return {}; }
+
+// qvariant_cast
+template<typename T>
+inline T qvariant_cast(const QVariant &v) { return v.value<T>(); }

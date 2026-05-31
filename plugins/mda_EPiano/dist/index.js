@@ -11,6 +11,7 @@ export const meta         = {
       "name": "Envelope Decay",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 3,
       "max": 23,
       "default": 8.5
@@ -21,6 +22,7 @@ export const meta         = {
       "name": "Envelope Release",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0.01,
       "max": 1.4,
       "default": 0.12
@@ -31,6 +33,7 @@ export const meta         = {
       "name": "Hardness",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -50,
       "max": 50,
       "default": 0
@@ -41,6 +44,7 @@ export const meta         = {
       "name": "Treble Boost",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -50,
       "max": 50,
       "default": 0
@@ -51,6 +55,7 @@ export const meta         = {
       "name": "Modulation",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -100,
       "max": 100,
       "default": 0
@@ -61,6 +66,7 @@ export const meta         = {
       "name": "LFO Rate",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0.1,
       "max": 37,
       "default": 4
@@ -71,6 +77,7 @@ export const meta         = {
       "name": "Velocity Sense",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 100,
       "default": 0
@@ -81,6 +88,7 @@ export const meta         = {
       "name": "Stereo Width",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 200,
       "default": 100
@@ -91,6 +99,7 @@ export const meta         = {
       "name": "Polyphonic",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 1
@@ -101,6 +110,7 @@ export const meta         = {
       "name": "Fine Tuning",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -50,
       "max": 50,
       "default": 0
@@ -111,6 +121,7 @@ export const meta         = {
       "name": "Random Tuning",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 50,
       "default": 7.3
@@ -121,6 +132,7 @@ export const meta         = {
       "name": "Overdrive",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 100,
       "default": 0
@@ -131,6 +143,7 @@ export const meta         = {
       "name": "Left Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -141,6 +154,7 @@ export const meta         = {
       "name": "Right Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -151,6 +165,7 @@ export const meta         = {
       "name": "Event In",
       "dir": "input",
       "type": "midi",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null

@@ -92,10 +92,19 @@ function parsePortBlock(block) {
     const isAudio   = /\ba\s+lv2:AudioPort\b/.test(block) || /lv2:AudioPort\b/.test(block);
     const isControl = /\ba\s+lv2:ControlPort\b/.test(block) || /lv2:ControlPort\b/.test(block);
     const isAtom    = /\ba\s+atom:AtomPort\b/.test(block)  || /atom:AtomPort\b/.test(block);
+    // Old LV2 event port API (pre-atom, used by plugins from ~2008-2013)
+    const isLegacyEvent = /\ba\s+ev:EventPort\b/.test(block) || /ev:EventPort\b/.test(block)
+                       || /\ba\s+<[^>]*EventPort>/.test(block);
+    const isLegacyMidi  = isLegacyEvent && (
+        /ev:supportsEvent\s+<[^>]*MidiEvent>/.test(block) ||
+        /ev:supportsEvent\s+midi:MidiEvent/.test(block) ||
+        isLegacyEvent // event ports are almost always MIDI in practice
+    );
 
     let type = 'control';
     if (isAudio) type = 'audio';
     if (isMidi || isAtom) type = isInput && isMidi ? 'midi' : 'atom';
+    if (isLegacyMidi && isInput) type = 'midi';   // treat as midi, flagged legacy below
 
     // Control range
     const min = parseFloat((block.match(/lv2:minimum\s+([\d.eE+\-]+)/) || [])[1]);
@@ -104,6 +113,7 @@ function parsePortBlock(block) {
 
     return {
         index, symbol, name, dir, type,
+        legacy: isLegacyEvent,   // true → old LV2 event API (not atom)
         min:  isNaN(min) ? null : min,
         max:  isNaN(max) ? null : max,
         default: isNaN(def) ? null : def,
@@ -130,14 +140,28 @@ export function generateLv2Shim(descriptor) {
     const midiIn    = ports.filter(p => p.type === 'midi'    && p.dir === 'input');
     const atomOut   = ports.filter(p => p.type === 'atom'    && p.dir === 'output');
 
+    const usesLegacyMidi = midiIn.some(p => p.legacy);
+
     const lines = [];
     lines.push('#include <stdlib.h>');
     lines.push('#include <stdint.h>');
     lines.push('#include <string.h>');
     lines.push('#include "lv2.h"');
-    lines.push('#include "lv2/atom/atom.h"');
-    lines.push('#include "lv2/urid/urid.h"');
-    lines.push('#include "lv2/midi/midi.h"');
+    if (!usesLegacyMidi) {
+        lines.push('#include "lv2/atom/atom.h"');
+        lines.push('#include "lv2/urid/urid.h"');
+        lines.push('#include "lv2/midi/midi.h"');
+    } else {
+        // Old LV2 event API requires different headers
+        lines.push('#include "lv2/urid/urid.h"');
+        lines.push('#include "lv2/midi/midi.h"');
+        lines.push('#pragma GCC diagnostic push');
+        lines.push('#pragma GCC diagnostic ignored "-Wdeprecated-declarations"');
+        lines.push('#include "lv2/lv2plug.in/ns/ext/event/event.h"');
+        lines.push('#include "lv2/lv2plug.in/ns/ext/event/event-helpers.h"');
+        lines.push('#include "lv2/lv2plug.in/ns/ext/uri-map/uri-map.h"');
+        lines.push('#pragma GCC diagnostic pop');
+    }
     lines.push('#include <emscripten.h>');
     lines.push('');
     lines.push('#define BLOCK_SIZE   128');
@@ -158,7 +182,22 @@ export function generateLv2Shim(descriptor) {
     lines.push('');
     lines.push('static LV2_URID_Map   g_map_iface   = { NULL, urid_map_fn };');
     lines.push('static LV2_Feature    g_map_feature  = { LV2_URID__map, &g_map_iface };');
-    lines.push('static const LV2_Feature *g_features[] = { &g_map_feature, NULL };');
+    if (usesLegacyMidi) {
+        // Old uri-map feature: same map, extra "map context" argument ignored
+        lines.push('#pragma GCC diagnostic push');
+        lines.push('#pragma GCC diagnostic ignored "-Wdeprecated-declarations"');
+        lines.push('static uint32_t old_uri_to_id(LV2_URI_Map_Callback_Data h, const char *m, const char *uri)');
+        lines.push('    { (void)h; (void)m; return urid_map_fn(NULL, uri); }');
+        lines.push('static LV2_URI_Map_Feature g_uri_map_data = { NULL, old_uri_to_id };');
+        lines.push('static LV2_Feature g_uri_map_feature = { LV2_URI_MAP_URI, &g_uri_map_data };');
+        lines.push('static uint32_t noop_evt_rc(LV2_Event_Callback_Data h, LV2_Event *ev) { (void)h; (void)ev; return 1; }');
+        lines.push('static LV2_Event_Feature g_evt_feature_data = { NULL, noop_evt_rc, noop_evt_rc };');
+        lines.push('static LV2_Feature g_evt_feature = { "http://lv2plug.in/ns/ext/event", &g_evt_feature_data };');
+        lines.push('#pragma GCC diagnostic pop');
+        lines.push('static const LV2_Feature *g_features[] = { &g_map_feature, &g_uri_map_feature, &g_evt_feature, NULL };');
+    } else {
+        lines.push('static const LV2_Feature *g_features[] = { &g_map_feature, NULL };');
+    }
     lines.push('');
 
     // Audio buffers
@@ -172,14 +211,24 @@ export function generateLv2Shim(descriptor) {
     // Output atom buffers (notify ports, etc.) — plugin writes into these
     for (const p of atomOut) lines.push(`static uint8_t g_atom_out_${p.symbol}[MIDI_BUF_SIZE];`);
 
-    // MIDI atom buffer
+    // MIDI buffer — atom sequence (new API) or event buffer (legacy API)
     if (midiIn.length > 0) {
         lines.push('');
-        lines.push('static uint8_t g_midi_buf[MIDI_BUF_SIZE];');
-        lines.push('static LV2_Atom_Sequence *g_midi_seq = (LV2_Atom_Sequence *)g_midi_buf;');
-        lines.push('static LV2_URID g_urid_midi_event;');
-        lines.push('static LV2_URID g_urid_atom_chunk;');
-        lines.push('static LV2_URID g_urid_atom_sequence;');
+        if (usesLegacyMidi) {
+            lines.push('#pragma GCC diagnostic push');
+            lines.push('#pragma GCC diagnostic ignored "-Wdeprecated-declarations"');
+            lines.push('/* Old LV2 event buffer: header + inline data region */');
+            lines.push('static uint8_t g_legacy_evt_mem[sizeof(LV2_Event_Buffer) + MIDI_BUF_SIZE];');
+            lines.push('static LV2_Event_Buffer *g_legacy_evt = (LV2_Event_Buffer *)g_legacy_evt_mem;');
+            lines.push('static LV2_URID g_legacy_midi_urid;');
+            lines.push('#pragma GCC diagnostic pop');
+        } else {
+            lines.push('static uint8_t g_midi_buf[MIDI_BUF_SIZE];');
+            lines.push('static LV2_Atom_Sequence *g_midi_seq = (LV2_Atom_Sequence *)g_midi_buf;');
+            lines.push('static LV2_URID g_urid_midi_event;');
+            lines.push('static LV2_URID g_urid_atom_chunk;');
+            lines.push('static LV2_URID g_urid_atom_sequence;');
+        }
     }
 
     // Plugin handle
@@ -200,9 +249,19 @@ export function generateLv2Shim(descriptor) {
     lines.push('    g_handle = g_desc->instantiate(g_desc, (double)sample_rate, "", g_features);');
 
     if (midiIn.length > 0) {
-        lines.push('    g_urid_midi_event   = urid_map_fn(NULL, LV2_MIDI__MidiEvent);');
-        lines.push('    g_urid_atom_chunk   = urid_map_fn(NULL, LV2_ATOM__Chunk);');
-        lines.push('    g_urid_atom_sequence = urid_map_fn(NULL, LV2_ATOM__Sequence);');
+        if (usesLegacyMidi) {
+            lines.push('#pragma GCC diagnostic push');
+            lines.push('#pragma GCC diagnostic ignored "-Wdeprecated-declarations"');
+            lines.push('    g_legacy_midi_urid = urid_map_fn(NULL, LV2_MIDI__MidiEvent);');
+            lines.push('    g_legacy_evt->capacity = MIDI_BUF_SIZE;');
+            lines.push('    lv2_event_buffer_reset(g_legacy_evt, LV2_EVENT_AUDIO_STAMP,');
+            lines.push('        (uint8_t *)(g_legacy_evt + 1));');
+            lines.push('#pragma GCC diagnostic pop');
+        } else {
+            lines.push('    g_urid_midi_event   = urid_map_fn(NULL, LV2_MIDI__MidiEvent);');
+            lines.push('    g_urid_atom_chunk   = urid_map_fn(NULL, LV2_ATOM__Chunk);');
+            lines.push('    g_urid_atom_sequence = urid_map_fn(NULL, LV2_ATOM__Sequence);');
+        }
     }
 
     for (const p of ports) {
@@ -210,7 +269,13 @@ export function generateLv2Shim(descriptor) {
         if (p.type === 'audio' && p.dir === 'input')    lines.push(`    g_desc->connect_port(g_handle, ${p.index}, g_in_${sym});`);
         if (p.type === 'audio' && p.dir === 'output')   lines.push(`    g_desc->connect_port(g_handle, ${p.index}, g_out_${sym});`);
         if (p.type === 'control')                         lines.push(`    g_desc->connect_port(g_handle, ${p.index}, &g_ctrl_${sym});`);
-        if (p.type === 'midi' && p.dir === 'input')      lines.push(`    g_desc->connect_port(g_handle, ${p.index}, g_midi_seq);`);
+        if (p.type === 'midi' && p.dir === 'input') {
+            if (p.legacy) {
+                lines.push(`    g_desc->connect_port(g_handle, ${p.index}, g_legacy_evt);`);
+            } else {
+                lines.push(`    g_desc->connect_port(g_handle, ${p.index}, g_midi_seq);`);
+            }
+        }
         if (p.type === 'atom' && p.dir === 'output')      lines.push(`    g_desc->connect_port(g_handle, ${p.index}, g_atom_out_${p.symbol});`);
     }
 
@@ -221,26 +286,49 @@ export function generateLv2Shim(descriptor) {
 
     // MIDI helpers
     if (midiIn.length > 0) {
-        lines.push('EMSCRIPTEN_KEEPALIVE void shim_midi_clear() {');
-        lines.push('    g_midi_seq->atom.type = g_urid_atom_sequence;');
-        lines.push('    g_midi_seq->atom.size = sizeof(LV2_Atom_Sequence_Body);');
-        lines.push('    g_midi_seq->body.unit = 0;');
-        lines.push('    g_midi_seq->body.pad  = 0;');
-        lines.push('}');
-        lines.push('');
-        lines.push('static void push_midi(const uint8_t *data, uint32_t size) {');
-        lines.push('    uint32_t body_off = g_midi_seq->atom.size - sizeof(LV2_Atom_Sequence_Body);');
-        lines.push('    uint8_t *end = (uint8_t *)(g_midi_seq + 1) + body_off;');
-        lines.push('    uint32_t event_total = sizeof(LV2_Atom_Event) + size;');
-        lines.push('    uint32_t padded = (event_total + 7u) & ~7u;');
-        lines.push('    if (end + padded > g_midi_buf + MIDI_BUF_SIZE) return;');
-        lines.push('    LV2_Atom_Event *ev = (LV2_Atom_Event *)end;');
-        lines.push('    ev->time.frames = 0;');
-        lines.push('    ev->body.type   = g_urid_midi_event;');
-        lines.push('    ev->body.size   = size;');
-        lines.push('    memcpy(ev + 1, data, size);');
-        lines.push('    g_midi_seq->atom.size += padded;');
-        lines.push('}');
+        if (usesLegacyMidi) {
+            lines.push('#pragma GCC diagnostic push');
+            lines.push('#pragma GCC diagnostic ignored "-Wdeprecated-declarations"');
+            lines.push('EMSCRIPTEN_KEEPALIVE void shim_midi_clear() {');
+            lines.push('    lv2_event_buffer_reset(g_legacy_evt, LV2_EVENT_AUDIO_STAMP,');
+            lines.push('        (uint8_t *)(g_legacy_evt + 1));');
+            lines.push('}');
+            lines.push('');
+            lines.push('static void push_midi(const uint8_t *data, uint32_t size) {');
+            lines.push('    uint32_t padded = ((uint32_t)sizeof(LV2_Event) + size + 7u) & ~7u;');
+            lines.push('    if (g_legacy_evt->size + padded > MIDI_BUF_SIZE) return;');
+            lines.push('    LV2_Event *ev = (LV2_Event *)((uint8_t *)(g_legacy_evt + 1) + g_legacy_evt->size);');
+            lines.push('    ev->frames    = 0;');
+            lines.push('    ev->subframes = 0;');
+            lines.push('    ev->type      = (uint16_t)g_legacy_midi_urid;');
+            lines.push('    ev->size      = (uint16_t)size;');
+            lines.push('    memcpy(ev + 1, data, size);');
+            lines.push('    g_legacy_evt->size += padded;');
+            lines.push('    g_legacy_evt->event_count++;');
+            lines.push('}');
+            lines.push('#pragma GCC diagnostic pop');
+        } else {
+            lines.push('EMSCRIPTEN_KEEPALIVE void shim_midi_clear() {');
+            lines.push('    g_midi_seq->atom.type = g_urid_atom_sequence;');
+            lines.push('    g_midi_seq->atom.size = sizeof(LV2_Atom_Sequence_Body);');
+            lines.push('    g_midi_seq->body.unit = 0;');
+            lines.push('    g_midi_seq->body.pad  = 0;');
+            lines.push('}');
+            lines.push('');
+            lines.push('static void push_midi(const uint8_t *data, uint32_t size) {');
+            lines.push('    uint32_t body_off = g_midi_seq->atom.size - sizeof(LV2_Atom_Sequence_Body);');
+            lines.push('    uint8_t *end = (uint8_t *)(g_midi_seq + 1) + body_off;');
+            lines.push('    uint32_t event_total = sizeof(LV2_Atom_Event) + size;');
+            lines.push('    uint32_t padded = (event_total + 7u) & ~7u;');
+            lines.push('    if (end + padded > g_midi_buf + MIDI_BUF_SIZE) return;');
+            lines.push('    LV2_Atom_Event *ev = (LV2_Atom_Event *)end;');
+            lines.push('    ev->time.frames = 0;');
+            lines.push('    ev->body.type   = g_urid_midi_event;');
+            lines.push('    ev->body.size   = size;');
+            lines.push('    memcpy(ev + 1, data, size);');
+            lines.push('    g_midi_seq->atom.size += padded;');
+            lines.push('}');
+        }
         lines.push('');
         lines.push('EMSCRIPTEN_KEEPALIVE void shim_midi_note_on(uint8_t ch, uint8_t note, uint8_t vel)');
         lines.push('    { uint8_t m[3] = {(uint8_t)(0x90|ch), note, vel}; push_midi(m, 3); }');

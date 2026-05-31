@@ -12,7 +12,7 @@
 
 import { spawnSync }    from 'child_process';
 import { existsSync }   from 'fs';
-import { join, dirname } from 'path';
+import { join, dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
 import { readFileSync }  from 'fs';
 
@@ -23,10 +23,12 @@ const args   = process.argv.slice(2);
 const onlyId = args.includes('--only') ? args[args.indexOf('--only') + 1] : null;
 
 const SETUPS = {
-    'mda-lv2':   'setup-mda-lv2.js',
-    'amsynth':   'setup-amsynth.js',
-    'synthv1':   'setup-synthv1.js',
-    'drumkv1':   'setup-drumkv1.js',
+    'mda-lv2':      'setup-mda-lv2.js',
+    'amsynth':      'setup-amsynth.js',
+    'synthv1':      'setup-synthv1.js',
+    'drumkv1':      'setup-drumkv1.js',
+    'So-synth-LV2': 'setup-so-synth.js',
+    'padthv1':      'setup-padthv1.js',
 };
 
 let ran = 0, skipped = 0, failed = 0;
@@ -40,13 +42,6 @@ for (const src of sources) {
         continue;
     }
 
-    const scriptPath = join(ROOT, 'scripts', scriptName);
-    if (!existsSync(scriptPath)) {
-        console.log(`⏭  ${src.id} — setup script not yet written (${scriptName})`);
-        skipped++;
-        continue;
-    }
-
     // Check the source repo is present before running its setup
     const repoDir = src.git ? join(ROOT, src.id) : null;
     if (repoDir && !existsSync(repoDir)) {
@@ -55,8 +50,26 @@ for (const src of sources) {
         continue;
     }
 
+    const scriptPath = scriptName ? join(ROOT, 'scripts', scriptName) : null;
+    const autoSetupPath = join(ROOT, 'scripts', 'auto-setup.js');
+
+    // Fall back to auto-setup.js if no dedicated script exists
+    let runScript, runArgs;
+    if (scriptPath && existsSync(scriptPath)) {
+        runScript = scriptPath;
+        runArgs   = [];
+    } else if (repoDir && existsSync(repoDir) && existsSync(autoSetupPath)) {
+        console.log(`   (no setup script — using auto-setup.js)`);
+        runScript = autoSetupPath;
+        runArgs   = [repoDir, '--id', src.id];
+    } else {
+        console.log(`⏭  ${src.id} — no setup script and auto-setup unavailable`);
+        skipped++;
+        continue;
+    }
+
     console.log(`\n── ${src.id} ${'─'.repeat(Math.max(0, 46 - src.id.length))}`);
-    const result = spawnSync(process.execPath, [scriptPath], {
+    const result = spawnSync(process.execPath, [runScript, ...runArgs], {
         cwd: ROOT,
         stdio: 'inherit',
     });

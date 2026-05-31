@@ -2,128 +2,646 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>wadspa demo — amp + dj_eq_mono</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>wadspa — browser plugin test page</title>
   <style>
-    body { font-family: monospace; padding: 2rem; background: #111; color: #eee; max-width: 480px; }
-    h1   { font-size: 1.1rem; margin-bottom: 0.5rem; }
-    h2   { font-size: 0.95rem; color: #aaa; margin: 1.4rem 0 0.6rem; }
-    button { padding: 0.5rem 1.2rem; cursor: pointer; font-family: monospace; }
-    .row { margin-top: 0.8rem; display: flex; align-items: center; gap: 0.8rem; }
-    .row label { width: 4rem; font-size: 0.85rem; color: #aaa; }
-    input[type=range] { flex: 1; }
-    .val { width: 4.5rem; text-align: right; font-size: 0.85rem; }
-    #log { margin-top: 1.4rem; font-size: 0.8rem; color: #777; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:      #0e0e0e;
+      --surface: #1a1a1a;
+      --border:  #2e2e2e;
+      --accent:  #4477ee;
+      --accent2: #33cc88;
+      --text:    #dddddd;
+      --muted:   #666;
+      --danger:  #cc4444;
+    }
+    body { font-family: monospace; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* ── Header ─────────────────────────────────────────────── */
+    header {
+      display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+      padding: 0.9rem 1.4rem; border-bottom: 1px solid var(--border);
+    }
+    header h1 { font-size: 1rem; letter-spacing: 0.05em; }
+    header a   { font-size: 0.75rem; color: var(--muted); text-decoration: none; }
+    header a:hover { color: var(--text); }
+    #catalog-stats {
+      margin-left: auto;
+      font-size: 0.72rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    #start-btn {
+      padding: 0.4rem 1.1rem; font-family: monospace; font-size: 0.82rem;
+      background: var(--accent); color: #fff; border: none; border-radius: 3px; cursor: pointer;
+    }
+    #start-btn:hover { background: #5588ff; }
+    #start-btn:disabled { background: var(--surface); color: var(--muted); cursor: default; }
+
+    /* ── Start overlay ──────────────────────────────────────── */
+    #start-overlay {
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(14,14,14,0.92);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 1rem;
+    }
+    #start-overlay h2 { font-size: 1.5rem; letter-spacing: 0.1em; color: var(--text); }
+    #start-overlay p  { font-size: 0.82rem; color: var(--muted); }
+    #start-overlay-btn {
+      margin-top: 0.5rem;
+      padding: 0.9rem 2.8rem; font-family: monospace; font-size: 1.1rem;
+      background: var(--accent); color: #fff; border: none; border-radius: 5px;
+      cursor: pointer; letter-spacing: 0.04em;
+    }
+    #start-overlay-btn:hover { background: #5588ff; }
+    #status { font-size: 0.75rem; color: var(--muted); }
+
+    /* ── Main layout ─────────────────────────────────────────── */
+    main { display: grid; grid-template-rows: auto 1fr; height: calc(100vh - 46px); }
+
+    /* ── Synth + keyboard section ────────────────────────────── */
+    #synth-section {
+      border-bottom: 1px solid var(--border);
+      display: flex; gap: 0; flex-wrap: wrap;
+    }
+    #synth-header {
+      display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;
+    }
+    #synth-header .section-lbl {
+      font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    #instrument-wrap { position: relative; display: inline-block; }
+    #instrument-btn {
+      padding: 0.25rem 0.65rem; font-family: monospace; font-size: 0.75rem;
+      background: var(--surface); color: var(--accent2); border: 1px solid var(--border);
+      border-radius: 3px; cursor: pointer;
+    }
+    #instrument-btn:hover { border-color: var(--accent2); }
+    #instrument-dropdown {
+      display: none; position: absolute; top: calc(100% + 4px); left: 0; z-index: 20;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+      min-width: 180px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    #instrument-dropdown.open { display: block; }
+    .inst-item {
+      padding: 0.45rem 0.8rem; font-size: 0.8rem; cursor: pointer; white-space: nowrap;
+    }
+    .inst-item:hover { background: var(--border); color: #fff; }
+    .inst-item.active { color: var(--accent2); }
+
+    /* ── Effects chain ───────────────────────────────────────── */
+    #chain-section {
+      padding: 1rem 1.4rem;
+      overflow-y: auto;
+    }
+    #chain-header {
+      display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.8rem;
+    }
+    #chain-header h2 { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+    .add-btn {
+      position: relative; display: inline-block;
+    }
+    .add-btn > button {
+      padding: 0.3rem 0.8rem; font-family: monospace; font-size: 0.78rem;
+      background: var(--surface); color: var(--text); border: 1px solid var(--border);
+      border-radius: 3px; cursor: pointer;
+    }
+    .add-btn > button:hover { border-color: var(--accent); }
+    .dropdown {
+      display: none; position: absolute; top: calc(100% + 4px); left: 0; z-index: 20;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+      min-width: 200px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      max-height: 60vh; overflow-y: auto;
+    }
+    .dropdown.open { display: block; }
+    .dropdown-item {
+      padding: 0.45rem 0.8rem; font-size: 0.8rem; cursor: pointer; white-space: nowrap;
+    }
+    .dropdown-item:hover { background: var(--border); color: #fff; }
+    .dropdown-sep { border-top: 1px solid var(--border); margin: 0.2rem 0; }
+
+    /* ── Plugin cards ─────────────────────────────────────────── */
+    #chain-cards {
+      display: flex; align-items: flex-start; flex-wrap: wrap; gap: 0.6rem;
+    }
+    .arrow { align-self: center; font-size: 1rem; color: var(--muted); flex-shrink: 0; margin-top: -1.5rem; }
+    .out-badge {
+      align-self: center; font-size: 0.72rem; color: var(--accent2); border: 1px solid var(--accent2);
+      padding: 0.2rem 0.5rem; border-radius: 3px; flex-shrink: 0; margin-top: -1.5rem;
+    }
+
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 6px; padding: 0.7rem 0.8rem; min-width: 160px; max-width: 220px;
+      flex-shrink: 0; position: relative;
+    }
+    .card.loading { opacity: 0.5; }
+    .card-title {
+      font-size: 0.75rem; font-weight: bold; color: var(--accent);
+      margin-bottom: 0.6rem; display: flex; align-items: center; justify-content: space-between;
+    }
+    .card-title span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .remove-btn {
+      background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.9rem;
+      padding: 0 0.1rem; line-height: 1; flex-shrink: 0;
+    }
+    .remove-btn:hover { color: var(--danger); }
+
+    /* ── Sliders in cards ─────────────────────────────────────── */
+    .ctrl-row { margin-top: 0.4rem; }
+    .ctrl-row label { display: block; font-size: 0.65rem; color: var(--muted); margin-bottom: 1px; }
+    .ctrl-row .ctrl-line { display: flex; align-items: center; gap: 0.4rem; }
+    .ctrl-row input[type=range] { flex: 1; accent-color: var(--accent); height: 3px; }
+    .ctrl-row .val { font-size: 0.62rem; color: #aaa; min-width: 3rem; text-align: right; }
+
+    /* ── Synth card (special) ─────────────────────────────────── */
+    #synth-card {
+      padding: 0.8rem 1.2rem 0.8rem 1.4rem; border-right: 1px solid var(--border);
+      min-width: 340px;
+    }
+    #synth-card .card-title { font-size: 0.82rem; color: var(--accent2); margin-bottom: 0.5rem; }
+
+    /* ── Piano ────────────────────────────────────────────────── */
+    #piano-wrap { margin: 0.5rem 0 0.4rem; }
+    .oct-row { display: flex; align-items: center; gap: 0.4rem; font-size: 0.72rem; color: var(--muted); margin-bottom: 0.35rem; }
+    .oct-row button { padding: 0.1rem 0.45rem; font-size: 0.8rem; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 2px; cursor: pointer; }
+    .piano { position: relative; display: flex; height: 80px; user-select: none; }
+    .wk {
+      width: 30px; height: 80px; background: #e0e0e0; border: 1px solid #888;
+      border-radius: 0 0 3px 3px; cursor: pointer; flex-shrink: 0;
+      display: flex; align-items: flex-end; justify-content: center; padding-bottom: 4px;
+      font-size: 0.52rem; color: #aaa;
+    }
+    .wk.on { background: #7aaaf5; }
+    .bk {
+      position: absolute; width: 20px; height: 48px; background: #181818;
+      border: 1px solid #000; border-radius: 0 0 2px 2px; cursor: pointer; z-index: 2;
+      display: flex; align-items: flex-end; justify-content: center; padding-bottom: 3px;
+      font-size: 0.5rem; color: #555;
+    }
+    .bk.on { background: #2a4a99; }
+
+    /* ── Synth sliders ────────────────────────────────────────── */
+    #synth-ctrls { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; margin-top: 0.4rem; }
   </style>
 </head>
 <body>
+
+<!-- ── Start overlay ─────────────────────────────────────── -->
+<div id="start-overlay">
+  <h2>wadspa</h2>
+  <p>LADSPA and LV2 plugins compiled to WebAssembly — running in your browser</p>
+  <button id="start-overlay-btn">Start audio</button>
+  <p id="overlay-status" style="font-size:0.75rem;color:var(--muted);min-height:1.2em"></p>
+</div>
+
+<header>
   <h1>wadspa</h1>
-  <p style="font-size:0.8rem;color:#666;margin:0 0 0.8rem"><a href="synth.html" style="color:#5588ee">→ synth demo (virtual piano)</a></p>
-  <button id="start">Start</button>
+  <a href="https://github.com/wadspa/wadspa" target="_blank">github</a>
+  <span id="catalog-stats">loading catalog…</span>
+  <span id="status"></span>
+  <button id="start-btn" style="display:none">Start audio</button>
+</header>
 
-  <div id="ui" style="display:none">
-    <h2>amp</h2>
-    <div class="row">
-      <label>Gain</label>
-      <input type="range" id="amp-gain" min="-70" max="70" value="0" step="0.5">
-      <span class="val" id="amp-gain-val">0 dB</span>
-    </div>
-
-    <h2>dj_eq_mono</h2>
-    <div class="row">
-      <label>Lo</label>
-      <input type="range" id="eq-lo" min="-70" max="6" value="0" step="0.5">
-      <span class="val" id="eq-lo-val">0 dB</span>
-    </div>
-    <div class="row">
-      <label>Mid</label>
-      <input type="range" id="eq-mid" min="-70" max="6" value="0" step="0.5">
-      <span class="val" id="eq-mid-val">0 dB</span>
-    </div>
-    <div class="row">
-      <label>Hi</label>
-      <input type="range" id="eq-hi" min="-70" max="6" value="0" step="0.5">
-      <span class="val" id="eq-hi-val">0 dB</span>
+<main>
+  <!-- ── Synth + keyboard ──────────────────────────────── -->
+  <div id="synth-section">
+    <div id="synth-card">
+      <div id="synth-header">
+        <span class="section-lbl">instrument</span>
+        <div id="instrument-wrap">
+          <button id="instrument-btn">wadspa synth ▾</button>
+          <div id="instrument-dropdown">
+          </div>
+        </div>
+      </div>
+      <div id="piano-wrap">
+        <div class="oct-row">
+          <button id="oct-dn">−</button>
+          <span id="oct-lbl">octave 4</span>
+          <button id="oct-up">+</button>
+          <span style="margin-left:0.5rem;font-size:0.65rem">A–J / W E T Y U · −= octave</span>
+        </div>
+        <div class="piano" id="piano"></div>
+      </div>
+      <div id="synth-ctrls"></div>
     </div>
   </div>
 
-  <div id="log">waiting...</div>
+  <!-- ── Effects chain ─────────────────────────────────── -->
+  <div id="chain-section">
+    <div id="chain-header">
+      <h2>effects / plugins chain</h2>
+      <div class="add-btn" id="add-wrap">
+        <button id="add-btn">+ add effect/plugin ▾</button>
+        <div class="dropdown" id="dropdown"></div>
+      </div>
+    </div>
+    <div id="chain-cards">
+      <div class="out-badge" id="out-badge">▶ output</div>
+    </div>
+  </div>
+</main>
 
-  <script type="module">
-    import { loadPlugin } from './core.js';
+<script>
+// Register COI service worker so SharedArrayBuffer is available for
+// threaded WASM plugins on GitHub Pages (which can't set custom headers).
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./coi-serviceworker.js').then(reg => {
+        if (!crossOriginIsolated && reg.active) location.reload();
+    });
+}
+</script>
+<script type="module">
+import { loadPlugin } from './core.js';
 
-    const ampPlugin = {
-      meta: {
-        id: 1181, label: 'amp', name: 'Simple Amplifier', maker: 'wadspa',
-        ports: [
-          { index: 0, name: 'Gain (dB)', dir: 'input',  type: 'control', min: -70, max: 70, default: '0' },
-          { index: 1, name: 'Input',     dir: 'input',  type: 'audio' },
-          { index: 2, name: 'Output',    dir: 'output', type: 'audio' },
-        ]
-      },
-      wasmUrl:      new URL('./amp.wasm',           import.meta.url).href,
-      processorUrl: new URL('./amp-processor.js',   import.meta.url).href,
-    };
+// ── Plugin catalog ────────────────────────────────────────────
+// meta.ports drives both the loadPlugin call and the UI sliders.
+// All ports listed here appear as sliders in the card.
 
-    const eqPlugin = {
-      meta: {
-        id: 1907, label: 'dj_eq_mono', name: 'DJ EQ (mono)', maker: 'wadspa',
-        ports: [
-          { index: 0, name: 'Lo gain (dB)',  dir: 'input',  type: 'control', min: -70, max: 6, default: '0' },
-          { index: 1, name: 'Mid gain (dB)', dir: 'input',  type: 'control', min: -70, max: 6, default: '0' },
-          { index: 2, name: 'Hi gain (dB)',  dir: 'input',  type: 'control', min: -70, max: 6, default: '0' },
-          { index: 3, name: 'Input',         dir: 'input',  type: 'audio' },
-          { index: 4, name: 'Output',        dir: 'output', type: 'audio' },
-          { index: 5, name: 'Latency',       dir: 'output', type: 'control' },
-        ]
-      },
-      wasmUrl:      new URL('./dj_eq_mono.wasm',          import.meta.url).href,
-      processorUrl: new URL('./dj_eq_mono-processor.js',  import.meta.url).href,
-    };
+// Loaded from docs/instruments.json by build-instruments.js.
+// MIDI-driven LV2 plugins appear here; audio-driven LV2 plugins appear in the effects catalog.
+let INSTRUMENTS = [];
+try {
+  INSTRUMENTS = await fetch('./instruments.json').then(r => {
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  });
+} catch (e) {
+  console.error('Failed to load instruments.json:', e);
+}
 
-    const log = msg => document.getElementById('log').textContent = msg;
+let EFFECTS = [];
+try {
+  EFFECTS = await fetch('./plugins/catalog.json').then(r => {
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  });
+} catch (e) {
+  console.error('Failed to load catalog.json:', e);
+}
 
-    function bindSlider(id, label, onInput) {
-      const slider = document.getElementById(id);
-      const valEl  = document.getElementById(id + '-val');
+const catalogStats = document.getElementById('catalog-stats');
+const totalPlugins = INSTRUMENTS.length + EFFECTS.length;
+catalogStats.textContent = totalPlugins
+  ? `${totalPlugins} plugins: ${INSTRUMENTS.length} instruments, ${EFFECTS.length} effects`
+  : 'catalog unavailable';
+
+// ── Plugin URL helpers ──────────────────────────────────────────
+const BASE = new URL('./plugins/', import.meta.url).href;
+
+function pluginModule(eff) {
+  return {
+    meta: { label: eff.label, ports: eff.ports },
+    wasmUrl:      `${BASE}${eff.id}/${eff.wasmFile}`,
+    processorUrl: `${BASE}${eff.id}/${eff.processorFile}`,
+  };
+}
+
+let activeInstrument = INSTRUMENTS[0] ?? null;
+
+function instrumentModule(inst) {
+  return {
+    meta: { label: inst.label, ports: inst.ports },
+    wasmUrl:      `${BASE}${inst.id}/${inst.wasmFile}`,
+    processorUrl: `${BASE}${inst.id}/${inst.processorFile}`,
+  };
+}
+
+// ── Audio state ─────────────────────────────────────────────────
+let ctx    = null;
+let synth  = null;
+const chain = [];   // array of { eff, node }
+
+async function rewire() {
+  if (!ctx || !synth) return;
+  synth.output.disconnect();
+  for (const { node } of chain) node.output.disconnect();
+
+  let prev = synth;
+  for (const { node } of chain) {
+    prev.output.connect(node.input);
+    prev = node;
+  }
+  prev.output.connect(ctx.destination);
+}
+
+// ── Piano ────────────────────────────────────────────────────────
+const WHITE  = [0,2,4,5,7,9,11];
+const WNAMES = ['C','D','E','F','G','A','B'];
+const BLACK  = [{semi:1,left:20},{semi:3,left:50},{semi:6,left:110},{semi:8,left:140},{semi:10,left:170}];
+const KLABEL = ['A','W','S','E','D','F','T','G','Y','H','U','J'];
+const KMAP   = {a:0,w:1,s:2,e:3,d:4,f:5,t:6,g:7,y:8,h:9,u:10,j:11};
+
+let octave = 4;
+let mouseHeld = null;
+const kbActive = new Map();
+const pressedKeys = new Set();
+
+function midiNote(semi) { return (octave + 1) * 12 + semi; }
+
+function markKey(semi, on) {
+  document.querySelectorAll(`[data-semi="${semi}"]`).forEach(el => el.classList.toggle('on', on));
+}
+
+function mousePress(semi) {
+  if (mouseHeld) { if (mouseHeld.semi === semi) return; mouseRelease(); }
+  const note = midiNote(semi);
+  mouseHeld = { semi, note };
+  markKey(semi, true);
+  synth?.noteOn(note, 100);
+}
+function mouseRelease() {
+  if (!mouseHeld) return;
+  const { semi, note } = mouseHeld; mouseHeld = null;
+  markKey(semi, false); synth?.noteOff(note);
+}
+document.addEventListener('mouseup', mouseRelease);
+
+function buildPiano() {
+  const piano = document.getElementById('piano');
+  piano.innerHTML = '';
+  WHITE.forEach((semi, i) => {
+    const el = document.createElement('div');
+    el.className = 'wk'; el.dataset.semi = semi;
+    el.textContent = KLABEL[semi];
+    el.addEventListener('mousedown',  e => { e.preventDefault(); mousePress(semi); });
+    el.addEventListener('mouseenter', e => { if (e.buttons & 1) mousePress(semi); });
+    piano.appendChild(el);
+  });
+  BLACK.forEach(({ semi, left }) => {
+    const el = document.createElement('div');
+    el.className = 'bk'; el.dataset.semi = semi;
+    el.style.left = left + 'px';
+    el.textContent = KLABEL[semi];
+    el.addEventListener('mousedown',  e => { e.preventDefault(); mousePress(semi); });
+    el.addEventListener('mouseenter', e => { if (e.buttons & 1) mousePress(semi); });
+    piano.appendChild(el);
+  });
+}
+
+window.addEventListener('keydown', e => {
+  if (e.repeat || e.metaKey || e.ctrlKey) return;
+  const k = e.key.toLowerCase();
+  if (k === '-') { if (octave > 0) { octave--; document.getElementById('oct-lbl').textContent = `octave ${octave}`; } return; }
+  if (k === '=') { if (octave < 8) { octave++; document.getElementById('oct-lbl').textContent = `octave ${octave}`; } return; }
+  if (k in KMAP && !pressedKeys.has(k)) {
+    pressedKeys.add(k);
+    const semi = KMAP[k], note = midiNote(semi);
+    kbActive.set(k, { semi, note });
+    markKey(semi, true); synth?.noteOn(note, 100);
+  }
+});
+window.addEventListener('keyup', e => {
+  const k = e.key.toLowerCase();
+  if (k in KMAP) {
+    pressedKeys.delete(k);
+    const entry = kbActive.get(k);
+    if (entry) { kbActive.delete(k); markKey(entry.semi, false); synth?.noteOff(entry.note); }
+  }
+});
+
+document.getElementById('oct-dn').onclick = () => { if (octave > 0) { octave--; document.getElementById('oct-lbl').textContent = `octave ${octave}`; } };
+document.getElementById('oct-up').onclick = () => { if (octave < 8) { octave++; document.getElementById('oct-lbl').textContent = `octave ${octave}`; } };
+
+buildPiano();
+
+// ── Synth controls (built after loadPlugin) ───────────────────
+function buildSynthControls(node, inst) {
+  const ctrls = document.getElementById('synth-ctrls');
+  const ctrlPorts = inst.ports.filter(p => p.type === 'control' && p.dir === 'input');
+  ctrls.innerHTML = '';
+  for (const p of ctrlPorts) {
+    const row = document.createElement('div');
+    row.className = 'ctrl-row';
+    const fmt = p.max <= 1 ? v => v.toFixed(2) : p.max <= 10 ? v => v.toFixed(2) + ' s' : v => v.toFixed(1);
+    row.innerHTML = `<label>${p.name}</label>
+      <div class="ctrl-line">
+        <input type="range" min="${p.min}" max="${p.max}" step="${(p.max-p.min)/200}" value="${p.default}">
+        <span class="val">${fmt(p.default)}</span>
+      </div>`;
+    const slider = row.querySelector('input');
+    const val    = row.querySelector('.val');
+    slider.addEventListener('input', () => {
+      const v = parseFloat(slider.value); val.textContent = fmt(v);
+      node.set(p.name, v);
+    });
+    ctrls.appendChild(row);
+  }
+}
+
+async function switchInstrument(inst) {
+  if (!ctx) return;
+  if (synth) { synth.output.disconnect(); synth = null; }
+  setStatus(`loading ${inst.name}…`);
+  try {
+    synth = await loadPlugin(ctx, instrumentModule(inst));
+    activeInstrument = inst;
+    buildSynthControls(synth, inst);
+    rewire();
+    document.getElementById('instrument-btn').textContent = inst.name + ' ▾';
+    document.querySelectorAll('.inst-item').forEach(el =>
+      el.classList.toggle('active', el.dataset.inst === inst.id));
+    setStatus('ready');
+  } catch (e) {
+    setStatus(`ERROR: ${e.message}`);
+    console.error(e);
+  }
+}
+
+// ── Effects chain UI ──────────────────────────────────────────
+function cardFmt(p, v) {
+  if (p.max - p.min > 100) return v.toFixed(0);
+  if (p.max <= 1)  return v.toFixed(2);
+  if (p.max <= 10) return v.toFixed(2);
+  return v.toFixed(1);
+}
+
+function renderChain() {
+  const container = document.getElementById('chain-cards');
+  const outBadge  = document.getElementById('out-badge');
+  container.innerHTML = '';
+
+  for (let i = 0; i < chain.length; i++) {
+    const { eff, node } = chain[i];
+
+    if (i > 0) {
+      const arrow = document.createElement('div');
+      arrow.className = 'arrow'; arrow.textContent = '→';
+      container.appendChild(arrow);
+    }
+
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    const ctrlPorts = eff.ports.filter(p => p.type === 'control' && p.dir === 'input');
+
+    card.innerHTML = `
+      <div class="card-title">
+        <span>${eff.name}</span>
+        <button class="remove-btn" title="remove">×</button>
+      </div>
+      ${ctrlPorts.map(p => `
+        <div class="ctrl-row">
+          <label>${p.name}</label>
+          <div class="ctrl-line">
+            <input type="range" min="${p.min}" max="${p.max}"
+                   step="${(p.max-p.min)/200}" value="${p.default}"
+                   data-port="${p.name}">
+            <span class="val">${cardFmt(p, p.default)}</span>
+          </div>
+        </div>`).join('')}
+    `;
+
+    card.querySelector('.remove-btn').addEventListener('click', async () => {
+      chain.splice(i, 1);
+      node.output.disconnect();
+      renderChain();
+      rewire();
+    });
+
+    for (const p of ctrlPorts) {
+      const slider = card.querySelector(`[data-port="${p.name}"]`);
+      const valEl  = slider.closest('.ctrl-line').querySelector('.val');
       slider.addEventListener('input', () => {
         const v = parseFloat(slider.value);
-        valEl.textContent = v + ' dB';
-        onInput(v);
+        valEl.textContent = cardFmt(p, v);
+        node.set(p.name, v);
       });
     }
 
-    document.getElementById('start').addEventListener('click', async () => {
-      document.getElementById('start').disabled = true;
-      try {
-        const ctx = new AudioContext();
-        log('loading amp...');
-        const amp = await loadPlugin(ctx, ampPlugin);
-        log('loading dj_eq_mono...');
-        const eq  = await loadPlugin(ctx, eqPlugin);
+    container.appendChild(card);
+  }
 
-        // chain: oscillator → eq → amp → output
-        const osc = ctx.createOscillator();
-        osc.type = 'sawtooth';
-        osc.frequency.value = 220;
-        osc.start();
+  if (chain.length > 0) {
+    const arrow = document.createElement('div');
+    arrow.className = 'arrow'; arrow.textContent = '→';
+    container.appendChild(arrow);
+  }
+  container.appendChild(outBadge);
+}
 
-        osc.connect(eq.input);
-        eq.output.connect(amp.input);
-        amp.output.connect(ctx.destination);
+async function addEffect(eff) {
+  closeDropdown();
+  setStatus(`loading ${eff.name}…`);
 
-        bindSlider('amp-gain', 'Gain', v => amp.set('Gain (dB)', v));
-        bindSlider('eq-lo',   'Lo',   v => eq.set('Lo gain (dB)', v));
-        bindSlider('eq-mid',  'Mid',  v => eq.set('Mid gain (dB)', v));
-        bindSlider('eq-hi',   'Hi',   v => eq.set('Hi gain (dB)', v));
+  // placeholder card while loading
+  const placeholder = document.createElement('div');
+  placeholder.className = 'card loading';
+  placeholder.innerHTML = `<div class="card-title"><span>${eff.name}</span></div><div style="font-size:0.7rem;color:var(--muted)">loading…</div>`;
+  const container = document.getElementById('chain-cards');
+  const outBadge  = document.getElementById('out-badge');
+  if (chain.length > 0) {
+    const arrow = document.createElement('div'); arrow.className = 'arrow'; arrow.textContent = '→';
+    container.insertBefore(arrow, outBadge);
+  }
+  container.insertBefore(placeholder, outBadge);
 
-        document.getElementById('ui').style.display = 'block';
-        log('running — osc → dj_eq_mono → amp → output');
-      } catch (e) {
-        log('ERROR: ' + e.message);
-        console.error(e);
-        document.getElementById('start').disabled = false;
-      }
+  try {
+    const mod  = pluginModule(eff);
+    const node = await loadPlugin(ctx, mod);
+    chain.push({ eff, node });
+    await rewire();
+    renderChain();
+    setStatus(`${eff.name} added`);
+  } catch (e) {
+    placeholder.remove();
+    setStatus(`ERROR: ${e.message}`);
+    console.error(e);
+  }
+}
+
+// ── Dropdown ──────────────────────────────────────────────────
+function buildDropdown() {
+  const dd = document.getElementById('dropdown');
+  const categories = [...new Set(EFFECTS.map(e => e.category))].sort((a, b) => {
+    if (a === 'LV2 Effects') return -1;
+    if (b === 'LV2 Effects') return 1;
+    return a.localeCompare(b);
+  });
+  dd.innerHTML = '';
+  for (const cat of categories) {
+    const sep = document.createElement('div');
+    sep.className = 'dropdown-sep';
+    const lbl = document.createElement('div');
+    lbl.style.cssText = 'font-size:0.62rem;color:var(--muted);padding:0.3rem 0.8rem 0.1rem;text-transform:uppercase;letter-spacing:0.06em';
+    lbl.textContent = cat;
+    dd.appendChild(sep); dd.appendChild(lbl);
+    for (const eff of EFFECTS.filter(e => e.category === cat)) {
+      const item = document.createElement('div');
+      item.className = 'dropdown-item';
+      item.textContent = eff.name;
+      item.addEventListener('click', () => addEffect(eff));
+      dd.appendChild(item);
+    }
+  }
+}
+
+function closeDropdown() { document.getElementById('dropdown').classList.remove('open'); }
+document.getElementById('add-btn').addEventListener('click', e => {
+  e.stopPropagation();
+  document.getElementById('dropdown').classList.toggle('open');
+});
+document.addEventListener('click', e => {
+  closeDropdown();
+  document.getElementById('instrument-dropdown').classList.remove('open');
+});
+buildDropdown();
+
+// ── Instrument picker ─────────────────────────────────────────
+function buildInstrumentDropdown() {
+  const dd = document.getElementById('instrument-dropdown');
+  dd.innerHTML = '';
+  for (const inst of INSTRUMENTS) {
+    const item = document.createElement('div');
+    item.className = 'inst-item' + (inst === activeInstrument ? ' active' : '');
+    item.dataset.inst = inst.id;
+    item.textContent = inst.name;
+    item.addEventListener('click', e => {
+      e.stopPropagation();
+      document.getElementById('instrument-dropdown').classList.remove('open');
+      switchInstrument(inst);
     });
-  </script>
+    dd.appendChild(item);
+  }
+  const btn = document.getElementById('instrument-btn');
+  btn.textContent = (activeInstrument?.name ?? 'instrument') + ' ▾';
+}
+
+document.getElementById('instrument-btn').addEventListener('click', e => {
+  e.stopPropagation();
+  document.getElementById('instrument-dropdown').classList.toggle('open');
+});
+buildInstrumentDropdown();
+
+// ── Start ──────────────────────────────────────────────────────
+function setStatus(msg) { document.getElementById('status').textContent = msg; }
+
+async function startAudio() {
+  const overlayStatus = document.getElementById('overlay-status');
+  const overlayBtn    = document.getElementById('start-overlay-btn');
+  overlayBtn.disabled = true;
+  overlayStatus.textContent = 'loading synth…';
+  try {
+    ctx   = new AudioContext();
+    if (!activeInstrument) throw new Error('No instruments loaded');
+    synth = await loadPlugin(ctx, instrumentModule(activeInstrument));
+    synth.output.connect(ctx.destination);
+    buildSynthControls(synth, activeInstrument);
+    renderChain();
+    document.getElementById('start-overlay').style.display = 'none';
+    setStatus('ready');
+  } catch (e) {
+    overlayStatus.textContent = 'ERROR: ' + e.message;
+    console.error(e);
+    overlayBtn.disabled = false;
+  }
+}
+
+document.getElementById('start-overlay-btn').addEventListener('click', startAudio);
+document.getElementById('start-btn').addEventListener('click', startAudio);
+</script>
 </body>
 </html>

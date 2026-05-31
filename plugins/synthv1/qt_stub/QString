@@ -1,0 +1,52 @@
+#pragma once
+#include "QByteArray"
+#include <string>
+#include <cstring>
+
+class QString {
+    std::string m_s;
+public:
+    QString() = default;
+    QString(const char *s) : m_s(s ? s : "") {}
+    QString(const std::string &s) : m_s(s) {}
+
+    static QString fromUtf8(const char *s)    { return QString(s); }
+    static QString fromLocal8Bit(const char *s){ return QString(s); }
+
+    // Returns a QByteArray that points into this QString's internal buffer.
+    // Safe to use immediately (before this QString is modified or destroyed).
+    QByteArray toUtf8() const { return QByteArray(m_s.c_str()); }
+
+    bool isEmpty() const { return m_s.empty(); }
+    int  size()    const { return (int)m_s.size(); }
+    char at(int i) const { return m_s[i]; }
+
+    bool startsWith(const char *s) const {
+        size_t n = s ? ::strlen(s) : 0;
+        return n > 0 && m_s.compare(0, n, s) == 0;
+    }
+    bool startsWith(const QString &o) const {
+        return m_s.compare(0, o.m_s.size(), o.m_s) == 0;
+    }
+    bool endsWith(const char *s) const {
+        size_t n = s ? ::strlen(s) : 0;
+        return n > 0 && m_s.size() >= n &&
+               m_s.compare(m_s.size() - n, n, s) == 0;
+    }
+    QString trimmed() const {
+        size_t a = m_s.find_first_not_of(" \t\r\n");
+        if (a == std::string::npos) return {};
+        size_t b = m_s.find_last_not_of(" \t\r\n");
+        return QString(m_s.substr(a, b - a + 1));
+    }
+
+    bool operator==(const QString &o) const { return m_s == o.m_s; }
+    bool operator!=(const QString &o) const { return m_s != o.m_s; }
+    bool operator< (const QString &o) const { return m_s <  o.m_s; }
+    bool operator==(const char *s)    const { return m_s == (s ? s : ""); }
+    bool operator!=(const char *s)    const { return m_s != (s ? s : ""); }
+
+    QString &operator=(const char *s) { m_s = s ? s : ""; return *this; }
+
+    std::string toStdString() const { return m_s; }
+};

@@ -1,0 +1,74 @@
+#pragma once
+#include "qglobal.h"
+
+// No-op synchronization — WASM is single-threaded.
+class QMutex {
+public:
+    enum RecursionMode { NonRecursive = 0, Recursive = 1 };
+    explicit QMutex(RecursionMode = NonRecursive) {}
+    void lock()    {}
+    void unlock()  {}
+    bool tryLock(int = 0) { return true; }
+    bool try_lock()       { return true; }
+};
+
+class QMutexLocker {
+public:
+    explicit QMutexLocker(QMutex *) {}
+    ~QMutexLocker() = default;
+    void unlock() {}
+    void relock()  {}
+    QMutex *mutex() const { return nullptr; }
+    Q_DISABLE_COPY(QMutexLocker)
+};
+
+class QRecursiveMutex : public QMutex {
+public:
+    QRecursiveMutex() : QMutex(Recursive) {}
+};
+
+class QReadWriteLock {
+public:
+    enum RecursionMode { NonRecursive = 0, Recursive = 1 };
+    explicit QReadWriteLock(RecursionMode = NonRecursive) {}
+    void lockForRead()    {}
+    void lockForWrite()   {}
+    void unlock()         {}
+    bool tryLockForRead(int = 0)  { return true; }
+    bool tryLockForWrite(int = 0) { return true; }
+};
+
+class QReadLocker {
+public:
+    explicit QReadLocker(QReadWriteLock *)  {}
+    ~QReadLocker() = default;
+    void unlock() {}
+    void relock()  {}
+    Q_DISABLE_COPY(QReadLocker)
+};
+
+class QWriteLocker {
+public:
+    explicit QWriteLocker(QReadWriteLock *) {}
+    ~QWriteLocker() = default;
+    void unlock() {}
+    void relock()  {}
+    Q_DISABLE_COPY(QWriteLocker)
+};
+
+class QSemaphore {
+public:
+    explicit QSemaphore(int = 0) {}
+    void acquire(int = 1) {}
+    bool tryAcquire(int = 1, int = 0) { return true; }
+    void release(int = 1) {}
+    int available() const { return 1; }
+};
+
+class QWaitCondition {
+public:
+    void wakeOne() {}
+    void wakeAll() {}
+    bool wait(QMutex *, unsigned long = ULONG_MAX) { return true; }
+    bool wait(QReadWriteLock *, unsigned long = ULONG_MAX) { return true; }
+};

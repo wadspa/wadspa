@@ -1,0 +1,5531 @@
+[
+  {
+    "id": "amp",
+    "label": "amp",
+    "name": "Simple Amplifier",
+    "category": "Dynamics",
+    "wasmFile": "amp.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Gain (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 70,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 2,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "dj_eq",
+    "label": "dj_eq_mono",
+    "name": "DJ EQ (mono)",
+    "category": "EQ",
+    "wasmFile": "dj_eq_mono.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Lo gain (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 6,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "name": "Mid gain (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 6,
+        "default": 0
+      },
+      {
+        "index": 2,
+        "name": "Hi gain (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 6,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 4,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      },
+      {
+        "index": 5,
+        "name": "Latency",
+        "dir": "output",
+        "type": "control",
+        "integer": true
+      }
+    ]
+  },
+  {
+    "id": "plate",
+    "label": "plate",
+    "name": "Plate reverb",
+    "category": "Reverb",
+    "wasmFile": "plate.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Reverb time",
+        "dir": "input",
+        "type": "control",
+        "min": 0.01,
+        "max": 8.5,
+        "default": 0.01
+      },
+      {
+        "index": 1,
+        "name": "Damping",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0.25
+      },
+      {
+        "index": 2,
+        "name": "Dry/wet mix",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0.25
+      },
+      {
+        "index": 3,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 4,
+        "name": "Left output",
+        "dir": "output",
+        "type": "audio"
+      },
+      {
+        "index": 5,
+        "name": "Right output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "sc4",
+    "label": "sc4",
+    "name": "SC4",
+    "category": "Dynamics",
+    "wasmFile": "sc4.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "RMS/peak",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "name": "Attack time (ms)",
+        "dir": "input",
+        "type": "control",
+        "min": 1.5,
+        "max": 400,
+        "default": 101.125
+      },
+      {
+        "index": 2,
+        "name": "Release time (ms)",
+        "dir": "input",
+        "type": "control",
+        "min": 2,
+        "max": 800,
+        "default": 2
+      },
+      {
+        "index": 3,
+        "name": "Threshold level (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -30,
+        "max": 0,
+        "default": -30
+      },
+      {
+        "index": 4,
+        "name": "Ratio (1:n)",
+        "dir": "input",
+        "type": "control",
+        "min": 1,
+        "max": 20,
+        "default": 1
+      },
+      {
+        "index": 5,
+        "name": "Knee radius (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": 1,
+        "max": 10,
+        "default": 3.25
+      },
+      {
+        "index": 6,
+        "name": "Makeup gain (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 24,
+        "default": 0
+      },
+      {
+        "index": 7,
+        "name": "Amplitude (dB)",
+        "dir": "output",
+        "type": "control",
+        "min": -40,
+        "max": 12,
+        "default": -40
+      },
+      {
+        "index": 8,
+        "name": "Gain reduction (dB)",
+        "dir": "output",
+        "type": "control",
+        "min": -24,
+        "max": 0,
+        "default": -24
+      },
+      {
+        "index": 9,
+        "name": "Left input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 10,
+        "name": "Right input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 11,
+        "name": "Left output",
+        "dir": "output",
+        "type": "audio"
+      },
+      {
+        "index": 12,
+        "name": "Right output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "fast_lookahead_limiter",
+    "label": "fastLookaheadLimiter",
+    "name": "Fast Lookahead limiter",
+    "category": "Dynamics",
+    "wasmFile": "fastLookaheadLimiter.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Input gain (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 20,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "name": "Limit (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 0,
+        "default": 0
+      },
+      {
+        "index": 2,
+        "name": "Release time (s)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.01,
+        "max": 2,
+        "default": 0.5075
+      },
+      {
+        "index": 3,
+        "name": "Attenuation (dB)",
+        "dir": "output",
+        "type": "control",
+        "min": 0,
+        "max": 70,
+        "default": 0
+      },
+      {
+        "index": 4,
+        "name": "Input 1",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 5,
+        "name": "Input 2",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 6,
+        "name": "Output 1",
+        "dir": "output",
+        "type": "audio"
+      },
+      {
+        "index": 7,
+        "name": "Output 2",
+        "dir": "output",
+        "type": "audio"
+      },
+      {
+        "index": 8,
+        "name": "latency",
+        "dir": "output",
+        "type": "control"
+      }
+    ]
+  },
+  {
+    "id": "dc_remove",
+    "label": "dcRemove",
+    "name": "DC Offset Remover",
+    "category": "Utility",
+    "wasmFile": "dcRemove.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 1,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "decimator",
+    "label": "decimator",
+    "name": "Decimator",
+    "category": "Distortion",
+    "wasmFile": "decimator.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Bit depth",
+        "dir": "input",
+        "type": "control",
+        "min": 1,
+        "max": 24,
+        "default": 1
+      },
+      {
+        "index": 1,
+        "name": "Sample rate (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.001,
+        "max": 1,
+        "default": 0.001,
+        "sampleRate": true
+      },
+      {
+        "index": 2,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 3,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "declip",
+    "label": "declip",
+    "name": "Declipper",
+    "category": "Dynamics",
+    "wasmFile": "declip.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 1,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "hard_limiter",
+    "label": "hardLimiter",
+    "name": "Hard Limiter",
+    "category": "Dynamics",
+    "wasmFile": "hardLimiter.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "dB limit",
+        "dir": "input",
+        "type": "control",
+        "min": -50,
+        "max": 0,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "name": "Wet level",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 2,
+        "name": "Residue level",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 4,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "satan_maximiser",
+    "label": "satanMaximiser",
+    "name": "Barry's Satan Maximiser",
+    "category": "Dynamics",
+    "wasmFile": "satanMaximiser.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Decay time (samples)",
+        "dir": "input",
+        "type": "control",
+        "min": 2,
+        "max": 30,
+        "default": 2
+      },
+      {
+        "index": 1,
+        "name": "Knee point (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -90,
+        "max": 0,
+        "default": 0
+      },
+      {
+        "index": 2,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 3,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "crossover_dist",
+    "label": "crossoverDist",
+    "name": "Crossover distortion",
+    "category": "Distortion",
+    "wasmFile": "crossoverDist.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Crossover amplitude",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 0.1,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "name": "Smoothing",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 2,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 3,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "diode",
+    "label": "diode",
+    "name": "Diode Processor",
+    "category": "Distortion",
+    "wasmFile": "diode.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Mode (0 for none, 1 for half wave, 2 for full wave)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 3,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 2,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "foverdrive",
+    "label": "foverdrive",
+    "name": "Fast overdrive",
+    "category": "Distortion",
+    "wasmFile": "foverdrive.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Drive level",
+        "dir": "input",
+        "type": "control",
+        "min": 1,
+        "max": 3,
+        "default": 1
+      },
+      {
+        "index": 1,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 2,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "highpass_iir",
+    "label": "highpass_iir",
+    "name": "Glame Highpass Filter",
+    "category": "Filter",
+    "wasmFile": "highpass_iir.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Cutoff Frequency",
+        "dir": "input",
+        "type": "control",
+        "min": 0.0001,
+        "max": 0.45,
+        "default": 0.112575,
+        "logarithmic": true,
+        "sampleRate": true
+      },
+      {
+        "index": 1,
+        "name": "Stages(2 poles per stage)",
+        "dir": "input",
+        "type": "control",
+        "min": 1,
+        "max": 10,
+        "default": 1,
+        "integer": true
+      },
+      {
+        "index": 2,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 3,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "lowpass_iir",
+    "label": "lowpass_iir",
+    "name": "Glame Lowpass Filter",
+    "category": "Filter",
+    "wasmFile": "lowpass_iir.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Cutoff Frequency",
+        "dir": "input",
+        "type": "control",
+        "min": 0.0001,
+        "max": 0.45,
+        "default": 0.45,
+        "logarithmic": true,
+        "sampleRate": true
+      },
+      {
+        "index": 1,
+        "name": "Stages(2 poles per stage)",
+        "dir": "input",
+        "type": "control",
+        "min": 1,
+        "max": 10,
+        "default": 1,
+        "integer": true
+      },
+      {
+        "index": 2,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 3,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "bandpass_iir",
+    "label": "bandpass_iir",
+    "name": "Glame Bandpass Filter",
+    "category": "Filter",
+    "wasmFile": "bandpass_iir.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Center Frequency (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.0001,
+        "max": 0.45,
+        "default": 0.0001,
+        "logarithmic": true,
+        "sampleRate": true
+      },
+      {
+        "index": 1,
+        "name": "Bandwidth (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.0001,
+        "max": 0.45,
+        "default": 0.0001,
+        "logarithmic": true,
+        "sampleRate": true
+      },
+      {
+        "index": 2,
+        "name": "Stages(2 poles per stage)",
+        "dir": "input",
+        "type": "control",
+        "min": 1,
+        "max": 10,
+        "default": 1,
+        "integer": true
+      },
+      {
+        "index": 3,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 4,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "notch_iir",
+    "label": "notch_iir",
+    "name": "Mag's Notch Filter",
+    "category": "Filter",
+    "wasmFile": "notch_iir.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Center Frequency (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.0001,
+        "max": 0.45,
+        "default": 0.0001,
+        "logarithmic": true,
+        "sampleRate": true
+      },
+      {
+        "index": 1,
+        "name": "Bandwidth (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.0001,
+        "max": 0.45,
+        "default": 0.0001,
+        "logarithmic": true,
+        "sampleRate": true
+      },
+      {
+        "index": 2,
+        "name": "Stages(2 poles per stage)",
+        "dir": "input",
+        "type": "control",
+        "min": 1,
+        "max": 10,
+        "default": 1,
+        "integer": true
+      },
+      {
+        "index": 3,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 4,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "butterworth",
+    "label": "bwxover_iir",
+    "name": "Glame Butterworth X-over Filter",
+    "category": "Filter",
+    "wasmFile": "bwxover_iir.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Cutoff Frequency (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.0001,
+        "max": 0.45,
+        "default": 0.112575,
+        "logarithmic": true,
+        "sampleRate": true
+      },
+      {
+        "index": 1,
+        "name": "Resonance",
+        "dir": "input",
+        "type": "control",
+        "min": 0.1,
+        "max": 1.41,
+        "default": 0.1
+      },
+      {
+        "index": 2,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 3,
+        "name": "LP-Output",
+        "dir": "output",
+        "type": "audio"
+      },
+      {
+        "index": 4,
+        "name": "HP-Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "single_para",
+    "label": "singlePara",
+    "name": "Single band parametric",
+    "category": "EQ",
+    "wasmFile": "singlePara.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Gain (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 30,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "name": "Frequency (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 0.4,
+        "default": 0,
+        "sampleRate": true
+      },
+      {
+        "index": 2,
+        "name": "Bandwidth (octaves)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 4,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 4,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "triple_para",
+    "label": "triplePara",
+    "name": "Triple band parametric with shelves",
+    "category": "EQ",
+    "wasmFile": "triplePara.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Low-shelving gain (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 30,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "name": "Low-shelving frequency (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.0001,
+        "max": 0.49,
+        "default": 0.0001,
+        "logarithmic": true,
+        "sampleRate": true
+      },
+      {
+        "index": 2,
+        "name": "Low-shelving slope",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "name": "Band 1 gain (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 30,
+        "default": 0
+      },
+      {
+        "index": 4,
+        "name": "Band 1 frequency (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.0001,
+        "max": 0.49,
+        "default": 0.122575,
+        "logarithmic": true,
+        "sampleRate": true
+      },
+      {
+        "index": 5,
+        "name": "Band 1 bandwidth (octaves)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 4,
+        "default": 0
+      },
+      {
+        "index": 6,
+        "name": "Band 2 gain (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 30,
+        "default": 0
+      },
+      {
+        "index": 7,
+        "name": "Band 2 frequency (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.0001,
+        "max": 0.49,
+        "default": 0.0001,
+        "logarithmic": true,
+        "sampleRate": true
+      },
+      {
+        "index": 8,
+        "name": "Band 2 bandwidth (octaves)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 4,
+        "default": 0
+      },
+      {
+        "index": 9,
+        "name": "Band 3 gain (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 30,
+        "default": 0
+      },
+      {
+        "index": 10,
+        "name": "Band 3 frequency (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.0001,
+        "max": 0.49,
+        "default": 0.49,
+        "logarithmic": true,
+        "sampleRate": true
+      },
+      {
+        "index": 11,
+        "name": "Band 3 bandwidth (octaves)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 4,
+        "default": 0
+      },
+      {
+        "index": 12,
+        "name": "High-shelving gain (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 30,
+        "default": 0
+      },
+      {
+        "index": 13,
+        "name": "High-shelving frequency (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.0001,
+        "max": 0.49,
+        "default": 0.0001,
+        "logarithmic": true,
+        "sampleRate": true
+      },
+      {
+        "index": 14,
+        "name": "High-shelving slope",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 15,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 16,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "flanger",
+    "label": "flanger",
+    "name": "Flanger",
+    "category": "Modulation",
+    "wasmFile": "flanger.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Delay base (ms)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.1,
+        "max": 25,
+        "default": 6.325
+      },
+      {
+        "index": 1,
+        "name": "Max slowdown (ms)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 10,
+        "default": 2.5
+      },
+      {
+        "index": 2,
+        "name": "LFO frequency (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.05,
+        "max": 100,
+        "default": 25.0375,
+        "logarithmic": true
+      },
+      {
+        "index": 3,
+        "name": "Feedback",
+        "dir": "input",
+        "type": "control",
+        "min": -1,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 4,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 5,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "retro_flange",
+    "label": "retroFlange",
+    "name": "Retro Flanger",
+    "category": "Modulation",
+    "wasmFile": "retroFlange.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Average stall (ms)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 10,
+        "default": 2.5
+      },
+      {
+        "index": 1,
+        "name": "Flange frequency (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.5,
+        "max": 8,
+        "default": 0.5
+      },
+      {
+        "index": 2,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 3,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "comb",
+    "label": "comb",
+    "name": "Comb Filter",
+    "category": "Modulation",
+    "wasmFile": "comb.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Band separation (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 16,
+        "max": 640,
+        "default": 172
+      },
+      {
+        "index": 1,
+        "name": "Feedback",
+        "dir": "input",
+        "type": "control",
+        "min": -0.99,
+        "max": 0.99,
+        "default": 0
+      },
+      {
+        "index": 2,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 3,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "delay",
+    "label": "delay_n",
+    "name": "Simple delay line, noninterpolating",
+    "category": "Delay",
+    "wasmFile": "delay_n.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 1,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      },
+      {
+        "index": 2,
+        "name": "Max Delay (s)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "name": "Delay Time (s)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "default": 0
+      }
+    ]
+  },
+  {
+    "id": "gate",
+    "label": "gate",
+    "name": "Gate",
+    "category": "Dynamics",
+    "wasmFile": "gate.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "LF key filter (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.0007,
+        "max": 0.1,
+        "default": 0.0007,
+        "sampleRate": true
+      },
+      {
+        "index": 1,
+        "name": "HF key filter (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.005,
+        "max": 0.49,
+        "default": 0.005,
+        "sampleRate": true
+      },
+      {
+        "index": 2,
+        "name": "Key level (dB)",
+        "dir": "output",
+        "type": "control",
+        "min": -70,
+        "max": 20,
+        "default": -70
+      },
+      {
+        "index": 3,
+        "name": "Threshold (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 20,
+        "default": -70
+      },
+      {
+        "index": 4,
+        "name": "Attack (ms)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.01,
+        "max": 1000,
+        "default": 250.0075
+      },
+      {
+        "index": 5,
+        "name": "Hold (ms)",
+        "dir": "input",
+        "type": "control",
+        "min": 2,
+        "max": 2000,
+        "default": 2000
+      },
+      {
+        "index": 6,
+        "name": "Decay (ms)",
+        "dir": "input",
+        "type": "control",
+        "min": 2,
+        "max": 4000,
+        "default": 2
+      },
+      {
+        "index": 7,
+        "name": "Range (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -90,
+        "max": 0,
+        "default": -90
+      },
+      {
+        "index": 8,
+        "name": "Output select (-1 = key listen, 0 = gate, 1 = bypass)",
+        "dir": "input",
+        "type": "control",
+        "min": -1,
+        "max": 1,
+        "default": 0,
+        "integer": true
+      },
+      {
+        "index": 9,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 10,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "dyson_compress",
+    "label": "dysonCompress",
+    "name": "Dyson compressor",
+    "category": "Dynamics",
+    "wasmFile": "dysonCompress.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Peak limit (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -30,
+        "max": 0,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "name": "Release time (s)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0.25
+      },
+      {
+        "index": 2,
+        "name": "Fast compression ratio",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "name": "Compression ratio",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 4,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 5,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "chorus",
+    "label": "multivoiceChorus",
+    "name": "Multivoice Chorus",
+    "category": "Modulation",
+    "wasmFile": "multivoiceChorus.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Number of voices",
+        "dir": "input",
+        "type": "control",
+        "min": 1,
+        "max": 8,
+        "default": 1,
+        "integer": true
+      },
+      {
+        "index": 1,
+        "name": "Delay base (ms)",
+        "dir": "input",
+        "type": "control",
+        "min": 10,
+        "max": 40,
+        "default": 10
+      },
+      {
+        "index": 2,
+        "name": "Voice separation (ms)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 2,
+        "default": 0.5
+      },
+      {
+        "index": 3,
+        "name": "Detune (%)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 5,
+        "default": 0
+      },
+      {
+        "index": 4,
+        "name": "LFO frequency (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 2,
+        "max": 30,
+        "default": 9
+      },
+      {
+        "index": 5,
+        "name": "Output attenuation (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 0,
+        "default": 0
+      },
+      {
+        "index": 6,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 7,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "gverb",
+    "label": "gverb",
+    "name": "GVerb",
+    "category": "Reverb",
+    "wasmFile": "gverb.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Roomsize (m)",
+        "dir": "input",
+        "type": "control",
+        "min": 1,
+        "max": 300,
+        "default": 75.75
+      },
+      {
+        "index": 1,
+        "name": "Reverb time (s)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.1,
+        "max": 30,
+        "default": 7.575
+      },
+      {
+        "index": 2,
+        "name": "Damping",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "name": "Input bandwidth",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 1
+      },
+      {
+        "index": 4,
+        "name": "Dry signal level (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 0,
+        "default": -70
+      },
+      {
+        "index": 5,
+        "name": "Early reflection level (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 0,
+        "default": 0
+      },
+      {
+        "index": 6,
+        "name": "Tail level (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 0,
+        "default": 0
+      },
+      {
+        "index": 7,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 8,
+        "name": "Left output",
+        "dir": "output",
+        "type": "audio"
+      },
+      {
+        "index": 9,
+        "name": "Right output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "vynil",
+    "label": "vynil",
+    "name": "VyNil (Vinyl Effect)",
+    "category": "Character",
+    "wasmFile": "vynil.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Year",
+        "dir": "input",
+        "type": "control",
+        "min": 1900,
+        "max": 1990,
+        "default": 1900
+      },
+      {
+        "index": 1,
+        "name": "RPM",
+        "dir": "input",
+        "type": "control",
+        "min": 33,
+        "max": 78,
+        "default": 33
+      },
+      {
+        "index": 2,
+        "name": "Surface warping",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "name": "Crackle",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 4,
+        "name": "Wear",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 5,
+        "name": "Input L",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 6,
+        "name": "Input R",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 7,
+        "name": "Output L",
+        "dir": "output",
+        "type": "audio"
+      },
+      {
+        "index": 8,
+        "name": "Output R",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "valve",
+    "label": "valve",
+    "name": "Valve saturation",
+    "category": "Distortion",
+    "wasmFile": "valve.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Distortion level",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "name": "Distortion character",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 2,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 3,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "tape_delay",
+    "label": "tapeDelay",
+    "name": "Tape Delay Simulation",
+    "category": "Delay",
+    "wasmFile": "tapeDelay.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Tape speed (inches/sec, 1=normal)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 10,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "name": "Dry level (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -90,
+        "max": 0,
+        "default": -90
+      },
+      {
+        "index": 2,
+        "name": "Tap 1 distance (inches)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 4,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "name": "Tap 1 level (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -90,
+        "max": 0,
+        "default": 0
+      },
+      {
+        "index": 4,
+        "name": "Tap 2 distance (inches)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 4,
+        "default": 1
+      },
+      {
+        "index": 5,
+        "name": "Tap 2 level (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -90,
+        "max": 0,
+        "default": -90
+      },
+      {
+        "index": 6,
+        "name": "Tap 3 distance (inches)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 4,
+        "default": 0
+      },
+      {
+        "index": 7,
+        "name": "Tap 3 level (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -90,
+        "max": 0,
+        "default": -90
+      },
+      {
+        "index": 8,
+        "name": "Tap 4 distance (inches)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 4,
+        "default": 4
+      },
+      {
+        "index": 9,
+        "name": "Tap 4 level (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -90,
+        "max": 0,
+        "default": -90
+      },
+      {
+        "index": 10,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 11,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "svf",
+    "label": "svf",
+    "name": "State Variable Filter",
+    "category": "Filter",
+    "wasmFile": "svf.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 1,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      },
+      {
+        "index": 2,
+        "name": "Filter type (0=none, 1=LP, 2=HP, 3=BP, 4=BR, 5=AP)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 5,
+        "default": 0,
+        "integer": true
+      },
+      {
+        "index": 3,
+        "name": "Filter freq",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 6000,
+        "default": 0
+      },
+      {
+        "index": 4,
+        "name": "Filter Q",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0.25
+      },
+      {
+        "index": 5,
+        "name": "Filter resonance",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      }
+    ]
+  },
+  {
+    "id": "mda_SubSynth",
+    "label": "MDA_SubSynth",
+    "name": "MDA SubSynth",
+    "description": "Sub-bass synthesizer",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_SubSynth.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "type",
+        "name": "Type",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 0.75,
+        "default": 0.5
+      },
+      {
+        "index": 1,
+        "symbol": "level",
+        "name": "Level",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 50
+      },
+      {
+        "index": 2,
+        "symbol": "tune",
+        "name": "Tune",
+        "dir": "input",
+        "type": "control",
+        "min": 10,
+        "max": 320,
+        "default": 198
+      },
+      {
+        "index": 3,
+        "symbol": "dry_mix",
+        "name": "Dry Mix",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 50
+      },
+      {
+        "index": 4,
+        "symbol": "thresh",
+        "name": "Thresh",
+        "dir": "input",
+        "type": "control",
+        "min": -60,
+        "max": 0,
+        "default": -60
+      },
+      {
+        "index": 5,
+        "symbol": "release",
+        "name": "Release",
+        "dir": "input",
+        "type": "control",
+        "min": 1,
+        "max": 1442,
+        "default": 1
+      },
+      {
+        "index": 6,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 7,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 8,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 9,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_BeatBox",
+    "label": "MDA_BeatBox",
+    "name": "MDA BeatBox",
+    "description": "Drum machine / beat generator",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_BeatBox.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "hat_thr",
+        "name": "Hat Thr",
+        "dir": "input",
+        "type": "control",
+        "min": -40,
+        "max": 0,
+        "default": -38
+      },
+      {
+        "index": 1,
+        "symbol": "hat_rate",
+        "name": "Hat Rate",
+        "dir": "input",
+        "type": "control",
+        "min": 40,
+        "max": 240,
+        "default": 130
+      },
+      {
+        "index": 2,
+        "symbol": "hat_mix",
+        "name": "Hat Mix",
+        "dir": "input",
+        "type": "control",
+        "min": -24,
+        "max": 12,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "symbol": "kik_thr",
+        "name": "Kik Thr",
+        "dir": "input",
+        "type": "control",
+        "min": -40,
+        "max": 0,
+        "default": -20
+      },
+      {
+        "index": 4,
+        "symbol": "kik_trig",
+        "name": "Kik Trig",
+        "dir": "input",
+        "type": "control",
+        "min": 22,
+        "max": 3494,
+        "default": 300
+      },
+      {
+        "index": 5,
+        "symbol": "kik_mix",
+        "name": "Kik Mix",
+        "dir": "input",
+        "type": "control",
+        "min": -24,
+        "max": 12,
+        "default": 0
+      },
+      {
+        "index": 6,
+        "symbol": "snr_thr",
+        "name": "Snr Thr",
+        "dir": "input",
+        "type": "control",
+        "min": -40,
+        "max": 0,
+        "default": -20
+      },
+      {
+        "index": 7,
+        "symbol": "snr_trig",
+        "name": "Snr Trig",
+        "dir": "input",
+        "type": "control",
+        "min": 22,
+        "max": 3494,
+        "default": 527.4
+      },
+      {
+        "index": 8,
+        "symbol": "snr_mix",
+        "name": "Snr Mix",
+        "dir": "input",
+        "type": "control",
+        "min": -24,
+        "max": 12,
+        "default": 0
+      },
+      {
+        "index": 9,
+        "symbol": "dynamics",
+        "name": "Dynamics",
+        "dir": "input",
+        "type": "control",
+        "min": 1,
+        "max": 100,
+        "default": 50
+      },
+      {
+        "index": 10,
+        "symbol": "record",
+        "name": "Record",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 4,
+        "default": 0
+      },
+      {
+        "index": 11,
+        "symbol": "thru_mix",
+        "name": "Thru Mix",
+        "dir": "input",
+        "type": "control",
+        "min": -45,
+        "max": 0,
+        "default": -45
+      },
+      {
+        "index": 12,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 13,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 14,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 15,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_Ambience",
+    "label": "MDA_Ambience",
+    "name": "MDA Ambience",
+    "description": "The Ambience aims to emulate the sonic properties of a room. By tweaking the damping or roomsize controls, you can add some texture and reverb to your sound.",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_Ambience.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "size",
+        "name": "Roomsize",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 10,
+        "default": 7
+      },
+      {
+        "index": 1,
+        "symbol": "hf_damp",
+        "name": "Damping",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 70
+      },
+      {
+        "index": 2,
+        "symbol": "mix",
+        "name": "Mix",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 90
+      },
+      {
+        "index": 3,
+        "symbol": "output",
+        "name": "Level",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 20,
+        "default": 0
+      },
+      {
+        "index": 4,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 5,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 6,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 7,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_Bandisto",
+    "label": "MDA_Bandisto",
+    "name": "MDA Bandisto",
+    "description": "MDA Bandisto LV2 plugin",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_Bandisto.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "listen",
+        "name": "Listen",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 3,
+        "default": 3
+      },
+      {
+        "index": 1,
+        "symbol": "l_m",
+        "name": "L <> M",
+        "dir": "input",
+        "type": "control",
+        "min": 88,
+        "max": 1020,
+        "default": 550
+      },
+      {
+        "index": 2,
+        "symbol": "m_h",
+        "name": "M <> H",
+        "dir": "input",
+        "type": "control",
+        "min": 112,
+        "max": 19606,
+        "default": 9859
+      },
+      {
+        "index": 3,
+        "symbol": "l_dist",
+        "name": "L Dist",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 60,
+        "default": 45
+      },
+      {
+        "index": 4,
+        "symbol": "m_dist",
+        "name": "M Dist",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 60,
+        "default": 45
+      },
+      {
+        "index": 5,
+        "symbol": "h_dist",
+        "name": "H Dist",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 60,
+        "default": 45
+      },
+      {
+        "index": 6,
+        "symbol": "l_out",
+        "name": "L Out",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 20,
+        "default": 6
+      },
+      {
+        "index": 7,
+        "symbol": "m_out",
+        "name": "M Out",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 20,
+        "default": 0
+      },
+      {
+        "index": 8,
+        "symbol": "h_out",
+        "name": "H Out",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 20,
+        "default": 0
+      },
+      {
+        "index": 9,
+        "symbol": "mode",
+        "name": "Mode",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 10,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 11,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 12,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 13,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_Combo",
+    "label": "MDA_Combo",
+    "name": "MDA Combo",
+    "description": "Clip one side of the waveform more than the other for rougher or \"gated\" effects (use an oscilloscope plug-in to see what's happening)",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_Combo.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "model",
+        "name": "Model",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 6,
+        "default": 1
+      },
+      {
+        "index": 1,
+        "symbol": "drive",
+        "name": "Drive",
+        "dir": "input",
+        "type": "control",
+        "min": -100,
+        "max": 100,
+        "default": 50
+      },
+      {
+        "index": 2,
+        "symbol": "bias",
+        "name": "Bias",
+        "dir": "input",
+        "type": "control",
+        "min": -100,
+        "max": 100,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "symbol": "output",
+        "name": "Output",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 20,
+        "default": 14
+      },
+      {
+        "index": 4,
+        "symbol": "stereo",
+        "name": "Stereo",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 5,
+        "symbol": "hpf_freq",
+        "name": "HPF Freq",
+        "dir": "input",
+        "type": "control",
+        "min": 1,
+        "max": 50,
+        "default": 1
+      },
+      {
+        "index": 6,
+        "symbol": "hpf_reso",
+        "name": "HPF Reso",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 50
+      },
+      {
+        "index": 7,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 8,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 9,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 10,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_DeEss",
+    "label": "MDA_Deess",
+    "name": "MDA De-ess",
+    "description": "Reduce excessive sibilants (/s/ /t/ /sh/ etc.) in vocals and speech.",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_Deess.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "thresh",
+        "name": "Thresh",
+        "dir": "input",
+        "type": "control",
+        "min": -60,
+        "max": 0,
+        "default": -30
+      },
+      {
+        "index": 1,
+        "symbol": "freq",
+        "name": "Freq",
+        "dir": "input",
+        "type": "control",
+        "min": 1000,
+        "max": 12000,
+        "default": 7600
+      },
+      {
+        "index": 2,
+        "symbol": "hf_drive",
+        "name": "HF Drive",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 20,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 4,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 5,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 6,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_Degrade",
+    "label": "MDA_Degrade",
+    "name": "MDA Degrade",
+    "description": "The MDA Degrade is a signal degrader with extensive controls. Use Quantize for bitcrushing, Rate for sample rate reduction and Integrator to reduce aliasing....",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_Degrade.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "headroom",
+        "name": "Headroom",
+        "dir": "input",
+        "type": "control",
+        "min": -30,
+        "max": 0,
+        "default": -6
+      },
+      {
+        "index": 1,
+        "symbol": "quant",
+        "name": "Quant",
+        "dir": "input",
+        "type": "control",
+        "min": 4,
+        "max": 16,
+        "default": 10
+      },
+      {
+        "index": 2,
+        "symbol": "rate",
+        "name": "Rate",
+        "dir": "input",
+        "type": "control",
+        "min": 4800,
+        "max": 48000,
+        "default": 48000
+      },
+      {
+        "index": 3,
+        "symbol": "integrator_sr",
+        "name": "Integrator",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 4,
+        "symbol": "post_filt",
+        "name": "Post Filter",
+        "dir": "input",
+        "type": "control",
+        "min": 200,
+        "max": 20000,
+        "default": 15000
+      },
+      {
+        "index": 5,
+        "symbol": "non_lin",
+        "name": "Non-Lin",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0.16
+      },
+      {
+        "index": 6,
+        "symbol": "even_odd",
+        "name": "EvenOdd",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 1
+      },
+      {
+        "index": 7,
+        "symbol": "output",
+        "name": "Output",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 20,
+        "default": 0
+      },
+      {
+        "index": 8,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 9,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 10,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 11,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_Delay",
+    "label": "MDA_Delay",
+    "name": "MDA Delay",
+    "description": "MDA Delay LV2 plugin",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_Delay.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "l_delay",
+        "name": "L Delay",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 330,
+        "default": 250
+      },
+      {
+        "index": 1,
+        "symbol": "rl_delay",
+        "name": "R/L Delay",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 2,
+        "default": 1
+      },
+      {
+        "index": 2,
+        "symbol": "rl_fixed_ratios",
+        "name": "R Delay Fixed Ratios",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "symbol": "feedback",
+        "name": "Feedback",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 70
+      },
+      {
+        "index": 4,
+        "symbol": "fb_tone",
+        "name": "Fb Tone\\nLo<>Hi",
+        "dir": "input",
+        "type": "control",
+        "min": -1,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 5,
+        "symbol": "fx_mix",
+        "name": "FX Mix",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 33
+      },
+      {
+        "index": 6,
+        "symbol": "output",
+        "name": "Output",
+        "dir": "input",
+        "type": "control",
+        "min": -12,
+        "max": 6,
+        "default": 0
+      },
+      {
+        "index": 7,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 8,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 9,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 10,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_Detune",
+    "label": "MDA_Detune",
+    "name": "MDA Detune",
+    "description": "The Detune is a low-quality stereo pitch shifter. It can be used for the sort of detune effects found on multi-effects. It will create a widening effect but...",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_Detune.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "detune",
+        "name": "Detune",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 300,
+        "default": 2.4
+      },
+      {
+        "index": 1,
+        "symbol": "mix",
+        "name": "Mix",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 99,
+        "default": 50
+      },
+      {
+        "index": 2,
+        "symbol": "output",
+        "name": "Level",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 20,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "symbol": "latency",
+        "name": "Latency",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 4,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 5,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 6,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 7,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_Dither",
+    "label": "MDA_Dither",
+    "name": "MDA Dither",
+    "description": "When a waveform is rounded to the nearest 16 (or whatever)-bit value this causes distortion. Dither allows you to exchange this rough sounding signal-dependa...",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_Dither.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "word_len",
+        "name": "Word Len",
+        "dir": "input",
+        "type": "control",
+        "min": 8,
+        "max": 24,
+        "default": 16
+      },
+      {
+        "index": 1,
+        "symbol": "dither",
+        "name": "Dither",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 3,
+        "default": 0
+      },
+      {
+        "index": 2,
+        "symbol": "dith_amp",
+        "name": "Dith Amp",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 4,
+        "default": 2
+      },
+      {
+        "index": 3,
+        "symbol": "dc_trim",
+        "name": "DC Trim",
+        "dir": "input",
+        "type": "control",
+        "min": -2,
+        "max": 2,
+        "default": 0
+      },
+      {
+        "index": 4,
+        "symbol": "zoom",
+        "name": "Zoom",
+        "dir": "input",
+        "type": "control",
+        "min": -80,
+        "max": 0,
+        "default": 0
+      },
+      {
+        "index": 5,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 6,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 7,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 8,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_DubDelay",
+    "label": "MDA_DubDelay",
+    "name": "MDA DubDelay",
+    "description": "The DubDelay is the go-to pedal for musicians who look for a delay pedal that adds something special to their sound. The unique features of the DubDelay are...",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_DubDelay.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "delay",
+        "name": "Delay",
+        "dir": "input",
+        "type": "control",
+        "min": 1,
+        "max": 7500,
+        "default": 460
+      },
+      {
+        "index": 1,
+        "symbol": "feedback",
+        "name": "Feedback",
+        "dir": "input",
+        "type": "control",
+        "min": -110,
+        "max": 110,
+        "default": 55
+      },
+      {
+        "index": 2,
+        "symbol": "fb_tone",
+        "name": "Fb Tone",
+        "dir": "input",
+        "type": "control",
+        "min": -100,
+        "max": 100,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "symbol": "lfo_depth",
+        "name": "LFO Depth",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 30
+      },
+      {
+        "index": 4,
+        "symbol": "lfo_rate",
+        "name": "LFO Rate",
+        "dir": "input",
+        "type": "control",
+        "min": 0.01,
+        "max": 10,
+        "default": 0.05
+      },
+      {
+        "index": 5,
+        "symbol": "fx_mix",
+        "name": "FX Mix",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 50
+      },
+      {
+        "index": 6,
+        "symbol": "output",
+        "name": "Level",
+        "dir": "input",
+        "type": "control",
+        "min": -12,
+        "max": 6,
+        "default": 0
+      },
+      {
+        "index": 7,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 8,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 9,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 10,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_Dynamics",
+    "label": "MDA_Dynamics",
+    "name": "MDA Dynamics",
+    "description": "Very wide range allows \"overcompression\" where output gets quieter as input gets louder",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_Dynamics.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "thresh",
+        "name": "Thresh",
+        "dir": "input",
+        "type": "control",
+        "min": -40,
+        "max": 0,
+        "default": -16
+      },
+      {
+        "index": 1,
+        "symbol": "ratio",
+        "name": "Ratio",
+        "dir": "input",
+        "type": "control",
+        "min": -17,
+        "max": 0.5,
+        "default": -10
+      },
+      {
+        "index": 2,
+        "symbol": "output",
+        "name": "Output",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 40,
+        "default": 4
+      },
+      {
+        "index": 3,
+        "symbol": "attack",
+        "name": "Attack",
+        "dir": "input",
+        "type": "control",
+        "min": 2,
+        "max": 1571,
+        "default": 283.14
+      },
+      {
+        "index": 4,
+        "symbol": "release",
+        "name": "Release",
+        "dir": "input",
+        "type": "control",
+        "min": 1,
+        "max": 1571,
+        "default": 864.6
+      },
+      {
+        "index": 5,
+        "symbol": "limiter",
+        "name": "Limiter",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 10,
+        "default": 10
+      },
+      {
+        "index": 6,
+        "symbol": "gate_thr",
+        "name": "Gate Thr",
+        "dir": "input",
+        "type": "control",
+        "min": -60,
+        "max": 0,
+        "default": -60
+      },
+      {
+        "index": 7,
+        "symbol": "gate_att",
+        "name": "Gate Att",
+        "dir": "input",
+        "type": "control",
+        "min": 5,
+        "max": 15782,
+        "default": 5
+      },
+      {
+        "index": 8,
+        "symbol": "gate_rel",
+        "name": "Gate Rel",
+        "dir": "input",
+        "type": "control",
+        "min": 9,
+        "max": 17384,
+        "default": 173.93
+      },
+      {
+        "index": 9,
+        "symbol": "mix",
+        "name": "Mix",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 100
+      },
+      {
+        "index": 10,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 11,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 12,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 13,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_Image",
+    "label": "MDA_Image",
+    "name": "MDA Image",
+    "description": "MDA Image LV2 plugin",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_Image.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "mode",
+        "name": "Mode",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "symbol": "s_width",
+        "name": "S Width",
+        "dir": "input",
+        "type": "control",
+        "min": -200,
+        "max": 200,
+        "default": 100
+      },
+      {
+        "index": 2,
+        "symbol": "s_pan",
+        "name": "S Pan",
+        "dir": "input",
+        "type": "control",
+        "min": -100,
+        "max": 100,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "symbol": "m_level",
+        "name": "M Level",
+        "dir": "input",
+        "type": "control",
+        "min": -200,
+        "max": 200,
+        "default": 100
+      },
+      {
+        "index": 4,
+        "symbol": "m_pan",
+        "name": "M Pan",
+        "dir": "input",
+        "type": "control",
+        "min": -100,
+        "max": 100,
+        "default": 0
+      },
+      {
+        "index": 5,
+        "symbol": "output",
+        "name": "Output",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 20,
+        "default": 0
+      },
+      {
+        "index": 6,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 7,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 8,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 9,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_Leslie",
+    "label": "MDA_Leslie",
+    "name": "MDA Leslie",
+    "description": "MDA Leslie LV2 plugin",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_Leslie.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "mode",
+        "name": "Mode",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 1,
+        "symbol": "lo_width",
+        "name": "Lo Width",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 50
+      },
+      {
+        "index": 2,
+        "symbol": "lo_throb",
+        "name": "Lo Throb",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 60
+      },
+      {
+        "index": 3,
+        "symbol": "hi_width",
+        "name": "Hi Width",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 70
+      },
+      {
+        "index": 4,
+        "symbol": "hi_depth",
+        "name": "Hi Depth",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 70
+      },
+      {
+        "index": 5,
+        "symbol": "hi_throb",
+        "name": "Hi Throb",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 70
+      },
+      {
+        "index": 6,
+        "symbol": "x_over",
+        "name": "X-Over",
+        "dir": "input",
+        "type": "control",
+        "min": 150,
+        "max": 1510,
+        "default": 772.8
+      },
+      {
+        "index": 7,
+        "symbol": "output",
+        "name": "Level",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 20,
+        "default": 0
+      },
+      {
+        "index": 8,
+        "symbol": "speed",
+        "name": "Rate",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 200,
+        "default": 100
+      },
+      {
+        "index": 9,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 10,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 11,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 12,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_Limiter",
+    "label": "MDA_Limiter",
+    "name": "MDA Limiter",
+    "description": "MDA Limiter LV2 plugin",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_Limiter.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "thresh",
+        "name": "Thresh",
+        "dir": "input",
+        "type": "control",
+        "min": -40,
+        "max": 0,
+        "default": -16
+      },
+      {
+        "index": 1,
+        "symbol": "output",
+        "name": "Output",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 20,
+        "default": 4
+      },
+      {
+        "index": 2,
+        "symbol": "release",
+        "name": "Release",
+        "dir": "input",
+        "type": "control",
+        "min": 1,
+        "max": 1571,
+        "default": 758.5
+      },
+      {
+        "index": 3,
+        "symbol": "attack",
+        "name": "Attack",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1563,
+        "default": 234.45
+      },
+      {
+        "index": 4,
+        "symbol": "knee",
+        "name": "Knee",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 5,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 6,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 7,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 8,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_Loudness",
+    "label": "MDA_Loudness",
+    "name": "MDA Loudness",
+    "description": "The ear is less sensitive to low frequencies when listening at low volume. This plug-in is based on the Stevens-Davis equal loudness contours and allows the...",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_Loudness.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "loudness",
+        "name": "Loudness",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0.7
+      },
+      {
+        "index": 1,
+        "symbol": "output",
+        "name": "Output",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 2,
+        "symbol": "link",
+        "name": "Link",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0.35
+      },
+      {
+        "index": 3,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 4,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 5,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 6,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_MultiBand",
+    "label": "MDA_MultiBand",
+    "name": "MDA MultiBand",
+    "description": "As well as just \"squashing everything\" this plug-in can be used to \"overcook\" the mid-frequencies while leaving the low end unprocessed, enhancing playback o...",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_MultiBand.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "listen",
+        "name": "Listen",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 1
+      },
+      {
+        "index": 1,
+        "symbol": "l_m",
+        "name": "L <> M",
+        "dir": "input",
+        "type": "control",
+        "min": 87,
+        "max": 1020,
+        "default": 110.7
+      },
+      {
+        "index": 2,
+        "symbol": "m_h",
+        "name": "M <> H",
+        "dir": "input",
+        "type": "control",
+        "min": 111,
+        "max": 19606,
+        "default": 17153.79
+      },
+      {
+        "index": 3,
+        "symbol": "l_comp",
+        "name": "L Comp",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 30,
+        "default": 15
+      },
+      {
+        "index": 4,
+        "symbol": "m_comp",
+        "name": "M Comp",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 30,
+        "default": 0
+      },
+      {
+        "index": 5,
+        "symbol": "h_comp",
+        "name": "H Comp",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 30,
+        "default": 18
+      },
+      {
+        "index": 6,
+        "symbol": "l_out",
+        "name": "L Out",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 20,
+        "default": -2
+      },
+      {
+        "index": 7,
+        "symbol": "m_out",
+        "name": "M Out",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 20,
+        "default": 0
+      },
+      {
+        "index": 8,
+        "symbol": "h_out",
+        "name": "H Out",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 20,
+        "default": 0
+      },
+      {
+        "index": 9,
+        "symbol": "attack",
+        "name": "Attack",
+        "dir": "input",
+        "type": "control",
+        "min": 7,
+        "max": 1755,
+        "default": 387.64
+      },
+      {
+        "index": 10,
+        "symbol": "release",
+        "name": "Release",
+        "dir": "input",
+        "type": "control",
+        "min": 1,
+        "max": 1571,
+        "default": 946.344
+      },
+      {
+        "index": 11,
+        "symbol": "stereo",
+        "name": "Stereo",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 200,
+        "default": 110
+      },
+      {
+        "index": 12,
+        "symbol": "process",
+        "name": "Process",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 13,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 14,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 15,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 16,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_Overdrive",
+    "label": "MDA_Overdrive",
+    "name": "MDA Overdrive",
+    "description": "The Overdrive effect has a variety of sonic possibilities: adding body to drum loops, fuzz guitar, as well as that typical muffled “standing outside of a nig...",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_Overdrive.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "drive",
+        "name": "Drive",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 50
+      },
+      {
+        "index": 1,
+        "symbol": "muffle",
+        "name": "Muffle",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 0
+      },
+      {
+        "index": 2,
+        "symbol": "output",
+        "name": "Level",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 20,
+        "default": 4
+      },
+      {
+        "index": 3,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 4,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 5,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 6,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_RePsycho",
+    "label": "MDA_RePsycho",
+    "name": "MDA RePsycho!",
+    "description": "The RePsycho is an event-based pitch shifter. It chops audio into individual beats and shifts each beat upwards in pitch. Only allowing downwards pitch shift...",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_RePsycho.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "tune",
+        "name": "Tune",
+        "dir": "input",
+        "type": "control",
+        "min": -24,
+        "max": 0,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "symbol": "fine",
+        "name": "Fine",
+        "dir": "input",
+        "type": "control",
+        "min": -100,
+        "max": 0,
+        "default": 0
+      },
+      {
+        "index": 2,
+        "symbol": "decay",
+        "name": "Decay",
+        "dir": "input",
+        "type": "control",
+        "min": -50,
+        "max": 50,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "symbol": "thresh",
+        "name": "Thresh",
+        "dir": "input",
+        "type": "control",
+        "min": -30,
+        "max": 0,
+        "default": -12
+      },
+      {
+        "index": 4,
+        "symbol": "hold",
+        "name": "Hold",
+        "dir": "input",
+        "type": "control",
+        "min": 10,
+        "max": 260,
+        "default": 122.5
+      },
+      {
+        "index": 5,
+        "symbol": "mix",
+        "name": "Mix",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 100
+      },
+      {
+        "index": 6,
+        "symbol": "quality",
+        "name": "Quality",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 1
+      },
+      {
+        "index": 7,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 8,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 9,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 10,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_RezFilter",
+    "label": "MDA_RezFilter",
+    "name": "MDA RezFilter",
+    "description": "Limit maximum cut-off frequency for a mellower sound (the filter can sound \"screechy\" at high frequencies)",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_RezFilter.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "freq",
+        "name": "Freq",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 33
+      },
+      {
+        "index": 1,
+        "symbol": "res",
+        "name": "Res",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 70
+      },
+      {
+        "index": 2,
+        "symbol": "output",
+        "name": "Output",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 20,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "symbol": "env_vcf",
+        "name": "Env->VCF",
+        "dir": "input",
+        "type": "control",
+        "min": -100,
+        "max": 100,
+        "default": 70
+      },
+      {
+        "index": 4,
+        "symbol": "attack",
+        "name": "Attack",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 160.83,
+        "default": 0
+      },
+      {
+        "index": 5,
+        "symbol": "release",
+        "name": "Release",
+        "dir": "input",
+        "type": "control",
+        "min": 1.56,
+        "max": 15511.64,
+        "default": 7250
+      },
+      {
+        "index": 6,
+        "symbol": "lfo_vcf",
+        "name": "LFO->VCF",
+        "dir": "input",
+        "type": "control",
+        "min": -100,
+        "max": 100,
+        "default": 40
+      },
+      {
+        "index": 7,
+        "symbol": "lfo_rate",
+        "name": "LFO Rate",
+        "dir": "input",
+        "type": "control",
+        "min": 0.01,
+        "max": 100,
+        "default": 40
+      },
+      {
+        "index": 8,
+        "symbol": "trigger",
+        "name": "Trigger",
+        "dir": "input",
+        "type": "control",
+        "min": -37,
+        "max": 3,
+        "default": -37
+      },
+      {
+        "index": 9,
+        "symbol": "max_freq",
+        "name": "Max Freq",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 75
+      },
+      {
+        "index": 10,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 11,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 12,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 13,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_RingMod",
+    "label": "MDA_RingMod",
+    "name": "MDA RingMod",
+    "description": "The Ringmod is a ring modulator with frequency, fine tune and feedback controls.",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_RingMod.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "freq",
+        "name": "Freq",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 16000,
+        "default": 1000
+      },
+      {
+        "index": 1,
+        "symbol": "fine",
+        "name": "Fine",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 0
+      },
+      {
+        "index": 2,
+        "symbol": "feedback",
+        "name": "Feedback",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 4,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 5,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 6,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_RoundPan",
+    "label": "MDA_RoundPan",
+    "name": "MDA RoundPan",
+    "description": "MDA RoundPan LV2 plugin",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_RoundPan.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "pan",
+        "name": "Pan",
+        "dir": "input",
+        "type": "control",
+        "min": -180,
+        "max": 180,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "symbol": "auto",
+        "name": "Rate",
+        "dir": "input",
+        "type": "control",
+        "min": -515,
+        "max": 515,
+        "default": 309
+      },
+      {
+        "index": 2,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 3,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 4,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 5,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_Shepard",
+    "label": "MDA_Shepard",
+    "name": "MDA Shepard",
+    "description": "The MDA Shepard is a risset-tone generator. Use it to generate an endlessly rising or falling tone and build tension like never before. The Mode parameter ha...",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_Shepard.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "mode",
+        "name": "Mode",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "symbol": "rate",
+        "name": "Rate",
+        "dir": "input",
+        "type": "control",
+        "min": -100,
+        "max": 100,
+        "default": -30
+      },
+      {
+        "index": 2,
+        "symbol": "output",
+        "name": "Output",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 20,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 4,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 5,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 6,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_Splitter",
+    "label": "MDA_Splitter",
+    "name": "MDA Splitter",
+    "description": "This plug-in can split a signal based on frequency or level, for example for producing dynamic effects where only loud drum hits are sent to a reverb. Other...",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_Splitter.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "mode",
+        "name": "Mode",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "symbol": "freq",
+        "name": "Freq",
+        "dir": "input",
+        "type": "control",
+        "min": 100,
+        "max": 10000,
+        "default": 5050
+      },
+      {
+        "index": 2,
+        "symbol": "freq_sw",
+        "name": "Freq SW",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "symbol": "level",
+        "name": "Level",
+        "dir": "input",
+        "type": "control",
+        "min": -40,
+        "max": 0,
+        "default": -20
+      },
+      {
+        "index": 4,
+        "symbol": "level_sw",
+        "name": "Level SW",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 5,
+        "symbol": "envelope",
+        "name": "Envelope",
+        "dir": "input",
+        "type": "control",
+        "min": 10,
+        "max": 1000,
+        "default": 505
+      },
+      {
+        "index": 6,
+        "symbol": "output",
+        "name": "Output",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 20,
+        "default": 0
+      },
+      {
+        "index": 7,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 8,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 9,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 10,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_Stereo",
+    "label": "MDA_Stereo",
+    "name": "MDA Stereo",
+    "description": "MDA Stereo LV2 plugin",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_Stereo.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "width",
+        "name": "Width",
+        "dir": "input",
+        "type": "control",
+        "min": -100,
+        "max": 100,
+        "default": 56
+      },
+      {
+        "index": 1,
+        "symbol": "delay",
+        "name": "Delay",
+        "dir": "input",
+        "type": "control",
+        "min": 0.45,
+        "max": 47.62,
+        "default": 22.43
+      },
+      {
+        "index": 2,
+        "symbol": "balance",
+        "name": "Balance",
+        "dir": "input",
+        "type": "control",
+        "min": -100,
+        "max": 100,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "symbol": "mod",
+        "name": "Mod",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 47.62,
+        "default": 0
+      },
+      {
+        "index": 4,
+        "symbol": "rate",
+        "name": "Rate",
+        "dir": "input",
+        "type": "control",
+        "min": 0.1,
+        "max": 100,
+        "default": 50
+      },
+      {
+        "index": 5,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 6,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 7,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 8,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_TalkBox",
+    "label": "MDA_TalkBox",
+    "name": "MDA TalkBox",
+    "description": "MDA TalkBox LV2 plugin",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_TalkBox.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "wet",
+        "name": "Wet",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 200,
+        "default": 100
+      },
+      {
+        "index": 1,
+        "symbol": "dry",
+        "name": "Dry",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 200,
+        "default": 0
+      },
+      {
+        "index": 2,
+        "symbol": "carrier",
+        "name": "Carrier",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "symbol": "quality",
+        "name": "Quality",
+        "dir": "input",
+        "type": "control",
+        "min": 5,
+        "max": 100,
+        "default": 100
+      },
+      {
+        "index": 4,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 5,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 6,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 7,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_TestTone",
+    "label": "MDA_TestTone",
+    "name": "MDA TestTone",
+    "description": "MDA TestTone LV2 plugin",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_TestTone.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "mode",
+        "name": "Mode",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "symbol": "level",
+        "name": "Level",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0.71
+      },
+      {
+        "index": 2,
+        "symbol": "channel",
+        "name": "Channel",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 3,
+        "symbol": "f1",
+        "name": "F1",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0.57
+      },
+      {
+        "index": 4,
+        "symbol": "f2",
+        "name": "F2",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 5,
+        "symbol": "sweep",
+        "name": "Sweep",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0.3
+      },
+      {
+        "index": 6,
+        "symbol": "thru",
+        "name": "Thru",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 7,
+        "symbol": "zero_db",
+        "name": "Zero dB",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 1
+      },
+      {
+        "index": 8,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 9,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 10,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 11,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_ThruZero",
+    "label": "MDA_ThruZero",
+    "name": "MDA ThruZero",
+    "description": "Tape flanger and ADT",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_ThruZero.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "rate",
+        "name": "Rate",
+        "dir": "input",
+        "type": "control",
+        "min": 0.01,
+        "max": 10,
+        "default": 0.08
+      },
+      {
+        "index": 1,
+        "symbol": "depth",
+        "name": "Depth",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 42,
+        "default": 20
+      },
+      {
+        "index": 2,
+        "symbol": "mix",
+        "name": "Mix",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 47
+      },
+      {
+        "index": 3,
+        "symbol": "feedback",
+        "name": "Feedback",
+        "dir": "input",
+        "type": "control",
+        "min": -100,
+        "max": 100,
+        "default": -40
+      },
+      {
+        "index": 4,
+        "symbol": "depth_mod",
+        "name": "Depth Mod",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 100
+      },
+      {
+        "index": 5,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 6,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 7,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 8,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_Tracker",
+    "label": "MDA_Tracker",
+    "name": "MDA Tracker",
+    "description": "This plug-in tracks the frequency of the input signal with an oscillator, ring modulator or filter. The pitch tracking only works with monophonic inputs, but...",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_Tracker.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "mode",
+        "name": "Mode",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "symbol": "dynamics",
+        "name": "Dynamics",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 100
+      },
+      {
+        "index": 2,
+        "symbol": "mix",
+        "name": "Mix",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 100
+      },
+      {
+        "index": 3,
+        "symbol": "glide",
+        "name": "Glide",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 97
+      },
+      {
+        "index": 4,
+        "symbol": "transpose",
+        "name": "Transpose",
+        "dir": "input",
+        "type": "control",
+        "min": -36,
+        "max": 36,
+        "default": 0
+      },
+      {
+        "index": 5,
+        "symbol": "maximum",
+        "name": "Maximum",
+        "dir": "input",
+        "type": "control",
+        "min": 39,
+        "max": 7350,
+        "default": 6500
+      },
+      {
+        "index": 6,
+        "symbol": "trigger",
+        "name": "Trigger",
+        "dir": "input",
+        "type": "control",
+        "min": -60,
+        "max": 0,
+        "default": -30
+      },
+      {
+        "index": 7,
+        "symbol": "output",
+        "name": "Output",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 20,
+        "default": 0
+      },
+      {
+        "index": 8,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 9,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 10,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 11,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_Transient",
+    "label": "MDA_Transient",
+    "name": "MDA Transient",
+    "description": "MDA Transient LV2 plugin",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_Transient.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "attack",
+        "name": "Attack",
+        "dir": "input",
+        "type": "control",
+        "min": -100,
+        "max": 100,
+        "default": 50
+      },
+      {
+        "index": 1,
+        "symbol": "release",
+        "name": "Release",
+        "dir": "input",
+        "type": "control",
+        "min": -100,
+        "max": 100,
+        "default": 50
+      },
+      {
+        "index": 2,
+        "symbol": "output",
+        "name": "Output",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 20,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "symbol": "filter",
+        "name": "Filter",
+        "dir": "input",
+        "type": "control",
+        "min": -10,
+        "max": 10,
+        "default": 0
+      },
+      {
+        "index": 4,
+        "symbol": "att_hold",
+        "name": "Att Hold",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 35
+      },
+      {
+        "index": 5,
+        "symbol": "rel_hold",
+        "name": "Rel Hold",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 35
+      },
+      {
+        "index": 6,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 7,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 8,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 9,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_VocInput",
+    "label": "MDA_VocInput",
+    "name": "MDA VocInput",
+    "description": "MDA VocInput LV2 plugin",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_VocInput.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "tracking",
+        "name": "Tracking",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "symbol": "pitch",
+        "name": "Pitch",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 2,
+        "symbol": "breath",
+        "name": "Breath",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0.2
+      },
+      {
+        "index": 3,
+        "symbol": "s_thresh",
+        "name": "S Thresh",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 4,
+        "symbol": "max_freq",
+        "name": "Max Freq",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0.35
+      },
+      {
+        "index": 5,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 6,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 7,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 8,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_Vocoder",
+    "label": "MDA_Vocoder",
+    "name": "MDA Vocoder",
+    "description": "This 16-band vocoder applies the spectrum of your voice to the waveform of an instrument. Plug your voice signal into the Modulator input and the instrument...",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_Vocoder.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "mod_in",
+        "name": "Swap carrier-modulator",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "symbol": "output",
+        "name": "Output",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 20,
+        "default": 0
+      },
+      {
+        "index": 2,
+        "symbol": "hi_thru",
+        "name": "Hi Thru",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 40
+      },
+      {
+        "index": 3,
+        "symbol": "hi_band",
+        "name": "Hi Band",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 40
+      },
+      {
+        "index": 4,
+        "symbol": "envelope",
+        "name": "Envelope",
+        "dir": "input",
+        "type": "control",
+        "min": 14,
+        "max": 10000,
+        "default": 1602.24
+      },
+      {
+        "index": 5,
+        "symbol": "filter_q",
+        "name": "Filter Q",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 55
+      },
+      {
+        "index": 6,
+        "symbol": "mid_freq",
+        "name": "Mid Freq",
+        "dir": "input",
+        "type": "control",
+        "min": 200,
+        "max": 1600,
+        "default": 1000
+      },
+      {
+        "index": 7,
+        "symbol": "quality",
+        "name": "Quality",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 1
+      },
+      {
+        "index": 8,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 9,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 10,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 11,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  }
+]

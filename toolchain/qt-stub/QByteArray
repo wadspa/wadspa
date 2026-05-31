@@ -1,0 +1,89 @@
+#pragma once
+#include "qglobal.h"
+#include <vector>
+#include <string>
+#include <algorithm>
+
+class QByteArray {
+    std::vector<char> m_data;
+public:
+    QByteArray() = default;
+    QByteArray(const char *data, int size = -1) {
+        if (!data) return;
+        if (size < 0) { auto n = ::strlen(data); m_data.assign(data, data + n); }
+        else m_data.assign(data, data + size);
+    }
+    explicit QByteArray(int size, char fill = '\0') : m_data(size, fill) {}
+
+    static QByteArray fromRawData(const char *data, int size)
+        { return QByteArray(data, size); }
+    static QByteArray fromHex(const QByteArray &) { return {}; }
+
+    const char *constData() const { return m_data.empty() ? "" : m_data.data(); }
+    const char *data() const      { return constData(); }
+    char       *data()            { return m_data.empty() ? nullptr : m_data.data(); }
+
+    int  size()    const { return (int)m_data.size(); }
+    int  length()  const { return size(); }
+    bool isEmpty() const { return m_data.empty(); }
+    bool isNull()  const { return false; }
+
+    void resize(int n)       { m_data.resize(n); }
+    void clear()             { m_data.clear(); }
+    char at(int i)     const { return m_data[i]; }
+    char operator[](int i) const { return m_data[i]; }
+    char &operator[](int i)      { return m_data[i]; }
+
+    QByteArray &append(const char *s) {
+        if (s) m_data.insert(m_data.end(), s, s + ::strlen(s));
+        return *this;
+    }
+    QByteArray &append(char c) { m_data.push_back(c); return *this; }
+    QByteArray &append(const QByteArray &b)
+        { m_data.insert(m_data.end(), b.m_data.begin(), b.m_data.end()); return *this; }
+
+    QByteArray toHex() const { return {}; }
+    QByteArray toLower() const {
+        QByteArray r = *this;
+        for (auto &c : r.m_data) c = (char)::tolower((unsigned char)c);
+        return r;
+    }
+    QByteArray toUpper() const {
+        QByteArray r = *this;
+        for (auto &c : r.m_data) c = (char)::toupper((unsigned char)c);
+        return r;
+    }
+    QByteArray trimmed() const {
+        int b = 0, e = (int)m_data.size() - 1;
+        while (b <= e && ::isspace((unsigned char)m_data[b])) b++;
+        while (e >= b && ::isspace((unsigned char)m_data[e])) e--;
+        return e < b ? QByteArray{} : QByteArray(m_data.data() + b, e - b + 1);
+    }
+
+    int indexOf(char c, int from = 0) const {
+        for (int i = from; i < size(); ++i)
+            if (m_data[i] == c) return i;
+        return -1;
+    }
+    bool contains(char c) const { return indexOf(c) >= 0; }
+    bool startsWith(const char *s) const {
+        size_t n = ::strlen(s);
+        return m_data.size() >= n && ::memcmp(m_data.data(), s, n) == 0;
+    }
+
+    bool operator==(const QByteArray &o) const { return m_data == o.m_data; }
+    bool operator!=(const QByteArray &o) const { return m_data != o.m_data; }
+    bool operator< (const QByteArray &o) const { return m_data <  o.m_data; }
+    bool operator==(const char *s) const { return ::strcmp(constData(), s ? s : "") == 0; }
+    bool operator!=(const char *s) const { return !(*this == s); }
+
+    QByteArray operator+(const QByteArray &b) const { QByteArray r = *this; r.append(b); return r; }
+    QByteArray &operator+=(const QByteArray &b) { return append(b); }
+    QByteArray &operator+=(char c) { return append(c); }
+
+    std::string toStdString() const { return std::string(constData(), m_data.size()); }
+};
+
+inline QByteArray operator+(const char *s, const QByteArray &b) {
+    QByteArray r(s); r.append(b); return r;
+}

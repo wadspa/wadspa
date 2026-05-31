@@ -11,6 +11,7 @@ export const meta         = {
       "name": "Type",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 0.75,
       "default": 0.5
@@ -21,6 +22,7 @@ export const meta         = {
       "name": "Level",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 100,
       "default": 50
@@ -31,6 +33,7 @@ export const meta         = {
       "name": "Tune",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 10,
       "max": 320,
       "default": 198
@@ -41,6 +44,7 @@ export const meta         = {
       "name": "Dry Mix",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 100,
       "default": 50
@@ -51,6 +55,7 @@ export const meta         = {
       "name": "Thresh",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -60,
       "max": 0,
       "default": -60
@@ -61,6 +66,7 @@ export const meta         = {
       "name": "Release",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 1,
       "max": 1442,
       "default": 1
@@ -71,6 +77,7 @@ export const meta         = {
       "name": "Left In",
       "dir": "input",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -81,6 +88,7 @@ export const meta         = {
       "name": "Right In",
       "dir": "input",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -91,6 +99,7 @@ export const meta         = {
       "name": "Left Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -101,6 +110,7 @@ export const meta         = {
       "name": "Right Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null

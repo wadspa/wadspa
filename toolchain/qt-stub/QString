@@ -1,0 +1,309 @@
+#pragma once
+#include "QByteArray"
+#include <string>
+#include <algorithm>
+#include <cctype>
+#include <cstdlib>
+#include <stdexcept>
+
+// QStringList forward-declared so QString::split() can be declared
+class QStringList;
+
+// QLatin1Char defined before QString so it can be used in default params
+inline QChar QLatin1Char(char c) { return QChar(c); }
+
+class QString {
+    std::string m_s;
+public:
+    QString() = default;
+    QString(const char *s)         : m_s(s ? s : "") {}
+    QString(const std::string &s)  : m_s(s) {}
+    QString(std::string &&s)       : m_s(std::move(s)) {}
+    QString(QChar c)               : m_s(1, c.toLatin1()) {}
+    QString(int n, QChar c)        : m_s(n, c.toLatin1()) {}
+
+    // Factory statics
+    static QString fromUtf8(const char *s, int sz = -1) {
+        if (!s) return {};
+        return sz < 0 ? QString(s) : QString(std::string(s, sz));
+    }
+    static QString fromLatin1(const char *s, int sz = -1) { return fromUtf8(s, sz); }
+    static QString fromLocal8Bit(const char *s, int sz = -1) { return fromUtf8(s, sz); }
+    static QString fromStdString(const std::string &s) { return QString(s); }
+    static QString fromRawData(const QChar *, int) { return {}; }
+    static QString number(int n,    int base = 10) {
+        if (base == 16) { char b[32]; ::snprintf(b, 32, "%x", n); return b; }
+        return QString(std::to_string(n));
+    }
+    static QString number(uint n,    int base = 10) {
+        if (base == 16) { char b[32]; ::snprintf(b, 32, "%x", n); return b; }
+        return QString(std::to_string(n));
+    }
+    static QString number(long n,    int base = 10) {
+        if (base == 16) { char b[32]; ::snprintf(b, 32, "%lx", n); return b; }
+        return QString(std::to_string(n));
+    }
+    static QString number(ulong n,   int base = 10) {
+        if (base == 16) { char b[32]; ::snprintf(b, 32, "%lx", n); return b; }
+        return QString(std::to_string(n));
+    }
+    static QString number(qint64 n,  int base = 10) {
+        if (base == 16) { char b[32]; ::snprintf(b, 32, "%llx", (long long)n); return b; }
+        return QString(std::to_string(n));
+    }
+    static QString number(quint64 n, int base = 10) {
+        if (base == 16) { char b[32]; ::snprintf(b, 32, "%llx", (unsigned long long)n); return b; }
+        return QString(std::to_string(n));
+    }
+    static QString number(double n, char fmt = 'g', int prec = 6) {
+        char b[64]; ::snprintf(b, sizeof(b), "%.*g", prec, n); return b;
+    }
+    static QString number(float n,  char fmt = 'g', int prec = 6)
+        { return number((double)n, fmt, prec); }
+
+    // Conversions
+    QByteArray toUtf8()      const { return QByteArray(m_s.c_str()); }
+    QByteArray toLatin1()    const { return toUtf8(); }
+    QByteArray toLocal8Bit() const { return toUtf8(); }
+    std::string toStdString() const { return m_s; }
+    const char *constData()  const { return m_s.c_str(); }  // convenience (not Qt API)
+
+    // Size / empty
+    bool isEmpty() const { return m_s.empty(); }
+    bool isNull()  const { return false; }
+    int  size()    const { return (int)m_s.size(); }
+    int  length()  const { return size(); }
+    int  count()   const { return size(); }
+    void clear()         { m_s.clear(); }
+    void resize(int n)   { m_s.resize(n); }
+
+    // Access
+    QChar at(int i) const { return QChar(m_s[i]); }
+    QChar operator[](int i) const { return at(i); }
+
+    // Case
+    QString toLower() const {
+        std::string r = m_s;
+        std::transform(r.begin(), r.end(), r.begin(), [](unsigned char c){ return ::tolower(c); });
+        return r;
+    }
+    QString toUpper() const {
+        std::string r = m_s;
+        std::transform(r.begin(), r.end(), r.begin(), [](unsigned char c){ return ::toupper(c); });
+        return r;
+    }
+    QString trimmed() const {
+        int b = 0, e = (int)m_s.size() - 1;
+        while (b <= e && ::isspace((unsigned char)m_s[b])) b++;
+        while (e >= b && ::isspace((unsigned char)m_s[e])) e--;
+        return e < b ? QString{} : QString(m_s.substr(b, e - b + 1));
+    }
+    QString simplified() const { return trimmed(); }
+
+    // Search
+    bool startsWith(const char *s,   Qt::CaseSensitivity = Qt::CaseSensitive) const
+        { size_t n=::strlen(s); return m_s.size()>=n && m_s.compare(0,n,s)==0; }
+    bool startsWith(const QString &s, Qt::CaseSensitivity = Qt::CaseSensitive) const
+        { return m_s.rfind(s.m_s, 0) == 0; }
+    bool startsWith(QChar c, Qt::CaseSensitivity = Qt::CaseSensitive) const
+        { return !m_s.empty() && m_s.front() == c.toLatin1(); }
+    bool endsWith(const char *s,     Qt::CaseSensitivity = Qt::CaseSensitive) const {
+        size_t n = ::strlen(s);
+        return m_s.size() >= n && m_s.compare(m_s.size()-n, n, s) == 0;
+    }
+    bool endsWith(const QString &s,  Qt::CaseSensitivity = Qt::CaseSensitive) const
+        { return endsWith(s.m_s.c_str()); }
+    bool endsWith(QChar c, Qt::CaseSensitivity = Qt::CaseSensitive) const
+        { return !m_s.empty() && m_s.back() == c.toLatin1(); }
+    bool contains(const char *s,     Qt::CaseSensitivity = Qt::CaseSensitive) const
+        { return m_s.find(s) != std::string::npos; }
+    bool contains(const QString &s,  Qt::CaseSensitivity = Qt::CaseSensitive) const
+        { return m_s.find(s.m_s) != std::string::npos; }
+    bool contains(QChar c, Qt::CaseSensitivity = Qt::CaseSensitive) const
+        { return m_s.find(c.toLatin1()) != std::string::npos; }
+
+    int indexOf(const char *s,    int from = 0, Qt::CaseSensitivity = Qt::CaseSensitive) const {
+        auto pos = m_s.find(s, from);
+        return pos == std::string::npos ? -1 : (int)pos;
+    }
+    int indexOf(const QString &s, int from = 0, Qt::CaseSensitivity = Qt::CaseSensitive) const
+        { return indexOf(s.m_s.c_str(), from); }
+    int indexOf(QChar c, int from = 0, Qt::CaseSensitivity = Qt::CaseSensitive) const
+        { auto p = m_s.find(c.toLatin1(), from); return p==std::string::npos?-1:(int)p; }
+    int lastIndexOf(QChar c, int from = -1) const {
+        auto p = m_s.rfind(c.toLatin1(), from < 0 ? std::string::npos : (size_t)from);
+        return p == std::string::npos ? -1 : (int)p;
+    }
+    int lastIndexOf(const char *s, int from = -1) const {
+        auto p = m_s.rfind(s, from < 0 ? std::string::npos : (size_t)from);
+        return p == std::string::npos ? -1 : (int)p;
+    }
+
+    // Substrings
+    QString mid(int pos, int n = -1) const {
+        if (pos >= (int)m_s.size() || pos < 0) return {};
+        return n < 0 ? QString(m_s.substr(pos)) : QString(m_s.substr(pos, n));
+    }
+    QString left(int n)  const { return mid(0, n); }
+    QString right(int n) const {
+        int sz = size();
+        return n >= sz ? *this : mid(sz - n);
+    }
+    QString first(int n) const { return left(n); }
+    QString last(int n)  const { return right(n); }
+    QString section(QChar sep, int start, int end = -1) const;  // simplified below
+
+    // Mutation
+    QString &append(const char *s)    { if(s) m_s+=s; return *this; }
+    QString &append(const QString &s) { m_s += s.m_s; return *this; }
+    QString &append(QChar c)          { m_s += c.toLatin1(); return *this; }
+    QString &prepend(const char *s)   { if(s) m_s.insert(0,s); return *this; }
+    QString &prepend(const QString &s){ m_s.insert(0,s.m_s); return *this; }
+    QString &insert(int i, const char *s) { m_s.insert(i, s); return *this; }
+    QString &remove(int pos, int n)   { m_s.erase(pos, n); return *this; }
+    QString &replace(const char *b, const char *a) {
+        std::string bef(b), aft(a); size_t pos=0;
+        while((pos=m_s.find(bef,pos))!=std::string::npos)
+            { m_s.replace(pos,bef.size(),aft); pos+=aft.size(); }
+        return *this;
+    }
+    QString &replace(const QString &b, const QString &a)
+        { return replace(b.m_s.c_str(), a.m_s.c_str()); }
+    QString &replace(QChar b, QChar a)
+        { std::replace(m_s.begin(),m_s.end(),b.toLatin1(),a.toLatin1()); return *this; }
+    QString &replace(QChar b, const QString &a) {
+        char bc[2] = {b.toLatin1(), '\0'};
+        return replace(bc, a.m_s.c_str());
+    }
+    QString  chop(int n) const { return n>0?left(size()-n):*this; } // non-standard return
+    void     chop_inplace(int n) { if(n>0&&n<=size()) m_s.resize(m_s.size()-n); }
+    QString  chopped(int n) const { return left(size()-n); }
+
+    // Arg substitution (%1 .. %9)
+    QString arg(const QString &a, int fw = 0, QChar fill = QLatin1Char(' ')) const {
+        (void)fw; (void)fill;
+        for (int i = 1; i <= 9; ++i) {
+            char tok[3] = {'%', (char)('0'+i), '\0'};
+            auto pos = m_s.find(tok);
+            if (pos != std::string::npos)
+                return QString(m_s.substr(0,pos) + a.m_s + m_s.substr(pos+2));
+        }
+        return *this;
+    }
+    QString arg(const char *a) const { return arg(QString(a)); }
+    QString arg(int n, int fw=0, int base=10, QChar fill=QLatin1Char(' ')) const
+        { (void)fw;(void)fill; return arg(QString::number(n,base)); }
+    QString arg(uint n, int fw=0, int base=10, QChar fill=QLatin1Char(' ')) const
+        { (void)fw;(void)fill; return arg(QString::number((int)n,base)); }
+    QString arg(long n) const  { return arg(QString::number(n)); }
+    QString arg(ulong n) const { return arg(QString::number(n)); }
+    QString arg(double n, int fw=0, char fmt='g', int prec=-1, QChar fill=QLatin1Char(' ')) const
+        { (void)fw;(void)fill; return arg(QString::number(n,fmt,prec<0?6:prec)); }
+    QString arg(float n, int fw=0, char fmt='g', int prec=-1, QChar fill=QLatin1Char(' ')) const
+        { return arg((double)n,fw,fmt,prec,fill); }
+    QString arg(const QString &a1, const QString &a2) const
+        { return arg(a1).arg(a2); }
+    QString arg(const QString &a1, const QString &a2, const QString &a3) const
+        { return arg(a1).arg(a2).arg(a3); }
+
+    // Numeric conversions
+    int    toInt   (bool *ok=nullptr, int base=10) const {
+        try { size_t pos; int r=(int)std::stol(m_s,&pos,base);
+              if(ok) *ok=(pos==m_s.size()); return r; }
+        catch(...) { if(ok) *ok=false; return 0; }
+    }
+    uint   toUInt  (bool *ok=nullptr, int base=10) const { return (uint)toInt(ok,base); }
+    long   toLong  (bool *ok=nullptr, int base=10) const {
+        try { size_t pos; long r=std::stol(m_s,&pos,base);
+              if(ok) *ok=(pos==m_s.size()); return r; }
+        catch(...) { if(ok) *ok=false; return 0; }
+    }
+    qint64 toLongLong(bool *ok=nullptr, int base=10) const {
+        try { size_t pos; qint64 r=std::stoll(m_s,&pos,base);
+              if(ok) *ok=(pos==m_s.size()); return r; }
+        catch(...) { if(ok) *ok=false; return 0; }
+    }
+    double toDouble(bool *ok=nullptr) const {
+        try { size_t pos; double r=std::stod(m_s,&pos);
+              if(ok) *ok=(pos==m_s.size()); return r; }
+        catch(...) { if(ok) *ok=false; return 0.0; }
+    }
+    float   toFloat (bool *ok=nullptr) const { return (float)toDouble(ok); }
+    ulong   toULong (bool *ok=nullptr, int base=10) const {
+        try { size_t pos; ulong r=(ulong)std::stoul(m_s,&pos,base);
+              if(ok) *ok=(pos==m_s.size()); return r; }
+        catch(...) { if(ok) *ok=false; return 0; }
+    }
+    quint64 toULongLong(bool *ok=nullptr, int base=10) const {
+        try { size_t pos; quint64 r=(quint64)std::stoull(m_s,&pos,base);
+              if(ok) *ok=(pos==m_s.size()); return r; }
+        catch(...) { if(ok) *ok=false; return 0; }
+    }
+
+    // Split — declared here, defined in QStringList (must include QStringList for body)
+    QStringList split(const QString &sep,
+                      Qt::CaseSensitivity cs = Qt::CaseSensitive) const;
+    QStringList split(QChar sep,
+                      Qt::CaseSensitivity cs = Qt::CaseSensitive) const;
+    QStringList split(const char *sep,
+                      Qt::CaseSensitivity cs = Qt::CaseSensitive) const;
+
+    // Comparison
+    bool operator==(const QString &o) const { return m_s == o.m_s; }
+    bool operator!=(const QString &o) const { return m_s != o.m_s; }
+    bool operator< (const QString &o) const { return m_s <  o.m_s; }
+    bool operator<=(const QString &o) const { return m_s <= o.m_s; }
+    bool operator> (const QString &o) const { return m_s >  o.m_s; }
+    bool operator>=(const QString &o) const { return m_s >= o.m_s; }
+    bool operator==(const char *s)   const { return m_s == (s?s:""); }
+    bool operator!=(const char *s)   const { return !(*this==s); }
+
+    // Concatenation
+    QString  operator+(const QString &o) const { return QString(m_s + o.m_s); }
+    QString  operator+(const char *s)    const { return QString(m_s + (s?s:"")); }
+    QString  operator+(QChar c)          const { return QString(m_s + c.toLatin1()); }
+    QString &operator+=(const QString &o){ return append(o); }
+    QString &operator+=(const char *s)   { return append(s); }
+    QString &operator+=(QChar c)         { return append(c); }
+
+    // Misc
+    QString repeated(int n) const {
+        std::string r; r.reserve(m_s.size()*n);
+        for(int i=0;i<n;i++) r+=m_s;
+        return r;
+    }
+    bool isDigit() const { return size()==1 && ::isdigit((unsigned char)m_s[0]); }
+
+    // For std containers
+    struct Hasher {
+        size_t operator()(const QString &s) const
+            { return std::hash<std::string>{}(s.m_s); }
+    };
+
+    // Allow read-back as std::string
+    operator std::string() const { return m_s; }
+};
+
+// QLatin1String helper
+class QLatin1String {
+    const char *m_s;
+public:
+    QLatin1String(const char *s) : m_s(s?s:"") {}
+    const char *latin1() const { return m_s; }
+    operator QString() const   { return QString(m_s); }
+};
+
+// Free operators
+inline QString operator+(const char *s, const QString &q) { return QString(s) + q; }
+inline QString operator+(char c, const QString &q) { return QString(std::string(1, c)) + q; }
+inline bool    operator==(const char *s, const QString &q) { return q == s; }
+inline bool    operator!=(const char *s, const QString &q) { return q != s; }
+
+namespace std {
+    template<>
+    struct hash<QString> {
+        size_t operator()(const QString &s) const {
+            return hash<std::string>{}(s.toStdString());
+        }
+    };
+}

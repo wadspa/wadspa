@@ -4,6 +4,8 @@
 
 wadspa takes the battle-tested [LADSPA](https://www.ladspa.org/) and [LV2](https://lv2plug.in/) plugin ecosystems — hundreds of high-quality audio effects and instruments written in C and C++ — and makes them available in any browser via the Web Audio API. Each plugin is a self-contained `.wasm` binary loaded as an `AudioWorkletNode`. No native code. No security issues. No browser-update breakage.
 
+**Live browser test page:** [wadspa.github.io/wadspa](https://wadspa.github.io/wadspa/)
+
 ---
 
 ## Why wadspa?
@@ -12,12 +14,33 @@ Existing browser plugin formats (CLAP, WAM, Web Audio Modules) repeatedly break 
 
 - **Standard Web Audio API** — uses `AudioWorkletNode`, which every modern browser supports and has no plans to remove
 - **LADSPA effects** — hundreds of production-ready C audio effects compiled to WASM with no changes to the source
-- **LV2 instruments** — polyphonic MIDI instruments written in C or C++, with full ADSR, FM synthesis, and more
-- **No shared memory by default** — each plugin owns its WASM heap; no `SharedArrayBuffer` required unless threading is explicitly enabled
-- **Threading support** — plugins that use pthreads compile with `--threads`; a COI service worker handles GitHub Pages header restrictions automatically
-- **File I/O** — plugins that read data files (wavetables, IRs, presets) use Emscripten's embedded FS (`--embed-file`), baked into the WASM binary at build time
-- **GTK / Qt UI skipped automatically** — LV2 separates DSP from UI; wadspa compiles only the DSP layer, automatically excluding `*_gtk.*` and `*_qt*.*` source files
+- **LV2 plugins** — effects and MIDI instruments written in C or C++, from filters and processors to full polyphonic synthesizers
+- **Qt plugin support** — `toolchain/qt-stub/` is a header-only Qt shim that lets Qt-dependent LV2 DSP layers (synthv1, drumkv1, padthv1, …) compile to WASM without any Qt installation
+- **Fully automated pipeline** — adding a new plugin repo requires one entry in `sources.json`; `setup-all.js` and `build-instruments.js` handle the rest
+- **GTK / Qt UI skipped automatically** — LV2 separates DSP from UI; wadspa compiles only the DSP layer, excluding `*_gtk.*` and `*_qt*.*` source files
 - **Zero runtime dependencies** — plugins are plain npm packages; `@wadspa/core` is a single 97-line file
+
+---
+
+## Instruments (13)
+
+| Plugin | Description |
+|--------|-------------|
+| `synthv1` | Dual-oscillator polyphonic analog synthesizer (rncbc) |
+| `drumkv1` | Per-pad drum synthesizer with per-pad synthesis and effects (rncbc) |
+| `padthv1` | Polyphonic additive synthesizer using the PADsynth algorithm (rncbc) |
+| `amsynth` | 32-voice analog modeling synthesizer |
+| `fm_synth` | 2-operator FM synthesizer, 8-voice polyphonic |
+| `wadspa_synth` | 8-voice polyphonic sawtooth with ADSR and lowpass filter |
+| `mda_DX10` | FM synthesizer, 8-voice polyphonic |
+| `mda_JX10` | Virtual analog polysynth, 8-voice |
+| `mda_EPiano` | Electric piano (Rhodes/Wurlitzer style) |
+| `mda_Piano` | Acoustic piano physical model |
+| `so-404` | SO-404 bass synthesizer — TB-303-style bass synth clone |
+| `so-kl5` | SO-kl5 electric piano clone |
+| `so-666` | SO-666 feedback oscillator synthesizer |
+
+Plus 32+ LADSPA effects (reverb, chorus, EQ, dynamics, …) all available on the browser test page.
 
 ---
 
@@ -78,14 +101,14 @@ npm install -g @wadspa/toolchain   # requires Emscripten (emcc on PATH)
 # LADSPA effect
 wadspa build ./my-effect
 
-# LV2 instrument (C or C++)
-wadspa build-lv2 ./my-instrument --include /opt/homebrew/include
+# LV2 plugin (instrument or effect, C or C++)
+wadspa build-lv2 ./my-plugin --include /opt/homebrew/include
 
 # LV2 with threading
-wadspa build-lv2 ./my-instrument --threads
+wadspa build-lv2 ./my-plugin --threads
 
 # LV2 with embedded data files
-wadspa build-lv2 ./my-instrument --embed-file data/wavetable.bin@/data/wavetable.bin
+wadspa build-lv2 ./my-plugin --embed-file data/wavetable.bin@/data/wavetable.bin
 ```
 
 ---
@@ -131,45 +154,108 @@ plugin.cpp + plugin.ttl ──┐
                            └── [emit]   writes processor.js, index.js, package.json
 ```
 
+### Qt stub library (`toolchain/qt-stub/`)
+
+Qt-dependent LV2 plugins (such as the rncbc suite — synthv1, drumkv1, padthv1) use Qt only for their DSP configuration layer: `QSettings`, `QMap`, `QHash`, `QDomDocument`, `QString`, etc. The `toolchain/qt-stub/` directory provides header-only C++ implementations of all these types backed by `std::` containers, with no Qt installation required.
+
+To use it, add `"includes": ["toolchain/qt-stub"]` to the plugin's `lv2.json` entry. The `build-instruments.js` script resolves this path automatically.
+
+---
+
+## Adding a new plugin
+
+The pipeline is fully automated. To add any LV2 plugin repo:
+
+**1. Add one entry to `sources.json`:**
+```json
+{
+  "id": "my-synth",
+  "git": "https://github.com/author/my-synth.git",
+  "setup": "setup-my-synth",
+  "description": "My synthesizer plugin"
+}
+```
+
+**2. Clone and build:**
+```sh
+node scripts/fetch-sources.js --only my-synth
+node scripts/setup-all.js --only my-synth
+node scripts/build-instruments.js --only my-synth
+```
+
+If no dedicated `setup-my-synth.js` exists, `setup-all.js` falls back to `auto-setup.js`, which discovers source files, detects Qt headers, handles `.ttl.in` templates, and iteratively resolves compile errors automatically.
+
+For Qt-dependent plugins that need custom stub generation (QThread scheduler replacement, libsndfile substitution, etc.), write a `scripts/setup-<id>.js` following the pattern of `setup-drumkv1.js` or `setup-padthv1.js`.
+
 ---
 
 ## Plugin manifest fields
 
-`plugins/instruments.json` supports these per-entry fields:
+LV2 registry entries live in `plugins/lv2.json`:
 
 ```json
 {
   "id":           "my_synth",
-  "description":  "What this instrument does",
+  "description":  "What this plugin does",
+  "category":     "Instruments",
+  "includes":     ["toolchain/qt-stub"],
+  "sources":      ["my_synth.cpp", "my_synth_lv2.cpp"],
   "threads":      false,
   "memoryGrowth": false,
-  "embedFiles":   ["data/wavetable.bin@/data/wavetable.bin"]
+  "embedFiles":   []
 }
 ```
 
 | Field | Default | Description |
 |---|---|---|
-| `threads` | `false` | Compile with `-pthread` (requires COOP/COEP headers — handled by `coi-serviceworker.js`) |
+| `includes` | `[]` | Extra include directories, relative to repo root |
+| `sources` | (auto) | Source files to compile; paths relative to plugin dir |
+| `threads` | `false` | Compile with `-pthread` |
 | `memoryGrowth` | `false` | Allow WASM heap to grow at runtime |
-| `embedFiles` | `[]` | Files to embed in the WASM virtual FS at build time (`src@/virtual/path`) |
+| `embedFiles` | `[]` | Files to embed in the WASM virtual FS |
+
+---
+
+## Build scripts
+
+```sh
+# Clone / update all source repos
+node scripts/fetch-sources.js
+
+# Prepare plugin directories from source repos
+node scripts/setup-all.js
+
+# Build all LV2 plugins → docs/instruments.json + docs/plugins/catalog.json
+node scripts/build-instruments.js
+
+# Build all LADSPA effects → docs/plugins/catalog.json
+node scripts/build-all.js
+
+# Auto-setup any LV2 repo (source discovery + iterative compile)
+node scripts/auto-setup.js path/to/repo --id my-plugin
+
+# Smoke-test LV2 plugins in Node
+node scripts/test-instruments.js
+```
 
 ---
 
 ## Audio routing
 
-**Mono effects** (1 audio in, 1 audio out):
+**Effects** (audio in → audio out):
 ```js
 source.connect(node.input);
 node.output.connect(ctx.destination);
 ```
 
-**Stereo effects / instruments** (2 audio out):
+**Instruments** (MIDI in → audio out):
 ```js
-source.connect(node.input);
-node.output.connect(ctx.destination);
+inst.noteOn(60, 100);   // middle C, velocity 100
+inst.noteOff(60);
+inst.output.connect(ctx.destination);
 ```
 
-Stereo detection is automatic. LV2 instruments always output stereo (L + R).
+Stereo detection is automatic — all bundled instruments output stereo (L + R).
 
 ---
 
@@ -182,7 +268,7 @@ Stereo detection is automatic. LV2 instruments always output stereo (L + R).
 | Firefox 76+ | ✅ |
 | Edge 79+ | ✅ |
 
-Threaded plugins (`threads: true`) additionally require `crossOriginIsolated`. The included `docs/coi-serviceworker.js` handles this automatically for GitHub Pages deployments.
+Threaded plugins (`threads: true`) additionally require `crossOriginIsolated`. The included `docs/coi-serviceworker.js` handles this for GitHub Pages deployments.
 
 ---
 
@@ -190,23 +276,55 @@ Threaded plugins (`threads: true`) additionally require `crossOriginIsolated`. T
 
 ```
 wadspa/
-  core/              @wadspa/core — runtime host
-  toolchain/         @wadspa/toolchain — build CLI (LADSPA + LV2)
+  core/                    @wadspa/core — runtime host
+  toolchain/
+    bin/wadspa.js           CLI entry point (build, build-lv2)
+    src/
+      shim-ladspa.js        LADSPA shim generator
+      shim-lv2.js           LV2 shim generator (URID map, atom MIDI, legacy event API)
+      compile.js            emcc invocation
+    qt-stub/                Header-only Qt shim for Qt-dependent LV2 DSP layers
+      qglobal.h             Q_OBJECT macros, QChar, qDeleteAll, Qt:: namespace enums
+      QString               std::string wrapper with full Qt string API
+      QMap / QHash          std::map / std::unordered_map with Qt iterator API
+      QSettings             Inheritable settings class (no-op in WASM)
+      QDomDocument          XML DOM stub (no-op)
+      QFile / QFileInfo     File I/O stubs (no-op)
+      QMutex / QThread      Threading stubs (no-op; WASM is single-threaded)
+      fftw3.h               HC2R inverse DFT stub for PADsynth wavetable generation
+      …                     QVariant, QList, QVector, QStringList, QObject, QApplication
   plugins/
-    manifest.json    LADSPA effect registry (32+ plugins)
-    instruments.json LV2 instrument registry
-    wadspa_synth/    8-voice polyphonic sawtooth synth (LV2, C)
-    fm_synth/        2-operator FM synthesizer (LV2, C++)
-    sc4/             SC4 stereo compressor (LADSPA)
-    plate/           Plate reverb (LADSPA)
-    …                32+ LADSPA effects from swh-plugins, more being added
+    manifest.json           LADSPA effect registry (32+ plugins)
+    lv2.json                LV2 plugin registry (13 instruments + effects)
+    synthv1/                Dual-oscillator polyphonic analog synthesizer
+    drumkv1/                Per-pad drum synthesizer
+    padthv1/                PADsynth additive synthesizer
+    amsynth/                Analog modeling synthesizer
+    wadspa_synth/           Built-in 8-voice sawtooth synth (LV2, C)
+    fm_synth/               2-operator FM synthesizer (LV2, C++)
+    mda_*/                  MDA LV2 collection (instruments + effects)
+    so-404/ so-kl5/ so-666/ SO-synth collection (bass, piano, feedback)
+    sc4/ plate/ …           32+ LADSPA effects from swh-plugins
   scripts/
-    build-all.js         Build all LADSPA effects → docs/plugins/catalog.json
-    build-instruments.js Build all LV2 instruments → docs/instruments.json
-    test-instruments.js  Node WASM smoke test (non-threaded instruments)
+    fetch-sources.js         Clone / update all repos listed in sources.json
+    setup-all.js             Run setup scripts; falls back to auto-setup.js
+    auto-setup.js            Generic LV2 setup: source discovery, Qt detection, iterative build
+    setup-synthv1.js         synthv1 (Qt stub wiring, sched replacement)
+    setup-drumkv1.js         drumkv1 (Qt stub, sched, libsndfile stub)
+    setup-padthv1.js         padthv1 (Qt stub, sched, FFTW3 stub)
+    setup-amsynth.js         amsynth preparation
+    setup-mda-lv2.js         MDA LV2 plugin preparation
+    setup-so-synth.js        SO-synth (legacy LV2 event API)
+    build-instruments.js     Build all LV2 plugins → docs/
+    build-all.js             Build all LADSPA effects → docs/
+    test-instruments.js      Node WASM smoke test for LV2 plugins
+  sources.json               External plugin repos (git URLs + setup script mapping)
   docs/
-    coi-serviceworker.js COOP/COEP header injection for GitHub Pages
-  swh-plugins/       Steve Harris LADSPA collection (98 plugins, 32 built so far)
+    index.html               GitHub Pages browser test page
+    instruments.json         Built instrument catalog (generated by build-instruments.js)
+    plugins/catalog.json     Built effects catalog
+    coi-serviceworker.js     COOP/COEP header injection for GitHub Pages
+    porting-a-plugin.md      Guide to adding new plugins
 ```
 
 ---

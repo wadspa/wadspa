@@ -9,7 +9,16 @@
   "scripts": {
     "link-toolchain": "npm link --workspace=toolchain",
     "test": "node scripts/test-instruments.js",
-    "build": "node scripts/build-instruments.js",
-    "build:skip": "node scripts/build-instruments.js --skip-existing"
+    "test:lv2": "node scripts/test-instruments.js",
+    "build": "node scripts/build-archive.js",
+    "build:skip": "node scripts/build-archive.js --skip-existing",
+    "build:archive": "node scripts/build-archive.js",
+    "build:archive:skip": "node scripts/build-archive.js --skip-existing",
+    "build:effects": "node scripts/build-all.js",
+    "build:effects:skip": "node scripts/build-all.js --skip-existing",
+    "build:lv2": "node scripts/build-instruments.js",
+    "build:lv2:skip": "node scripts/build-instruments.js --skip-existing",
+    "setup:mda-lv2": "node scripts/setup-mda-lv2.js",
+    "sync:demo": "node scripts/sync-demo.js"
   }
 }

@@ -1,0 +1,12 @@
+#pragma once
+#include <cstring>
+// Minimal QByteArray stub — holds a non-owning const char* pointer.
+class QByteArray {
+    const char *m_ptr;
+public:
+    QByteArray() : m_ptr("") {}
+    explicit QByteArray(const char *p) : m_ptr(p ? p : "") {}
+    const char *constData() const { return m_ptr; }
+    bool isEmpty() const { return !m_ptr || *m_ptr == '\0'; }
+    int size() const { return m_ptr ? (int)::strlen(m_ptr) : 0; }
+};

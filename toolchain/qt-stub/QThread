@@ -1,0 +1,44 @@
+#pragma once
+#include "QObject"
+#include "QMutex"
+
+// QThread stub — WASM is single-threaded; all thread ops are no-ops.
+class QThread : public QObject {
+public:
+    enum Priority { IdlePriority = 0, LowestPriority, LowPriority, NormalPriority,
+                    HighPriority, HighestPriority, TimeCriticalPriority, InheritPriority };
+
+    explicit QThread(QObject *parent = nullptr) : QObject(parent) {}
+    virtual ~QThread() = default;
+
+    void start(Priority = NormalPriority) {}
+    void quit()  {}
+    void exit(int = 0) {}
+    bool wait(unsigned long = ULONG_MAX) { return true; }
+    void terminate() {}
+
+    bool isRunning() const { return false; }
+    bool isFinished() const { return true; }
+    bool isInterruptionRequested() const { return false; }
+    void requestInterruption() {}
+
+    void setPriority(Priority) {}
+    Priority priority() const { return NormalPriority; }
+
+    void setStackSize(uint) {}
+    uint stackSize() const { return 0; }
+
+    QObject *worker() const { return nullptr; }
+
+    static QThread *currentThread() { return nullptr; }
+    static int idealThreadCount() { return 1; }
+    static void yieldCurrentThread() {}
+
+    // Sleep — no-op (or could call emscripten_sleep if needed)
+    static void sleep(unsigned long) {}
+    static void msleep(unsigned long) {}
+    static void usleep(unsigned long) {}
+
+protected:
+    virtual void run() {}
+};
