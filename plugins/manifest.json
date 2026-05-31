@@ -2,180 +2,212 @@
   {
     "id": "amp",
     "xml": "amp_1181.xml",
-    "npmName": "@wadspa/amp"
+    "npmName": "@wadspa/amp",
+    "category": "Dynamics"
   },
   {
     "id": "dj_eq",
     "xml": "dj_eq_1901.xml",
     "npmName": "@wadspa/dj-eq-mono",
-    "util": ["biquad.h"]
+    "util": ["biquad.h"],
+    "category": "EQ"
   },
   {
     "id": "plate",
     "xml": "plate_1423.xml",
     "npmName": "@wadspa/plate",
-    "util": ["waveguide_nl.h"]
+    "util": ["waveguide_nl.h"],
+    "category": "Reverb"
   },
   {
     "id": "sc4",
     "xml": "sc4_1882.xml",
     "npmName": "@wadspa/sc4",
     "utilSrc": ["db.c", "rms.c"],
-    "util": ["db.h", "rms.h"]
+    "util": ["db.h", "rms.h"],
+    "category": "Dynamics"
   },
   {
     "id": "fast_lookahead_limiter",
     "xml": "fast_lookahead_limiter_1913.xml",
-    "npmName": "@wadspa/fast-lookahead-limiter"
+    "npmName": "@wadspa/fast-lookahead-limiter",
+    "category": "Dynamics"
   },
   {
     "id": "dc_remove",
     "xml": "dc_remove_1207.xml",
-    "npmName": "@wadspa/dc-remove"
+    "npmName": "@wadspa/dc-remove",
+    "category": "Utility"
   },
   {
     "id": "decimator",
     "xml": "decimator_1202.xml",
-    "npmName": "@wadspa/decimator"
+    "npmName": "@wadspa/decimator",
+    "category": "Distortion"
   },
   {
     "id": "declip",
     "xml": "declip_1195.xml",
-    "npmName": "@wadspa/declip"
+    "npmName": "@wadspa/declip",
+    "category": "Dynamics"
   },
   {
     "id": "hard_limiter",
     "xml": "hard_limiter_1413.xml",
-    "npmName": "@wadspa/hard-limiter"
+    "npmName": "@wadspa/hard-limiter",
+    "category": "Dynamics"
   },
   {
     "id": "satan_maximiser",
     "xml": "satan_maximiser_1408.xml",
-    "npmName": "@wadspa/satan-maximiser"
+    "npmName": "@wadspa/satan-maximiser",
+    "category": "Dynamics"
   },
   {
     "id": "crossover_dist",
     "xml": "crossover_dist_1404.xml",
-    "npmName": "@wadspa/crossover-dist"
+    "npmName": "@wadspa/crossover-dist",
+    "category": "Distortion"
   },
   {
     "id": "diode",
     "xml": "diode_1185.xml",
-    "npmName": "@wadspa/diode"
+    "npmName": "@wadspa/diode",
+    "category": "Distortion"
   },
   {
     "id": "foverdrive",
     "xml": "foverdrive_1196.xml",
-    "npmName": "@wadspa/foverdrive"
+    "npmName": "@wadspa/foverdrive",
+    "category": "Distortion"
   },
   {
     "id": "highpass_iir",
     "xml": "highpass_iir_1890.xml",
     "npmName": "@wadspa/highpass-iir",
     "util": ["iir.h"],
-    "utilSrc": ["iir.c"]
+    "utilSrc": ["iir.c"],
+    "category": "Filter"
   },
   {
     "id": "lowpass_iir",
     "xml": "lowpass_iir_1891.xml",
     "npmName": "@wadspa/lowpass-iir",
     "util": ["iir.h"],
-    "utilSrc": ["iir.c"]
+    "utilSrc": ["iir.c"],
+    "category": "Filter"
   },
   {
     "id": "bandpass_iir",
     "xml": "bandpass_iir_1892.xml",
     "npmName": "@wadspa/bandpass-iir",
     "util": ["iir.h"],
-    "utilSrc": ["iir.c"]
+    "utilSrc": ["iir.c"],
+    "category": "Filter"
   },
   {
     "id": "notch_iir",
     "xml": "notch_iir_1894.xml",
     "npmName": "@wadspa/notch-iir",
     "util": ["iir.h"],
-    "utilSrc": ["iir.c"]
+    "utilSrc": ["iir.c"],
+    "category": "Filter"
   },
   {
     "id": "butterworth",
     "xml": "butterworth_1902.xml",
     "npmName": "@wadspa/butterworth",
     "util": ["iir.h", "buffer.h"],
-    "utilSrc": ["iir.c", "buffer.c"]
+    "utilSrc": ["iir.c", "buffer.c"],
+    "category": "Filter"
   },
   {
     "id": "single_para",
     "xml": "single_para_1203.xml",
     "npmName": "@wadspa/single-para",
-    "util": ["biquad.h"]
+    "util": ["biquad.h"],
+    "category": "EQ"
   },
   {
     "id": "triple_para",
     "xml": "triple_para_1204.xml",
     "npmName": "@wadspa/triple-para",
-    "util": ["biquad.h"]
+    "util": ["biquad.h"],
+    "category": "EQ"
   },
   {
     "id": "flanger",
     "xml": "flanger_1191.xml",
-    "npmName": "@wadspa/flanger"
+    "npmName": "@wadspa/flanger",
+    "category": "Modulation"
   },
   {
     "id": "retro_flange",
     "xml": "retro_flange_1208.xml",
-    "npmName": "@wadspa/retro-flange"
+    "npmName": "@wadspa/retro-flange",
+    "category": "Modulation"
   },
   {
     "id": "comb",
     "xml": "comb_1190.xml",
-    "npmName": "@wadspa/comb"
+    "npmName": "@wadspa/comb",
+    "category": "Modulation"
   },
   {
     "id": "delay",
     "xml": "delay_1898.xml",
-    "npmName": "@wadspa/delay"
+    "npmName": "@wadspa/delay",
+    "category": "Delay"
   },
   {
     "id": "gate",
     "xml": "gate_1921.xml",
     "npmName": "@wadspa/gate",
-    "util": ["biquad.h"]
+    "util": ["biquad.h"],
+    "category": "Dynamics"
   },
   {
     "id": "dyson_compress",
     "xml": "dyson_compress_1403.xml",
-    "npmName": "@wadspa/dyson-compress"
+    "npmName": "@wadspa/dyson-compress",
+    "category": "Dynamics"
   },
   {
     "id": "chorus",
     "xml": "multivoice_chorus_1201.xml",
-    "npmName": "@wadspa/chorus"
+    "npmName": "@wadspa/chorus",
+    "category": "Modulation"
   },
   {
     "id": "gverb",
     "xml": "gverb_1216.xml",
     "npmName": "@wadspa/gverb",
-    "extraDirs": ["gverb"]
+    "extraDirs": ["gverb"],
+    "category": "Reverb"
   },
   {
     "id": "vynil",
     "xml": "vynil_1905.xml",
     "npmName": "@wadspa/vynil",
-    "util": ["biquad.h"]
+    "util": ["biquad.h"],
+    "category": "Character"
   },
   {
     "id": "valve",
     "xml": "valve_1209.xml",
-    "npmName": "@wadspa/valve"
+    "npmName": "@wadspa/valve",
+    "category": "Distortion"
   },
   {
     "id": "tape_delay",
     "xml": "tape_delay_1211.xml",
-    "npmName": "@wadspa/tape-delay"
+    "npmName": "@wadspa/tape-delay",
+    "category": "Delay"
   },
   {
     "id": "svf",
     "xml": "svf_1214.xml",
-    "npmName": "@wadspa/svf"
+    "npmName": "@wadspa/svf",
+    "category": "Filter"
   }
 ]

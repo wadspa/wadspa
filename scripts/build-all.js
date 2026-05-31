@@ -5,28 +5,33 @@
  * Usage:
  *   node scripts/build-all.js [--only <id>] [--skip-existing]
  *
+ * After each successful build (or when skipping an already-built plugin):
+ *   - Copies dist/ to docs/plugins/<id>/
+ *   - Updates docs/plugins/catalogue.json
+ *
  * Requirements:
  *   - emcc on PATH (or EMCC env var)
  *   - perl on PATH (for swh-plugins/makestub.pl)
  *   - wadspa on PATH (npm link from toolchain/)
  */
 
-import { execSync }                                          from 'child_process';
+import { execSync }                                                              from 'child_process';
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync, copyFileSync } from 'fs';
-import { join, dirname }                                     from 'path';
-import { fileURLToPath }                                     from 'url';
+import { join, dirname }                                                          from 'path';
+import { fileURLToPath }                                                          from 'url';
 
-const ROOT    = join(dirname(fileURLToPath(import.meta.url)), '..');
-const SWH     = join(ROOT, 'swh-plugins');
-const PLUGINS = join(ROOT, 'plugins');
-const SHARED  = join(PLUGINS, 'shared');
-const MAKESTUB = join(SWH, 'makestub.pl');
+const ROOT        = join(dirname(fileURLToPath(import.meta.url)), '..');
+const SWH         = join(ROOT, 'swh-plugins');
+const PLUGINS     = join(ROOT, 'plugins');
+const SHARED      = join(PLUGINS, 'shared');
+const MAKESTUB    = join(SWH, 'makestub.pl');
+const DOCS_PLUGINS = join(ROOT, 'docs', 'plugins');
 
 const manifest = JSON.parse(readFileSync(join(PLUGINS, 'manifest.json'), 'utf8'));
 
 // --- CLI args ---
-const args        = process.argv.slice(2);
-const onlyId      = args.includes('--only')          ? args[args.indexOf('--only') + 1]     : null;
+const args         = process.argv.slice(2);
+const onlyId       = args.includes('--only') ? args[args.indexOf('--only') + 1] : null;
 const skipExisting = args.includes('--skip-existing');
 
 // ---
@@ -39,16 +44,76 @@ function copyIfMissing(src, dest) {
     if (!existsSync(dest)) copyFileSync(src, dest);
 }
 
+// Resolve LADSPA default hint strings to numeric values.
+function resolveDefault(def, min, max) {
+    const s = String(def);
+    if (s === 'min')    return min;
+    if (s === 'max')    return max;
+    if (s === 'low')    return +(min + (max - min) * 0.25).toFixed(6);
+    if (s === 'high')   return +(min + (max - min) * 0.75).toFixed(6);
+    if (s === 'middle') return +(min + (max - min) * 0.5).toFixed(6);
+    const n = parseFloat(s);
+    return isNaN(n) ? min : n;
+}
+
+// Read the generated dist/index.js and build a catalogue entry.
+function buildCatalogueEntry(manifestEntry, distDir) {
+    const indexPath = join(distDir, 'index.js');
+    if (!existsSync(indexPath)) return null;
+
+    const src = readFileSync(indexPath, 'utf8');
+    const match = src.match(/export const meta\s*=\s*(\{[\s\S]*?\});\s*export/);
+    if (!match) return null;
+
+    let meta;
+    try { meta = JSON.parse(match[1]); } catch { return null; }
+
+    const wasmFile = readdirSync(distDir).find(f => f.endsWith('.wasm'));
+    if (!wasmFile) return null;
+
+    return {
+        id:            manifestEntry.id,
+        label:         meta.label,
+        name:          meta.name,
+        category:      manifestEntry.category ?? 'Uncategorized',
+        wasmFile,
+        processorFile: 'processor.js',
+        ports: meta.ports.map(p => {
+            if (p.type !== 'control') return p;
+            return { ...p, default: resolveDefault(p.default, p.min, p.max) };
+        }),
+    };
+}
+
+// Copy dist/ to docs/plugins/<id>/ and update catalogue list.
+function deploy(manifestEntry, distDir, catalogueEntries) {
+    const entry = buildCatalogueEntry(manifestEntry, distDir);
+    if (!entry) {
+        console.warn(`   ⚠ Could not read meta from ${distDir}/index.js — skipping catalogue`);
+        return;
+    }
+    catalogueEntries.push(entry);
+
+    if (!existsSync(DOCS_PLUGINS)) return;
+    const dest = join(DOCS_PLUGINS, manifestEntry.id);
+    mkdirSync(dest, { recursive: true });
+    run(`cp -r "${distDir}/." "${dest}/"`);
+}
+
+// ---
+
 let passed = 0, failed = 0, skipped = 0;
+const catalogueEntries = [];
 
 for (const entry of manifest) {
     if (onlyId && entry.id !== onlyId) continue;
 
-    const dir    = join(PLUGINS, entry.id);
+    const dir     = join(PLUGINS, entry.id);
     const distDir = join(dir, 'dist');
 
     if (skipExisting && existsSync(distDir)) {
         console.log(`⏭  ${entry.id} — skipping (dist/ exists)`);
+        deploy(entry, distDir, catalogueEntries);
         skipped++;
         continue;
     }
@@ -67,7 +132,7 @@ for (const entry of manifest) {
         const cFile = join(dir, `${entry.id}.c`);
         writeFileSync(cFile, cSrc);
 
-        // 3. Copy shared base headers (always needed)
+        // 3. Copy shared base headers
         copyIfMissing(join(SHARED, 'ladspa.h'),      join(dir, 'ladspa.h'));
         copyIfMissing(join(SHARED, 'ladspa-util.h'), join(dir, 'ladspa-util.h'));
         copyIfMissing(join(SHARED, 'config.h'),      join(dir, 'config.h'));
@@ -77,12 +142,12 @@ for (const entry of manifest) {
             copyIfMissing(join(SHARED, 'util', h), join(dir, 'util', h));
         }
 
-        // 5. Copy util .c sources (will be added to sources list)
+        // 5. Copy util .c sources
         for (const s of entry.utilSrc ?? []) {
             copyIfMissing(join(SHARED, 'util', s), join(dir, 'util', s));
         }
 
-        // 5b. Copy extra subdirectories (e.g. gverb/) from plugins/shared/
+        // 5b. Copy extra subdirectories (e.g. gverb/)
         for (const d of entry.extraDirs ?? []) {
             const srcD  = join(SHARED, d);
             const destD = join(dir, d);
@@ -90,7 +155,7 @@ for (const entry of manifest) {
             run(`cp -rn "${srcD}/." "${destD}/"`);
         }
 
-        // 6. Build — collect all extra C sources (util/ + extraDir/ *.c files)
+        // 6. Build
         const extraSources = [
             ...(entry.utilSrc ?? []).map(s => `util/${s}`),
             ...(entry.extraDirs ?? []).flatMap(d =>
@@ -99,18 +164,29 @@ for (const entry of manifest) {
                     .map(f => `${d}/${f}`)
             ),
         ].join(',');
-        const sourcesFlag  = extraSources ? `--sources ${entry.id}.c,${extraSources}` : '';
-        const nameFlag     = `--name ${entry.npmName}`;
+        const sourcesFlag = extraSources ? `--sources ${entry.id}.c,${extraSources}` : '';
+        const nameFlag    = `--name ${entry.npmName}`;
 
         const cmd = `wadspa build "${dir}" --include "${dir}" ${sourcesFlag} ${nameFlag}`.trim();
-        const out  = run(cmd, { cwd: dir });
+        const out = run(cmd, { cwd: dir });
         console.log(out.trim().split('\n').map(l => '   ' + l).join('\n'));
+
+        deploy(entry, distDir, catalogueEntries);
         passed++;
 
     } catch (e) {
         console.error(`   ✗ FAILED: ${e.message.split('\n')[0]}`);
         failed++;
     }
+}
+
+// Write catalogue
+if (catalogueEntries.length > 0 && existsSync(DOCS_PLUGINS)) {
+    writeFileSync(
+        join(DOCS_PLUGINS, 'catalogue.json'),
+        JSON.stringify(catalogueEntries, null, 2)
+    );
+    console.log(`\nCatalogue: ${catalogueEntries.length} plugins → docs/plugins/catalogue.json`);
 }
 
 console.log(`\n${'─'.repeat(50)}`);

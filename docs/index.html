@@ -262,174 +262,24 @@ const SYNTH_META = {
   ]
 };
 
-const EFFECTS = [
-  {
-    id: 'amp', label: 'Amp', category: 'Dynamics',
-    wasmFile: 'amp.wasm', processorFile: 'processor.js',
-    meta: { label:'amp', ports:[
-      {index:0,name:'Gain (dB)',dir:'input', type:'control',min:-70,max:70, default:0},
-      {index:1,name:'Input',    dir:'input', type:'audio'},
-      {index:2,name:'Output',   dir:'output',type:'audio'},
-    ]}
-  },
-  {
-    id: 'sc4', label: 'Compressor', category: 'Dynamics',
-    wasmFile: 'sc4.wasm', processorFile: 'processor.js',
-    meta: { label:'sc4', ports:[
-      {index:0,name:'RMS/peak',   dir:'input', type:'control',min:0,   max:1,   default:0},
-      {index:1,name:'Attack',     dir:'input', type:'control',min:1.5, max:400, default:101.125},
-      {index:2,name:'Release',    dir:'input', type:'control',min:2,   max:800, default:401},
-      {index:3,name:'Threshold',  dir:'input', type:'control',min:-30, max:0,   default:-20},
-      {index:4,name:'Ratio',      dir:'input', type:'control',min:1,   max:20,  default:4},
-      {index:5,name:'Knee radius',dir:'input', type:'control',min:1,   max:10,  default:3.25},
-      {index:6,name:'Makeup gain',dir:'input', type:'control',min:0,   max:24,  default:0},
-      {index:7,name:'Left in',    dir:'input', type:'audio'},
-      {index:8,name:'Right in',   dir:'input', type:'audio'},
-      {index:9,name:'Left out',   dir:'output',type:'audio'},
-      {index:10,name:'Right out', dir:'output',type:'audio'},
-    ]}
-  },
-  {
-    id: 'dyson_compress', label: 'Dyson Compress', category: 'Dynamics',
-    wasmFile: 'dysonCompress.wasm', processorFile: 'processor.js',
-    meta: { label:'dysonCompress', ports:[
-      {index:0,name:'Peak limit (dB)',   dir:'input', type:'control',min:-30,max:0,  default:0},
-      {index:1,name:'Release time (s)',  dir:'input', type:'control',min:0,  max:1,  default:0.25},
-      {index:2,name:'Fast compression',  dir:'input', type:'control',min:0,  max:1,  default:0.5},
-      {index:3,name:'Compression ratio', dir:'input', type:'control',min:0,  max:1,  default:0.5},
-      {index:4,name:'Input',  dir:'input', type:'audio'},
-      {index:5,name:'Output', dir:'output',type:'audio'},
-    ]}
-  },
-  {
-    id: 'dj_eq', label: 'DJ EQ', category: 'EQ',
-    wasmFile: 'dj_eq_mono.wasm', processorFile: 'processor.js',
-    meta: { label:'dj_eq_mono', ports:[
-      {index:0,name:'Lo gain (dB)', dir:'input', type:'control',min:-70,max:6,default:0},
-      {index:1,name:'Mid gain (dB)',dir:'input', type:'control',min:-70,max:6,default:0},
-      {index:2,name:'Hi gain (dB)', dir:'input', type:'control',min:-70,max:6,default:0},
-      {index:3,name:'Input',        dir:'input', type:'audio'},
-      {index:4,name:'Output',       dir:'output',type:'audio'},
-      {index:5,name:'Latency',      dir:'output',type:'control'},
-    ]}
-  },
-  {
-    id: 'svf', label: 'State Variable Filter', category: 'EQ',
-    wasmFile: 'svf.wasm', processorFile: 'processor.js',
-    meta: { label:'svf', ports:[
-      {index:0,name:'Cutoff freq', dir:'input', type:'control',min:16,  max:20000,default:440},
-      {index:1,name:'Q factor',    dir:'input', type:'control',min:0.5, max:200,  default:0.707},
-      {index:2,name:'Filter mode', dir:'input', type:'control',min:0,   max:3,    default:0},
-      {index:3,name:'Input',       dir:'input', type:'audio'},
-      {index:4,name:'Output',      dir:'output',type:'audio'},
-    ]}
-  },
-  {
-    id: 'valve', label: 'Valve Saturation', category: 'Distortion',
-    wasmFile: 'valve.wasm', processorFile: 'processor.js',
-    meta: { label:'valve', ports:[
-      {index:0,name:'Distortion', dir:'input', type:'control',min:0,  max:100,default:0},
-      {index:1,name:'Level out',  dir:'input', type:'control',min:-70,max:20, default:0},
-      {index:2,name:'Input',      dir:'input', type:'audio'},
-      {index:3,name:'Output',     dir:'output',type:'audio'},
-    ]}
-  },
-  {
-    id: 'flanger', label: 'Flanger', category: 'Modulation',
-    wasmFile: 'flanger.wasm', processorFile: 'processor.js',
-    meta: { label:'flanger', ports:[
-      {index:0,name:'Delay base',   dir:'input', type:'control',min:0.1,  max:25,  default:6.25},
-      {index:1,name:'Max slowdown', dir:'input', type:'control',min:0.0,  max:10,  default:2.5},
-      {index:2,name:'LFO rate',     dir:'input', type:'control',min:0.05, max:40,  default:0.5},
-      {index:3,name:'Feedback',     dir:'input', type:'control',min:-1,   max:1,   default:0},
-      {index:4,name:'Input',        dir:'input', type:'audio'},
-      {index:5,name:'Output',       dir:'output',type:'audio'},
-    ]}
-  },
-  {
-    id: 'chorus', label: 'Chorus', category: 'Modulation',
-    wasmFile: 'multivoiceChorus.wasm', processorFile: 'processor.js',
-    meta: { label:'multivoiceChorus', ports:[
-      {index:0,name:'Voices',     dir:'input', type:'control',min:1,    max:8,   default:2},
-      {index:1,name:'Delay base', dir:'input', type:'control',min:10,   max:40,  default:25},
-      {index:2,name:'Voice spread',dir:'input',type:'control',min:0,    max:1,   default:0.5},
-      {index:3,name:'LFO rate',   dir:'input', type:'control',min:0.01, max:2,   default:0.5},
-      {index:4,name:'LFO depth',  dir:'input', type:'control',min:0,    max:10,  default:3},
-      {index:5,name:'Output attenuation',dir:'input',type:'control',min:0,max:1, default:0.5},
-      {index:6,name:'Input',      dir:'input', type:'audio'},
-      {index:7,name:'Output',     dir:'output',type:'audio'},
-    ]}
-  },
-  {
-    id: 'tape_delay', label: 'Tape Delay', category: 'Delay',
-    wasmFile: 'tapeDelay.wasm', processorFile: 'processor.js',
-    meta: { label:'tapeDelay', ports:[
-      {index:0,name:'Tape speed',  dir:'input', type:'control',min:0.1, max:10, default:1},
-      {index:1,name:'Dry (dB)',    dir:'input', type:'control',min:-90, max:0,  default:0},
-      {index:2,name:'Tap 1 dist', dir:'input', type:'control',min:0,   max:4,  default:0.5},
-      {index:3,name:'Tap 1 level',dir:'input', type:'control',min:-90, max:0,  default:-6},
-      {index:4,name:'Tap 2 dist', dir:'input', type:'control',min:0,   max:4,  default:1},
-      {index:5,name:'Tap 2 level',dir:'input', type:'control',min:-90, max:0,  default:-90},
-      {index:6,name:'Tap 3 dist', dir:'input', type:'control',min:0,   max:4,  default:2},
-      {index:7,name:'Tap 3 level',dir:'input', type:'control',min:-90, max:0,  default:-90},
-      {index:8,name:'Tap 4 dist', dir:'input', type:'control',min:0,   max:4,  default:3},
-      {index:9,name:'Tap 4 level',dir:'input', type:'control',min:-90, max:0,  default:-90},
-      {index:10,name:'Input',      dir:'input', type:'audio'},
-      {index:11,name:'Output',     dir:'output',type:'audio'},
-    ]}
-  },
-  {
-    id: 'plate', label: 'Plate Reverb', category: 'Reverb',
-    wasmFile: 'plate.wasm', processorFile: 'processor.js',
-    meta: { label:'plate', ports:[
-      {index:0,name:'Reverb time', dir:'input', type:'control',min:0.01,max:8.75,default:3.5},
-      {index:1,name:'Tail level',  dir:'input', type:'control',min:0,   max:1,   default:0.25},
-      {index:2,name:'Input',       dir:'input', type:'audio'},
-      {index:3,name:'Left output', dir:'output',type:'audio'},
-      {index:4,name:'Right output',dir:'output',type:'audio'},
-    ]}
-  },
-  {
-    id: 'gverb', label: 'Room Reverb', category: 'Reverb',
-    wasmFile: 'gverb.wasm', processorFile: 'processor.js',
-    meta: { label:'gverb', ports:[
-      {index:0,name:'Room size',  dir:'input', type:'control',min:1,   max:300, default:30},
-      {index:1,name:'Rev time',   dir:'input', type:'control',min:0.1, max:30,  default:7},
-      {index:2,name:'Damping',    dir:'input', type:'control',min:0,   max:1,   default:0.5},
-      {index:3,name:'Input bw',   dir:'input', type:'control',min:0,   max:1,   default:0.75},
-      {index:4,name:'Dry level',  dir:'input', type:'control',min:-70, max:0,   default:-70},
-      {index:5,name:'Early level',dir:'input', type:'control',min:-70, max:0,   default:0},
-      {index:6,name:'Tail level', dir:'input', type:'control',min:-70, max:0,   default:-17},
-      {index:7,name:'Input',      dir:'input', type:'audio'},
-      {index:8,name:'Left out',   dir:'output',type:'audio'},
-      {index:9,name:'Right out',  dir:'output',type:'audio'},
-    ]}
-  },
-  {
-    id: 'vynil', label: 'Vinyl Sim', category: 'Character',
-    wasmFile: 'vynil.wasm', processorFile: 'processor.js',
-    meta: { label:'vynil', ports:[
-      {index:0,name:'Year',       dir:'input', type:'control',min:1900,max:1990,default:1960},
-      {index:1,name:'RPM',        dir:'input', type:'control',min:33,  max:78,  default:33},
-      {index:2,name:'Surface',    dir:'input', type:'control',min:0,   max:1,   default:0},
-      {index:3,name:'Clickiness', dir:'input', type:'control',min:0,   max:10,  default:0},
-      {index:4,name:'Warp',       dir:'input', type:'control',min:0,   max:1,   default:0},
-      {index:5,name:'Left in',    dir:'input', type:'audio'},
-      {index:6,name:'Right in',   dir:'input', type:'audio'},
-      {index:7,name:'Left out',   dir:'output',type:'audio'},
-      {index:8,name:'Right out',  dir:'output',type:'audio'},
-    ]}
-  },
-];
+let EFFECTS = [];
+try {
+  EFFECTS = await fetch('./plugins/catalogue.json').then(r => {
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  });
+} catch (e) {
+  console.error('Failed to load catalogue.json:', e);
+}
 
 // ── Plugin URL helpers ──────────────────────────────────────────
 const BASE = new URL('./plugins/', import.meta.url).href;
 
-function pluginModule(dir, eff) {
+function pluginModule(eff) {
   return {
-    meta: eff.meta,
-    wasmUrl:      `${BASE}${dir}/${eff.wasmFile}`,
-    processorUrl: `${BASE}${dir}/${eff.processorFile}`,
+    meta: { label: eff.label, ports: eff.ports },
+    wasmUrl:      `${BASE}${eff.id}/${eff.wasmFile}`,
+    processorUrl: `${BASE}${eff.id}/${eff.processorFile}`,
   };
 }
 
@@ -588,11 +438,11 @@ function renderChain() {
     const card = document.createElement('div');
     card.className = 'card';
 
-    const ctrlPorts = eff.meta.ports.filter(p => p.type === 'control' && p.dir === 'input');
+    const ctrlPorts = eff.ports.filter(p => p.type === 'control' && p.dir === 'input');
 
     card.innerHTML = `
       <div class="card-title">
-        <span>${eff.label}</span>
+        <span>${eff.name}</span>
         <button class="remove-btn" title="remove">×</button>
       </div>
       ${ctrlPorts.map(p => `
@@ -638,12 +488,12 @@ function renderChain() {
 
 async function addEffect(eff) {
   closeDropdown();
-  setStatus(`loading ${eff.label}…`);
+  setStatus(`loading ${eff.name}…`);
 
   // placeholder card while loading
   const placeholder = document.createElement('div');
   placeholder.className = 'card loading';
-  placeholder.innerHTML = `<div class="card-title"><span>${eff.label}</span></div><div style="font-size:0.7rem;color:var(--muted)">loading…</div>`;
+  placeholder.innerHTML = `<div class="card-title"><span>${eff.name}</span></div><div style="font-size:0.7rem;color:var(--muted)">loading…</div>`;
   const container = document.getElementById('chain-cards');
   const outBadge  = document.getElementById('out-badge');
   if (chain.length > 0) {
@@ -653,12 +503,12 @@ async function addEffect(eff) {
   container.insertBefore(placeholder, outBadge);
 
   try {
-    const mod  = pluginModule(eff.id, eff);
+    const mod  = pluginModule(eff);
     const node = await loadPlugin(ctx, mod);
     chain.push({ eff, node });
     await rewire();
     renderChain();
-    setStatus(`${eff.label} added`);
+    setStatus(`${eff.name} added`);
   } catch (e) {
     placeholder.remove();
     setStatus(`ERROR: ${e.message}`);
@@ -681,7 +531,7 @@ function buildDropdown() {
     for (const eff of EFFECTS.filter(e => e.category === cat)) {
       const item = document.createElement('div');
       item.className = 'dropdown-item';
-      item.textContent = eff.label;
+      item.textContent = eff.name;
       item.addEventListener('click', () => addEffect(eff));
       dd.appendChild(item);
     }

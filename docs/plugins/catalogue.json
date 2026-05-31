@@ -1,0 +1,1869 @@
+[
+  {
+    "id": "amp",
+    "label": "amp",
+    "name": "Simple Amplifier",
+    "category": "Dynamics",
+    "wasmFile": "amp.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Gain (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 70,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 2,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "dj_eq",
+    "label": "dj_eq_mono",
+    "name": "DJ EQ (mono)",
+    "category": "EQ",
+    "wasmFile": "dj_eq_mono.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Lo gain (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 6,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "name": "Mid gain (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 6,
+        "default": 0
+      },
+      {
+        "index": 2,
+        "name": "Hi gain (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 6,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 4,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      },
+      {
+        "index": 5,
+        "name": "Latency",
+        "dir": "output",
+        "type": "control",
+        "integer": true
+      }
+    ]
+  },
+  {
+    "id": "plate",
+    "label": "plate",
+    "name": "Plate reverb",
+    "category": "Reverb",
+    "wasmFile": "plate.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Reverb time",
+        "dir": "input",
+        "type": "control",
+        "min": 0.01,
+        "max": 8.5,
+        "default": 0.01
+      },
+      {
+        "index": 1,
+        "name": "Damping",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0.25
+      },
+      {
+        "index": 2,
+        "name": "Dry/wet mix",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0.25
+      },
+      {
+        "index": 3,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 4,
+        "name": "Left output",
+        "dir": "output",
+        "type": "audio"
+      },
+      {
+        "index": 5,
+        "name": "Right output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "sc4",
+    "label": "sc4",
+    "name": "SC4",
+    "category": "Dynamics",
+    "wasmFile": "sc4.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "RMS/peak",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "name": "Attack time (ms)",
+        "dir": "input",
+        "type": "control",
+        "min": 1.5,
+        "max": 400,
+        "default": 101.125
+      },
+      {
+        "index": 2,
+        "name": "Release time (ms)",
+        "dir": "input",
+        "type": "control",
+        "min": 2,
+        "max": 800,
+        "default": 2
+      },
+      {
+        "index": 3,
+        "name": "Threshold level (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -30,
+        "max": 0,
+        "default": -30
+      },
+      {
+        "index": 4,
+        "name": "Ratio (1:n)",
+        "dir": "input",
+        "type": "control",
+        "min": 1,
+        "max": 20,
+        "default": 1
+      },
+      {
+        "index": 5,
+        "name": "Knee radius (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": 1,
+        "max": 10,
+        "default": 3.25
+      },
+      {
+        "index": 6,
+        "name": "Makeup gain (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 24,
+        "default": 0
+      },
+      {
+        "index": 7,
+        "name": "Amplitude (dB)",
+        "dir": "output",
+        "type": "control",
+        "min": -40,
+        "max": 12,
+        "default": -40
+      },
+      {
+        "index": 8,
+        "name": "Gain reduction (dB)",
+        "dir": "output",
+        "type": "control",
+        "min": -24,
+        "max": 0,
+        "default": -24
+      },
+      {
+        "index": 9,
+        "name": "Left input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 10,
+        "name": "Right input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 11,
+        "name": "Left output",
+        "dir": "output",
+        "type": "audio"
+      },
+      {
+        "index": 12,
+        "name": "Right output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "fast_lookahead_limiter",
+    "label": "fastLookaheadLimiter",
+    "name": "Fast Lookahead limiter",
+    "category": "Dynamics",
+    "wasmFile": "fastLookaheadLimiter.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Input gain (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 20,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "name": "Limit (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 0,
+        "default": 0
+      },
+      {
+        "index": 2,
+        "name": "Release time (s)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.01,
+        "max": 2,
+        "default": 0.5075
+      },
+      {
+        "index": 3,
+        "name": "Attenuation (dB)",
+        "dir": "output",
+        "type": "control",
+        "min": 0,
+        "max": 70,
+        "default": 0
+      },
+      {
+        "index": 4,
+        "name": "Input 1",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 5,
+        "name": "Input 2",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 6,
+        "name": "Output 1",
+        "dir": "output",
+        "type": "audio"
+      },
+      {
+        "index": 7,
+        "name": "Output 2",
+        "dir": "output",
+        "type": "audio"
+      },
+      {
+        "index": 8,
+        "name": "latency",
+        "dir": "output",
+        "type": "control"
+      }
+    ]
+  },
+  {
+    "id": "dc_remove",
+    "label": "dcRemove",
+    "name": "DC Offset Remover",
+    "category": "Utility",
+    "wasmFile": "dcRemove.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 1,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "decimator",
+    "label": "decimator",
+    "name": "Decimator",
+    "category": "Distortion",
+    "wasmFile": "decimator.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Bit depth",
+        "dir": "input",
+        "type": "control",
+        "min": 1,
+        "max": 24,
+        "default": 1
+      },
+      {
+        "index": 1,
+        "name": "Sample rate (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.001,
+        "max": 1,
+        "default": 0.001,
+        "sampleRate": true
+      },
+      {
+        "index": 2,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 3,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "declip",
+    "label": "declip",
+    "name": "Declipper",
+    "category": "Dynamics",
+    "wasmFile": "declip.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 1,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "hard_limiter",
+    "label": "hardLimiter",
+    "name": "Hard Limiter",
+    "category": "Dynamics",
+    "wasmFile": "hardLimiter.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "dB limit",
+        "dir": "input",
+        "type": "control",
+        "min": -50,
+        "max": 0,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "name": "Wet level",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 2,
+        "name": "Residue level",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 4,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "satan_maximiser",
+    "label": "satanMaximiser",
+    "name": "Barry's Satan Maximiser",
+    "category": "Dynamics",
+    "wasmFile": "satanMaximiser.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Decay time (samples)",
+        "dir": "input",
+        "type": "control",
+        "min": 2,
+        "max": 30,
+        "default": 2
+      },
+      {
+        "index": 1,
+        "name": "Knee point (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -90,
+        "max": 0,
+        "default": 0
+      },
+      {
+        "index": 2,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 3,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "crossover_dist",
+    "label": "crossoverDist",
+    "name": "Crossover distortion",
+    "category": "Distortion",
+    "wasmFile": "crossoverDist.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Crossover amplitude",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 0.1,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "name": "Smoothing",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 2,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 3,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "diode",
+    "label": "diode",
+    "name": "Diode Processor",
+    "category": "Distortion",
+    "wasmFile": "diode.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Mode (0 for none, 1 for half wave, 2 for full wave)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 3,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 2,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "foverdrive",
+    "label": "foverdrive",
+    "name": "Fast overdrive",
+    "category": "Distortion",
+    "wasmFile": "foverdrive.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Drive level",
+        "dir": "input",
+        "type": "control",
+        "min": 1,
+        "max": 3,
+        "default": 1
+      },
+      {
+        "index": 1,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 2,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "highpass_iir",
+    "label": "highpass_iir",
+    "name": "Glame Highpass Filter",
+    "category": "Filter",
+    "wasmFile": "highpass_iir.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Cutoff Frequency",
+        "dir": "input",
+        "type": "control",
+        "min": 0.0001,
+        "max": 0.45,
+        "default": 0.112575,
+        "logarithmic": true,
+        "sampleRate": true
+      },
+      {
+        "index": 1,
+        "name": "Stages(2 poles per stage)",
+        "dir": "input",
+        "type": "control",
+        "min": 1,
+        "max": 10,
+        "default": 1,
+        "integer": true
+      },
+      {
+        "index": 2,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 3,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "lowpass_iir",
+    "label": "lowpass_iir",
+    "name": "Glame Lowpass Filter",
+    "category": "Filter",
+    "wasmFile": "lowpass_iir.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Cutoff Frequency",
+        "dir": "input",
+        "type": "control",
+        "min": 0.0001,
+        "max": 0.45,
+        "default": 0.45,
+        "logarithmic": true,
+        "sampleRate": true
+      },
+      {
+        "index": 1,
+        "name": "Stages(2 poles per stage)",
+        "dir": "input",
+        "type": "control",
+        "min": 1,
+        "max": 10,
+        "default": 1,
+        "integer": true
+      },
+      {
+        "index": 2,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 3,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "bandpass_iir",
+    "label": "bandpass_iir",
+    "name": "Glame Bandpass Filter",
+    "category": "Filter",
+    "wasmFile": "bandpass_iir.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Center Frequency (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.0001,
+        "max": 0.45,
+        "default": 0.0001,
+        "logarithmic": true,
+        "sampleRate": true
+      },
+      {
+        "index": 1,
+        "name": "Bandwidth (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.0001,
+        "max": 0.45,
+        "default": 0.0001,
+        "logarithmic": true,
+        "sampleRate": true
+      },
+      {
+        "index": 2,
+        "name": "Stages(2 poles per stage)",
+        "dir": "input",
+        "type": "control",
+        "min": 1,
+        "max": 10,
+        "default": 1,
+        "integer": true
+      },
+      {
+        "index": 3,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 4,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "notch_iir",
+    "label": "notch_iir",
+    "name": "Mag's Notch Filter",
+    "category": "Filter",
+    "wasmFile": "notch_iir.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Center Frequency (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.0001,
+        "max": 0.45,
+        "default": 0.0001,
+        "logarithmic": true,
+        "sampleRate": true
+      },
+      {
+        "index": 1,
+        "name": "Bandwidth (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.0001,
+        "max": 0.45,
+        "default": 0.0001,
+        "logarithmic": true,
+        "sampleRate": true
+      },
+      {
+        "index": 2,
+        "name": "Stages(2 poles per stage)",
+        "dir": "input",
+        "type": "control",
+        "min": 1,
+        "max": 10,
+        "default": 1,
+        "integer": true
+      },
+      {
+        "index": 3,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 4,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "butterworth",
+    "label": "bwxover_iir",
+    "name": "Glame Butterworth X-over Filter",
+    "category": "Filter",
+    "wasmFile": "bwxover_iir.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Cutoff Frequency (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.0001,
+        "max": 0.45,
+        "default": 0.112575,
+        "logarithmic": true,
+        "sampleRate": true
+      },
+      {
+        "index": 1,
+        "name": "Resonance",
+        "dir": "input",
+        "type": "control",
+        "min": 0.1,
+        "max": 1.41,
+        "default": 0.1
+      },
+      {
+        "index": 2,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 3,
+        "name": "LP-Output",
+        "dir": "output",
+        "type": "audio"
+      },
+      {
+        "index": 4,
+        "name": "HP-Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "single_para",
+    "label": "singlePara",
+    "name": "Single band parametric",
+    "category": "EQ",
+    "wasmFile": "singlePara.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Gain (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 30,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "name": "Frequency (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 0.4,
+        "default": 0,
+        "sampleRate": true
+      },
+      {
+        "index": 2,
+        "name": "Bandwidth (octaves)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 4,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 4,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "triple_para",
+    "label": "triplePara",
+    "name": "Triple band parametric with shelves",
+    "category": "EQ",
+    "wasmFile": "triplePara.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Low-shelving gain (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 30,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "name": "Low-shelving frequency (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.0001,
+        "max": 0.49,
+        "default": 0.0001,
+        "logarithmic": true,
+        "sampleRate": true
+      },
+      {
+        "index": 2,
+        "name": "Low-shelving slope",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "name": "Band 1 gain (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 30,
+        "default": 0
+      },
+      {
+        "index": 4,
+        "name": "Band 1 frequency (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.0001,
+        "max": 0.49,
+        "default": 0.122575,
+        "logarithmic": true,
+        "sampleRate": true
+      },
+      {
+        "index": 5,
+        "name": "Band 1 bandwidth (octaves)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 4,
+        "default": 0
+      },
+      {
+        "index": 6,
+        "name": "Band 2 gain (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 30,
+        "default": 0
+      },
+      {
+        "index": 7,
+        "name": "Band 2 frequency (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.0001,
+        "max": 0.49,
+        "default": 0.0001,
+        "logarithmic": true,
+        "sampleRate": true
+      },
+      {
+        "index": 8,
+        "name": "Band 2 bandwidth (octaves)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 4,
+        "default": 0
+      },
+      {
+        "index": 9,
+        "name": "Band 3 gain (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 30,
+        "default": 0
+      },
+      {
+        "index": 10,
+        "name": "Band 3 frequency (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.0001,
+        "max": 0.49,
+        "default": 0.49,
+        "logarithmic": true,
+        "sampleRate": true
+      },
+      {
+        "index": 11,
+        "name": "Band 3 bandwidth (octaves)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 4,
+        "default": 0
+      },
+      {
+        "index": 12,
+        "name": "High-shelving gain (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 30,
+        "default": 0
+      },
+      {
+        "index": 13,
+        "name": "High-shelving frequency (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.0001,
+        "max": 0.49,
+        "default": 0.0001,
+        "logarithmic": true,
+        "sampleRate": true
+      },
+      {
+        "index": 14,
+        "name": "High-shelving slope",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 15,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 16,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "flanger",
+    "label": "flanger",
+    "name": "Flanger",
+    "category": "Modulation",
+    "wasmFile": "flanger.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Delay base (ms)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.1,
+        "max": 25,
+        "default": 6.325
+      },
+      {
+        "index": 1,
+        "name": "Max slowdown (ms)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 10,
+        "default": 2.5
+      },
+      {
+        "index": 2,
+        "name": "LFO frequency (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.05,
+        "max": 100,
+        "default": 25.0375,
+        "logarithmic": true
+      },
+      {
+        "index": 3,
+        "name": "Feedback",
+        "dir": "input",
+        "type": "control",
+        "min": -1,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 4,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 5,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "retro_flange",
+    "label": "retroFlange",
+    "name": "Retro Flanger",
+    "category": "Modulation",
+    "wasmFile": "retroFlange.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Average stall (ms)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 10,
+        "default": 2.5
+      },
+      {
+        "index": 1,
+        "name": "Flange frequency (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.5,
+        "max": 8,
+        "default": 0.5
+      },
+      {
+        "index": 2,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 3,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "comb",
+    "label": "comb",
+    "name": "Comb Filter",
+    "category": "Modulation",
+    "wasmFile": "comb.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Band separation (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 16,
+        "max": 640,
+        "default": 172
+      },
+      {
+        "index": 1,
+        "name": "Feedback",
+        "dir": "input",
+        "type": "control",
+        "min": -0.99,
+        "max": 0.99,
+        "default": 0
+      },
+      {
+        "index": 2,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 3,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "delay",
+    "label": "delay_n",
+    "name": "Simple delay line, noninterpolating",
+    "category": "Delay",
+    "wasmFile": "delay_n.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 1,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      },
+      {
+        "index": 2,
+        "name": "Max Delay (s)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "name": "Delay Time (s)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "default": 0
+      }
+    ]
+  },
+  {
+    "id": "gate",
+    "label": "gate",
+    "name": "Gate",
+    "category": "Dynamics",
+    "wasmFile": "gate.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "LF key filter (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.0007,
+        "max": 0.1,
+        "default": 0.0007,
+        "sampleRate": true
+      },
+      {
+        "index": 1,
+        "name": "HF key filter (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.005,
+        "max": 0.49,
+        "default": 0.005,
+        "sampleRate": true
+      },
+      {
+        "index": 2,
+        "name": "Key level (dB)",
+        "dir": "output",
+        "type": "control",
+        "min": -70,
+        "max": 20,
+        "default": -70
+      },
+      {
+        "index": 3,
+        "name": "Threshold (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 20,
+        "default": -70
+      },
+      {
+        "index": 4,
+        "name": "Attack (ms)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.01,
+        "max": 1000,
+        "default": 250.0075
+      },
+      {
+        "index": 5,
+        "name": "Hold (ms)",
+        "dir": "input",
+        "type": "control",
+        "min": 2,
+        "max": 2000,
+        "default": 2000
+      },
+      {
+        "index": 6,
+        "name": "Decay (ms)",
+        "dir": "input",
+        "type": "control",
+        "min": 2,
+        "max": 4000,
+        "default": 2
+      },
+      {
+        "index": 7,
+        "name": "Range (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -90,
+        "max": 0,
+        "default": -90
+      },
+      {
+        "index": 8,
+        "name": "Output select (-1 = key listen, 0 = gate, 1 = bypass)",
+        "dir": "input",
+        "type": "control",
+        "min": -1,
+        "max": 1,
+        "default": 0,
+        "integer": true
+      },
+      {
+        "index": 9,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 10,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "dyson_compress",
+    "label": "dysonCompress",
+    "name": "Dyson compressor",
+    "category": "Dynamics",
+    "wasmFile": "dysonCompress.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Peak limit (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -30,
+        "max": 0,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "name": "Release time (s)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0.25
+      },
+      {
+        "index": 2,
+        "name": "Fast compression ratio",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "name": "Compression ratio",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 4,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 5,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "chorus",
+    "label": "multivoiceChorus",
+    "name": "Multivoice Chorus",
+    "category": "Modulation",
+    "wasmFile": "multivoiceChorus.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Number of voices",
+        "dir": "input",
+        "type": "control",
+        "min": 1,
+        "max": 8,
+        "default": 1,
+        "integer": true
+      },
+      {
+        "index": 1,
+        "name": "Delay base (ms)",
+        "dir": "input",
+        "type": "control",
+        "min": 10,
+        "max": 40,
+        "default": 10
+      },
+      {
+        "index": 2,
+        "name": "Voice separation (ms)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 2,
+        "default": 0.5
+      },
+      {
+        "index": 3,
+        "name": "Detune (%)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 5,
+        "default": 0
+      },
+      {
+        "index": 4,
+        "name": "LFO frequency (Hz)",
+        "dir": "input",
+        "type": "control",
+        "min": 2,
+        "max": 30,
+        "default": 9
+      },
+      {
+        "index": 5,
+        "name": "Output attenuation (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -20,
+        "max": 0,
+        "default": 0
+      },
+      {
+        "index": 6,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 7,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "gverb",
+    "label": "gverb",
+    "name": "GVerb",
+    "category": "Reverb",
+    "wasmFile": "gverb.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Roomsize (m)",
+        "dir": "input",
+        "type": "control",
+        "min": 1,
+        "max": 300,
+        "default": 75.75
+      },
+      {
+        "index": 1,
+        "name": "Reverb time (s)",
+        "dir": "input",
+        "type": "control",
+        "min": 0.1,
+        "max": 30,
+        "default": 7.575
+      },
+      {
+        "index": 2,
+        "name": "Damping",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "name": "Input bandwidth",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 1
+      },
+      {
+        "index": 4,
+        "name": "Dry signal level (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 0,
+        "default": -70
+      },
+      {
+        "index": 5,
+        "name": "Early reflection level (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 0,
+        "default": 0
+      },
+      {
+        "index": 6,
+        "name": "Tail level (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -70,
+        "max": 0,
+        "default": 0
+      },
+      {
+        "index": 7,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 8,
+        "name": "Left output",
+        "dir": "output",
+        "type": "audio"
+      },
+      {
+        "index": 9,
+        "name": "Right output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "vynil",
+    "label": "vynil",
+    "name": "VyNil (Vinyl Effect)",
+    "category": "Character",
+    "wasmFile": "vynil.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Year",
+        "dir": "input",
+        "type": "control",
+        "min": 1900,
+        "max": 1990,
+        "default": 1900
+      },
+      {
+        "index": 1,
+        "name": "RPM",
+        "dir": "input",
+        "type": "control",
+        "min": 33,
+        "max": 78,
+        "default": 33
+      },
+      {
+        "index": 2,
+        "name": "Surface warping",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "name": "Crackle",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 4,
+        "name": "Wear",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 5,
+        "name": "Input L",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 6,
+        "name": "Input R",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 7,
+        "name": "Output L",
+        "dir": "output",
+        "type": "audio"
+      },
+      {
+        "index": 8,
+        "name": "Output R",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "valve",
+    "label": "valve",
+    "name": "Valve saturation",
+    "category": "Distortion",
+    "wasmFile": "valve.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Distortion level",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "name": "Distortion character",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 2,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 3,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "tape_delay",
+    "label": "tapeDelay",
+    "name": "Tape Delay Simulation",
+    "category": "Delay",
+    "wasmFile": "tapeDelay.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Tape speed (inches/sec, 1=normal)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 10,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "name": "Dry level (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -90,
+        "max": 0,
+        "default": -90
+      },
+      {
+        "index": 2,
+        "name": "Tap 1 distance (inches)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 4,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "name": "Tap 1 level (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -90,
+        "max": 0,
+        "default": 0
+      },
+      {
+        "index": 4,
+        "name": "Tap 2 distance (inches)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 4,
+        "default": 1
+      },
+      {
+        "index": 5,
+        "name": "Tap 2 level (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -90,
+        "max": 0,
+        "default": -90
+      },
+      {
+        "index": 6,
+        "name": "Tap 3 distance (inches)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 4,
+        "default": 0
+      },
+      {
+        "index": 7,
+        "name": "Tap 3 level (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -90,
+        "max": 0,
+        "default": -90
+      },
+      {
+        "index": 8,
+        "name": "Tap 4 distance (inches)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 4,
+        "default": 4
+      },
+      {
+        "index": 9,
+        "name": "Tap 4 level (dB)",
+        "dir": "input",
+        "type": "control",
+        "min": -90,
+        "max": 0,
+        "default": -90
+      },
+      {
+        "index": 10,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 11,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
+    "id": "svf",
+    "label": "svf",
+    "name": "State Variable Filter",
+    "category": "Filter",
+    "wasmFile": "svf.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 1,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      },
+      {
+        "index": 2,
+        "name": "Filter type (0=none, 1=LP, 2=HP, 3=BP, 4=BR, 5=AP)",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 5,
+        "default": 0,
+        "integer": true
+      },
+      {
+        "index": 3,
+        "name": "Filter freq",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 6000,
+        "default": 0
+      },
+      {
+        "index": 4,
+        "name": "Filter Q",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0.25
+      },
+      {
+        "index": 5,
+        "name": "Filter resonance",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      }
+    ]
+  }
+]
