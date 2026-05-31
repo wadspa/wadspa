@@ -33,7 +33,7 @@ class WadspProcessor extends AudioWorkletProcessor {
         const _cR = inputs[0]?.[1]; if (_cR && _cR.length) mod.HEAPF32.set(_cR, inPtrs[1]);
         mod._shim_run(128);
         outputs[0][0].set(mod.HEAPF32.subarray(outPtrs[0], outPtrs[0] + 128));
-        outputs[0][1].set(mod.HEAPF32.subarray(outPtrs[1], outPtrs[1] + 128));
+        outputs[1][0].set(mod.HEAPF32.subarray(outPtrs[1], outPtrs[1] + 128));
         return true;
     }
 }

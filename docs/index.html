@@ -60,6 +60,30 @@
       border-bottom: 1px solid var(--border);
       display: flex; gap: 0; flex-wrap: wrap;
     }
+    #synth-header {
+      display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;
+    }
+    #synth-header .section-lbl {
+      font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    #instrument-wrap { position: relative; display: inline-block; }
+    #instrument-btn {
+      padding: 0.25rem 0.65rem; font-family: monospace; font-size: 0.75rem;
+      background: var(--surface); color: var(--accent2); border: 1px solid var(--border);
+      border-radius: 3px; cursor: pointer;
+    }
+    #instrument-btn:hover { border-color: var(--accent2); }
+    #instrument-dropdown {
+      display: none; position: absolute; top: calc(100% + 4px); left: 0; z-index: 20;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+      min-width: 180px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    #instrument-dropdown.open { display: block; }
+    .inst-item {
+      padding: 0.45rem 0.8rem; font-size: 0.8rem; cursor: pointer; white-space: nowrap;
+    }
+    .inst-item:hover { background: var(--border); color: #fff; }
+    .inst-item.active { color: var(--accent2); }
 
     /* ── Effects chain ───────────────────────────────────────── */
     #chain-section {
@@ -84,6 +108,7 @@
       display: none; position: absolute; top: calc(100% + 4px); left: 0; z-index: 20;
       background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
       min-width: 200px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      max-height: 60vh; overflow-y: auto;
     }
     .dropdown.open { display: block; }
     .dropdown-item {
@@ -178,7 +203,15 @@
   <!-- ── Synth + keyboard ──────────────────────────────── -->
   <div id="synth-section">
     <div id="synth-card">
-      <div class="card-title">wadspa synth — 8-voice polyphonic saw</div>
+      <div id="synth-header">
+        <span class="section-lbl">instrument</span>
+        <div id="instrument-wrap">
+          <button id="instrument-btn">wadspa synth ▾</button>
+          <div id="instrument-dropdown">
+            <div class="inst-item active" data-inst="wadspa_synth">wadspa synth</div>
+          </div>
+        </div>
+      </div>
       <div id="piano-wrap">
         <div class="oct-row">
           <button id="oct-dn">−</button>
@@ -250,9 +283,10 @@ const EFFECTS = [
       {index:4,name:'Ratio',      dir:'input', type:'control',min:1,   max:20,  default:4},
       {index:5,name:'Knee radius',dir:'input', type:'control',min:1,   max:10,  default:3.25},
       {index:6,name:'Makeup gain',dir:'input', type:'control',min:0,   max:24,  default:0},
-      {index:7,name:'Input',      dir:'input', type:'audio'},
-      {index:8,name:'Output',     dir:'output',type:'audio'},
-      {index:9,name:'Amplitude',  dir:'output',type:'control'},
+      {index:7,name:'Left in',    dir:'input', type:'audio'},
+      {index:8,name:'Right in',   dir:'input', type:'audio'},
+      {index:9,name:'Left out',   dir:'output',type:'audio'},
+      {index:10,name:'Right out', dir:'output',type:'audio'},
     ]}
   },
   {
@@ -654,8 +688,23 @@ document.getElementById('add-btn').addEventListener('click', e => {
   e.stopPropagation();
   document.getElementById('dropdown').classList.toggle('open');
 });
-document.addEventListener('click', closeDropdown);
+document.addEventListener('click', e => {
+  closeDropdown();
+  document.getElementById('instrument-dropdown').classList.remove('open');
+});
 buildDropdown();
+
+// ── Instrument picker ─────────────────────────────────────────
+document.getElementById('instrument-btn').addEventListener('click', e => {
+  e.stopPropagation();
+  document.getElementById('instrument-dropdown').classList.toggle('open');
+});
+document.querySelectorAll('.inst-item').forEach(el => {
+  el.addEventListener('click', e => {
+    e.stopPropagation();
+    document.getElementById('instrument-dropdown').classList.remove('open');
+  });
+});
 
 // ── Start ──────────────────────────────────────────────────────
 function setStatus(msg) { document.getElementById('status').textContent = msg; }
