@@ -1,0 +1,10 @@
+[
+  {
+    "id": "wadspa_synth",
+    "description": "8-voice polyphonic sawtooth with ADSR and lowpass filter"
+  },
+  {
+    "id": "fm_synth",
+    "description": "2-operator FM synthesizer, 8-voice polyphonic"
+  }
+]

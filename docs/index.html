@@ -208,7 +208,6 @@
         <div id="instrument-wrap">
           <button id="instrument-btn">wadspa synth ▾</button>
           <div id="instrument-dropdown">
-            <div class="inst-item active" data-inst="wadspa_synth">wadspa synth</div>
           </div>
         </div>
       </div>
@@ -247,20 +246,16 @@ import { loadPlugin } from './core.js';
 // meta.ports drives both the loadPlugin call and the UI sliders.
 // All ports listed here appear as sliders in the card.
 
-const SYNTH_META = {
-  label: 'wadspa_synth',
-  ports: [
-    { index:0, name:'MIDI In',       symbol:'midi_in', dir:'input',  type:'midi' },
-    { index:1, name:'Audio Out L',   symbol:'out_l',   dir:'output', type:'audio' },
-    { index:2, name:'Audio Out R',   symbol:'out_r',   dir:'output', type:'audio' },
-    { index:3, name:'Cutoff',        symbol:'cutoff',  dir:'input',  type:'control', min:0,     max:1,   default:0.5  },
-    { index:4, name:'Attack',        symbol:'attack',  dir:'input',  type:'control', min:0.001, max:4,   default:0.01 },
-    { index:5, name:'Decay',         symbol:'decay',   dir:'input',  type:'control', min:0.001, max:4,   default:0.1  },
-    { index:6, name:'Sustain',       symbol:'sustain', dir:'input',  type:'control', min:0,     max:1,   default:0.7  },
-    { index:7, name:'Release',       symbol:'release', dir:'input',  type:'control', min:0.001, max:8,   default:0.3  },
-    { index:8, name:'Gain',          symbol:'gain',    dir:'input',  type:'control', min:0,     max:1,   default:0.7  },
-  ]
-};
+// Loaded from docs/instruments.json by build-instruments.js
+let INSTRUMENTS = [];
+try {
+  INSTRUMENTS = await fetch('./instruments.json').then(r => {
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  });
+} catch (e) {
+  console.error('Failed to load instruments.json:', e);
+}
 
 let EFFECTS = [];
 try {
@@ -283,11 +278,13 @@ function pluginModule(eff) {
   };
 }
 
-function synthModule() {
+let activeInstrument = INSTRUMENTS[0] ?? null;
+
+function instrumentModule(inst) {
   return {
-    meta: SYNTH_META,
-    wasmUrl:      `${BASE}wadspa_synth/wadspa_synth.wasm`,
-    processorUrl: `${BASE}wadspa_synth/processor.js`,
+    meta: { label: inst.label, ports: inst.ports },
+    wasmUrl:      `${BASE}${inst.id}/${inst.wasmFile}`,
+    processorUrl: `${BASE}${inst.id}/${inst.processorFile}`,
   };
 }
 
@@ -390,14 +387,14 @@ document.getElementById('oct-up').onclick = () => { if (octave < 8) { octave++; 
 buildPiano();
 
 // ── Synth controls (built after loadPlugin) ───────────────────
-function buildSynthControls(node) {
+function buildSynthControls(node, inst) {
   const ctrls = document.getElementById('synth-ctrls');
-  const ctrlPorts = SYNTH_META.ports.filter(p => p.type === 'control' && p.dir === 'input');
+  const ctrlPorts = inst.ports.filter(p => p.type === 'control' && p.dir === 'input');
   ctrls.innerHTML = '';
   for (const p of ctrlPorts) {
     const row = document.createElement('div');
     row.className = 'ctrl-row';
-    const fmt = p.max <= 1 ? v => v.toFixed(2) : p.max <= 10 ? v => v.toFixed(3) + ' s' : v => v.toFixed(1);
+    const fmt = p.max <= 1 ? v => v.toFixed(2) : p.max <= 10 ? v => v.toFixed(2) + ' s' : v => v.toFixed(1);
     row.innerHTML = `<label>${p.name}</label>
       <div class="ctrl-line">
         <input type="range" min="${p.min}" max="${p.max}" step="${(p.max-p.min)/200}" value="${p.default}">
@@ -410,6 +407,25 @@ function buildSynthControls(node) {
       node.set(p.name, v);
     });
     ctrls.appendChild(row);
+  }
+}
+
+async function switchInstrument(inst) {
+  if (!ctx) return;
+  if (synth) { synth.output.disconnect(); synth = null; }
+  setStatus(`loading ${inst.name}…`);
+  try {
+    synth = await loadPlugin(ctx, instrumentModule(inst));
+    activeInstrument = inst;
+    buildSynthControls(synth, inst);
+    rewire();
+    document.getElementById('instrument-btn').textContent = inst.name + ' ▾';
+    document.querySelectorAll('.inst-item').forEach(el =>
+      el.classList.toggle('active', el.dataset.inst === inst.id));
+    setStatus('ready');
+  } catch (e) {
+    setStatus(`ERROR: ${e.message}`);
+    console.error(e);
   }
 }
 
@@ -549,16 +565,30 @@ document.addEventListener('click', e => {
 buildDropdown();
 
 // ── Instrument picker ─────────────────────────────────────────
+function buildInstrumentDropdown() {
+  const dd = document.getElementById('instrument-dropdown');
+  dd.innerHTML = '';
+  for (const inst of INSTRUMENTS) {
+    const item = document.createElement('div');
+    item.className = 'inst-item' + (inst === activeInstrument ? ' active' : '');
+    item.dataset.inst = inst.id;
+    item.textContent = inst.name;
+    item.addEventListener('click', e => {
+      e.stopPropagation();
+      document.getElementById('instrument-dropdown').classList.remove('open');
+      switchInstrument(inst);
+    });
+    dd.appendChild(item);
+  }
+  const btn = document.getElementById('instrument-btn');
+  btn.textContent = (activeInstrument?.name ?? 'instrument') + ' ▾';
+}
+
 document.getElementById('instrument-btn').addEventListener('click', e => {
   e.stopPropagation();
   document.getElementById('instrument-dropdown').classList.toggle('open');
 });
-document.querySelectorAll('.inst-item').forEach(el => {
-  el.addEventListener('click', e => {
-    e.stopPropagation();
-    document.getElementById('instrument-dropdown').classList.remove('open');
-  });
-});
+buildInstrumentDropdown();
 
 // ── Start ──────────────────────────────────────────────────────
 function setStatus(msg) { document.getElementById('status').textContent = msg; }
@@ -570,9 +600,10 @@ async function startAudio() {
   overlayStatus.textContent = 'loading synth…';
   try {
     ctx   = new AudioContext();
-    synth = await loadPlugin(ctx, synthModule());
+    if (!activeInstrument) throw new Error('No instruments loaded');
+    synth = await loadPlugin(ctx, instrumentModule(activeInstrument));
     synth.output.connect(ctx.destination);
-    buildSynthControls(synth);
+    buildSynthControls(synth, activeInstrument);
     renderChain();
     document.getElementById('start-overlay').style.display = 'none';
     setStatus('ready');
