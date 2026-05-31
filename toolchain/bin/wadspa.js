@@ -145,13 +145,19 @@ async function buildLv2(args) {
         process.exit(1);
     }
 
-    const lv2Opts = { includes: [], defines: [], sources: null, out: null, name: null };
+    const lv2Opts = {
+        includes: [], defines: [], sources: null, out: null, name: null,
+        threads: false, embedFiles: [], allowMemoryGrowth: false,
+    };
     for (let i = 2; i < args.length; i++) {
-        if      (args[i] === '--out')     lv2Opts.out     = resolve(args[++i]);
-        else if (args[i] === '--name')    lv2Opts.name    = args[++i];
-        else if (args[i] === '--include') lv2Opts.includes.push(resolve(args[++i]));
-        else if (args[i] === '--define')  lv2Opts.defines.push(args[++i]);
-        else if (args[i] === '--sources') lv2Opts.sources = args[++i].split(',').map(s => resolve(pluginDir, s.trim()));
+        if      (args[i] === '--out')           lv2Opts.out     = resolve(args[++i]);
+        else if (args[i] === '--name')          lv2Opts.name    = args[++i];
+        else if (args[i] === '--include')       lv2Opts.includes.push(resolve(args[++i]));
+        else if (args[i] === '--define')        lv2Opts.defines.push(args[++i]);
+        else if (args[i] === '--sources')       lv2Opts.sources = args[++i].split(',').map(s => resolve(pluginDir, s.trim()));
+        else if (args[i] === '--threads')       lv2Opts.threads = true;
+        else if (args[i] === '--memory-growth') lv2Opts.allowMemoryGrowth = true;
+        else if (args[i] === '--embed-file')    lv2Opts.embedFiles.push(args[++i]);
         else { console.error(`Unknown option: ${args[i]}`); usage(); }
     }
 
@@ -175,21 +181,28 @@ async function buildLv2(args) {
     mkdirSync(lv2OutDir, { recursive: true });
     const lv2OutJs = join(lv2OutDir, lv2Label + '.js');
 
+    // Auto-detect sources; skip generated shims and UI files (GTK, Qt)
     const SHIM_NAMES_LV2 = new Set(['_wadspa_lv2_shim.c', '_wadspa_shim.c']);
+    const UI_PATTERNS    = /(_ui|_gtk|_qt[0-9]*)\.(c|cpp)$/i;
     const lv2Sources = lv2Opts.sources ?? readdirSync(pluginDir)
-        .filter(f => (f.endsWith('.c') || f.endsWith('.cpp')) && !SHIM_NAMES_LV2.has(f))
+        .filter(f => (f.endsWith('.c') || f.endsWith('.cpp'))
+                  && !SHIM_NAMES_LV2.has(f)
+                  && !UI_PATTERNS.test(f))
         .map(f => join(pluginDir, f));
 
     const lv2ExportName = 'create' + lv2Label + 'Plugin';
 
     console.log('→ Compiling LV2 plugin to WASM...');
     compilePlugin({
-        sources:      [...lv2Sources, lv2ShimPath],
-        outJs:        lv2OutJs,
-        exportedFns:  lv2ExportedFunctions(lv2Desc),
-        includeFlags: [pluginDir, ...lv2Opts.includes],
-        defines:      lv2Opts.defines,
-        exportName:   lv2ExportName,
+        sources:           [...lv2Sources, lv2ShimPath],
+        outJs:             lv2OutJs,
+        exportedFns:       lv2ExportedFunctions(lv2Desc),
+        includeFlags:      [pluginDir, ...lv2Opts.includes],
+        defines:           lv2Opts.defines,
+        exportName:        lv2ExportName,
+        threads:           lv2Opts.threads,
+        embedFiles:        lv2Opts.embedFiles,
+        allowMemoryGrowth: lv2Opts.allowMemoryGrowth,
     });
     console.log(`  ${lv2Label}.js   (${Math.round(readFileSync(lv2OutJs).length / 1024)}KB)`);
     console.log(`  ${lv2Label}.wasm (${Math.round(readFileSync(lv2OutJs.replace('.js', '.wasm')).length / 1024)}KB)`);

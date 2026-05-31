@@ -109,7 +109,12 @@ for (const entry of instruments) {
 
     console.log(`\n▶  ${entry.id}`);
     try {
-        const cmd = `wadspa build-lv2 "${dir}" --include "${LV2_INCLUDE}"`;
+        const flags = [`--include "${LV2_INCLUDE}"`];
+        if (entry.threads)       flags.push('--threads');
+        if (entry.memoryGrowth)  flags.push('--memory-growth');
+        for (const f of entry.embedFiles ?? []) flags.push(`--embed-file "${f}"`);
+
+        const cmd = `wadspa build-lv2 "${dir}" ${flags.join(' ')}`;
         const out = run(cmd, { cwd: dir });
         console.log(out.trim().split('\n').map(l => '   ' + l).join('\n'));
 

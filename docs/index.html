@@ -239,6 +239,15 @@
   </div>
 </main>
 
+<script>
+// Register COI service worker so SharedArrayBuffer is available for
+// threaded WASM plugins on GitHub Pages (which can't set custom headers).
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./coi-serviceworker.js').then(reg => {
+        if (!crossOriginIsolated && reg.active) location.reload();
+    });
+}
+</script>
 <script type="module">
 import { loadPlugin } from './core.js';
 

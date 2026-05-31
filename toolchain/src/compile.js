@@ -23,30 +23,40 @@ function findEmcc() {
 }
 
 export function compilePlugin({
-    sources,       // string[] — .c files to compile
-    outJs,         // string   — output .js path
-    exportedFns,   // string[] — EXPORTED_FUNCTIONS list
-    includeFlags,  // string[] — extra -I flags
-    defines,       // string[] — extra -D flags
-    exportName,    // string   — factory function name
+    sources,                  // string[] — .c/.cpp files to compile
+    outJs,                    // string   — output .js path
+    exportedFns,              // string[] — EXPORTED_FUNCTIONS list
+    includeFlags,             // string[] — extra -I flags
+    defines,                  // string[] — extra -D flags
+    exportName,               // string   — factory function name
+    threads         = false,  // boolean  — enable pthreads (requires COOP/COEP headers)
+    embedFiles      = [],     // string[] — "src@/virtual/path" pairs to embed in WASM FS
+    allowMemoryGrowth = false,// boolean  — allow WASM heap to grow at runtime
 }) {
     const emcc = findEmcc();
 
     const exported = JSON.stringify(exportedFns);
+    const env = threads ? 'worker' : 'node,worker';
     const flags = [
         '-O3',
         '-s WASM=1',
         '-s MODULARIZE=1',
         `-s EXPORT_NAME='${exportName}'`,
         '-s EXPORT_ES6=1',
-        "-s ENVIRONMENT='node,worker'",
+        `-s ENVIRONMENT='${env}'`,
         `-s EXPORTED_FUNCTIONS='${exported}'`,
-        "-s EXPORTED_RUNTIME_METHODS='[\"HEAPF32\"]'",
-        '-s ALLOW_MEMORY_GROWTH=0',
-        '-DBIQUAD_TYPE=double',  // safe default: prevents float32 precision loss at low freqs
+        "-s EXPORTED_RUNTIME_METHODS='[\"HEAPF32\",\"FS\"]'",
+        `-s ALLOW_MEMORY_GROWTH=${allowMemoryGrowth || threads ? 1 : 0}`,
+        '-DBIQUAD_TYPE=double',
         '-lm',
         ...includeFlags.map(f => `-I"${f}"`),
         ...defines.map(d => `-D${d}`),
+        ...embedFiles.map(f => `--embed-file "${f}"`),
+        ...(threads ? [
+            '-pthread',
+            '-s PTHREAD_POOL_SIZE=4',
+            '-s SHARED_MEMORY=1',
+        ] : []),
     ];
 
     const srcList = sources.map(s => `"${s}"`).join(' ');
@@ -54,15 +64,15 @@ export function compilePlugin({
 
     // Strip any active Python virtualenv — emcc requires Python 3.10+ and a
     // venv on an older Python will cause "requires python 3.10 or above" errors.
-    const env = { ...process.env };
-    delete env.VIRTUAL_ENV;
-    delete env.VIRTUAL_ENV_PROMPT;
-    if (env.PATH) {
-        env.PATH = env.PATH.split(':').filter(p => !p.includes('/.venv/')).join(':');
+    const procEnv = { ...process.env };
+    delete procEnv.VIRTUAL_ENV;
+    delete procEnv.VIRTUAL_ENV_PROMPT;
+    if (procEnv.PATH) {
+        procEnv.PATH = procEnv.PATH.split(':').filter(p => !p.includes('/.venv/')).join(':');
     }
 
     try {
-        execSync(cmd, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'], env });
+        execSync(cmd, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'], env: procEnv });
     } catch (e) {
         throw new Error(`emcc compilation failed:\n${e.stderr || e.message}`);
     }

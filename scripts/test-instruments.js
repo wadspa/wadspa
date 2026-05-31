@@ -27,7 +27,7 @@ const onlyId = args.includes('--only') ? args[args.indexOf('--only') + 1] : null
 
 const instruments = JSON.parse(readFileSync(join(PLUGINS, 'instruments.json'), 'utf8'));
 
-let passed = 0, failed = 0;
+let passed = 0, failed = 0, skipped = 0;
 
 for (const inst of instruments) {
     if (onlyId && inst.id !== onlyId) continue;
@@ -36,6 +36,13 @@ for (const inst of instruments) {
     const indexUrl = pathToFileURL(join(distDir, 'index.js')).href;
 
     process.stdout.write(`  ${inst.id} … `);
+
+    // Threaded builds use SharedArrayBuffer and can't run in plain Node
+    if (inst.threads) {
+        console.log('⏭  skipped (threaded — browser-only)');
+        skipped++;
+        continue;
+    }
 
     try {
         const wasmFile   = readdirSync(distDir).find(f => f.endsWith('.wasm'));
@@ -73,5 +80,5 @@ for (const inst of instruments) {
 }
 
 console.log(`\n${'─'.repeat(40)}`);
-console.log(`✓ ${passed} passed   ✗ ${failed} failed`);
+console.log(`✓ ${passed} passed   ✗ ${failed} failed   ⏭ ${skipped} skipped`);
 if (failed > 0) process.exit(1);
