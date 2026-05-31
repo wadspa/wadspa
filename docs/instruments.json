@@ -1,96 +1,77 @@
 [
   {
-    "id": "mda_Piano",
-    "label": "MDA_Piano",
-    "name": "MDA Piano",
-    "description": "Acoustic piano physical model",
-    "wasmFile": "MDA_Piano.wasm",
+    "id": "amsynth",
+    "label": "amsynth",
+    "name": "amsynth",
+    "description": "amsynth — analog modeling synthesizer, 32-voice polyphonic",
+    "category": "Instruments",
+    "wasmFile": "amsynth.wasm",
     "processorFile": "processor.js",
     "ports": [
       {
         "index": 0,
-        "symbol": "env_decay",
-        "name": "Envelope Decay",
+        "symbol": "control",
+        "name": "Control",
         "dir": "input",
-        "type": "control",
-        "min": 0,
-        "max": 100,
-        "default": 50
+        "type": "midi",
+        "min": null,
+        "max": null,
+        "default": null
       },
       {
         "index": 1,
-        "symbol": "env_release",
-        "name": "Envelope Release",
-        "dir": "input",
-        "type": "control",
-        "min": 0,
-        "max": 100,
-        "default": 50
+        "symbol": "notify",
+        "name": "Notify",
+        "dir": "output",
+        "type": "atom",
+        "min": null,
+        "max": null,
+        "default": null
       },
       {
         "index": 2,
-        "symbol": "hardness_offset",
-        "name": "Hardness Offset",
-        "dir": "input",
-        "type": "control",
-        "min": -50,
-        "max": 50,
-        "default": 0
+        "symbol": "out_l",
+        "name": "Left",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
       },
       {
         "index": 3,
-        "symbol": "vel_to_hardness",
-        "name": "Velocity to Hardness",
-        "dir": "input",
-        "type": "control",
-        "min": 0,
-        "max": 100,
-        "default": 50
+        "symbol": "out_r",
+        "name": "Right",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
       },
       {
         "index": 4,
-        "symbol": "muffling_filter",
-        "name": "Muffling Filter",
+        "symbol": "amp_attack",
+        "name": "Amp Attack",
         "dir": "input",
         "type": "control",
         "min": 0,
-        "max": 100,
-        "default": 80.3
+        "max": 2.5,
+        "default": 0
       },
       {
         "index": 5,
-        "symbol": "vel_to_muffling",
-        "name": "Velocity to Muffling",
+        "symbol": "amp_decay",
+        "name": "Amp Decay",
         "dir": "input",
         "type": "control",
         "min": 0,
-        "max": 100,
-        "default": 25.1
+        "max": 2.5,
+        "default": 0
       },
       {
         "index": 6,
-        "symbol": "vel_sensitivity",
-        "name": "Velocity Sensitivity",
-        "dir": "input",
-        "type": "control",
-        "min": 0,
-        "max": 100,
-        "default": 37.6
-      },
-      {
-        "index": 7,
-        "symbol": "stereo_width",
-        "name": "Stereo Width",
-        "dir": "input",
-        "type": "control",
-        "min": 0,
-        "max": 200,
-        "default": 100
-      },
-      {
-        "index": 8,
-        "symbol": "polyphony",
-        "name": "Polyphony",
+        "symbol": "amp_sustain",
+        "name": "Amp Sustain",
         "dir": "input",
         "type": "control",
         "min": 0,
@@ -98,64 +79,384 @@
         "default": 1
       },
       {
-        "index": 9,
-        "symbol": "fine_tuning",
-        "name": "Fine Tuning",
+        "index": 7,
+        "symbol": "amp_release",
+        "name": "Amp Release",
         "dir": "input",
         "type": "control",
-        "min": -50,
-        "max": 50,
+        "min": 0,
+        "max": 2.5,
+        "default": 0
+      },
+      {
+        "index": 8,
+        "symbol": "osc1_waveform",
+        "name": "Osc1 Waveform",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 4,
+        "default": 2
+      },
+      {
+        "index": 9,
+        "symbol": "filter_attack",
+        "name": "Filter Attack",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 2.5,
         "default": 0
       },
       {
         "index": 10,
-        "symbol": "random_detuning",
-        "name": "Random Detuning",
+        "symbol": "filter_decay",
+        "name": "Filter Decay",
         "dir": "input",
         "type": "control",
         "min": 0,
-        "max": 50,
-        "default": 12.3
-      },
-      {
-        "index": 11,
-        "symbol": "stretch_tuning",
-        "name": "Stretch Tuning",
-        "dir": "input",
-        "type": "control",
-        "min": -50,
-        "max": 50,
+        "max": 2.5,
         "default": 0
       },
       {
+        "index": 11,
+        "symbol": "filter_sustain",
+        "name": "Filter Sustain",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 1
+      },
+      {
         "index": 12,
-        "symbol": "left_out",
-        "name": "Left Out",
-        "dir": "output",
-        "type": "audio",
-        "min": null,
-        "max": null,
-        "default": null
+        "symbol": "filter_release",
+        "name": "Filter Release",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 2.5,
+        "default": 0
       },
       {
         "index": 13,
-        "symbol": "right_out",
-        "name": "Right Out",
-        "dir": "output",
-        "type": "audio",
-        "min": null,
-        "max": null,
-        "default": null
+        "symbol": "filter_resonance",
+        "name": "Filter Resonance",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 0.97,
+        "default": 0
       },
       {
         "index": 14,
-        "symbol": "event_in",
-        "name": "Event In",
+        "symbol": "filter_env_amount",
+        "name": "Filter Env Amount",
         "dir": "input",
-        "type": "midi",
-        "min": null,
-        "max": null,
-        "default": null
+        "type": "control",
+        "min": -16,
+        "max": 16,
+        "default": 0
+      },
+      {
+        "index": 15,
+        "symbol": "filter_cutoff",
+        "name": "Filter Cutoff",
+        "dir": "input",
+        "type": "control",
+        "min": -0.5,
+        "max": 1.5,
+        "default": 1.5
+      },
+      {
+        "index": 16,
+        "symbol": "osc2_detune",
+        "name": "Osc2 Detune",
+        "dir": "input",
+        "type": "control",
+        "min": -1,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 17,
+        "symbol": "osc2_waveform",
+        "name": "Osc2 Waveform",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 4,
+        "default": 2
+      },
+      {
+        "index": 18,
+        "symbol": "master_vol",
+        "name": "Master Vol",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0.67
+      },
+      {
+        "index": 19,
+        "symbol": "lfo_freq",
+        "name": "LFO Freq",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 7.5,
+        "default": 0
+      },
+      {
+        "index": 20,
+        "symbol": "lfo_waveform",
+        "name": "LFO Waveform",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 6,
+        "default": 0
+      },
+      {
+        "index": 21,
+        "symbol": "osc2_range",
+        "name": "Osc2 Range",
+        "dir": "input",
+        "type": "control",
+        "min": -3,
+        "max": 4,
+        "default": 0
+      },
+      {
+        "index": 22,
+        "symbol": "osc_mix",
+        "name": "Osc Mix",
+        "dir": "input",
+        "type": "control",
+        "min": -1,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 23,
+        "symbol": "freq_mod_amount",
+        "name": "Freq Mod Amount",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1.259921,
+        "default": 0
+      },
+      {
+        "index": 24,
+        "symbol": "filter_mod_amount",
+        "name": "Filter Mod Amount",
+        "dir": "input",
+        "type": "control",
+        "min": -1,
+        "max": 1,
+        "default": -1
+      },
+      {
+        "index": 25,
+        "symbol": "amp_mod_amount",
+        "name": "Amp Mod Amount",
+        "dir": "input",
+        "type": "control",
+        "min": -1,
+        "max": 1,
+        "default": -1
+      },
+      {
+        "index": 26,
+        "symbol": "osc_mix_mode",
+        "name": "Ring Mod",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 27,
+        "symbol": "osc1_pulsewidth",
+        "name": "Osc1 Pulsewidth",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 1
+      },
+      {
+        "index": 28,
+        "symbol": "osc2_pulsewidth",
+        "name": "Osc2 Pulsewidth",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 1
+      },
+      {
+        "index": 29,
+        "symbol": "reverb_roomsize",
+        "name": "Reverb Roomsize",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 30,
+        "symbol": "reverb_damp",
+        "name": "Reverb Damp",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 31,
+        "symbol": "reverb_wet",
+        "name": "Reverb Wet",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 32,
+        "symbol": "reverb_width",
+        "name": "Reverb Width",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 1
+      },
+      {
+        "index": 33,
+        "symbol": "distortion_crunch",
+        "name": "Distortion Crunch",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 0.9,
+        "default": 0
+      },
+      {
+        "index": 34,
+        "symbol": "osc2_sync",
+        "name": "Osc2 Sync",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 35,
+        "symbol": "portamento_time",
+        "name": "Portamento Time",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 36,
+        "symbol": "keyboard_mode",
+        "name": "Keyboard Mode",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 2,
+        "default": 0
+      },
+      {
+        "index": 37,
+        "symbol": "osc2_pitch",
+        "name": "Osc2 Pitch",
+        "dir": "input",
+        "type": "control",
+        "min": -12,
+        "max": 12,
+        "default": 0
+      },
+      {
+        "index": 38,
+        "symbol": "filter_type",
+        "name": "Filter Type",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 2,
+        "default": 0
+      },
+      {
+        "index": 39,
+        "symbol": "filter_slope",
+        "name": "Filter Slope",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 1
+      },
+      {
+        "index": 40,
+        "symbol": "freq_mod_osc",
+        "name": "Freq Mod to Oscillator",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 2,
+        "default": 0
+      },
+      {
+        "index": 41,
+        "symbol": "filter_kbd_track",
+        "name": "Filter Key Track",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 1
+      },
+      {
+        "index": 42,
+        "symbol": "filter_vel_sens",
+        "name": "Filter Velocity Track",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 1
+      },
+      {
+        "index": 43,
+        "symbol": "amp_vel_sens",
+        "name": "Amp Velocity Amount",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 1
+      },
+      {
+        "index": 44,
+        "symbol": "portamento_mode",
+        "name": "Portamento Mode",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
       }
     ]
   }

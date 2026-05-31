@@ -1,0 +1,48 @@
+import createMDA_ePianoPlugin from './MDA_ePiano.js';
+
+let mod = null;
+const inPtrs  = [];
+const outPtrs = [0, 0];
+const SETTERS = {"env_decay":"_shim_set_env_decay","env_release":"_shim_set_env_release","hardness":"_shim_set_hardness","treble_boost":"_shim_set_treble_boost","modulation":"_shim_set_modulation","lfo_rate":"_shim_set_lfo_rate","vel_sense":"_shim_set_vel_sense","stereo_width":"_shim_set_stereo_width","polyphonic":"_shim_set_polyphonic","fine_tuning":"_shim_set_fine_tuning","random_tuning":"_shim_set_random_tuning","overdrive":"_shim_set_overdrive"};
+
+class WadspProcessor extends AudioWorkletProcessor {
+    constructor() {
+        super();
+        this.port.onmessage = async ({ data }) => {
+            if (data.type === 'setup') {
+                try {
+                    mod = await createMDA_ePianoPlugin({ wasmBinary: data.wasm, locateFile: (p, d) => d + p });
+                    mod._shim_init(sampleRate);
+                    
+                    outPtrs[0] = mod._shim_output_buf_left_out() >> 2;
+                    outPtrs[1] = mod._shim_output_buf_right_out() >> 2;
+                    this.port.postMessage({ type: 'ready' });
+                } catch (e) {
+                    this.port.postMessage({ type: 'error', message: e.message });
+                }
+            } else if (data.type === 'midi') {
+                if (!mod) return;
+                const { status, data1, data2 } = data;
+                const type = status & 0xF0;
+                const ch   = status & 0x0F;
+                if      (type === 0x90 && data2 > 0) mod._shim_midi_note_on(ch, data1, data2);
+                else if (type === 0x80 || (type === 0x90 && data2 === 0)) mod._shim_midi_note_off(ch, data1);
+                else if (type === 0xB0) mod._shim_midi_cc(ch, data1, data2);
+                else if (type === 0xE0) mod._shim_midi_pitch_bend(ch, ((data2 << 7) | data1) - 8192);
+            } else if (data.type === 'set') {
+                if (mod) { const fn = SETTERS[data.symbol]; if (fn) mod[fn](data.value); }
+            }
+        };
+    }
+
+    process(inputs, outputs) {
+        if (!mod) return true;
+
+        mod._shim_run(128);
+        outputs[0][0].set(mod.HEAPF32.subarray(outPtrs[0], outPtrs[0] + 128));
+        outputs[1][0].set(mod.HEAPF32.subarray(outPtrs[1], outPtrs[1] + 128));
+        return true;
+    }
+}
+
+registerProcessor('wadspa-MDA_ePiano', WadspProcessor);

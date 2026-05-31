@@ -1,0 +1,40 @@
+[
+  {
+    "id": "mda-lv2",
+    "git": "https://github.com/mod-audio/mda-lv2.git",
+    "setup": "setup-mda-lv2",
+    "description": "MDA LV2 plugin collection — 36 instruments and effects"
+  },
+  {
+    "id": "synthv1",
+    "git": "https://github.com/rncbc/synthv1.git",
+    "setup": "setup-synthv1",
+    "description": "synthv1 — polyphonic analog synthesizer LV2"
+  },
+  {
+    "id": "drumkv1",
+    "git": "https://github.com/rncbc/drumkv1.git",
+    "setup": "setup-drumkv1",
+    "description": "drumkv1 — sample-based drum synthesizer LV2",
+    "notes": "requires audio sample files embedded via --embed-file"
+  },
+  {
+    "id": "amsynth",
+    "git": "https://github.com/amsynth/amsynth.git",
+    "setup": "setup-amsynth",
+    "description": "amsynth — analog modeling synthesizer LV2"
+  },
+  {
+    "id": "So-synth-LV2",
+    "git": "https://github.com/lvtk/so-synth-lv2.git",
+    "setup": "setup-so-synth",
+    "description": "SO-synth — bass and piano synths (old LV2 event API)",
+    "notes": "uses pre-atom LV2 event port API — shim needs old-style MIDI delivery"
+  },
+  {
+    "id": "swh-plugins",
+    "git": "https://github.com/swh/ladspa.git",
+    "setup": null,
+    "description": "Steve Harris LADSPA plugin collection"
+  }
+]

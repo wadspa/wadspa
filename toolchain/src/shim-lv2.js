@@ -48,9 +48,12 @@ export function parseLv2Ttl(pluginDir) {
     const ttlPath   = join(pluginDir, ttlMatch[1]);
     const ttlSrc    = readFileSync(ttlPath, 'utf8');
 
-    // Extract plugin label (lv2:symbol or doap:name)
-    const labelMatch = ttlSrc.match(/doap:name\s+"([^"]+)"/);
-    const label      = labelMatch ? labelMatch[1] : pluginUri.split('/').pop();
+    // Some bundle files also describe the overall project before the plugin.
+    // Prefer the last doap:name so the plugin name wins over the project name.
+    const labelMatches = [...ttlSrc.matchAll(/doap:name\s+"([^"]+)"/g)];
+    const label        = labelMatches.length > 0
+        ? labelMatches[labelMatches.length - 1][1]
+        : pluginUri.split('/').pop();
 
     // Extract ports — match ALL [...] blocks in the file; parsePortBlock
     // returns null for blocks that don't contain lv2:index, so non-port
@@ -125,6 +128,7 @@ export function generateLv2Shim(descriptor) {
     const ctrlIn    = ports.filter(p => p.type === 'control' && p.dir === 'input');
     const ctrlOut   = ports.filter(p => p.type === 'control' && p.dir === 'output');
     const midiIn    = ports.filter(p => p.type === 'midi'    && p.dir === 'input');
+    const atomOut   = ports.filter(p => p.type === 'atom'    && p.dir === 'output');
 
     const lines = [];
     lines.push('#include <stdlib.h>');
@@ -165,6 +169,9 @@ export function generateLv2Shim(descriptor) {
     for (const p of ctrlIn)  lines.push(`static float g_ctrl_${p.symbol} = ${floatLit(p.default)};`);
     for (const p of ctrlOut) lines.push(`static float g_ctrl_${p.symbol} = 0.0f;`);
 
+    // Output atom buffers (notify ports, etc.) — plugin writes into these
+    for (const p of atomOut) lines.push(`static uint8_t g_atom_out_${p.symbol}[MIDI_BUF_SIZE];`);
+
     // MIDI atom buffer
     if (midiIn.length > 0) {
         lines.push('');
@@ -204,6 +211,7 @@ export function generateLv2Shim(descriptor) {
         if (p.type === 'audio' && p.dir === 'output')   lines.push(`    g_desc->connect_port(g_handle, ${p.index}, g_out_${sym});`);
         if (p.type === 'control')                         lines.push(`    g_desc->connect_port(g_handle, ${p.index}, &g_ctrl_${sym});`);
         if (p.type === 'midi' && p.dir === 'input')      lines.push(`    g_desc->connect_port(g_handle, ${p.index}, g_midi_seq);`);
+        if (p.type === 'atom' && p.dir === 'output')      lines.push(`    g_desc->connect_port(g_handle, ${p.index}, g_atom_out_${p.symbol});`);
     }
 
     lines.push('    if (g_desc->activate) g_desc->activate(g_handle);');

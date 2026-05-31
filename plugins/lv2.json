@@ -1,0 +1,323 @@
+[
+  {
+    "id": "wadspa_synth",
+    "description": "8-voice polyphonic sawtooth with ADSR and lowpass filter"
+  },
+  {
+    "id": "fm_synth",
+    "description": "2-operator FM synthesizer, 8-voice polyphonic"
+  },
+  {
+    "id": "mda_DX10",
+    "description": "FM synthesizer, 8-voice polyphonic",
+    "sources": [
+      "mda_DX10_lv2.cpp",
+      "mdaDX10.cpp"
+    ]
+  },
+  {
+    "id": "mda_JX10",
+    "description": "Virtual analog polysynth, 8-voice",
+    "sources": [
+      "mda_JX10_lv2.cpp",
+      "mdaJX10.cpp"
+    ]
+  },
+  {
+    "id": "mda_EPiano",
+    "description": "Electric piano (Rhodes/Wurlitzer style)",
+    "sources": [
+      "mda_EPiano_lv2.cpp",
+      "mdaEPiano.cpp"
+    ]
+  },
+  {
+    "id": "mda_Piano",
+    "description": "Acoustic piano physical model",
+    "sources": [
+      "mda_Piano_lv2.cpp",
+      "mdaPiano.cpp"
+    ]
+  },
+  {
+    "id": "mda_SubSynth",
+    "description": "Sub-bass synthesizer",
+    "sources": [
+      "mda_SubSynth_lv2.cpp",
+      "mdaSubSynth.cpp"
+    ]
+  },
+  {
+    "id": "mda_BeatBox",
+    "description": "Drum machine / beat generator",
+    "sources": [
+      "mda_BeatBox_lv2.cpp",
+      "mdaBeatBox.cpp"
+    ]
+  },
+  {
+    "id": "mda_Ambience",
+    "description": "The Ambience aims to emulate the sonic properties of a room. By tweaking the damping or roomsize controls, you can add some texture and reverb to your sound.",
+    "sources": [
+      "mda_Ambience_lv2.cpp",
+      "mdaAmbience.cpp"
+    ]
+  },
+  {
+    "id": "mda_Bandisto",
+    "description": "MDA Bandisto LV2 plugin",
+    "sources": [
+      "mda_Bandisto_lv2.cpp",
+      "mdaBandisto.cpp"
+    ]
+  },
+  {
+    "id": "mda_Combo",
+    "description": "Clip one side of the waveform more than the other for rougher or \"gated\" effects (use an oscilloscope plug-in to see what's happening)",
+    "sources": [
+      "mda_Combo_lv2.cpp",
+      "mdaCombo.cpp"
+    ]
+  },
+  {
+    "id": "mda_DeEss",
+    "description": "Reduce excessive sibilants (/s/ /t/ /sh/ etc.) in vocals and speech.",
+    "sources": [
+      "mda_DeEss_lv2.cpp",
+      "mdaDeEss.cpp"
+    ]
+  },
+  {
+    "id": "mda_Degrade",
+    "description": "The MDA Degrade is a signal degrader with extensive controls. Use Quantize for bitcrushing, Rate for sample rate reduction and Integrator to reduce aliasing....",
+    "sources": [
+      "mda_Degrade_lv2.cpp",
+      "mdaDegrade.cpp"
+    ]
+  },
+  {
+    "id": "mda_Delay",
+    "description": "MDA Delay LV2 plugin",
+    "sources": [
+      "mda_Delay_lv2.cpp",
+      "mdaDelay.cpp"
+    ]
+  },
+  {
+    "id": "mda_Detune",
+    "description": "The Detune is a low-quality stereo pitch shifter. It can be used for the sort of detune effects found on multi-effects. It will create a widening effect but...",
+    "sources": [
+      "mda_Detune_lv2.cpp",
+      "mdaDetune.cpp"
+    ]
+  },
+  {
+    "id": "mda_Dither",
+    "description": "When a waveform is rounded to the nearest 16 (or whatever)-bit value this causes distortion. Dither allows you to exchange this rough sounding signal-dependa...",
+    "sources": [
+      "mda_Dither_lv2.cpp",
+      "mdaDither.cpp"
+    ]
+  },
+  {
+    "id": "mda_DubDelay",
+    "description": "The DubDelay is the go-to pedal for musicians who look for a delay pedal that adds something special to their sound. The unique features of the DubDelay are...",
+    "sources": [
+      "mda_DubDelay_lv2.cpp",
+      "mdaDubDelay.cpp"
+    ]
+  },
+  {
+    "id": "mda_Dynamics",
+    "description": "Very wide range allows \"overcompression\" where output gets quieter as input gets louder",
+    "sources": [
+      "mda_Dynamics_lv2.cpp",
+      "mdaDynamics.cpp"
+    ]
+  },
+  {
+    "id": "mda_Image",
+    "description": "MDA Image LV2 plugin",
+    "sources": [
+      "mda_Image_lv2.cpp",
+      "mdaImage.cpp"
+    ]
+  },
+  {
+    "id": "mda_Leslie",
+    "description": "MDA Leslie LV2 plugin",
+    "sources": [
+      "mda_Leslie_lv2.cpp",
+      "mdaLeslie.cpp"
+    ]
+  },
+  {
+    "id": "mda_Limiter",
+    "description": "MDA Limiter LV2 plugin",
+    "sources": [
+      "mda_Limiter_lv2.cpp",
+      "mdaLimiter.cpp"
+    ]
+  },
+  {
+    "id": "mda_Loudness",
+    "description": "The ear is less sensitive to low frequencies when listening at low volume. This plug-in is based on the Stevens-Davis equal loudness contours and allows the...",
+    "sources": [
+      "mda_Loudness_lv2.cpp",
+      "mdaLoudness.cpp"
+    ]
+  },
+  {
+    "id": "mda_MultiBand",
+    "description": "As well as just \"squashing everything\" this plug-in can be used to \"overcook\" the mid-frequencies while leaving the low end unprocessed, enhancing playback o...",
+    "sources": [
+      "mda_MultiBand_lv2.cpp",
+      "mdaMultiBand.cpp"
+    ]
+  },
+  {
+    "id": "mda_Overdrive",
+    "description": "The Overdrive effect has a variety of sonic possibilities: adding body to drum loops, fuzz guitar, as well as that typical muffled “standing outside of a nig...",
+    "sources": [
+      "mda_Overdrive_lv2.cpp",
+      "mdaOverdrive.cpp"
+    ]
+  },
+  {
+    "id": "mda_RePsycho",
+    "description": "The RePsycho is an event-based pitch shifter. It chops audio into individual beats and shifts each beat upwards in pitch. Only allowing downwards pitch shift...",
+    "sources": [
+      "mda_RePsycho_lv2.cpp",
+      "mdaRePsycho.cpp"
+    ]
+  },
+  {
+    "id": "mda_RezFilter",
+    "description": "Limit maximum cut-off frequency for a mellower sound (the filter can sound \"screechy\" at high frequencies)",
+    "sources": [
+      "mda_RezFilter_lv2.cpp",
+      "mdaRezFilter.cpp"
+    ]
+  },
+  {
+    "id": "mda_RingMod",
+    "description": "The Ringmod is a ring modulator with frequency, fine tune and feedback controls.",
+    "sources": [
+      "mda_RingMod_lv2.cpp",
+      "mdaRingMod.cpp"
+    ]
+  },
+  {
+    "id": "mda_RoundPan",
+    "description": "MDA RoundPan LV2 plugin",
+    "sources": [
+      "mda_RoundPan_lv2.cpp",
+      "mdaRoundPan.cpp"
+    ]
+  },
+  {
+    "id": "mda_Shepard",
+    "description": "The MDA Shepard is a risset-tone generator. Use it to generate an endlessly rising or falling tone and build tension like never before. The Mode parameter ha...",
+    "sources": [
+      "mda_Shepard_lv2.cpp",
+      "mdaShepard.cpp"
+    ]
+  },
+  {
+    "id": "mda_Splitter",
+    "description": "This plug-in can split a signal based on frequency or level, for example for producing dynamic effects where only loud drum hits are sent to a reverb. Other...",
+    "sources": [
+      "mda_Splitter_lv2.cpp",
+      "mdaSplitter.cpp"
+    ]
+  },
+  {
+    "id": "mda_Stereo",
+    "description": "MDA Stereo LV2 plugin",
+    "sources": [
+      "mda_Stereo_lv2.cpp",
+      "mdaStereo.cpp"
+    ]
+  },
+  {
+    "id": "mda_TalkBox",
+    "description": "MDA TalkBox LV2 plugin",
+    "sources": [
+      "mda_TalkBox_lv2.cpp",
+      "mdaTalkBox.cpp"
+    ]
+  },
+  {
+    "id": "mda_TestTone",
+    "description": "MDA TestTone LV2 plugin",
+    "sources": [
+      "mda_TestTone_lv2.cpp",
+      "mdaTestTone.cpp"
+    ]
+  },
+  {
+    "id": "mda_ThruZero",
+    "description": "Tape flanger and ADT",
+    "sources": [
+      "mda_ThruZero_lv2.cpp",
+      "mdaThruZero.cpp"
+    ]
+  },
+  {
+    "id": "mda_Tracker",
+    "description": "This plug-in tracks the frequency of the input signal with an oscillator, ring modulator or filter. The pitch tracking only works with monophonic inputs, but...",
+    "sources": [
+      "mda_Tracker_lv2.cpp",
+      "mdaTracker.cpp"
+    ]
+  },
+  {
+    "id": "mda_Transient",
+    "description": "MDA Transient LV2 plugin",
+    "sources": [
+      "mda_Transient_lv2.cpp",
+      "mdaTransient.cpp"
+    ]
+  },
+  {
+    "id": "mda_VocInput",
+    "description": "MDA VocInput LV2 plugin",
+    "sources": [
+      "mda_VocInput_lv2.cpp",
+      "mdaVocInput.cpp"
+    ]
+  },
+  {
+    "id": "mda_Vocoder",
+    "description": "This 16-band vocoder applies the spectrum of your voice to the waveform of an instrument. Plug your voice signal into the Modulator input and the instrument...",
+    "sources": [
+      "mda_Vocoder_lv2.cpp",
+      "mdaVocoder.cpp"
+    ]
+  },
+  {
+    "id": "amsynth",
+    "description": "amsynth — analog modeling synthesizer, 32-voice polyphonic",
+    "category": "Instruments",
+    "sources": [
+      "lv2plugin.cpp",
+      "core/synth/Synthesizer.cpp",
+      "core/synth/VoiceAllocationUnit.cpp",
+      "core/synth/VoiceBoard.cpp",
+      "core/synth/ADSR.cpp",
+      "core/synth/Oscillator.cpp",
+      "core/synth/LowPassFilter.cpp",
+      "core/synth/Distortion.cpp",
+      "core/synth/SoftLimiter.cpp",
+      "core/synth/MidiController.cpp",
+      "core/synth/Parameter.cpp",
+      "core/synth/Preset.cpp",
+      "core/synth/PresetController.cpp",
+      "core/synth/TuningMap.cpp",
+      "freeverb/revmodel.cpp",
+      "freeverb/allpass.cpp",
+      "freeverb/comb.cpp",
+      "core/filesystem.cpp"
+    ]
+  }
+]
