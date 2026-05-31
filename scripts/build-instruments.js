@@ -112,7 +112,14 @@ for (const entry of instruments) {
         const flags = [`--include "${LV2_INCLUDE}"`];
         if (entry.threads)       flags.push('--threads');
         if (entry.memoryGrowth)  flags.push('--memory-growth');
-        for (const f of entry.embedFiles ?? []) flags.push(`--embed-file "${f}"`);
+        for (const f of entry.embedFiles  ?? []) flags.push(`--embed-file "${f}"`);
+        for (const i of entry.includes    ?? []) flags.push(`--include "${join(ROOT, i)}"`);
+        for (const d of entry.defines     ?? []) flags.push(`--define "${d}"`);
+        if (entry.sources) {
+            const srcs = (Array.isArray(entry.sources) ? entry.sources : [entry.sources])
+                .map(s => join(dir, s)).join(',');
+            flags.push(`--sources "${srcs}"`);
+        }
 
         const cmd = `wadspa build-lv2 "${dir}" ${flags.join(' ')}`;
         const out = run(cmd, { cwd: dir });

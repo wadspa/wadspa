@@ -1,0 +1,111 @@
+export { default } from './MDA_SubSynth.js';
+export const meta         = {
+  "uri": "http://moddevices.com/plugins/mda/SubSynth",
+  "label": "MDA_SubSynth",
+  "name": "MDA SubSynth",
+  "exportName": "createMDA_SubSynthPlugin",
+  "ports": [
+    {
+      "index": 0,
+      "symbol": "type",
+      "name": "Type",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 0.75,
+      "default": 0.5
+    },
+    {
+      "index": 1,
+      "symbol": "level",
+      "name": "Level",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 100,
+      "default": 50
+    },
+    {
+      "index": 2,
+      "symbol": "tune",
+      "name": "Tune",
+      "dir": "input",
+      "type": "control",
+      "min": 10,
+      "max": 320,
+      "default": 198
+    },
+    {
+      "index": 3,
+      "symbol": "dry_mix",
+      "name": "Dry Mix",
+      "dir": "input",
+      "type": "control",
+      "min": 0,
+      "max": 100,
+      "default": 50
+    },
+    {
+      "index": 4,
+      "symbol": "thresh",
+      "name": "Thresh",
+      "dir": "input",
+      "type": "control",
+      "min": -60,
+      "max": 0,
+      "default": -60
+    },
+    {
+      "index": 5,
+      "symbol": "release",
+      "name": "Release",
+      "dir": "input",
+      "type": "control",
+      "min": 1,
+      "max": 1442,
+      "default": 1
+    },
+    {
+      "index": 6,
+      "symbol": "left_in",
+      "name": "Left In",
+      "dir": "input",
+      "type": "audio",
+      "min": null,
+      "max": null,
+      "default": null
+    },
+    {
+      "index": 7,
+      "symbol": "right_in",
+      "name": "Right In",
+      "dir": "input",
+      "type": "audio",
+      "min": null,
+      "max": null,
+      "default": null
+    },
+    {
+      "index": 8,
+      "symbol": "left_out",
+      "name": "Left Out",
+      "dir": "output",
+      "type": "audio",
+      "min": null,
+      "max": null,
+      "default": null
+    },
+    {
+      "index": 9,
+      "symbol": "right_out",
+      "name": "Right Out",
+      "dir": "output",
+      "type": "audio",
+      "min": null,
+      "max": null,
+      "default": null
+    }
+  ]
+};
+export const wasmUrl      = new URL('./MDA_SubSynth.wasm',  import.meta.url).href;
+export const processorUrl = new URL('./processor.js',      import.meta.url).href;

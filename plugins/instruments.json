@@ -6,5 +6,35 @@
   {
     "id": "fm_synth",
     "description": "2-operator FM synthesizer, 8-voice polyphonic"
+  },
+  {
+    "id": "mda_DX10",
+    "description": "FM synthesizer, 8-voice polyphonic",
+    "sources": ["mda_DX10_lv2.cpp", "mdaDX10.cpp"]
+  },
+  {
+    "id": "mda_JX10",
+    "description": "Virtual analog polysynth, 8-voice",
+    "sources": ["mda_JX10_lv2.cpp", "mdaJX10.cpp"]
+  },
+  {
+    "id": "mda_EPiano",
+    "description": "Electric piano (Rhodes/Wurlitzer style)",
+    "sources": ["mda_EPiano_lv2.cpp", "mdaEPiano.cpp"]
+  },
+  {
+    "id": "mda_Piano",
+    "description": "Acoustic piano physical model",
+    "sources": ["mda_Piano_lv2.cpp", "mdaPiano.cpp"]
+  },
+  {
+    "id": "mda_SubSynth",
+    "description": "Sub-bass synthesizer",
+    "sources": ["mda_SubSynth_lv2.cpp", "mdaSubSynth.cpp"]
+  },
+  {
+    "id": "mda_BeatBox",
+    "description": "Drum machine / beat generator",
+    "sources": ["mda_BeatBox_lv2.cpp", "mdaBeatBox.cpp"]
   }
 ]

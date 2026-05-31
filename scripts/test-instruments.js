@@ -53,16 +53,33 @@ for (const inst of instruments) {
         const mod = await factory({ wasmBinary });
 
         mod._shim_init(SAMPLE_RATE);
-        mod._shim_midi_note_on(0, 60, 100);
+
+        const outBufFns = Object.keys(mod).filter(k => k.startsWith('_shim_output_buf_'));
+        const inBufFns  = Object.keys(mod).filter(k => k.startsWith('_shim_input_buf_'));
+        if (outBufFns.length === 0) throw new Error('no _shim_output_buf_* functions exported');
+
+        const hasMidi = typeof mod._shim_midi_note_on === 'function';
+        if (hasMidi) {
+            mod._shim_midi_note_on(0, 60, 100);
+        } else if (inBufFns.length > 0) {
+            // Audio-triggered plugin — fill input buffers with a loud impulse to
+            // exceed internal thresholds and drive output
+            for (const fn of inBufFns) {
+                const ptr = mod[fn]() >> 2;
+                mod.HEAPF32[ptr] = 0.9;  // single-sample impulse
+            }
+        }
 
         let peak = 0;
         for (let b = 0; b < BLOCKS; b++) {
             mod._shim_run(BLOCK_SIZE);
-            const ptr = mod._shim_output_buf_out_l() >> 2;
-            const buf = mod.HEAPF32.subarray(ptr, ptr + BLOCK_SIZE);
-            for (let i = 0; i < BLOCK_SIZE; i++) {
-                const abs = Math.abs(buf[i]);
-                if (abs > peak) peak = abs;
+            for (const fn of outBufFns) {
+                const ptr = mod[fn]() >> 2;
+                const buf = mod.HEAPF32.subarray(ptr, ptr + BLOCK_SIZE);
+                for (let i = 0; i < BLOCK_SIZE; i++) {
+                    const abs = Math.abs(buf[i]);
+                    if (abs > peak) peak = abs;
+                }
             }
         }
 

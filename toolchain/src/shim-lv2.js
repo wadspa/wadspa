@@ -23,12 +23,28 @@ export function parseLv2Ttl(pluginDir) {
     const manifestPath = join(pluginDir, 'manifest.ttl');
     const manifestSrc  = readFileSync(manifestPath, 'utf8');
 
-    // Extract plugin URI and .ttl file from manifest
+    // Build prefix map (@prefix short: <uri> .)
+    const prefixes = {};
+    const prefixRe = /@prefix\s+(\w+):\s+<([^>]+)>/g;
+    let pm;
+    while ((pm = prefixRe.exec(manifestSrc)) !== null) prefixes[pm[1]] = pm[2];
+
+    // Extract plugin URI — angle-bracket form first, then prefixed form (e.g. mda:DX10)
     const pluginMatch = manifestSrc.match(/<([^>]+)>\s+a\s+lv2:Plugin/);
     const ttlMatch    = manifestSrc.match(/rdfs:seeAlso\s+<([^>]+\.ttl)>/);
-    if (!pluginMatch || !ttlMatch) throw new Error('Could not parse manifest.ttl');
+    if (!ttlMatch) throw new Error('Could not find rdfs:seeAlso TTL reference in manifest.ttl');
 
-    const pluginUri = pluginMatch[1];
+    let pluginUri;
+    if (pluginMatch) {
+        pluginUri = pluginMatch[1];
+    } else {
+        const pfxMatch = manifestSrc.match(/(\w+):(\S+)\s+a\s+lv2:Plugin/);
+        if (pfxMatch && prefixes[pfxMatch[1]]) {
+            pluginUri = prefixes[pfxMatch[1]] + pfxMatch[2];
+        } else {
+            throw new Error('Could not parse plugin URI from manifest.ttl');
+        }
+    }
     const ttlPath   = join(pluginDir, ttlMatch[1]);
     const ttlSrc    = readFileSync(ttlPath, 'utf8');
 
@@ -68,7 +84,8 @@ function parsePortBlock(block) {
     const dir      = isOutput ? 'output' : 'input';
 
     // Type
-    const isMidi    = /atom:supports\s+midi:MidiEvent/.test(block) || /midi:MidiEvent/.test(block);
+    const isMidi    = /atom:supports\s+midi:MidiEvent/.test(block) || /midi:MidiEvent/.test(block)
+                   || /atom:supports\s+<[^>]*MidiEvent>/.test(block);
     const isAudio   = /\ba\s+lv2:AudioPort\b/.test(block) || /lv2:AudioPort\b/.test(block);
     const isControl = /\ba\s+lv2:ControlPort\b/.test(block) || /lv2:ControlPort\b/.test(block);
     const isAtom    = /\ba\s+atom:AtomPort\b/.test(block)  || /atom:AtomPort\b/.test(block);

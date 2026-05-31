@@ -1,221 +1,161 @@
 [
   {
-    "id": "wadspa_synth",
-    "label": "wadspa_synth",
-    "name": "wadspa synth",
-    "description": "8-voice polyphonic sawtooth with ADSR and lowpass filter",
-    "wasmFile": "wadspa_synth.wasm",
+    "id": "mda_Piano",
+    "label": "MDA_Piano",
+    "name": "MDA Piano",
+    "description": "Acoustic piano physical model",
+    "wasmFile": "MDA_Piano.wasm",
     "processorFile": "processor.js",
     "ports": [
       {
         "index": 0,
-        "symbol": "midi_in",
-        "name": "MIDI In",
+        "symbol": "env_decay",
+        "name": "Envelope Decay",
         "dir": "input",
-        "type": "midi",
-        "min": null,
-        "max": null,
-        "default": null
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 50
       },
       {
         "index": 1,
-        "symbol": "out_l",
-        "name": "Audio Out L",
-        "dir": "output",
-        "type": "audio",
-        "min": null,
-        "max": null,
-        "default": null
+        "symbol": "env_release",
+        "name": "Envelope Release",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 100,
+        "default": 50
       },
       {
         "index": 2,
-        "symbol": "out_r",
-        "name": "Audio Out R",
-        "dir": "output",
-        "type": "audio",
-        "min": null,
-        "max": null,
-        "default": null
+        "symbol": "hardness_offset",
+        "name": "Hardness Offset",
+        "dir": "input",
+        "type": "control",
+        "min": -50,
+        "max": 50,
+        "default": 0
       },
       {
         "index": 3,
-        "symbol": "cutoff",
-        "name": "Filter Cutoff",
+        "symbol": "vel_to_hardness",
+        "name": "Velocity to Hardness",
         "dir": "input",
         "type": "control",
         "min": 0,
-        "max": 1,
-        "default": 0.5
+        "max": 100,
+        "default": 50
       },
       {
         "index": 4,
-        "symbol": "attack",
-        "name": "Attack",
+        "symbol": "muffling_filter",
+        "name": "Muffling Filter",
         "dir": "input",
         "type": "control",
-        "min": 0.001,
-        "max": 4,
-        "default": 0.01
+        "min": 0,
+        "max": 100,
+        "default": 80.3
       },
       {
         "index": 5,
-        "symbol": "decay",
-        "name": "Decay",
+        "symbol": "vel_to_muffling",
+        "name": "Velocity to Muffling",
         "dir": "input",
         "type": "control",
-        "min": 0.001,
-        "max": 4,
-        "default": 0.1
+        "min": 0,
+        "max": 100,
+        "default": 25.1
       },
       {
         "index": 6,
-        "symbol": "sustain",
-        "name": "Sustain",
+        "symbol": "vel_sensitivity",
+        "name": "Velocity Sensitivity",
         "dir": "input",
         "type": "control",
         "min": 0,
-        "max": 1,
-        "default": 0.7
+        "max": 100,
+        "default": 37.6
       },
       {
         "index": 7,
-        "symbol": "release",
-        "name": "Release",
+        "symbol": "stereo_width",
+        "name": "Stereo Width",
         "dir": "input",
         "type": "control",
-        "min": 0.001,
-        "max": 8,
-        "default": 0.3
+        "min": 0,
+        "max": 200,
+        "default": 100
       },
       {
         "index": 8,
-        "symbol": "gain",
-        "name": "Master Gain",
+        "symbol": "polyphony",
+        "name": "Polyphony",
         "dir": "input",
         "type": "control",
         "min": 0,
         "max": 1,
-        "default": 0.7
-      }
-    ]
-  },
-  {
-    "id": "fm_synth",
-    "label": "FM_Synth",
-    "name": "FM Synth",
-    "description": "2-operator FM synthesizer, 8-voice polyphonic",
-    "wasmFile": "FM_Synth.wasm",
-    "processorFile": "processor.js",
-    "ports": [
-      {
-        "index": 0,
-        "symbol": "midi_in",
-        "name": "MIDI In",
-        "dir": "input",
-        "type": "midi",
-        "min": null,
-        "max": null,
-        "default": null
-      },
-      {
-        "index": 1,
-        "symbol": "out_l",
-        "name": "Audio Out L",
-        "dir": "output",
-        "type": "audio",
-        "min": null,
-        "max": null,
-        "default": null
-      },
-      {
-        "index": 2,
-        "symbol": "out_r",
-        "name": "Audio Out R",
-        "dir": "output",
-        "type": "audio",
-        "min": null,
-        "max": null,
-        "default": null
-      },
-      {
-        "index": 3,
-        "symbol": "mod_ratio",
-        "name": "Mod Ratio",
-        "dir": "input",
-        "type": "control",
-        "min": 0.5,
-        "max": 8,
-        "default": 2
-      },
-      {
-        "index": 4,
-        "symbol": "mod_index",
-        "name": "Mod Index",
-        "dir": "input",
-        "type": "control",
-        "min": 0,
-        "max": 10,
-        "default": 3
-      },
-      {
-        "index": 5,
-        "symbol": "mod_decay",
-        "name": "Mod Decay",
-        "dir": "input",
-        "type": "control",
-        "min": 0.01,
-        "max": 4,
-        "default": 0.5
-      },
-      {
-        "index": 6,
-        "symbol": "attack",
-        "name": "Attack",
-        "dir": "input",
-        "type": "control",
-        "min": 0.001,
-        "max": 4,
-        "default": 0.01
-      },
-      {
-        "index": 7,
-        "symbol": "decay",
-        "name": "Decay",
-        "dir": "input",
-        "type": "control",
-        "min": 0.001,
-        "max": 4,
-        "default": 0.3
-      },
-      {
-        "index": 8,
-        "symbol": "sustain",
-        "name": "Sustain",
-        "dir": "input",
-        "type": "control",
-        "min": 0,
-        "max": 1,
-        "default": 0.5
+        "default": 1
       },
       {
         "index": 9,
-        "symbol": "release",
-        "name": "Release",
+        "symbol": "fine_tuning",
+        "name": "Fine Tuning",
         "dir": "input",
         "type": "control",
-        "min": 0.001,
-        "max": 8,
-        "default": 0.5
+        "min": -50,
+        "max": 50,
+        "default": 0
       },
       {
         "index": 10,
-        "symbol": "gain",
-        "name": "Gain",
+        "symbol": "random_detuning",
+        "name": "Random Detuning",
         "dir": "input",
         "type": "control",
         "min": 0,
-        "max": 1,
-        "default": 0.7
+        "max": 50,
+        "default": 12.3
+      },
+      {
+        "index": 11,
+        "symbol": "stretch_tuning",
+        "name": "Stretch Tuning",
+        "dir": "input",
+        "type": "control",
+        "min": -50,
+        "max": 50,
+        "default": 0
+      },
+      {
+        "index": 12,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 13,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 14,
+        "symbol": "event_in",
+        "name": "Event In",
+        "dir": "input",
+        "type": "midi",
+        "min": null,
+        "max": null,
+        "default": null
       }
     ]
   }
