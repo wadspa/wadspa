@@ -460,7 +460,6 @@ function renderChain() {
     card.querySelector('.remove-btn').addEventListener('click', async () => {
       chain.splice(i, 1);
       node.output.disconnect();
-      node.node.disconnect();
       renderChain();
       rewire();
     });
