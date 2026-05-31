@@ -14,8 +14,17 @@ plugins/*/index.html
 # Superseded processor approach (per-plugin static-import is used instead)
 core/src/processor.js
 
-# swh-plugins is a separate upstream repo (add as submodule if needed)
+# External source repos cloned by fetch-sources.js — not tracked in wadspa repo
 swh-plugins/
+synthv1/
+drumkv1/
+padthv1/
+amsynth/
+So-synth-LV2/
+mda-lv2/
+fomp/
+caps-lv2/
+setBfree/
 
 # macOS
 .DS_Store
