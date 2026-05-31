@@ -292,19 +292,19 @@ const EFFECTS = [
   {
     id: 'dyson_compress', label: 'Dyson Compress', category: 'Dynamics',
     wasmFile: 'dysonCompress.wasm', processorFile: 'processor.js',
-    meta: { label:'dyson_compress', ports:[
-      {index:0,name:'Peak limit', dir:'input', type:'control',min:0,max:1,default:1},
-      {index:1,name:'Release time',dir:'input',type:'control',min:0,max:1,default:0.25},
-      {index:2,name:'Fast compression',dir:'input',type:'control',min:0,max:1,default:0.5},
-      {index:3,name:'Attenuation',dir:'input',type:'control',min:0,max:1,default:1},
-      {index:4,name:'Input', dir:'input', type:'audio'},
-      {index:5,name:'Output',dir:'output',type:'audio'},
+    meta: { label:'dysonCompress', ports:[
+      {index:0,name:'Peak limit (dB)',   dir:'input', type:'control',min:-30,max:0,  default:0},
+      {index:1,name:'Release time (s)',  dir:'input', type:'control',min:0,  max:1,  default:0.25},
+      {index:2,name:'Fast compression',  dir:'input', type:'control',min:0,  max:1,  default:0.5},
+      {index:3,name:'Compression ratio', dir:'input', type:'control',min:0,  max:1,  default:0.5},
+      {index:4,name:'Input',  dir:'input', type:'audio'},
+      {index:5,name:'Output', dir:'output',type:'audio'},
     ]}
   },
   {
     id: 'dj_eq', label: 'DJ EQ', category: 'EQ',
     wasmFile: 'dj_eq_mono.wasm', processorFile: 'processor.js',
-    meta: { label:'dj_eq', ports:[
+    meta: { label:'dj_eq_mono', ports:[
       {index:0,name:'Lo gain (dB)', dir:'input', type:'control',min:-70,max:6,default:0},
       {index:1,name:'Mid gain (dB)',dir:'input', type:'control',min:-70,max:6,default:0},
       {index:2,name:'Hi gain (dB)', dir:'input', type:'control',min:-70,max:6,default:0},
@@ -363,14 +363,19 @@ const EFFECTS = [
   {
     id: 'tape_delay', label: 'Tape Delay', category: 'Delay',
     wasmFile: 'tapeDelay.wasm', processorFile: 'processor.js',
-    meta: { label:'tape_delay', ports:[
-      {index:0,name:'Delay time', dir:'input', type:'control',min:0.2, max:2,   default:0.5},
-      {index:1,name:'Dry level',  dir:'input', type:'control',min:0,   max:1,   default:0.5},
-      {index:2,name:'Wet level',  dir:'input', type:'control',min:0,   max:1,   default:0.25},
-      {index:3,name:'Feedback',   dir:'input', type:'control',min:0,   max:1,   default:0.25},
-      {index:4,name:'Tape speed', dir:'input', type:'control',min:0.1, max:10,  default:1},
-      {index:5,name:'Input',      dir:'input', type:'audio'},
-      {index:6,name:'Output',     dir:'output',type:'audio'},
+    meta: { label:'tapeDelay', ports:[
+      {index:0,name:'Tape speed',  dir:'input', type:'control',min:0.1, max:10, default:1},
+      {index:1,name:'Dry (dB)',    dir:'input', type:'control',min:-90, max:0,  default:0},
+      {index:2,name:'Tap 1 dist', dir:'input', type:'control',min:0,   max:4,  default:0.5},
+      {index:3,name:'Tap 1 level',dir:'input', type:'control',min:-90, max:0,  default:-6},
+      {index:4,name:'Tap 2 dist', dir:'input', type:'control',min:0,   max:4,  default:1},
+      {index:5,name:'Tap 2 level',dir:'input', type:'control',min:-90, max:0,  default:-90},
+      {index:6,name:'Tap 3 dist', dir:'input', type:'control',min:0,   max:4,  default:2},
+      {index:7,name:'Tap 3 level',dir:'input', type:'control',min:-90, max:0,  default:-90},
+      {index:8,name:'Tap 4 dist', dir:'input', type:'control',min:0,   max:4,  default:3},
+      {index:9,name:'Tap 4 level',dir:'input', type:'control',min:-90, max:0,  default:-90},
+      {index:10,name:'Input',      dir:'input', type:'audio'},
+      {index:11,name:'Output',     dir:'output',type:'audio'},
     ]}
   },
   {
