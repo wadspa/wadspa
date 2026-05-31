@@ -1,0 +1,165 @@
+export { default } from './ZamEQ2.js';
+export const meta         = {
+  "uri": "urn:zamaudio:ZamEQ2",
+  "label": "ZamEQ2",
+  "name": "ZamEQ2",
+  "exportName": "createZamEQ2Plugin",
+  "ports": [
+    {
+      "index": 0,
+      "symbol": "lv2_audio_in_1",
+      "name": "Audio Input 1",
+      "dir": "input",
+      "type": "audio",
+      "legacy": false,
+      "min": null,
+      "max": null,
+      "default": null
+    },
+    {
+      "index": 1,
+      "symbol": "lv2_audio_out_1",
+      "name": "Audio Output 1",
+      "dir": "output",
+      "type": "audio",
+      "legacy": false,
+      "min": null,
+      "max": null,
+      "default": null
+    },
+    {
+      "index": 2,
+      "symbol": "boost1",
+      "name": "Boost/Cut 1",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -20,
+      "max": 20,
+      "default": 0
+    },
+    {
+      "index": 3,
+      "symbol": "bw1",
+      "name": "Bandwidth 1",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0.699999988079,
+      "max": 2.5,
+      "default": 1.5
+    },
+    {
+      "index": 4,
+      "symbol": "f1",
+      "name": "Frequency 1",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 200,
+      "max": 2500,
+      "default": 1000
+    },
+    {
+      "index": 5,
+      "symbol": "boost2",
+      "name": "Boost/Cut 2",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -20,
+      "max": 20,
+      "default": 0
+    },
+    {
+      "index": 6,
+      "symbol": "bw2",
+      "name": "Bandwidth 2",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0.699999988079,
+      "max": 2.5,
+      "default": 1.5
+    },
+    {
+      "index": 7,
+      "symbol": "f2",
+      "name": "Frequency 2",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 600,
+      "max": 7000,
+      "default": 3000
+    },
+    {
+      "index": 8,
+      "symbol": "boostl",
+      "name": "Boost/Cut L",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -20,
+      "max": 20,
+      "default": 0
+    },
+    {
+      "index": 9,
+      "symbol": "fl",
+      "name": "Frequency L",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 40,
+      "max": 600,
+      "default": 250
+    },
+    {
+      "index": 10,
+      "symbol": "boosth",
+      "name": "Boost/Cut H",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -20,
+      "max": 20,
+      "default": 0
+    },
+    {
+      "index": 11,
+      "symbol": "fh",
+      "name": "Frequency H",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 1500,
+      "max": 22000,
+      "default": 8000
+    },
+    {
+      "index": 12,
+      "symbol": "outputgain",
+      "name": "Output gain",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -10,
+      "max": 10,
+      "default": 0
+    },
+    {
+      "index": 13,
+      "symbol": "inputgain",
+      "name": "Input gain",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -10,
+      "max": 10,
+      "default": 0
+    }
+  ]
+};
+export const wasmUrl      = new URL('./ZamEQ2.wasm',  import.meta.url).href;
+export const processorUrl = new URL('./processor.js',      import.meta.url).href;

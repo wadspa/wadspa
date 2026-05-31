@@ -1,0 +1,23 @@
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix pset: <http://lv2plug.in/ns/ext/presets#> .
+@prefix ui:   <http://lv2plug.in/ns/extensions/ui#> .
+
+<urn:zamaudio:ZaMultiCompX2>
+    a lv2:Plugin ;
+    lv2:binary <ZaMultiCompX2.wasm> ;
+    rdfs:seeAlso <ZaMultiCompX2.ttl> .
+
+    a ui:CocoaUI ;
+    ui:binary <ZaMultiCompX2_ui.wasm> ;
+    rdfs:seeAlso <ZaMultiCompX2_ui.ttl> .
+
+    a pset:Preset ;
+    lv2:appliesTo <urn:zamaudio:ZaMultiCompX2> ;
+    rdfs:label "Zero" ;
+    rdfs:seeAlso <presets.ttl> .
+
+    a pset:Preset ;
+    lv2:appliesTo <urn:zamaudio:ZaMultiCompX2> ;
+    rdfs:label "Presence" ;
+    rdfs:seeAlso <presets.ttl> .

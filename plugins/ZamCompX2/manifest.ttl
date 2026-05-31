@@ -1,0 +1,28 @@
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix pset: <http://lv2plug.in/ns/ext/presets#> .
+@prefix ui:   <http://lv2plug.in/ns/extensions/ui#> .
+
+<urn:zamaudio:ZamCompX2>
+    a lv2:Plugin ;
+    lv2:binary <ZamCompX2.wasm> ;
+    rdfs:seeAlso <ZamCompX2.ttl> .
+
+    a ui:CocoaUI ;
+    ui:binary <ZamCompX2_ui.wasm> ;
+    rdfs:seeAlso <ZamCompX2_ui.ttl> .
+
+    a pset:Preset ;
+    lv2:appliesTo <urn:zamaudio:ZamCompX2> ;
+    rdfs:label "Zero" ;
+    rdfs:seeAlso <presets.ttl> .
+
+    a pset:Preset ;
+    lv2:appliesTo <urn:zamaudio:ZamCompX2> ;
+    rdfs:label "PoppySnare" ;
+    rdfs:seeAlso <presets.ttl> .
+
+    a pset:Preset ;
+    lv2:appliesTo <urn:zamaudio:ZamCompX2> ;
+    rdfs:label "VocalLeveller" ;
+    rdfs:seeAlso <presets.ttl> .

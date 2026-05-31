@@ -38,6 +38,9 @@ swh-plugins/
 /mclk/
 /meters/
 /libspecbleach/
+/tap-lv2/
+/zam-plugins/
+/midifilter.lv2/
 
 # Plugin dirs not yet building (future work)
 plugins/fomp/

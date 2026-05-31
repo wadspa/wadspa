@@ -1,0 +1,407 @@
+export { default } from './ZaMultiComp.js';
+export const meta         = {
+  "uri": "urn:zamaudio:ZaMultiComp",
+  "label": "ZaMultiComp",
+  "name": "ZaMultiComp",
+  "exportName": "createZaMultiCompPlugin",
+  "ports": [
+    {
+      "index": 0,
+      "symbol": "lv2_audio_in_1",
+      "name": "Audio Input 1",
+      "dir": "input",
+      "type": "audio",
+      "legacy": false,
+      "min": null,
+      "max": null,
+      "default": null
+    },
+    {
+      "index": 1,
+      "symbol": "lv2_audio_out_1",
+      "name": "Audio Output 1",
+      "dir": "output",
+      "type": "audio",
+      "legacy": false,
+      "min": null,
+      "max": null,
+      "default": null
+    },
+    {
+      "index": 2,
+      "symbol": "att1",
+      "name": "Attack1",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0.10000000149,
+      "max": 100,
+      "default": 10
+    },
+    {
+      "index": 3,
+      "symbol": "att2",
+      "name": "Attack2",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0.10000000149,
+      "max": 100,
+      "default": 10
+    },
+    {
+      "index": 4,
+      "symbol": "att3",
+      "name": "Attack3",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0.10000000149,
+      "max": 100,
+      "default": 10
+    },
+    {
+      "index": 5,
+      "symbol": "rel1",
+      "name": "Release1",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 1,
+      "max": 500,
+      "default": 80
+    },
+    {
+      "index": 6,
+      "symbol": "rel2",
+      "name": "Release2",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 1,
+      "max": 500,
+      "default": 80
+    },
+    {
+      "index": 7,
+      "symbol": "rel3",
+      "name": "Release3",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 1,
+      "max": 500,
+      "default": 80
+    },
+    {
+      "index": 8,
+      "symbol": "kn1",
+      "name": "Knee1",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 8,
+      "default": 0
+    },
+    {
+      "index": 9,
+      "symbol": "kn2",
+      "name": "Knee2",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 8,
+      "default": 0
+    },
+    {
+      "index": 10,
+      "symbol": "kn3",
+      "name": "Knee3",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 8,
+      "default": 0
+    },
+    {
+      "index": 11,
+      "symbol": "rat1",
+      "name": "Ratio1",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 1,
+      "max": 20,
+      "default": 4
+    },
+    {
+      "index": 12,
+      "symbol": "rat2",
+      "name": "Ratio2",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 1,
+      "max": 20,
+      "default": 4
+    },
+    {
+      "index": 13,
+      "symbol": "rat3",
+      "name": "Ratio3",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 1,
+      "max": 20,
+      "default": 4
+    },
+    {
+      "index": 14,
+      "symbol": "thr1",
+      "name": "Threshold 1",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -60,
+      "max": 0,
+      "default": -20
+    },
+    {
+      "index": 15,
+      "symbol": "thr2",
+      "name": "Threshold 2",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -60,
+      "max": 0,
+      "default": -18
+    },
+    {
+      "index": 16,
+      "symbol": "thr3",
+      "name": "Threshold 3",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -60,
+      "max": 0,
+      "default": -16
+    },
+    {
+      "index": 17,
+      "symbol": "mak1",
+      "name": "Makeup 1",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 30,
+      "default": 0
+    },
+    {
+      "index": 18,
+      "symbol": "mak2",
+      "name": "Makeup 2",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 30,
+      "default": 0
+    },
+    {
+      "index": 19,
+      "symbol": "mak3",
+      "name": "Makeup 3",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 30,
+      "default": 0
+    },
+    {
+      "index": 20,
+      "symbol": "xover1",
+      "name": "Crossover freq 1",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 20,
+      "max": 1400,
+      "default": 160
+    },
+    {
+      "index": 21,
+      "symbol": "xover2",
+      "name": "Crossover freq 2",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 1400,
+      "max": 14000,
+      "default": 1400
+    },
+    {
+      "index": 22,
+      "symbol": "toggle1",
+      "name": "ZamComp 1 ON",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0
+    },
+    {
+      "index": 23,
+      "symbol": "toggle2",
+      "name": "ZamComp 2 ON",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0
+    },
+    {
+      "index": 24,
+      "symbol": "toggle3",
+      "name": "ZamComp 3 ON",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0
+    },
+    {
+      "index": 25,
+      "symbol": "listen1",
+      "name": "Listen 1",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0
+    },
+    {
+      "index": 26,
+      "symbol": "listen2",
+      "name": "Listen 2",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0
+    },
+    {
+      "index": 27,
+      "symbol": "listen3",
+      "name": "Listen 3",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0
+    },
+    {
+      "index": 28,
+      "symbol": "globalgain",
+      "name": "Master Trim",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 29,
+      "symbol": "out",
+      "name": "Output",
+      "dir": "output",
+      "type": "control",
+      "legacy": false,
+      "min": -45,
+      "max": 20,
+      "default": null
+    },
+    {
+      "index": 30,
+      "symbol": "outlo",
+      "name": "Output low",
+      "dir": "output",
+      "type": "control",
+      "legacy": false,
+      "min": -45,
+      "max": 20,
+      "default": null
+    },
+    {
+      "index": 31,
+      "symbol": "outmed",
+      "name": "Output medium",
+      "dir": "output",
+      "type": "control",
+      "legacy": false,
+      "min": -45,
+      "max": 20,
+      "default": null
+    },
+    {
+      "index": 32,
+      "symbol": "outhi",
+      "name": "Output high",
+      "dir": "output",
+      "type": "control",
+      "legacy": false,
+      "min": -45,
+      "max": 20,
+      "default": null
+    },
+    {
+      "index": 33,
+      "symbol": "gr1",
+      "name": "Gain Reduction 1",
+      "dir": "output",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 20,
+      "default": null
+    },
+    {
+      "index": 34,
+      "symbol": "gr2",
+      "name": "Gain Reduction 2",
+      "dir": "output",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 20,
+      "default": null
+    },
+    {
+      "index": 35,
+      "symbol": "gr3",
+      "name": "Gain Reduction 3",
+      "dir": "output",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 20,
+      "default": null
+    }
+  ]
+};
+export const wasmUrl      = new URL('./ZaMultiComp.wasm',  import.meta.url).href;
+export const processorUrl = new URL('./processor.js',      import.meta.url).href;

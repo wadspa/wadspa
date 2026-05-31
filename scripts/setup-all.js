@@ -34,6 +34,8 @@ const SETUPS = {
     'sorcer':       'setup-sorcer.js',
     'setBfree':          'setup-setBfree.js',
     'noise-repellent':   'setup-noise-repellent.js',
+    'tap-lv2':           'setup-tap-lv2.js',
+    'zam-plugins':       'setup-zam-plugins.js',
 };
 
 let ran = 0, skipped = 0, failed = 0;

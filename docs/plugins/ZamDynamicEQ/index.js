@@ -1,0 +1,220 @@
+export { default } from './ZamDynamicEQ.js';
+export const meta         = {
+  "uri": "urn:zamaudio:ZamDynamicEQ",
+  "label": "ZamDynamicEQ",
+  "name": "ZamDynamicEQ",
+  "exportName": "createZamDynamicEQPlugin",
+  "ports": [
+    {
+      "index": 0,
+      "symbol": "lv2_audio_in_1",
+      "name": "Audio Input 1",
+      "dir": "input",
+      "type": "audio",
+      "legacy": false,
+      "min": null,
+      "max": null,
+      "default": null
+    },
+    {
+      "index": 1,
+      "symbol": "lv2_sidechain_in",
+      "name": "Sidechain Input",
+      "dir": "input",
+      "type": "audio",
+      "legacy": false,
+      "min": null,
+      "max": null,
+      "default": null
+    },
+    {
+      "index": 2,
+      "symbol": "lv2_audio_out_1",
+      "name": "Audio Output 1",
+      "dir": "output",
+      "type": "audio",
+      "legacy": false,
+      "min": null,
+      "max": null,
+      "default": null
+    },
+    {
+      "index": 3,
+      "symbol": "att",
+      "name": "Attack",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0.10000000149,
+      "max": 100,
+      "default": 10
+    },
+    {
+      "index": 4,
+      "symbol": "rel",
+      "name": "Release",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 1,
+      "max": 500,
+      "default": 80
+    },
+    {
+      "index": 5,
+      "symbol": "kn",
+      "name": "Knee",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 8,
+      "default": 0
+    },
+    {
+      "index": 6,
+      "symbol": "rat",
+      "name": "Ratio",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 1,
+      "max": 5,
+      "default": 1.5
+    },
+    {
+      "index": 7,
+      "symbol": "thr",
+      "name": "Threshold",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -80,
+      "max": 0,
+      "default": 0
+    },
+    {
+      "index": 8,
+      "symbol": "max",
+      "name": "Max Boost/Cut",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 10,
+      "default": 10
+    },
+    {
+      "index": 9,
+      "symbol": "slew",
+      "name": "Slew",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 1,
+      "max": 150,
+      "default": 1
+    },
+    {
+      "index": 10,
+      "symbol": "sidech",
+      "name": "Sidechain",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0
+    },
+    {
+      "index": 11,
+      "symbol": "togglelow",
+      "name": "Low Shelf",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0
+    },
+    {
+      "index": 12,
+      "symbol": "togglepeak",
+      "name": "Peak",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0
+    },
+    {
+      "index": 13,
+      "symbol": "togglehigh",
+      "name": "High Shelf",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0
+    },
+    {
+      "index": 14,
+      "symbol": "detectfreq",
+      "name": "Detect Frequency",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 20,
+      "max": 16000,
+      "default": 1000
+    },
+    {
+      "index": 15,
+      "symbol": "targetfreq",
+      "name": "Target Frequency",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 20,
+      "max": 16000,
+      "default": 1000
+    },
+    {
+      "index": 16,
+      "symbol": "targetwidth",
+      "name": "Target width",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 1,
+      "max": 5,
+      "default": 1
+    },
+    {
+      "index": 17,
+      "symbol": "boostcut",
+      "name": "Boost / Cut",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0
+    },
+    {
+      "index": 18,
+      "symbol": "controlgain",
+      "name": "Control Gain",
+      "dir": "output",
+      "type": "control",
+      "legacy": false,
+      "min": -10,
+      "max": 0,
+      "default": null
+    }
+  ]
+};
+export const wasmUrl      = new URL('./ZamDynamicEQ.wasm',  import.meta.url).href;
+export const processorUrl = new URL('./processor.js',      import.meta.url).href;

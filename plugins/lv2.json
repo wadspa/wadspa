@@ -586,5 +586,431 @@
       "libspecbleach/src/shared/utils/tonal_detector.c",
       "libspecbleach/src/shared/utils/transient_detector.c"
     ]
+  },
+  {
+    "id": "tap-autopan",
+    "description": "TAP autopan (LV2)",
+    "category": "Effects",
+    "sources": [
+      "tap_autopan.c"
+    ]
+  },
+  {
+    "id": "tap-chorusflanger",
+    "description": "TAP chorusflanger (LV2)",
+    "category": "Effects",
+    "sources": [
+      "tap_chorusflanger.c"
+    ]
+  },
+  {
+    "id": "tap-deesser",
+    "description": "TAP deesser (LV2)",
+    "category": "Effects",
+    "sources": [
+      "tap_deesser.c"
+    ]
+  },
+  {
+    "id": "tap-doubler",
+    "description": "TAP doubler (LV2)",
+    "category": "Effects",
+    "sources": [
+      "tap_doubler.c"
+    ]
+  },
+  {
+    "id": "tap-dynamics",
+    "description": "TAP dynamics (LV2)",
+    "category": "Effects",
+    "sources": [
+      "tap_dynamics.c"
+    ]
+  },
+  {
+    "id": "tap-dynamics-st",
+    "description": "TAP dynamics-st (LV2)",
+    "category": "Effects",
+    "sources": [
+      "tap_dynamics.c"
+    ]
+  },
+  {
+    "id": "tap-echo",
+    "description": "TAP echo (LV2)",
+    "category": "Effects",
+    "sources": [
+      "tap_echo.c"
+    ]
+  },
+  {
+    "id": "tap-eq",
+    "description": "TAP eq (LV2)",
+    "category": "Effects",
+    "sources": [
+      "tap_eq.c"
+    ]
+  },
+  {
+    "id": "tap-eqbw",
+    "description": "TAP eqbw (LV2)",
+    "category": "Effects",
+    "sources": [
+      "tap_eqbw.c"
+    ]
+  },
+  {
+    "id": "tap-limiter",
+    "description": "TAP limiter (LV2)",
+    "category": "Effects",
+    "sources": [
+      "tap_limiter.c"
+    ]
+  },
+  {
+    "id": "tap-pinknoise",
+    "description": "TAP pinknoise (LV2)",
+    "category": "Effects",
+    "sources": [
+      "tap_pinknoise.c"
+    ]
+  },
+  {
+    "id": "tap-pitch",
+    "description": "TAP pitch (LV2)",
+    "category": "Effects",
+    "sources": [
+      "tap_pitch.c"
+    ]
+  },
+  {
+    "id": "tap-reflector",
+    "description": "TAP reflector (LV2)",
+    "category": "Effects",
+    "sources": [
+      "tap_reflector.c"
+    ]
+  },
+  {
+    "id": "tap-reverb",
+    "description": "TAP reverb (LV2)",
+    "category": "Effects",
+    "sources": [
+      "tap_reverb.c"
+    ]
+  },
+  {
+    "id": "tap-rotspeak",
+    "description": "TAP rotspeak (LV2)",
+    "category": "Effects",
+    "sources": [
+      "tap_rotspeak.c"
+    ]
+  },
+  {
+    "id": "tap-sigmoid",
+    "description": "TAP sigmoid (LV2)",
+    "category": "Effects",
+    "sources": [
+      "tap_sigmoid.c"
+    ]
+  },
+  {
+    "id": "tap-tremolo",
+    "description": "TAP tremolo (LV2)",
+    "category": "Effects",
+    "sources": [
+      "tap_tremolo.c"
+    ]
+  },
+  {
+    "id": "tap-tubewarmth",
+    "description": "TAP tubewarmth (LV2)",
+    "category": "Effects",
+    "sources": [
+      "tap_tubewarmth.c"
+    ]
+  },
+  {
+    "id": "tap-vibrato",
+    "description": "TAP vibrato (LV2)",
+    "category": "Effects",
+    "sources": [
+      "tap_vibrato.c"
+    ]
+  },
+  {
+    "id": "ZamComp",
+    "description": "ZamComp (ZamAudio LV2)",
+    "category": "Effects",
+    "sources": [
+      "ZamCompPlugin.cpp",
+      "dpf/DistrhoPluginMain.cpp",
+      "lv2ui_stub.cpp"
+    ],
+    "includes": [
+      "plugins/ZamComp",
+      "plugins/ZamComp/dpf"
+    ],
+    "defines": [
+      "DISTRHO_PLUGIN_TARGET_LV2"
+    ]
+  },
+  {
+    "id": "ZamCompX2",
+    "description": "ZamCompX2 (ZamAudio LV2)",
+    "category": "Effects",
+    "sources": [
+      "ZamCompX2Plugin.cpp",
+      "dpf/DistrhoPluginMain.cpp",
+      "lv2ui_stub.cpp"
+    ],
+    "includes": [
+      "plugins/ZamCompX2",
+      "plugins/ZamCompX2/dpf"
+    ],
+    "defines": [
+      "DISTRHO_PLUGIN_TARGET_LV2"
+    ]
+  },
+  {
+    "id": "ZaMultiComp",
+    "description": "ZaMultiComp (ZamAudio LV2)",
+    "category": "Effects",
+    "sources": [
+      "ZaMultiCompPlugin.cpp",
+      "dpf/DistrhoPluginMain.cpp",
+      "lv2ui_stub.cpp"
+    ],
+    "includes": [
+      "plugins/ZaMultiComp",
+      "plugins/ZaMultiComp/dpf"
+    ],
+    "defines": [
+      "DISTRHO_PLUGIN_TARGET_LV2"
+    ]
+  },
+  {
+    "id": "ZaMultiCompX2",
+    "description": "ZaMultiCompX2 (ZamAudio LV2)",
+    "category": "Effects",
+    "sources": [
+      "ZaMultiCompX2Plugin.cpp",
+      "dpf/DistrhoPluginMain.cpp",
+      "lv2ui_stub.cpp"
+    ],
+    "includes": [
+      "plugins/ZaMultiCompX2",
+      "plugins/ZaMultiCompX2/dpf"
+    ],
+    "defines": [
+      "DISTRHO_PLUGIN_TARGET_LV2"
+    ]
+  },
+  {
+    "id": "ZamTube",
+    "description": "ZamTube (ZamAudio LV2)",
+    "category": "Effects",
+    "sources": [
+      "ZamTubePlugin.cpp",
+      "tonestacks.cpp",
+      "triode.cpp",
+      "dpf/DistrhoPluginMain.cpp",
+      "lv2ui_stub.cpp"
+    ],
+    "includes": [
+      "plugins/ZamTube",
+      "plugins/ZamTube/dpf"
+    ],
+    "defines": [
+      "DISTRHO_PLUGIN_TARGET_LV2"
+    ]
+  },
+  {
+    "id": "ZamEQ2",
+    "description": "ZamEQ2 (ZamAudio LV2)",
+    "category": "Effects",
+    "sources": [
+      "ZamEQ2Plugin.cpp",
+      "dpf/DistrhoPluginMain.cpp",
+      "lv2ui_stub.cpp"
+    ],
+    "includes": [
+      "plugins/ZamEQ2",
+      "plugins/ZamEQ2/dpf"
+    ],
+    "defines": [
+      "DISTRHO_PLUGIN_TARGET_LV2"
+    ]
+  },
+  {
+    "id": "ZamAutoSat",
+    "description": "ZamAutoSat (ZamAudio LV2)",
+    "category": "Effects",
+    "sources": [
+      "ZamAutoSatPlugin.cpp",
+      "dpf/DistrhoPluginMain.cpp",
+      "lv2ui_stub.cpp"
+    ],
+    "includes": [
+      "plugins/ZamAutoSat",
+      "plugins/ZamAutoSat/dpf"
+    ],
+    "defines": [
+      "DISTRHO_PLUGIN_TARGET_LV2"
+    ]
+  },
+  {
+    "id": "ZamGEQ31",
+    "description": "ZamGEQ31 (ZamAudio LV2)",
+    "category": "Effects",
+    "sources": [
+      "ZamGEQ31Plugin.cpp",
+      "dpf/DistrhoPluginMain.cpp",
+      "lv2ui_stub.cpp"
+    ],
+    "includes": [
+      "plugins/ZamGEQ31",
+      "plugins/ZamGEQ31/dpf"
+    ],
+    "defines": [
+      "DISTRHO_PLUGIN_TARGET_LV2"
+    ]
+  },
+  {
+    "id": "ZamGate",
+    "description": "ZamGate (ZamAudio LV2)",
+    "category": "Effects",
+    "sources": [
+      "ZamGatePlugin.cpp",
+      "dpf/DistrhoPluginMain.cpp",
+      "lv2ui_stub.cpp"
+    ],
+    "includes": [
+      "plugins/ZamGate",
+      "plugins/ZamGate/dpf"
+    ],
+    "defines": [
+      "DISTRHO_PLUGIN_TARGET_LV2"
+    ]
+  },
+  {
+    "id": "ZamGateX2",
+    "description": "ZamGateX2 (ZamAudio LV2)",
+    "category": "Effects",
+    "sources": [
+      "ZamGateX2Plugin.cpp",
+      "dpf/DistrhoPluginMain.cpp",
+      "lv2ui_stub.cpp"
+    ],
+    "includes": [
+      "plugins/ZamGateX2",
+      "plugins/ZamGateX2/dpf"
+    ],
+    "defines": [
+      "DISTRHO_PLUGIN_TARGET_LV2"
+    ]
+  },
+  {
+    "id": "ZaMaximX2",
+    "description": "ZaMaximX2 (ZamAudio LV2)",
+    "category": "Effects",
+    "sources": [
+      "ZaMaximX2Plugin.cpp",
+      "dpf/DistrhoPluginMain.cpp",
+      "lv2ui_stub.cpp"
+    ],
+    "includes": [
+      "plugins/ZaMaximX2",
+      "plugins/ZaMaximX2/dpf"
+    ],
+    "defines": [
+      "DISTRHO_PLUGIN_TARGET_LV2"
+    ]
+  },
+  {
+    "id": "ZamDelay",
+    "description": "ZamDelay (ZamAudio LV2)",
+    "category": "Effects",
+    "sources": [
+      "ZamDelayPlugin.cpp",
+      "dpf/DistrhoPluginMain.cpp",
+      "lv2ui_stub.cpp"
+    ],
+    "includes": [
+      "plugins/ZamDelay",
+      "plugins/ZamDelay/dpf"
+    ],
+    "defines": [
+      "DISTRHO_PLUGIN_TARGET_LV2"
+    ]
+  },
+  {
+    "id": "ZamPhono",
+    "description": "ZamPhono (ZamAudio LV2)",
+    "category": "Effects",
+    "sources": [
+      "ZamPhonoPlugin.cpp",
+      "dpf/DistrhoPluginMain.cpp",
+      "lv2ui_stub.cpp"
+    ],
+    "includes": [
+      "plugins/ZamPhono",
+      "plugins/ZamPhono/dpf"
+    ],
+    "defines": [
+      "DISTRHO_PLUGIN_TARGET_LV2"
+    ]
+  },
+  {
+    "id": "ZamDynamicEQ",
+    "description": "ZamDynamicEQ (ZamAudio LV2)",
+    "category": "Effects",
+    "sources": [
+      "ZamDynamicEQPlugin.cpp",
+      "dpf/DistrhoPluginMain.cpp",
+      "lv2ui_stub.cpp"
+    ],
+    "includes": [
+      "plugins/ZamDynamicEQ",
+      "plugins/ZamDynamicEQ/dpf"
+    ],
+    "defines": [
+      "DISTRHO_PLUGIN_TARGET_LV2"
+    ]
+  },
+  {
+    "id": "ZamGrains",
+    "description": "ZamGrains (ZamAudio LV2)",
+    "category": "Effects",
+    "sources": [
+      "ZamGrainsPlugin.cpp",
+      "dpf/DistrhoPluginMain.cpp",
+      "lv2ui_stub.cpp"
+    ],
+    "includes": [
+      "plugins/ZamGrains",
+      "plugins/ZamGrains/dpf"
+    ],
+    "defines": [
+      "DISTRHO_PLUGIN_TARGET_LV2"
+    ]
+  },
+  {
+    "id": "ZamEcho",
+    "description": "ZamEcho (ZamAudio LV2)",
+    "category": "Effects",
+    "sources": [
+      "ZamEchoPlugin.cpp",
+      "dpf/DistrhoPluginMain.cpp",
+      "lv2ui_stub.cpp"
+    ],
+    "includes": [
+      "plugins/ZamEcho",
+      "plugins/ZamEcho/dpf"
+    ],
+    "defines": [
+      "DISTRHO_PLUGIN_TARGET_LV2"
+    ]
   }
 ]

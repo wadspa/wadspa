@@ -118,5 +118,23 @@
     "git": "https://github.com/x42/meters.lv2.git",
     "setup": null,
     "description": "meters.lv2 — audio level meters LV2"
+  },
+  {
+    "id": "tap-lv2",
+    "git": "https://github.com/moddevices/tap-lv2.git",
+    "setup": null,
+    "description": "TAP LV2 — Tom's Audio Processing plugins (reverb, EQ, dynamics, modulation)"
+  },
+  {
+    "id": "zam-plugins",
+    "git": "https://github.com/zamaudio/zam-plugins.git",
+    "setup": null,
+    "description": "ZamAudio — compressor, gate, EQ, limiter, tube saturation LV2 plugins"
+  },
+  {
+    "id": "midifilter.lv2",
+    "git": "https://github.com/x42/midifilter.lv2.git",
+    "setup": null,
+    "description": "x42 MIDI Filter Collection — 25+ MIDI processing LV2 plugins"
   }
 ]
