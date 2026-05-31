@@ -7,6 +7,9 @@
     "toolchain"
   ],
   "scripts": {
-    "link-toolchain": "npm link --workspace=toolchain"
+    "link-toolchain": "npm link --workspace=toolchain",
+    "test": "node scripts/test-instruments.js",
+    "build": "node scripts/build-instruments.js",
+    "build:skip": "node scripts/build-instruments.js --skip-existing"
   }
 }
