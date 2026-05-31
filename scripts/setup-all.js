@@ -32,7 +32,8 @@ const SETUPS = {
     'samplv1':      'setup-samplv1.js',
     'fomp':         'setup-fomp.js',
     'sorcer':       'setup-sorcer.js',
-    'setBfree':     'setup-setBfree.js',
+    'setBfree':          'setup-setBfree.js',
+    'noise-repellent':   'setup-noise-repellent.js',
 };
 
 let ran = 0, skipped = 0, failed = 0;

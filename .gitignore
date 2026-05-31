@@ -42,7 +42,6 @@ swh-plugins/
 # Plugin dirs not yet building (future work)
 plugins/fomp/
 plugins/caps-lv2/
-plugins/noise-repellent/
 
 # macOS
 .DS_Store

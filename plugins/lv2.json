@@ -538,5 +538,53 @@
       "lv2.c",
       "overdrive.c"
     ]
+  },
+  {
+    "id": "noise-repellent",
+    "description": "Noise Repellent — broadband noise reduction (LV2)",
+    "category": "Effects",
+    "includes": [
+      "plugins/noise-repellent/libspecbleach/src",
+      "plugins/noise-repellent/libspecbleach/include"
+    ],
+    "sources": [
+      "nrepellent.c",
+      "noise_profile_state.c",
+      "signal_crossfade.c",
+      "kiss_fft.c",
+      "fft_transform.c",
+      "libspecbleach/src/processors/denoiser/spectral_denoiser.c",
+      "libspecbleach/src/processors/denoiser2d/spectral_2d_denoiser.c",
+      "libspecbleach/src/processors/specbleach_2d_denoiser.c",
+      "libspecbleach/src/processors/specbleach_denoiser.c",
+      "libspecbleach/src/shared/denoiser_logic/core/denoiser_post_process.c",
+      "libspecbleach/src/shared/denoiser_logic/core/denoiser_profile_core.c",
+      "libspecbleach/src/shared/denoiser_logic/core/noise_floor_manager.c",
+      "libspecbleach/src/shared/denoiser_logic/core/noise_profile.c",
+      "libspecbleach/src/shared/denoiser_logic/estimators/adaptive_noise_estimator.c",
+      "libspecbleach/src/shared/denoiser_logic/estimators/brandt_noise_estimator.c",
+      "libspecbleach/src/shared/denoiser_logic/estimators/martin_noise_estimator.c",
+      "libspecbleach/src/shared/denoiser_logic/estimators/noise_estimator.c",
+      "libspecbleach/src/shared/denoiser_logic/estimators/spp_mmse_noise_estimator.c",
+      "libspecbleach/src/shared/denoiser_logic/processing/gain_calculator.c",
+      "libspecbleach/src/shared/denoiser_logic/processing/masking_veto.c",
+      "libspecbleach/src/shared/denoiser_logic/processing/nlm_filter.c",
+      "libspecbleach/src/shared/denoiser_logic/processing/spectral_whitening.c",
+      "libspecbleach/src/shared/denoiser_logic/processing/suppression_engine.c",
+      "libspecbleach/src/shared/denoiser_logic/processing/tonal_reducer.c",
+      "libspecbleach/src/shared/stft/stft_buffer.c",
+      "libspecbleach/src/shared/stft/stft_processor.c",
+      "libspecbleach/src/shared/stft/stft_windows.c",
+      "libspecbleach/src/shared/utils/absolute_hearing_thresholds.c",
+      "libspecbleach/src/shared/utils/critical_bands.c",
+      "libspecbleach/src/shared/utils/general_utils.c",
+      "libspecbleach/src/shared/utils/masking_estimator.c",
+      "libspecbleach/src/shared/utils/spectral_circular_buffer.c",
+      "libspecbleach/src/shared/utils/spectral_features.c",
+      "libspecbleach/src/shared/utils/spectral_smoother.c",
+      "libspecbleach/src/shared/utils/spectral_utils.c",
+      "libspecbleach/src/shared/utils/tonal_detector.c",
+      "libspecbleach/src/shared/utils/transient_detector.c"
+    ]
   }
 ]
