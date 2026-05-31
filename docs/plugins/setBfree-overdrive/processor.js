@@ -1,0 +1,37 @@
+import createsetBfree_Organ_OverdrivePlugin from './setBfree_Organ_Overdrive.js';
+
+let mod = null;
+const inPtrs  = [0];
+const outPtrs = [0];
+const SETTERS = {"bias":"_shim_set_bias","feedback":"_shim_set_feedback","sagtobias":"_shim_set_sagtobias","postfeed":"_shim_set_postfeed","globfeed":"_shim_set_globfeed","gainin":"_shim_set_gainin","gainout":"_shim_set_gainout"};
+
+class WadspProcessor extends AudioWorkletProcessor {
+    constructor() {
+        super();
+        this.port.onmessage = async ({ data }) => {
+            if (data.type === 'setup') {
+                try {
+                    mod = await createsetBfree_Organ_OverdrivePlugin({ wasmBinary: data.wasm, locateFile: (p, d) => d + p });
+                    mod._shim_init(sampleRate);
+                    inPtrs[0]  = mod._shim_input_buf_in() >> 2;
+                    outPtrs[0] = mod._shim_output_buf_out() >> 2;
+                    this.port.postMessage({ type: 'ready' });
+                } catch (e) {
+                    this.port.postMessage({ type: 'error', message: e.message });
+                }
+            } else if (data.type === 'set') {
+                if (mod) { const fn = SETTERS[data.symbol]; if (fn) mod[fn](data.value); }
+            }
+        };
+    }
+
+    process(inputs, outputs) {
+        if (!mod) return true;
+        const _c0 = inputs[0]?.[0]; if (_c0 && _c0.length) mod.HEAPF32.set(_c0, inPtrs[0]);
+        mod._shim_run(128);
+        outputs[0][0].set(mod.HEAPF32.subarray(outPtrs[0], outPtrs[0] + 128));
+        return true;
+    }
+}
+
+registerProcessor('wadspa-setBfree_Organ_Overdrive', WadspProcessor);

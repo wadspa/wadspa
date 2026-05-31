@@ -2,10 +2,12 @@ node_modules/
 
 # Generated shim files (recreated by `wadspa build`)
 **/_wadspa_shim.c
+**/_wadspa_lv2_shim.c
 
-# Plugin-dir root build artifacts (dist/ is tracked, root-level artifacts are not)
+# Plugin-dir build artifacts (dist/ holds intermediate build output; docs/ holds the tracked release)
 plugins/*/*.js
 plugins/*/*.wasm
+plugins/*/dist/
 
 # Old test/scratch files
 plugins/*/test.mjs
@@ -35,6 +37,12 @@ swh-plugins/
 /sorcer/
 /mclk/
 /meters/
+/libspecbleach/
+
+# Plugin dirs not yet building (future work)
+plugins/fomp/
+plugins/caps-lv2/
+plugins/noise-repellent/
 
 # macOS
 .DS_Store

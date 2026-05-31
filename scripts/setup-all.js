@@ -31,6 +31,8 @@ const SETUPS = {
     'padthv1':      'setup-padthv1.js',
     'samplv1':      'setup-samplv1.js',
     'fomp':         'setup-fomp.js',
+    'sorcer':       'setup-sorcer.js',
+    'setBfree':     'setup-setBfree.js',
 };
 
 let ran = 0, skipped = 0, failed = 0;

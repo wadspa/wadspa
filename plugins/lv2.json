@@ -509,5 +509,34 @@
       "zreverb.cc",
       "reverbs_lv2.cc"
     ]
+  },
+  {
+    "id": "sorcer",
+    "description": "Sorcer — wavetable synthesiser LV2",
+    "category": "Instruments",
+    "includes": [
+      "toolchain"
+    ],
+    "sources": [
+      "main.cpp"
+    ]
+  },
+  {
+    "id": "setBfree-reverb",
+    "description": "setBfree: Spring Reverb (LV2)",
+    "category": "Effects",
+    "sources": [
+      "lv2.c",
+      "reverb.c"
+    ]
+  },
+  {
+    "id": "setBfree-overdrive",
+    "description": "setBfree: Overdrive Preamp (LV2)",
+    "category": "Effects",
+    "sources": [
+      "lv2.c",
+      "overdrive.c"
+    ]
   }
 ]
