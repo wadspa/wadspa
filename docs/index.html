@@ -414,13 +414,16 @@ function buildSynthControls(node, inst) {
   const ctrlPorts = inst.ports.filter(p => p.type === 'control' && p.dir === 'input');
   ctrls.innerHTML = '';
   for (const p of ctrlPorts) {
+    const min = p.min ?? 0;
+    const max = p.max ?? 1;
+    const def = p.default ?? min;
     const row = document.createElement('div');
     row.className = 'ctrl-row';
-    const fmt = p.max <= 1 ? v => v.toFixed(2) : p.max <= 10 ? v => v.toFixed(2) + ' s' : v => v.toFixed(1);
+    const fmt = max <= 1 ? v => v.toFixed(2) : max <= 10 ? v => v.toFixed(2) + ' s' : v => v.toFixed(1);
     row.innerHTML = `<label>${p.name}</label>
       <div class="ctrl-line">
-        <input type="range" min="${p.min}" max="${p.max}" step="${(p.max-p.min)/200}" value="${p.default}">
-        <span class="val">${fmt(p.default)}</span>
+        <input type="range" min="${min}" max="${max}" step="${(max-min)/200}" value="${def}">
+        <span class="val">${fmt(def)}</span>
       </div>`;
     const slider = row.querySelector('input');
     const val    = row.querySelector('.val');
@@ -429,6 +432,8 @@ function buildSynthControls(node, inst) {
       node.set(p.name, v);
     });
     ctrls.appendChild(row);
+    // Push default to plugin so WASM state matches UI on load
+    if (def !== null && def !== undefined) node.set(p.name, def);
   }
 }
 

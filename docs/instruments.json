@@ -1125,7 +1125,7 @@
     "id": "amsynth",
     "label": "amsynth",
     "name": "amsynth",
-    "description": "amsynth — analog modeling synthesizer, 32-voice polyphonic",
+    "description": "amsynth \u2014 analog modeling synthesizer, 32-voice polyphonic",
     "category": "Instruments",
     "wasmFile": "amsynth.wasm",
     "processorFile": "processor.js",
@@ -1631,7 +1631,7 @@
     "id": "drumkv1",
     "label": "drumkv1",
     "name": "drumkv1",
-    "description": "drumkv1 — sample-based drum synthesizer with per-pad synthesis and effects",
+    "description": "drumkv1 \u2014 sample-based drum synthesizer with per-pad synthesis and effects",
     "category": "Instruments",
     "wasmFile": "drumkv1.wasm",
     "processorFile": "processor.js",
@@ -2060,7 +2060,7 @@
     "id": "so-404",
     "label": "SO404_Bass_Synthesizer",
     "name": "SO-404 Bass Synthesizer",
-    "description": "SO-404 Bass Synthesizer — TB-303-style bass synth clone",
+    "description": "SO-404 Bass Synthesizer \u2014 TB-303-style bass synth clone",
     "category": "Instruments",
     "wasmFile": "SO404_Bass_Synthesizer.wasm",
     "processorFile": "processor.js",
@@ -2096,7 +2096,7 @@
         "legacy": false,
         "min": null,
         "max": null,
-        "default": 0
+        "default": 1
       },
       {
         "index": 3,
@@ -2181,7 +2181,7 @@
     "id": "so-kl5",
     "label": "SOkl5_Piano_Synthesizer",
     "name": "SO-kl5 Piano Synthesizer",
-    "description": "SO-kl5 Piano Synthesizer — electric piano clone",
+    "description": "SO-kl5 Piano Synthesizer \u2014 electric piano clone",
     "category": "Instruments",
     "wasmFile": "SOkl5_Piano_Synthesizer.wasm",
     "processorFile": "processor.js",
@@ -2217,7 +2217,7 @@
         "legacy": false,
         "min": null,
         "max": null,
-        "default": 0
+        "default": 1
       },
       {
         "index": 3,
@@ -2291,7 +2291,7 @@
     "id": "so-666",
     "label": "SO666_Feedback_Synthesizer",
     "name": "SO-666 Feedback Synthesizer",
-    "description": "SO-666 Feedback Synthesizer — feedback oscillator synth",
+    "description": "SO-666 Feedback Synthesizer \u2014 feedback oscillator synth",
     "category": "Instruments",
     "wasmFile": "SO666_Feedback_Synthesizer.wasm",
     "processorFile": "processor.js",
@@ -2327,7 +2327,7 @@
         "legacy": false,
         "min": null,
         "max": null,
-        "default": 0
+        "default": 1
       },
       {
         "index": 3,
@@ -2390,7 +2390,7 @@
     "id": "padthv1",
     "label": "padthv1",
     "name": "padthv1",
-    "description": "padthv1 — polyphonic additive (PADsynth) synthesizer",
+    "description": "padthv1 \u2014 polyphonic additive (PADsynth) synthesizer",
     "category": "Instruments",
     "wasmFile": "padthv1.wasm",
     "processorFile": "processor.js",
@@ -3457,7 +3457,7 @@
     "id": "synthv1",
     "label": "synthv1",
     "name": "synthv1",
-    "description": "synthv1 — dual-oscillator polyphonic analog synthesizer",
+    "description": "synthv1 \u2014 dual-oscillator polyphonic analog synthesizer",
     "category": "Instruments",
     "wasmFile": "synthv1.wasm",
     "processorFile": "processor.js",
