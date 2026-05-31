@@ -1,0 +1,9 @@
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix fomp: <http://drobilla.net/plugins/fomp/> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+fomp:cs_chorus1 a lv2:Plugin ; rdfs:seeAlso <cs_chorus1.ttl> ; lv2:binary <cs_chorus.wasm> .
+fomp:cs_chorus2 a lv2:Plugin ; rdfs:seeAlso <cs_chorus2.ttl> ; lv2:binary <cs_chorus.wasm> .
+fomp:triple_chorus a lv2:Plugin ; rdfs:seeAlso <triple_chorus.ttl> ; lv2:binary <cs_chorus.wasm> .

@@ -5858,5 +5858,1071 @@
         "default": null
       }
     ]
+  },
+  {
+    "id": "fil4",
+    "label": "fil4mono",
+    "name": "fil4#mono",
+    "description": "fil4",
+    "category": "Instruments",
+    "wasmFile": "fil4mono.wasm",
+    "processorFile": "processor.js",
+    "ports": []
+  },
+  {
+    "id": "fomp-autowah",
+    "label": "Autowah",
+    "name": "Auto-wah",
+    "description": "fomp: Autowah (LV2)",
+    "category": "Effects",
+    "wasmFile": "Autowah.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "in",
+        "name": "Input",
+        "dir": "input",
+        "type": "audio",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 1,
+        "symbol": "out",
+        "name": "Output",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 2,
+        "symbol": "drive",
+        "name": "Drive",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -20,
+        "max": 20,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "symbol": "decay",
+        "name": "Decay",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 4,
+        "symbol": "range",
+        "name": "Range",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 5,
+        "symbol": "freq",
+        "name": "Freq",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 6,
+        "symbol": "mix",
+        "name": "Mix",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      }
+    ]
+  },
+  {
+    "id": "fomp-blvco",
+    "label": "Pulse_VCO",
+    "name": "Pulse VCO",
+    "description": "fomp: Band-limited VCOs (LV2)",
+    "category": "Instruments",
+    "wasmFile": "Pulse_VCO.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "out",
+        "name": "Output",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 1,
+        "symbol": "freq",
+        "name": "Frequency",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0.000001,
+        "max": 1,
+        "default": 440
+      },
+      {
+        "index": 2,
+        "symbol": "exp_fm",
+        "name": "Exp FM",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 3,
+        "symbol": "lin_fm",
+        "name": "Lin FM",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 4,
+        "symbol": "octave",
+        "name": "Octave",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -4,
+        "max": 4,
+        "default": 0
+      },
+      {
+        "index": 5,
+        "symbol": "tune",
+        "name": "Tune",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 6,
+        "symbol": "exp_fm_gain",
+        "name": "Exp FM gain",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 4,
+        "default": 0
+      },
+      {
+        "index": 7,
+        "symbol": "lin_fm_gain",
+        "name": "Lin FM gain",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 4,
+        "default": 0
+      },
+      {
+        "index": 8,
+        "symbol": "lp_filter",
+        "name": "LP filter",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 1,
+        "default": 1
+      }
+    ]
+  },
+  {
+    "id": "fomp-cs_chorus",
+    "label": "CS_Chorus_1",
+    "name": "CS Chorus 1",
+    "description": "fomp: CS Chorus (LV2)",
+    "category": "Effects",
+    "wasmFile": "CS_Chorus_1.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "in",
+        "name": "Input",
+        "dir": "input",
+        "type": "audio",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 1,
+        "symbol": "out",
+        "name": "Output",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 2,
+        "symbol": "delay",
+        "name": "Delay",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 30,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "symbol": "mod_freq_1",
+        "name": "Mod Frequency 1",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0.003,
+        "max": 10,
+        "default": 0.003
+      },
+      {
+        "index": 4,
+        "symbol": "mod_amp_1",
+        "name": "Mod Amplitude 1",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 10,
+        "default": 0
+      },
+      {
+        "index": 5,
+        "symbol": "mod_freq_2",
+        "name": "Mod Frequency 2",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0.01,
+        "max": 30,
+        "default": 0.01
+      },
+      {
+        "index": 6,
+        "symbol": "mod_amp_2",
+        "name": "Mod Amplitude 2",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 3,
+        "default": 0
+      }
+    ]
+  },
+  {
+    "id": "fomp-cs_phaser",
+    "label": "CS_Phaser_1",
+    "name": "CS Phaser 1",
+    "description": "fomp: CS Phaser (LV2)",
+    "category": "Effects",
+    "wasmFile": "CS_Phaser_1.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "in",
+        "name": "Input",
+        "dir": "input",
+        "type": "audio",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 1,
+        "symbol": "out",
+        "name": "Output",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 2,
+        "symbol": "fm",
+        "name": "FM",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 3,
+        "symbol": "exp_fm",
+        "name": "Exp FM",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 4,
+        "symbol": "lin_fm",
+        "name": "Lin FM",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 5,
+        "symbol": "in_gain",
+        "name": "Input gain",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -40,
+        "max": 10,
+        "default": 0
+      },
+      {
+        "index": 6,
+        "symbol": "sections",
+        "name": "Sections",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 1,
+        "max": 30,
+        "default": 1
+      },
+      {
+        "index": 7,
+        "symbol": "freq",
+        "name": "Frequency",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -6,
+        "max": 6,
+        "default": 0
+      },
+      {
+        "index": 8,
+        "symbol": "exp_fm_gain",
+        "name": "Exp FM gain",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 10,
+        "default": 0
+      },
+      {
+        "index": 9,
+        "symbol": "lin_fm_gain",
+        "name": "Lin FM gain",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 10,
+        "default": 0
+      },
+      {
+        "index": 10,
+        "symbol": "fb_gain",
+        "name": "Feedback gain",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -1,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 11,
+        "symbol": "out_mix",
+        "name": "Output mix",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -1,
+        "max": 1,
+        "default": 0
+      }
+    ]
+  },
+  {
+    "id": "fomp-filters",
+    "label": "4Band_Parametric_Filter",
+    "name": "4-Band Parametric Filter",
+    "description": "fomp: Parametric EQ (LV2)",
+    "category": "Effects",
+    "wasmFile": "4Band_Parametric_Filter.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "in",
+        "name": "Input",
+        "dir": "input",
+        "type": "audio",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 1,
+        "symbol": "out",
+        "name": "Output",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 2,
+        "symbol": "filter",
+        "name": "Filter",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": 0
+      },
+      {
+        "index": 3,
+        "symbol": "gain",
+        "name": "Gain",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -20,
+        "max": 20,
+        "default": 0
+      },
+      {
+        "index": 4,
+        "symbol": "sec_1",
+        "name": "Section 1",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": 0
+      },
+      {
+        "index": 5,
+        "symbol": "freq_1",
+        "name": "Frequency 1",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 20,
+        "max": 2000,
+        "default": 200
+      },
+      {
+        "index": 6,
+        "symbol": "bw_1",
+        "name": "Bandwidth 1",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0.125,
+        "max": 8,
+        "default": 1
+      },
+      {
+        "index": 7,
+        "symbol": "gain_1",
+        "name": "Gain 1",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -20,
+        "max": 20,
+        "default": 0
+      },
+      {
+        "index": 8,
+        "symbol": "sec_2",
+        "name": "Section 2",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": 0
+      },
+      {
+        "index": 9,
+        "symbol": "freq_2",
+        "name": "Frequency 2",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 40,
+        "max": 4000,
+        "default": 400
+      },
+      {
+        "index": 10,
+        "symbol": "bw_2",
+        "name": "Bandwidth 2",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0.125,
+        "max": 8,
+        "default": 1
+      },
+      {
+        "index": 11,
+        "symbol": "gain_2",
+        "name": "Gain 2",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -20,
+        "max": 20,
+        "default": 0
+      },
+      {
+        "index": 12,
+        "symbol": "sec_3",
+        "name": "Section 3",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": 0
+      },
+      {
+        "index": 13,
+        "symbol": "freq_3",
+        "name": "Frequency 3",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 100,
+        "max": 10000,
+        "default": 1000
+      },
+      {
+        "index": 14,
+        "symbol": "bw_3",
+        "name": "Bandwidth 3",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0.125,
+        "max": 8,
+        "default": 1
+      },
+      {
+        "index": 15,
+        "symbol": "gain_3",
+        "name": "Gain 3",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -20,
+        "max": 20,
+        "default": 0
+      },
+      {
+        "index": 16,
+        "symbol": "sec_4",
+        "name": "Section 4",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": 0
+      },
+      {
+        "index": 17,
+        "symbol": "freq_4",
+        "name": "Frequency 4",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 200,
+        "max": 20000,
+        "default": 2000
+      },
+      {
+        "index": 18,
+        "symbol": "bw_4",
+        "name": "Bandwidth 4",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0.125,
+        "max": 8,
+        "default": 1
+      },
+      {
+        "index": 19,
+        "symbol": "gain_4",
+        "name": "Gain 4",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -20,
+        "max": 20,
+        "default": 0
+      }
+    ]
+  },
+  {
+    "id": "fomp-mvchpf24",
+    "label": "Moog_HighPass_Filter_1",
+    "name": "Moog High-Pass Filter 1",
+    "description": "fomp: Moog HPF (LV2)",
+    "category": "Effects",
+    "wasmFile": "Moog_HighPass_Filter_1.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "in",
+        "name": "Input",
+        "dir": "input",
+        "type": "audio",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 1,
+        "symbol": "out",
+        "name": "Output",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 2,
+        "symbol": "fm",
+        "name": "FM",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 3,
+        "symbol": "exp_fm",
+        "name": "Exp FM",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 4,
+        "symbol": "in_gain",
+        "name": "Input gain",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -60,
+        "max": 10,
+        "default": 0
+      },
+      {
+        "index": 5,
+        "symbol": "freq",
+        "name": "Frequency",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0.000001,
+        "max": 1,
+        "default": 440
+      },
+      {
+        "index": 6,
+        "symbol": "exp_gm_gain",
+        "name": "Exp FM gain",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 10,
+        "default": 0
+      },
+      {
+        "index": 7,
+        "symbol": "out_gain",
+        "name": "Output gain",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -15,
+        "max": 15,
+        "default": 0
+      }
+    ]
+  },
+  {
+    "id": "fomp-mvclpf24",
+    "label": "Moog_LowPass_Filter_1",
+    "name": "Moog Low-Pass Filter 1",
+    "description": "fomp: Moog LPF (LV2)",
+    "category": "Effects",
+    "wasmFile": "Moog_LowPass_Filter_1.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "in",
+        "name": "Input",
+        "dir": "input",
+        "type": "audio",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 1,
+        "symbol": "out",
+        "name": "Output",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 2,
+        "symbol": "fm",
+        "name": "FM",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 3,
+        "symbol": "exp_fm",
+        "name": "Exp FM",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 4,
+        "symbol": "res_mod",
+        "name": "Resonance Mod",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 5,
+        "symbol": "in_gain",
+        "name": "Input gain",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -60,
+        "max": 10,
+        "default": 0
+      },
+      {
+        "index": 6,
+        "symbol": "freq",
+        "name": "Frequency",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0.000001,
+        "max": 1,
+        "default": 440
+      },
+      {
+        "index": 7,
+        "symbol": "exp_fm_gain",
+        "name": "Exp. FM gain",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 10,
+        "default": 0
+      },
+      {
+        "index": 8,
+        "symbol": "res",
+        "name": "Resonance",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 9,
+        "symbol": "res_gain",
+        "name": "Resonance gain",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 10,
+        "symbol": "out_gain",
+        "name": "Output gain",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -15,
+        "max": 15,
+        "default": 0
+      }
+    ]
+  },
+  {
+    "id": "fomp-reverbs",
+    "label": "reverb",
+    "name": "reverb",
+    "description": "fomp: Reverb (LV2)",
+    "category": "Effects",
+    "wasmFile": "reverb.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "in_l",
+        "name": "In L",
+        "dir": "input",
+        "type": "audio",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 1,
+        "symbol": "in_r",
+        "name": "In R",
+        "dir": "input",
+        "type": "audio",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 2,
+        "symbol": "out_l",
+        "name": "Out L",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 3,
+        "symbol": "out_r",
+        "name": "Out R",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 4,
+        "symbol": "delay",
+        "name": "Delay",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0.02,
+        "max": 0.1,
+        "default": 0.06
+      },
+      {
+        "index": 5,
+        "symbol": "xover",
+        "name": "Xover",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 50,
+        "max": 1000,
+        "default": 223.607
+      },
+      {
+        "index": 6,
+        "symbol": "rt_low",
+        "name": "RT-low",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 1,
+        "max": 8,
+        "default": 2.75
+      },
+      {
+        "index": 7,
+        "symbol": "rt_mid",
+        "name": "RT-mid",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 1,
+        "max": 8,
+        "default": 2.75
+      },
+      {
+        "index": 8,
+        "symbol": "damping",
+        "name": "Damping",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 1500,
+        "max": 24000,
+        "default": 6000
+      },
+      {
+        "index": 9,
+        "symbol": "f1_freq",
+        "name": "F1-freq",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 40,
+        "max": 10000,
+        "default": 159.054
+      },
+      {
+        "index": 10,
+        "symbol": "f1_gain",
+        "name": "F1-gain",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -20,
+        "max": 20,
+        "default": 0
+      },
+      {
+        "index": 11,
+        "symbol": "f2_freq",
+        "name": "F2-freq",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 40,
+        "max": 10000,
+        "default": 2514.87
+      },
+      {
+        "index": 12,
+        "symbol": "f2_gain",
+        "name": "F2-gain",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -20,
+        "max": 20,
+        "default": 0
+      },
+      {
+        "index": 13,
+        "symbol": "out_mix",
+        "name": "Output mix",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      }
+    ]
   }
 ]

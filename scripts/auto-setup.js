@@ -71,13 +71,26 @@ function findFiles(dir, predicate, maxDepth = 5, depth = 0) {
 // Also generate manifest.ttl from .ttl.in templates if needed
 function resolveManifestTtlIn(templatePath) {
     const src = readFileSync(templatePath, 'utf8');
-    // Replace build-system placeholders: @LIB_EXT@ → .wasm (wadspa uses a JS wrapper)
-    // and @BUNDLE_PATH@ / @INSTALL_PREFIX@ → '.'
-    const out = src
+    // Try to extract variable substitutions from the Makefile at repo root
+    // e.g. LV2NAME=fil4 → replaces @LV2NAME@ with 'fil4'
+    const extras = {};
+    const mf = join(repoDir, 'Makefile');
+    if (existsSync(mf)) {
+        const mfsrc = readFileSync(mf, 'utf8');
+        for (const [, k, v] of mfsrc.matchAll(/^([A-Z][A-Z0-9_]*)\s*[:?]?=\s*(\S+)/mg)) {
+            extras[k] = v;
+        }
+    }
+    let out = src
         .replace(/@LIB_EXT@/g, '.wasm')
         .replace(/@BUNDLE_PATH@/g, '.')
-        .replace(/@INSTALL_PREFIX@/g, '.')
-        .replace(/@[A-Z_]+@/g, '.');         // any remaining substitutions
+        .replace(/@INSTALL_PREFIX@/g, '.');
+    // Substitute known Makefile variables before the catch-all
+    for (const [k, v] of Object.entries(extras)) {
+        out = out.replace(new RegExp(`@${k}@`, 'g'), v);
+    }
+    // Catch-all for any remaining @VAR@ placeholders → use pluginId
+    out = out.replace(/@([A-Z][A-Z0-9_]*)@/g, (_, k) => extras[k] || pluginId);
     const dest = templatePath.replace(/\.in$/, '');
     writeFileSync(dest, out);
     return dest;
@@ -115,12 +128,25 @@ console.log(`   bundle: ${relative(ROOT, bundleDir)}`);
 function isCpp(name) { return /\.(c|cc|cpp|cxx)$/i.test(name); }
 
 // Check if a file can plausibly be a plugin source (not a test, demo, UI, standalone, tools)
-const SKIP_PATTERNS = [
-    /\btest\b/i, /\bdemo\b/i, /\bstandalone\b/i, /\bmain\b/i,
-    /\bui\b/i,   /\bgui\b/i,  /\btools?\b/i,     /\bexample/i,
-    /^pugl/i,    /^robtk/i,   /\bjack/i,          /\balsa/i,
+// Uses full path so directory context (e.g. faust/, src/) can inform the decision.
+const SKIP_FILENAME = [
+    /\btest\b/i, /\bdemo\b/i, /\bstandalone\b/i,
+    /\btools?\b/i, /\bexample/i, /\bwidget/i,
+    /^pugl/i, /^robtk/i, /\bjack/i, /\balsa/i,
 ];
-function isSkippable(name) { return SKIP_PATTERNS.some(r => r.test(name)); }
+// Patterns that match the file basename only (not path)
+const SKIP_BASENAME_EXACT = [/^main\.(c|cc|cpp|cxx)$/i]; // skip bare main.cpp at repo root
+const SKIP_PATH_DIRS = [/\/jack\//i, /\/gui\//i, /\/tools?\//i, /\/standalone\//i, /\/test\//i];
+function isSkippable(name, fullPath) {
+    if (SKIP_FILENAME.some(r => r.test(name))) return true;
+    // Skip bare "main.cpp" only when it's not inside a DSP-specific subdir (faust/, dsp/, src/)
+    if (/^main\.(c|cc|cpp|cxx)$/i.test(name) && fullPath) {
+        const inDspDir = /\/(faust|dsp|src|plugin|lv2)\//i.test(fullPath);
+        if (!inDspDir) return true;
+    }
+    if (fullPath && SKIP_PATH_DIRS.some(r => r.test(fullPath))) return true;
+    return false;
+}
 
 // Read CMakeLists.txt to extract target sources
 function parseCmakeSources(dir) {
@@ -135,29 +161,42 @@ function parseCmakeSources(dir) {
         const tokens = m[1].split(/\s+/).filter(t => isCpp(t));
         files.push(...tokens);
     }
-    return [...new Set(files)];
-}
-
-// Read Makefile to extract common source variables
-function parseMakeSources(dir) {
-    const mf = join(dir, 'Makefile');
-    if (!existsSync(mf)) return [];
-    const src = readFileSync(mf, 'utf8');
-    const files = [];
-    const varRe = /^(?:SRCS?|SOURCES?|OBJ|OBJECTS?)\s*[+:?]?=\s*(.*(?:\\\n.*)*)$/mg;
-    let m;
-    while ((m = varRe.exec(src)) !== null) {
-        const val = m[1].replace(/\\\n/g, ' ');
-        const tokens = val.split(/\s+/).map(t => t.replace(/\.o$/, '.c')).filter(isCpp);
+    // Match FILE(GLOB varname pattern) — pick up FAUST-style builds
+    const globRe = /FILE\s*\(\s*GLOB[_RECURSE]*\s+\w+\s+(.*?)\)/gs;
+    while ((m = globRe.exec(src)) !== null) {
+        const tokens = m[1].split(/\s+/).filter(t => isCpp(t) && !t.includes('*'));
         files.push(...tokens);
     }
     return [...new Set(files)];
 }
 
+// Read Makefile to extract common source variables (checks both dir and repo root)
+function parseMakeSources(dir, repoDir) {
+    const results = new Set();
+    for (const base of [dir, ...(repoDir && repoDir !== dir ? [repoDir] : [])]) {
+        const mf = join(base, 'Makefile');
+        if (!existsSync(mf)) continue;
+        const src = readFileSync(mf, 'utf8');
+        // Match common DSP source variable names (SRCS, SRC, DSP_SRC, PLUGIN_SRC, etc.)
+        const varRe = /^(?:(?:DSP_|PLUGIN_|LV2_)?SRCS?|SOURCES?|OBJ|OBJECTS?)\s*[+:?]?=\s*(.*(?:\\\n.*)*)$/mg;
+        let m;
+        while ((m = varRe.exec(src)) !== null) {
+            const val = m[1].replace(/\\\n/g, ' ');
+            for (const t of val.split(/\s+/).map(t => t.replace(/\.o$/, '.c')).filter(isCpp)) {
+                // Resolve relative to base or repoDir
+                for (const resolved of [join(base, t), repoDir ? join(repoDir, t) : null].filter(Boolean)) {
+                    if (existsSync(resolved)) { results.add(resolved); break; }
+                }
+            }
+        }
+    }
+    return [...results];
+}
+
 // Collect all .c/.cpp in a directory (non-recursive)
 function listCppInDir(dir) {
     if (!existsSync(dir)) return [];
-    return readdirSync(dir).filter(n => isCpp(n) && !isSkippable(n)).map(n => join(dir, n));
+    return readdirSync(dir).filter(n => isCpp(n)).map(n => join(dir, n)).filter(f => !isSkippable(basename(f), f));
 }
 
 // Build candidate source list
@@ -173,31 +212,29 @@ function discoverSources(bundleDir, repoDir) {
         }
     }
 
-    // 2. Makefile sources from bundle dir
-    for (const f of parseMakeSources(bundleDir)) {
-        const full = join(bundleDir, f);
-        if (existsSync(full)) candidates.add(full);
-    }
+    // 2. Makefile sources from bundle dir or repo root
+    for (const f of parseMakeSources(bundleDir, repoDir)) candidates.add(f);
 
     // 3. All .c/.cpp in bundle dir
     for (const f of listCppInDir(bundleDir)) candidates.add(f);
 
-    // 4. If bundle dir != repo root, also check parent dirs up 2 levels
+    // 4. If bundle dir != repo root, check parent dirs up 2 levels and their src/ subdirs
     let d = dirname(bundleDir);
     for (let i = 0; i < 2 && d !== repoDir && d !== dirname(repoDir); i++, d = dirname(d)) {
         for (const f of listCppInDir(d)) candidates.add(f);
+        for (const f of listCppInDir(join(d, 'src'))) candidates.add(f);
     }
 
-    // 5. If still empty, check repo root
+    // 5. If still empty, check repo root and common subdirs (src/, lib/, plugin/, faust/)
     if (candidates.size === 0) {
         for (const f of listCppInDir(repoDir)) candidates.add(f);
+        for (const sub of ['src', 'lib', 'plugin', 'plugins', 'dsp', 'faust', 'source', 'sources']) {
+            for (const f of listCppInDir(join(repoDir, sub))) candidates.add(f);
+        }
     }
 
     // Filter: skip things that look like UI or standalone apps
-    const filtered = [...candidates].filter(f => {
-        const name = basename(f);
-        return !isSkippable(name);
-    });
+    const filtered = [...candidates].filter(f => !isSkippable(basename(f), f));
 
     return filtered;
 }
@@ -267,16 +304,32 @@ if (LV2_INCLUDE) includeDirs.push(LV2_INCLUDE);
 const pluginDir = join(ROOT, 'plugins', pluginId);
 mkdirSync(pluginDir, { recursive: true });
 
-// Copy all TTL files from bundle
+// Copy all TTL files from bundle (also resolve any *.ttl.in templates)
 for (const f of readdirSync(bundleDir)) {
     if (/\.ttl$/i.test(f)) {
         writeFileSync(join(pluginDir, f), readFileSync(join(bundleDir, f)));
+    } else if (/\.ttl\.in$/i.test(f)) {
+        resolveManifestTtlIn(join(bundleDir, f));
+        const resolved = join(bundleDir, f.replace(/\.in$/, ''));
+        if (existsSync(resolved))
+            writeFileSync(join(pluginDir, basename(resolved)), readFileSync(resolved));
     }
 }
-// Copy source files
-for (const f of sourcePaths) {
-    const dest = join(pluginDir, basename(f));
-    writeFileSync(dest, readFileSync(f));
+// Copy source files — rename .c → .cpp if file contains C++ keywords
+// (so emcc compiles it as C++ rather than C)
+function hasCppKeywords(content) {
+    return /^\s*(class|template\s*<|namespace\s+\w)/m.test(content);
+}
+for (let f of sourcePaths) {
+    const content = readFileSync(f, 'utf8');
+    let destName = basename(f);
+    if (/\.c$/i.test(destName) && hasCppKeywords(content)) {
+        destName = destName.replace(/\.c$/i, '.cpp');
+        // Update sourcePaths entry so the build command uses the .cpp name
+        sourcePaths = sourcePaths.map(p => p === f ? join(pluginDir, destName) : p);
+        f = join(pluginDir, destName);
+    }
+    writeFileSync(join(pluginDir, destName), content);
 }
 // Copy headers from all include dirs (those that are source dirs)
 const headerDirs = new Set([bundleDir, repoDir, ...sourcePaths.map(dirname)]);
@@ -342,6 +395,11 @@ function analyzeErrors(output) {
         fixes.push({ type: 'add_qt_stub' });
     }
 
+    // C file includes C++ header — rename all .c sources to .cpp so emcc compiles as C++
+    if (/unknown type name 'class'|'class' keyword/.test(output)) {
+        fixes.push({ type: 'force_cxx' });
+    }
+
     return fixes;
 }
 
@@ -364,6 +422,25 @@ function applyFixes(fixes, sources, includes) {
             console.log(`   + Qt stub`);
             includes.unshift(QT_STUB);
             changed = true;
+        }
+        if (fix.type === 'force_cxx') {
+            // Rename any .c source files in pluginDir to .cpp so emcc uses C++ mode
+            const renamed = [];
+            for (let i = 0; i < sources.length; i++) {
+                const s = sources[i];
+                if (/\.c$/i.test(s)) {
+                    const newPath = s.replace(/\.c$/i, '.cpp');
+                    const disk = join(pluginDir, basename(s));
+                    const newDisk = join(pluginDir, basename(newPath));
+                    if (existsSync(disk) && !existsSync(newDisk)) {
+                        writeFileSync(newDisk, readFileSync(disk));
+                    }
+                    sources[i] = newPath;
+                    renamed.push(basename(newPath));
+                    changed = true;
+                }
+            }
+            if (renamed.length) console.log(`   + force C++ mode: renamed ${renamed.join(', ')}`);
         }
     }
     return changed;

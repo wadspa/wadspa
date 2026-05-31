@@ -16,15 +16,25 @@ core/src/processor.js
 
 # External source repos cloned by fetch-sources.js — not tracked in wadspa repo
 swh-plugins/
-synthv1/
-drumkv1/
-padthv1/
-amsynth/
-So-synth-LV2/
-mda-lv2/
-fomp/
-caps-lv2/
-setBfree/
+/synthv1/
+/drumkv1/
+/padthv1/
+/amsynth/
+/So-synth-LV2/
+/mda-lv2/
+/fomp/
+/caps-lv2/
+/setBfree/
+/fil4/
+/samplv1/
+/noise-repellent/
+/string-machine/
+/wolf-shaper/
+/zynaddsubfx/
+/geonkick/
+/sorcer/
+/mclk/
+/meters/
 
 # macOS
 .DS_Store

@@ -405,5 +405,109 @@
       "synthv1_sched_wasm.cpp",
       "synthv1_wasm_lv2.cpp"
     ]
+  },
+  {
+    "id": "samplv1",
+    "description": "samplv1 — polyphonic sampler LV2",
+    "category": "Instruments",
+    "includes": [
+      "toolchain/qt-stub"
+    ],
+    "sources": [
+      "samplv1.cpp",
+      "samplv1_param.cpp",
+      "samplv1_programs.cpp",
+      "samplv1_controls.cpp",
+      "samplv1_tuning.cpp",
+      "samplv1_formant.cpp",
+      "samplv1_wave.cpp",
+      "samplv1_sample.cpp",
+      "samplv1_config.cpp",
+      "samplv1_sched_wasm.cpp",
+      "samplv1_pshifter.cpp",
+      "samplv1_lv2.cpp"
+    ]
+  },
+  {
+    "id": "fil4",
+    "description": "fil4",
+    "category": "Instruments",
+    "sources": [
+      "lv2.cpp"
+    ]
+  },
+  {
+    "id": "fomp-autowah",
+    "description": "fomp: Autowah (LV2)",
+    "category": "Effects",
+    "sources": [
+      "autowah.cc",
+      "autowah_lv2.cc"
+    ]
+  },
+  {
+    "id": "fomp-blvco",
+    "description": "fomp: Band-limited VCOs (LV2)",
+    "category": "Instruments",
+    "sources": [
+      "blvco.cc",
+      "blvco_lv2.cc"
+    ]
+  },
+  {
+    "id": "fomp-cs_chorus",
+    "description": "fomp: CS Chorus (LV2)",
+    "category": "Effects",
+    "sources": [
+      "cs_chorus.cc",
+      "cs_chorus_lv2.cc"
+    ]
+  },
+  {
+    "id": "fomp-cs_phaser",
+    "description": "fomp: CS Phaser (LV2)",
+    "category": "Effects",
+    "sources": [
+      "cs_phaser.cc",
+      "cs_phaser_lv2.cc"
+    ]
+  },
+  {
+    "id": "fomp-filters",
+    "description": "fomp: Parametric EQ (LV2)",
+    "category": "Effects",
+    "sources": [
+      "filters.cc",
+      "filters_lv2.cc"
+    ]
+  },
+  {
+    "id": "fomp-mvchpf24",
+    "description": "fomp: Moog HPF (LV2)",
+    "category": "Effects",
+    "sources": [
+      "mvchpf24.cc",
+      "mvchpf24_lv2.cc"
+    ]
+  },
+  {
+    "id": "fomp-mvclpf24",
+    "description": "fomp: Moog LPF (LV2)",
+    "category": "Effects",
+    "sources": [
+      "mvclpf24.cc",
+      "mvclpf24_lv2.cc"
+    ]
+  },
+  {
+    "id": "fomp-reverbs",
+    "description": "fomp: Reverb (LV2)",
+    "category": "Effects",
+    "sources": [
+      "reverbs.cc",
+      "pareq.cc",
+      "zreverb.cc",
+      "reverbs_lv2.cc"
+    ]
   }
 ]

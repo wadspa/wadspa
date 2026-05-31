@@ -1,0 +1,231 @@
+export { default } from './4Band_Parametric_Filter.js';
+export const meta         = {
+  "uri": "http://drobilla.net/plugins/fomp/parametric1",
+  "label": "4Band_Parametric_Filter",
+  "name": "4-Band Parametric Filter",
+  "exportName": "create4Band_Parametric_FilterPlugin",
+  "ports": [
+    {
+      "index": 0,
+      "symbol": "in",
+      "name": "Input",
+      "dir": "input",
+      "type": "audio",
+      "legacy": false,
+      "min": null,
+      "max": null,
+      "default": null
+    },
+    {
+      "index": 1,
+      "symbol": "out",
+      "name": "Output",
+      "dir": "output",
+      "type": "audio",
+      "legacy": false,
+      "min": null,
+      "max": null,
+      "default": null
+    },
+    {
+      "index": 2,
+      "symbol": "filter",
+      "name": "Filter",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": null,
+      "max": null,
+      "default": 0
+    },
+    {
+      "index": 3,
+      "symbol": "gain",
+      "name": "Gain",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -20,
+      "max": 20,
+      "default": 0
+    },
+    {
+      "index": 4,
+      "symbol": "sec_1",
+      "name": "Section 1",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": null,
+      "max": null,
+      "default": 0
+    },
+    {
+      "index": 5,
+      "symbol": "freq_1",
+      "name": "Frequency 1",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 20,
+      "max": 2000,
+      "default": 200
+    },
+    {
+      "index": 6,
+      "symbol": "bw_1",
+      "name": "Bandwidth 1",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0.125,
+      "max": 8,
+      "default": 1
+    },
+    {
+      "index": 7,
+      "symbol": "gain_1",
+      "name": "Gain 1",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -20,
+      "max": 20,
+      "default": 0
+    },
+    {
+      "index": 8,
+      "symbol": "sec_2",
+      "name": "Section 2",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": null,
+      "max": null,
+      "default": 0
+    },
+    {
+      "index": 9,
+      "symbol": "freq_2",
+      "name": "Frequency 2",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 40,
+      "max": 4000,
+      "default": 400
+    },
+    {
+      "index": 10,
+      "symbol": "bw_2",
+      "name": "Bandwidth 2",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0.125,
+      "max": 8,
+      "default": 1
+    },
+    {
+      "index": 11,
+      "symbol": "gain_2",
+      "name": "Gain 2",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -20,
+      "max": 20,
+      "default": 0
+    },
+    {
+      "index": 12,
+      "symbol": "sec_3",
+      "name": "Section 3",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": null,
+      "max": null,
+      "default": 0
+    },
+    {
+      "index": 13,
+      "symbol": "freq_3",
+      "name": "Frequency 3",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 100,
+      "max": 10000,
+      "default": 1000
+    },
+    {
+      "index": 14,
+      "symbol": "bw_3",
+      "name": "Bandwidth 3",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0.125,
+      "max": 8,
+      "default": 1
+    },
+    {
+      "index": 15,
+      "symbol": "gain_3",
+      "name": "Gain 3",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -20,
+      "max": 20,
+      "default": 0
+    },
+    {
+      "index": 16,
+      "symbol": "sec_4",
+      "name": "Section 4",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": null,
+      "max": null,
+      "default": 0
+    },
+    {
+      "index": 17,
+      "symbol": "freq_4",
+      "name": "Frequency 4",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 200,
+      "max": 20000,
+      "default": 2000
+    },
+    {
+      "index": 18,
+      "symbol": "bw_4",
+      "name": "Bandwidth 4",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0.125,
+      "max": 8,
+      "default": 1
+    },
+    {
+      "index": 19,
+      "symbol": "gain_4",
+      "name": "Gain 4",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -20,
+      "max": 20,
+      "default": 0
+    }
+  ]
+};
+export const wasmUrl      = new URL('./4Band_Parametric_Filter.wasm',  import.meta.url).href;
+export const processorUrl = new URL('./processor.js',      import.meta.url).href;

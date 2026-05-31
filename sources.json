@@ -40,5 +40,83 @@
     "git": "https://github.com/swh/ladspa.git",
     "setup": null,
     "description": "Steve Harris LADSPA plugin collection"
+  },
+  {
+    "id": "samplv1",
+    "git": "https://github.com/rncbc/samplv1.git",
+    "setup": null,
+    "description": "samplv1 — polyphonic sampler LV2 (rncbc)"
+  },
+  {
+    "id": "fomp",
+    "git": "https://github.com/drobilla/fomp.git",
+    "setup": null,
+    "description": "fomp — Moog filters, chorus, phaser, reverb, VCO in LV2"
+  },
+  {
+    "id": "caps-lv2",
+    "git": "https://github.com/moddevices/caps-lv2.git",
+    "setup": null,
+    "description": "CAPS LV2 — amp sims, EQ, reverb, compressor, modulation"
+  },
+  {
+    "id": "setBfree",
+    "git": "https://github.com/pantherb/setBfree.git",
+    "setup": null,
+    "description": "setBfree — Hammond B3 organ emulator LV2"
+  },
+  {
+    "id": "noise-repellent",
+    "git": "https://github.com/lucianodato/noise-repellent.git",
+    "setup": null,
+    "description": "noise-repellent — LV2 broadband noise suppressor"
+  },
+  {
+    "id": "string-machine",
+    "git": "https://github.com/jpcima/string-machine.git",
+    "setup": null,
+    "description": "string-machine — polyphonic string ensemble synthesizer LV2"
+  },
+  {
+    "id": "wolf-shaper",
+    "git": "https://github.com/pdesaulniers/wolf-shaper.git",
+    "setup": null,
+    "description": "wolf-shaper — waveshaper LV2 effect"
+  },
+  {
+    "id": "zynaddsubfx",
+    "git": "https://github.com/zynaddsubfx/zynaddsubfx.git",
+    "setup": null,
+    "description": "ZynAddSubFX — complex additive/subtractive/FM synthesizer LV2"
+  },
+  {
+    "id": "geonkick",
+    "git": "https://github.com/Geonkick-Synthesizer/geonkick.git",
+    "setup": null,
+    "description": "Geonkick — kick drum synthesizer LV2"
+  },
+  {
+    "id": "sorcer",
+    "git": "https://github.com/openAVproductions/openAV-Sorcer.git",
+    "setup": null,
+    "description": "Sorcer — polyphonic wavetable synthesizer LV2"
+  },
+  {
+    "id": "fil4",
+    "git": "https://github.com/x42/fil4.lv2.git",
+    "setup": null,
+    "description": "fil4 — 4-band parametric equalizer LV2"
+  },
+  {
+    "id": "mclk",
+    "git": "https://github.com/x42/mclk.lv2.git",
+    "setup": null,
+    "description": "mclk — MIDI clock generator LV2"
+  },
+  {
+    "id": "meters",
+    "git": "https://github.com/x42/meters.lv2.git",
+    "setup": null,
+    "description": "meters.lv2 — audio level meters LV2"
   }
 ]

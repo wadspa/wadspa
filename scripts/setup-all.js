@@ -29,6 +29,8 @@ const SETUPS = {
     'drumkv1':      'setup-drumkv1.js',
     'So-synth-LV2': 'setup-so-synth.js',
     'padthv1':      'setup-padthv1.js',
+    'samplv1':      'setup-samplv1.js',
+    'fomp':         'setup-fomp.js',
 };
 
 let ran = 0, skipped = 0, failed = 0;
@@ -36,11 +38,7 @@ let ran = 0, skipped = 0, failed = 0;
 for (const src of sources) {
     if (onlyId && src.id !== onlyId) continue;
 
-    const scriptName = SETUPS[src.id];
-    if (!scriptName) {
-        if (!onlyId) { skipped++; }
-        continue;
-    }
+    const scriptName = SETUPS[src.id] || null;
 
     // Check the source repo is present before running its setup
     const repoDir = src.git ? join(ROOT, src.id) : null;
@@ -53,7 +51,7 @@ for (const src of sources) {
     const scriptPath = scriptName ? join(ROOT, 'scripts', scriptName) : null;
     const autoSetupPath = join(ROOT, 'scripts', 'auto-setup.js');
 
-    // Fall back to auto-setup.js if no dedicated script exists
+    // Use dedicated script if it exists, otherwise fall back to auto-setup.js
     let runScript, runArgs;
     if (scriptPath && existsSync(scriptPath)) {
         runScript = scriptPath;

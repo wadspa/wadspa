@@ -1,0 +1,7 @@
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix fomp: <http://drobilla.net/plugins/fomp/> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+fomp:autowah a lv2:Plugin ; rdfs:seeAlso <autowah.ttl> ; lv2:binary <autowah.wasm> .

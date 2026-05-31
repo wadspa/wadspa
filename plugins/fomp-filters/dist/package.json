@@ -1,0 +1,9 @@
+{
+  "name": "@wadspa/4band_parametric_filter",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js"
+  }
+}

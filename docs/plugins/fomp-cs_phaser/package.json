@@ -1,0 +1,9 @@
+{
+  "name": "@wadspa/cs_phaser_1",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js"
+  }
+}
