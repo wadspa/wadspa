@@ -147,8 +147,16 @@ plugin.c ──┐
 ```
 plugin.cpp + plugin.ttl ──┐
                            ├── [parse]  reads Turtle RDF for port metadata
+                           │           concatenates multiple TTL files when ports
+                           │           are split across them (e.g. fil4)
                            ├── [shim]   generates _wadspa_lv2_shim.c
-                           │           (URID map, atom MIDI, typed exports)
+                           │           · URID map (strings → uint32 IDs)
+                           │           · LV2_Options feature (nominalBlockLength /
+                           │             maxBlockLength) required by DPF plugins
+                           │           · atom MIDI input/output buffers
+                           │           · URI-based descriptor search (handles plugins
+                           │             that export multiple descriptors)
+                           │           · typed audio buffer / control port exports
                            ├── [emcc]   compiles plugin sources + shim → .js + .wasm
                            │           UI files (*_gtk.*, *_qt*.*) excluded automatically
                            └── [emit]   writes processor.js, index.js, package.json
@@ -159,6 +167,29 @@ plugin.cpp + plugin.ttl ──┐
 Qt-dependent LV2 plugins (such as the rncbc suite — synthv1, drumkv1, padthv1) use Qt only for their DSP configuration layer: `QSettings`, `QMap`, `QHash`, `QDomDocument`, `QString`, etc. The `toolchain/qt-stub/` directory provides header-only C++ implementations of all these types backed by `std::` containers, with no Qt installation required.
 
 To use it, add `"includes": ["toolchain/qt-stub"]` to the plugin's `lv2.json` entry. The `build-instruments.js` script resolves this path automatically.
+
+`toolchain/qt-stub/fftw3.h` provides a minimal FFTW3 float API stub for plugins that only need the header (not FFT performance). For PADsynth-style plugins that perform large IFFTs at init time, use `toolchain/kissfft/` instead — it provides a full O(N log N) implementation of the same FFTW3 float API.
+
+### kissfft FFT library (`toolchain/kissfft/`)
+
+`toolchain/kissfft/` provides a drop-in FFTW3 float API backed by [kissfft](https://github.com/mborgerding/kissfft) — an O(N log N) FFT with no external dependencies. It is required for PADsynth-style synthesizers (padthv1) that pre-generate large wavetables (up to 65536 points) at instantiation time.
+
+To use it, list `toolchain/kissfft` in `includes` **before** `toolchain/qt-stub`, and prepend the three kissfft sources to the `sources` list:
+
+```json
+{
+  "id": "padthv1",
+  "includes": ["toolchain/kissfft", "toolchain/qt-stub"],
+  "sources": [
+    "../../toolchain/kissfft/kiss_fft.c",
+    "../../toolchain/kissfft/kiss_fftr.c",
+    "../../toolchain/kissfft/fftw3_kissfft.c",
+    "padthv1.cpp", "..."
+  ]
+}
+```
+
+The include order matters: `toolchain/kissfft/fftw3.h` takes priority over `toolchain/qt-stub/fftw3.h`.
 
 ---
 
@@ -213,6 +244,7 @@ LV2 registry entries live in `plugins/lv2.json`:
 | `threads` | `false` | Compile with `-pthread` |
 | `memoryGrowth` | `false` | Allow WASM heap to grow at runtime |
 | `embedFiles` | `[]` | Files to embed in the WASM virtual FS |
+| `noTest` | `false` | Skip in `test-instruments.js` (use for plugins that require external sample files to produce sound) |
 
 ---
 
@@ -281,7 +313,7 @@ wadspa/
     bin/wadspa.js           CLI entry point (build, build-lv2)
     src/
       shim-ladspa.js        LADSPA shim generator
-      shim-lv2.js           LV2 shim generator (URID map, atom MIDI, legacy event API)
+      shim-lv2.js           LV2 shim generator (URID map, LV2_Options, atom MIDI, URI search)
       compile.js            emcc invocation
     qt-stub/                Header-only Qt shim for Qt-dependent LV2 DSP layers
       qglobal.h             Q_OBJECT macros, QChar, qDeleteAll, Qt:: namespace enums
@@ -291,8 +323,13 @@ wadspa/
       QDomDocument          XML DOM stub (no-op)
       QFile / QFileInfo     File I/O stubs (no-op)
       QMutex / QThread      Threading stubs (no-op; WASM is single-threaded)
-      fftw3.h               HC2R inverse DFT stub for PADsynth wavetable generation
+      fftw3.h               Minimal FFTW3 float API stub (use kissfft/ for PADsynth)
       …                     QVariant, QList, QVector, QStringList, QObject, QApplication
+    kissfft/                O(N log N) FFT — drop-in FFTW3 float API via kissfft
+      kiss_fft.c/h          Core complex FFT (arbitrary size)
+      kiss_fftr.c/h         Real FFT (N/2+1 complex output)
+      fftw3_kissfft.c       fftwf_plan_r2r_1d / fftwf_plan_dft_r2c_1d / etc.
+      fftw3.h               FFTW3 float API header (takes priority over qt-stub/fftw3.h)
   plugins/
     manifest.json           LADSPA effect registry (32+ plugins)
     lv2.json                LV2 plugin registry (13 instruments + effects)

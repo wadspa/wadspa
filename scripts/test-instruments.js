@@ -45,6 +45,13 @@ for (const inst of lv2Plugins) {
         continue;
     }
 
+    // Plugins that require external sample files cannot produce sound without them
+    if (inst.noTest) {
+        console.log('⏭  skipped (requires external samples)');
+        skipped++;
+        continue;
+    }
+
     try {
         const wasmFile   = readdirSync(distDir).find(f => f.endsWith('.wasm'));
         if (!wasmFile) throw new Error('no .wasm file in dist/');
@@ -61,7 +68,12 @@ for (const inst of lv2Plugins) {
 
         const hasMidi = typeof mod._shim_midi_note_on === 'function';
         const audioDriven = !hasMidi && inBufFns.length > 0;
+
+        // Run a few silent warmup blocks before the note-on so that
+        // PADsynth-style instruments (padthv1) can pre-generate their
+        // wavetables during the first process() call's reset_test().
         if (hasMidi) {
+            for (let b = 0; b < 4; b++) mod._shim_run(BLOCK_SIZE);
             mod._shim_midi_note_on(0, 60, 100);
         }
 

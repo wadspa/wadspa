@@ -60,17 +60,44 @@ export function parseLv2Ttl(pluginDir) {
     // blocks are safely ignored. This handles the `lv2:port [...] , [...]`
     // multi-port Turtle syntax where only the first block follows lv2:port.
     const ports = [];
-    const portBlockRe = /\[([^\]]+)\]/gs;
-    let portMatch;
-    while ((portMatch = portBlockRe.exec(ttlSrc)) !== null) {
-        const block = portMatch[1];
-        const port  = parsePortBlock(block);
-        if (port) ports.push(port);
+    function extractPortsFromSrc(src) {
+        const portBlockRe = /\[([^\]]+)\]/gs;
+        let portMatch;
+        while ((portMatch = portBlockRe.exec(src)) !== null) {
+            const block = portMatch[1];
+            const port  = parsePortBlock(block);
+            if (port) ports.push(port);
+        }
+    }
+    extractPortsFromSrc(ttlSrc);
+
+    // If the primary TTL has no audio ports, scan other .ttl files.
+    // Some plugins (e.g. fil4) split port definitions across multiple TTL files that
+    // are designed to be concatenated — the common ports file ends with an open bracket
+    // that the variant file continues. Parse them as a single concatenated document.
+    const hasAudio = ports.some(p => p.type === 'audio');
+    if (!hasAudio) {
+        const extraFiles = readdirSync(pluginDir)
+            .filter(f => f.endsWith('.ttl') && f !== 'manifest.ttl' && join(pluginDir, f) !== ttlPath)
+            .sort();
+        const combined = extraFiles.map(f => {
+            try { return readFileSync(join(pluginDir, f), 'utf8'); } catch { return ''; }
+        }).join('\n');
+        extractPortsFromSrc(combined);
     }
 
     ports.sort((a, b) => a.index - b.index);
 
-    return { uri: pluginUri, label, ports };
+    // Deduplicate by index — when multiple TTL variants define the same port index
+    // (e.g. fil4 has separate mono.ttl and stereo.ttl), keep only the first occurrence.
+    const seen = new Set();
+    const uniquePorts = ports.filter(p => {
+        if (seen.has(p.index)) return false;
+        seen.add(p.index);
+        return true;
+    });
+
+    return { uri: pluginUri, label, ports: uniquePorts };
 }
 
 function parsePortBlock(block) {
@@ -138,6 +165,7 @@ export function generateLv2Shim(descriptor) {
     const ctrlIn    = ports.filter(p => p.type === 'control' && p.dir === 'input');
     const ctrlOut   = ports.filter(p => p.type === 'control' && p.dir === 'output');
     const midiIn    = ports.filter(p => p.type === 'midi'    && p.dir === 'input');
+    const atomIn    = ports.filter(p => p.type === 'atom'    && p.dir === 'input');
     const atomOut   = ports.filter(p => p.type === 'atom'    && p.dir === 'output');
 
     const usesLegacyMidi = midiIn.some(p => p.legacy);
@@ -182,6 +210,29 @@ export function generateLv2Shim(descriptor) {
     lines.push('');
     lines.push('static LV2_URID_Map   g_map_iface   = { NULL, urid_map_fn };');
     lines.push('static LV2_Feature    g_map_feature  = { LV2_URID__map, &g_map_iface };');
+    lines.push('');
+    // Options feature — required by DPF-based plugins (ZAM, etc.)
+    // Inlined definitions avoid header-path fragility across plugin bundles.
+    lines.push('#ifndef LV2_OPTIONS_H');
+    lines.push('#define LV2_OPTIONS_H');
+    lines.push('typedef enum { LV2_OPTIONS_INSTANCE=0,LV2_OPTIONS_RESOURCE,LV2_OPTIONS_BLANK,LV2_OPTIONS_PORT } LV2_Options_Context;');
+    lines.push('typedef struct { LV2_Options_Context context; uint32_t subject; LV2_URID key; uint32_t size; LV2_URID type; const void *value; } LV2_Options_Option;');
+    lines.push('#endif');
+    lines.push('#ifndef LV2_OPTIONS__options');
+    lines.push('#define LV2_OPTIONS__options "http://lv2plug.in/ns/ext/options#options"');
+    lines.push('#endif');
+    lines.push('#ifndef LV2_BUF_SIZE__nominalBlockLength');
+    lines.push('#define LV2_BUF_SIZE__nominalBlockLength "http://lv2plug.in/ns/ext/buf-size#nominalBlockLength"');
+    lines.push('#endif');
+    lines.push('#ifndef LV2_BUF_SIZE__maxBlockLength');
+    lines.push('#define LV2_BUF_SIZE__maxBlockLength "http://lv2plug.in/ns/ext/buf-size#maxBlockLength"');
+    lines.push('#endif');
+    lines.push('static LV2_URID g_opt_urid_nom;');
+    lines.push('static LV2_URID g_opt_urid_max;');
+    lines.push('static LV2_URID g_opt_urid_int;');
+    lines.push('static int32_t  g_opt_block_size = BLOCK_SIZE;');
+    lines.push('static LV2_Options_Option g_options[3];');
+    lines.push('static LV2_Feature g_opt_feature = { LV2_OPTIONS__options, g_options };');
     if (usesLegacyMidi) {
         // Old uri-map feature: same map, extra "map context" argument ignored
         lines.push('#pragma GCC diagnostic push');
@@ -194,9 +245,9 @@ export function generateLv2Shim(descriptor) {
         lines.push('static LV2_Event_Feature g_evt_feature_data = { NULL, noop_evt_rc, noop_evt_rc };');
         lines.push('static LV2_Feature g_evt_feature = { "http://lv2plug.in/ns/ext/event", &g_evt_feature_data };');
         lines.push('#pragma GCC diagnostic pop');
-        lines.push('static const LV2_Feature *g_features[] = { &g_map_feature, &g_uri_map_feature, &g_evt_feature, NULL };');
+        lines.push('static const LV2_Feature *g_features[] = { &g_map_feature, &g_opt_feature, &g_uri_map_feature, &g_evt_feature, NULL };');
     } else {
-        lines.push('static const LV2_Feature *g_features[] = { &g_map_feature, NULL };');
+        lines.push('static const LV2_Feature *g_features[] = { &g_map_feature, &g_opt_feature, NULL };');
     }
     lines.push('');
 
@@ -208,8 +259,10 @@ export function generateLv2Shim(descriptor) {
     for (const p of ctrlIn)  lines.push(`static float g_ctrl_${p.symbol} = ${floatLit(p.default)};`);
     for (const p of ctrlOut) lines.push(`static float g_ctrl_${p.symbol} = 0.0f;`);
 
-    // Output atom buffers (notify ports, etc.) — plugin writes into these
+    // Output atom buffers — plugin writes into these; size is set before each run
     for (const p of atomOut) lines.push(`static uint8_t g_atom_out_${p.symbol}[MIDI_BUF_SIZE];`);
+    // Input atom buffers — non-MIDI control/notify inputs need a valid empty sequence
+    for (const p of atomIn)  lines.push(`static uint8_t g_atom_in_${p.symbol}[MIDI_BUF_SIZE];`);
 
     // MIDI buffer — atom sequence (new API) or event buffer (legacy API)
     if (midiIn.length > 0) {
@@ -245,7 +298,24 @@ export function generateLv2Shim(descriptor) {
 
     // shim_init
     lines.push('EMSCRIPTEN_KEEPALIVE void shim_init(unsigned long sample_rate) {');
-    lines.push('    g_desc   = lv2_descriptor(0);');
+    // Fill options array before instantiate so DPF-based plugins can read block size
+    lines.push('    g_opt_urid_nom = urid_map_fn(NULL, LV2_BUF_SIZE__nominalBlockLength);');
+    lines.push('    g_opt_urid_max = urid_map_fn(NULL, LV2_BUF_SIZE__maxBlockLength);');
+    lines.push('    g_opt_urid_int = urid_map_fn(NULL, "http://lv2plug.in/ns/ext/atom#Int");');
+    lines.push('    g_options[0].context=LV2_OPTIONS_INSTANCE; g_options[0].subject=0;');
+    lines.push('    g_options[0].key=g_opt_urid_nom; g_options[0].size=sizeof(int32_t);');
+    lines.push('    g_options[0].type=g_opt_urid_int; g_options[0].value=&g_opt_block_size;');
+    lines.push('    g_options[1].context=LV2_OPTIONS_INSTANCE; g_options[1].subject=0;');
+    lines.push('    g_options[1].key=g_opt_urid_max; g_options[1].size=sizeof(int32_t);');
+    lines.push('    g_options[1].type=g_opt_urid_int; g_options[1].value=&g_opt_block_size;');
+    lines.push('    g_options[2].key=0; g_options[2].value=NULL;');
+    // Find descriptor by URI (some plugins register multiple at different indices)
+    lines.push(`    { const char *_uri = "${descriptor.uri}";`);
+    lines.push('      for (int _i = 0; ; _i++) {');
+    lines.push('          g_desc = lv2_descriptor(_i);');
+    lines.push('          if (!g_desc || strcmp(g_desc->URI, _uri) == 0) break;');
+    lines.push('      }');
+    lines.push('    }');
     lines.push('    g_handle = g_desc->instantiate(g_desc, (double)sample_rate, "", g_features);');
 
     if (midiIn.length > 0) {
@@ -276,7 +346,16 @@ export function generateLv2Shim(descriptor) {
                 lines.push(`    g_desc->connect_port(g_handle, ${p.index}, g_midi_seq);`);
             }
         }
-        if (p.type === 'atom' && p.dir === 'output')      lines.push(`    g_desc->connect_port(g_handle, ${p.index}, g_atom_out_${p.symbol});`);
+        if (p.type === 'atom' && p.dir === 'output') lines.push(`    g_desc->connect_port(g_handle, ${p.index}, g_atom_out_${p.symbol});`);
+        if (p.type === 'atom' && p.dir === 'input')  lines.push(`    g_desc->connect_port(g_handle, ${p.index}, g_atom_in_${p.symbol});`);
+    }
+    // Initialize input atom buffers as empty sequences (URID 0 is acceptable for non-MIDI)
+    for (const p of atomIn) {
+        lines.push(`    { uint32_t *_a = (uint32_t*)g_atom_in_${p.symbol};`);
+        lines.push(`      _a[0] = sizeof(uint64_t); /* atom.size = body size (empty sequence body) */`);
+        lines.push(`      _a[1] = 0; /* atom.type = 0 (no URID needed for empty input) */`);
+        lines.push(`      _a[2] = 0; _a[3] = 0; /* sequence body: unit=0, pad=0 */`);
+        lines.push(`    }`);
     }
 
     lines.push('    if (g_desc->activate) g_desc->activate(g_handle);');
@@ -360,6 +439,10 @@ export function generateLv2Shim(descriptor) {
     // shim_run
     lines.push('');
     lines.push('EMSCRIPTEN_KEEPALIVE void shim_run(unsigned long count) {');
+    // Set output atom buffer capacities so plugins know how much space they can use
+    for (const p of atomOut) {
+        lines.push(`    *(uint32_t*)g_atom_out_${p.symbol} = MIDI_BUF_SIZE - 8; /* atom.size = capacity */`);
+    }
     lines.push('    g_desc->run(g_handle, count);');
     if (midiIn.length > 0) lines.push('    shim_midi_clear();');
     lines.push('}');

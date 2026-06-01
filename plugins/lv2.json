@@ -324,6 +324,7 @@
     "id": "drumkv1",
     "description": "drumkv1 — sample-based drum synthesizer with per-pad synthesis and effects",
     "category": "Instruments",
+    "noTest": true,
     "includes": [
       "toolchain/qt-stub"
     ],
@@ -374,9 +375,13 @@
     "description": "padthv1 — polyphonic additive (PADsynth) synthesizer",
     "category": "Instruments",
     "includes": [
+      "toolchain/kissfft",
       "toolchain/qt-stub"
     ],
     "sources": [
+      "../../toolchain/kissfft/kiss_fft.c",
+      "../../toolchain/kissfft/kiss_fftr.c",
+      "../../toolchain/kissfft/fftw3_kissfft.c",
       "padthv1.cpp",
       "padthv1_param.cpp",
       "padthv1_programs.cpp",
@@ -410,6 +415,7 @@
     "id": "samplv1",
     "description": "samplv1 — polyphonic sampler LV2",
     "category": "Instruments",
+    "noTest": true,
     "includes": [
       "toolchain/qt-stub"
     ],

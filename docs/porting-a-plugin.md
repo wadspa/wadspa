@@ -163,7 +163,7 @@ Many high-quality Linux synthesizers (rncbc's suite: synthv1, drumkv1, padthv1) 
 | `QSharedPointer` / `QScopedPointer` | `std::shared_ptr` / `std::unique_ptr` wrappers |
 | `QObject` | Base class stub with virtual destructor and no-op signals |
 | `QApplication` | `Qt::ApplicationAttribute` enum + no-op `setAttribute` |
-| `fftw3.h` | HC2R inverse DFT stub for PADsynth wavetable generation |
+| `fftw3.h` | Minimal FFTW3 float API stub — header-only, O(N²). Use `toolchain/kissfft/` instead for large IFFTs. |
 
 ### 1. Add `toolchain/qt-stub` to the lv2.json entry
 
@@ -198,8 +198,8 @@ void MySynth_sched::schedule(int sid)
 
 ### 3. Replace file-loading dependencies
 
-- **libsndfile** (audio sample files) — replace `*_sample.cpp` with a stub that generates synthetic audio. See `plugins/drumkv1/drumkv1_sample_stub.cpp` for a white-noise burst generator.
-- **FFTW3** (PADsynth wavetable generation) — `toolchain/qt-stub/fftw3.h` provides a correct O(N²) HC2R inverse DFT. It's slow at init time but correct.
+- **libsndfile** (audio sample files) — replace `*_sample.cpp` with a stub that generates synthetic audio. See `plugins/drumkv1/drumkv1_sample_stub.cpp` for a white-noise burst generator. Mark the plugin `"noTest": true` in `lv2.json` so the smoke test skips it (no default samples = always silent).
+- **FFTW3** (PADsynth wavetable generation) — for plugins that generate large wavetables (padthv1 uses 65536-point IFFTs), use `toolchain/kissfft/` rather than the `qt-stub/fftw3.h` stub. Add `toolchain/kissfft` to `includes` **before** `toolchain/qt-stub`, and prepend `kiss_fft.c`, `kiss_fftr.c`, and `fftw3_kissfft.c` to `sources`. The `fftw3.h` stub in `qt-stub/` is O(N²) and will time out on large FFT sizes.
 
 ### 4. Generate config.h
 
@@ -292,7 +292,11 @@ The biquad patch (`double` literals throughout) prevents catastrophic cancellati
 
 **Plugin sounds wrong at low frequencies** — float precision in biquad. Confirm you're using the `biquad.h` from `plugins/shared/util/` (already patched) and not a fresh copy from the SWH repo.
 
-**LV2 port count is wrong** — the TTL parser matches all `[...]` blocks in the `.ttl` file. Make sure each port block contains `lv2:index`, `lv2:symbol`, and a direction/type triple.
+**LV2 port count is wrong** — the TTL parser matches all `[...]` blocks in the `.ttl` file. Make sure each port block contains `lv2:index`, `lv2:symbol`, and a direction/type triple. If a plugin splits its port definitions across multiple `.ttl` files (e.g. `plugin.ports.ttl` + `plugin.mono.ttl`), the parser concatenates all non-manifest TTL files automatically when the main file has no audio ports — no action required.
+
+**DPF plugin returns NULL from `lv2_instantiate`** — DPF requires the `LV2_OPTIONS__options` feature to be present in the host features array. The generated shim provides this automatically (nominalBlockLength and maxBlockLength set to the block size). If you are writing your own shim, ensure `g_features[]` includes an `LV2_Options_Option` array terminated by a `{ .key = 0 }` sentinel.
+
+**Plugin exports multiple descriptors and the wrong one plays** — the shim searches for the plugin URI rather than calling `lv2_descriptor(0)`. If you see the wrong patch being applied, verify the URI in `manifest.ttl` matches exactly the URI returned by the desired descriptor.
 
 **Stuck notes (LV2 synth)** — if rapid re-clicks cause notes to sustain, check that `note_on` retriggers an existing voice for that MIDI note before allocating a new one. See `plugins/wadspa_synth/wadspa_synth.c` for the reference implementation.
 
@@ -320,10 +324,12 @@ The biquad patch (`double` literals throughout) prevents catastrophic cancellati
 - [ ] MIDI input or audio input path tested in browser
 
 **LV2 (Qt-dependent)**
-- [ ] `"includes": ["toolchain/qt-stub"]` in `lv2.json`
+- [ ] `"includes": ["toolchain/qt-stub"]` in `lv2.json` (or `["toolchain/kissfft", "toolchain/qt-stub"]` for PADsynth-style plugins)
+- [ ] kissfft sources prepended to `sources` list if the plugin generates large FFT wavetables
 - [ ] QThread scheduler replaced with synchronous WASM version
-- [ ] File-loading dependencies (libsndfile, etc.) replaced with stubs
+- [ ] File-loading dependencies (libsndfile, etc.) replaced with stubs; `"noTest": true` set if samples are required for any sound output
 - [ ] `config.h` generated with correct feature flags
 - [ ] `node scripts/setup-<id>.js` idempotent (safe to re-run)
 - [ ] `node scripts/build-instruments.js --only <id>` succeeds
+- [ ] `node scripts/test-instruments.js --only <id>` passes (or plugin marked `noTest`)
 - [ ] Plugin tested in browser (Chrome + Safari)
