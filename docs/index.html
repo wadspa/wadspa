@@ -58,12 +58,16 @@
     #status { font-size: 0.75rem; color: var(--muted); }
 
     /* ── Main layout ─────────────────────────────────────────── */
-    main { display: grid; grid-template-rows: auto 1fr; height: calc(100vh - 46px); }
+    main {
+      display: flex; flex-direction: row;
+      height: calc(100vh - 46px); overflow: hidden;
+    }
 
     /* ── Synth + keyboard section ────────────────────────────── */
     #synth-section {
-      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
       display: flex; gap: 0; flex-wrap: wrap;
+      flex-shrink: 0; overflow-y: auto;
     }
     #synth-header {
       display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;
@@ -92,6 +96,7 @@
 
     /* ── Effects chain ───────────────────────────────────────── */
     #chain-section {
+      flex: 1; min-width: 0;
       padding: 1rem 1.4rem;
       overflow-y: auto;
     }
