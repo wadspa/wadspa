@@ -160,11 +160,16 @@ for (const entry of lv2Plugins) {
 }
 
 if (instrumentEntries.length > 0 || !onlyId) {
-    writeFileSync(
-        join(ROOT, 'docs', 'instruments.json'),
-        JSON.stringify(instrumentEntries, null, 2)
-    );
-    console.log(`\nInstruments catalog: ${instrumentEntries.length} → docs/instruments.json`);
+    const instrumentsPath = join(ROOT, 'docs', 'instruments.json');
+    let instrumentsCatalog = [];
+    if (onlyId && existsSync(instrumentsPath)) {
+        instrumentsCatalog = JSON.parse(readFileSync(instrumentsPath, 'utf8'));
+    }
+    const processed = new Set(processedIds);
+    instrumentsCatalog = instrumentsCatalog.filter(e => !processed.has(e.id));
+    instrumentsCatalog.push(...instrumentEntries);
+    writeFileSync(instrumentsPath, JSON.stringify(instrumentsCatalog, null, 2));
+    console.log(`\nInstruments catalog: ${instrumentsCatalog.length} → docs/instruments.json`);
 }
 
 if (effectEntries.length > 0 || (!onlyId && processedIds.length > 0)) {
