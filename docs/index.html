@@ -462,6 +462,20 @@ async function switchInstrument(inst) {
 }
 
 // ── Effects chain UI ──────────────────────────────────────────
+function resolvePortDefault(p) {
+  const d = p.default;
+  if (d === null || d === undefined) return null;
+  if (typeof d === 'number') return d;
+  const s = String(d);
+  if (s === 'min')    return p.min;
+  if (s === 'max')    return p.max;
+  if (s === 'low')    return p.min + (p.max - p.min) * 0.25;
+  if (s === 'high')   return p.min + (p.max - p.min) * 0.75;
+  if (s === 'middle') return p.min + (p.max - p.min) * 0.5;
+  const n = parseFloat(s);
+  return isNaN(n) ? null : n;
+}
+
 function cardFmt(p, v) {
   if (p.max - p.min > 100) return v.toFixed(0);
   if (p.max <= 1)  return v.toFixed(2);
@@ -520,6 +534,10 @@ function renderChain() {
         valEl.textContent = cardFmt(p, v);
         node.set(p.name, v);
       });
+      // Dispatch the catalog default immediately so the WASM starts at the
+      // displayed value rather than whatever the C shim compiled in.
+      const def = resolvePortDefault(p);
+      if (def !== null) node.set(p.name, def);
     }
 
     container.appendChild(card);

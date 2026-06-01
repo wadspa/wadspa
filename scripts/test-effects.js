@@ -4,9 +4,10 @@
  *
  * For each effect:
  *   1. Instantiate the WASM module directly (no AudioWorklet needed)
- *   2. Fill all audio input buffers with a 440 Hz sine tone
- *   3. Run 64 blocks of 128 samples (~186 ms)
- *   4. Assert peak amplitude > 1e-6 (non-silent)
+ *   2. Dispatch catalog default values to all control ports (mirrors browser behaviour)
+ *   3. Fill all audio input buffers with a 440 Hz sine tone
+ *   4. Run 64 blocks of 128 samples (~186 ms)
+ *   5. Assert peak amplitude > 1e-6 (non-silent)
  *
  * Usage:
  *   node scripts/test-effects.js [--only <id>]
@@ -26,24 +27,10 @@ const args   = process.argv.slice(2);
 const onlyId = args.includes('--only') ? args[args.indexOf('--only') + 1] : null;
 
 // Effects that cannot produce non-silent output in a headless test
-// without special state (e.g. noise profile). Listed by id.
+// without special runtime state. Listed by id.
 const KNOWN_SKIPS = new Set([
     'noise-repellent',  // requires a trained noise profile before reducing anything
 ]);
-
-// Per-plugin setup called after _shim_init() to override extreme defaults
-// that would produce silence at the test tone level.
-const PLUGIN_SETUP = {
-    // Default bit-depth=1 and sample-rate=0.001 (maximum decimation → silence).
-    // The port has a LADSPA SampleRate hint: the raw value is a fraction of the
-    // sample rate, but the plugin code uses it as literal Hz (fs/sample_rate).
-    // Pass 44100 (= 1.0 * SAMPLE_RATE) for full-rate (no decimation).
-    decimator:    mod => { mod._shim_set_bit_depth(16); mod._shim_set_sample_rate_hz(SAMPLE_RATE); },
-    // Default wet=0 and residue=0 → both output paths are muted.
-    hard_limiter: mod => { mod._shim_set_wet_level(1.0); },
-    // Default dry=-90 dB and tape-speed=0 → no audio passes through.
-    tape_delay:   mod => { mod._shim_set_dry_level_db(0); mod._shim_set_tape_speed_inches_sec_1_normal(1.0); },
-};
 
 const catalog = JSON.parse(readFileSync(join(DOCS_PLUGINS, 'catalog.json'), 'utf8'));
 
@@ -75,11 +62,26 @@ for (const eff of catalog) {
         if (!wasmFile) throw new Error('no .wasm file in plugin directory');
         const wasmBinary = readFileSync(join(pluginDir, wasmFile));
 
+        // Parse the SETTERS map from processor.js so we can dispatch controls by
+        // port index (LADSPA) or symbol (LV2) without duplicating the naming logic.
+        const processorSrc = readFileSync(join(pluginDir, 'processor.js'), 'utf8');
+        const settersMatch = processorSrc.match(/const SETTERS\s*=\s*(\{[^\n]+\})/);
+        const SETTERS = settersMatch ? JSON.parse(settersMatch[1]) : {};
+
         const { default: factory } = await import(indexUrl);
         const mod = await factory({ wasmBinary });
 
         mod._shim_init(SAMPLE_RATE);
-        PLUGIN_SETUP[eff.id]?.(mod);
+
+        // Dispatch catalog defaults to all control ports — mirrors what renderChain()
+        // does in the browser so the test exercises the same initial state.
+        for (const p of eff.ports) {
+            if (p.type !== 'control' || p.dir !== 'input') continue;
+            const v = resolveDefault(p.default, p.min, p.max);
+            if (v === null) continue;
+            const fn = p.symbol ? SETTERS[p.symbol] : SETTERS[String(p.index)];
+            if (fn && typeof mod[fn] === 'function') mod[fn](v);
+        }
 
         const inBufFns  = Object.keys(mod).filter(k => k.startsWith('_shim_input_buf_'));
         const outBufFns = Object.keys(mod).filter(k => k.startsWith('_shim_output_buf_'));
@@ -116,6 +118,19 @@ for (const eff of catalog) {
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`✓ ${passed} passed   ✗ ${failed} failed   ⏭ ${skipped} skipped`);
 if (failed > 0) process.exit(1);
+
+function resolveDefault(d, min, max) {
+    if (d === null || d === undefined) return null;
+    if (typeof d === 'number') return d;
+    const s = String(d);
+    if (s === 'min')    return min;
+    if (s === 'max')    return max;
+    if (s === 'low')    return min + (max - min) * 0.25;
+    if (s === 'high')   return min + (max - min) * 0.75;
+    if (s === 'middle') return min + (max - min) * 0.5;
+    const n = parseFloat(s);
+    return isNaN(n) ? null : n;
+}
 
 function fillAudioInputs(mod, inBufFns, blockIndex) {
     const baseSample = blockIndex * BLOCK_SIZE;
