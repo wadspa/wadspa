@@ -553,7 +553,12 @@ async function addEffect(eff) {
     const mod  = pluginModule(eff);
     const node = await loadPlugin(ctx, mod);
     chain.push({ eff, node });
-    await rewire();
+    try {
+      await rewire();
+    } catch (e) {
+      chain.pop();
+      throw e;
+    }
     renderChain();
     setStatus(`${eff.name} added`);
   } catch (e) {

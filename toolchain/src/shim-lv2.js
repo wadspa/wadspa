@@ -496,9 +496,22 @@ export function generateLv2Processor(descriptor, label) {
             `        const _cR = inputs[0]?.[1]; if (_cR && _cR.length) mod.HEAPF32.set(_cR, inPtrs[1]);`,
         ].join('\n');
     } else if (stereoOut) {
-        inputCopies = audioIn.length > 0
-            ? `        const _c0 = inputs[0]?.[0]; if (_c0 && _c0.length) mod.HEAPF32.set(_c0, inPtrs[0]);`
-            : '';
+        if (audioIn.length === 0) {
+            inputCopies = '';
+        } else if (audioIn.length === 1) {
+            inputCopies = `        const _c0 = inputs[0]?.[0]; if (_c0 && _c0.length) mod.HEAPF32.set(_c0, inPtrs[0]);`;
+        } else {
+            // L/R are ports 0 and 1, read from the single stereo worklet input (inputs[0][0] and inputs[0][1]).
+            // Any further ports (sidechain, etc.) come from separate unconnected worklet inputs.
+            const lines = [
+                `        const _cL = inputs[0]?.[0]; if (_cL && _cL.length) mod.HEAPF32.set(_cL, inPtrs[0]);`,
+                `        const _cR = inputs[0]?.[1]; if (_cR && _cR.length) mod.HEAPF32.set(_cR, inPtrs[1]);`,
+            ];
+            for (let i = 2; i < audioIn.length; i++) {
+                lines.push(`        const _c${i} = inputs[${i}]?.[0]; if (_c${i} && _c${i}.length) mod.HEAPF32.set(_c${i}, inPtrs[${i}]);`);
+            }
+            inputCopies = lines.join('\n');
+        }
     } else {
         inputCopies = audioIn.map((_, i) =>
             `        const _c${i} = inputs[${i}]?.[0]; if (_c${i} && _c${i}.length) mod.HEAPF32.set(_c${i}, inPtrs[${i}]);`

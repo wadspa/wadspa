@@ -4114,7 +4114,7 @@
     "id": "mda_Overdrive",
     "label": "MDA_Overdrive",
     "name": "MDA Overdrive",
-    "description": "The Overdrive effect has a variety of sonic possibilities: adding body to drum loops, fuzz guitar, as well as that typical muffled “standing outside of a nig...",
+    "description": "The Overdrive effect has a variety of sonic possibilities: adding body to drum loops, fuzz guitar, as well as that typical muffled \u201cstanding outside of a nig...",
     "category": "LV2 Effects",
     "wasmFile": "MDA_Overdrive.wasm",
     "processorFile": "processor.js",
@@ -5864,7 +5864,7 @@
     "label": "fil4mono",
     "name": "fil4#mono",
     "description": "fil4",
-    "category": "Instruments",
+    "category": "LV2 Effects",
     "wasmFile": "fil4mono.wasm",
     "processorFile": "processor.js",
     "ports": [
@@ -6395,116 +6395,6 @@
         "min": 0,
         "max": 1,
         "default": 0.5
-      }
-    ]
-  },
-  {
-    "id": "fomp-blvco",
-    "label": "Pulse_VCO",
-    "name": "Pulse VCO",
-    "description": "fomp: Band-limited VCOs (LV2)",
-    "category": "Instruments",
-    "wasmFile": "Pulse_VCO.wasm",
-    "processorFile": "processor.js",
-    "ports": [
-      {
-        "index": 0,
-        "symbol": "out",
-        "name": "Output",
-        "dir": "output",
-        "type": "audio",
-        "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
-      },
-      {
-        "index": 1,
-        "symbol": "freq",
-        "name": "Frequency",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0.000001,
-        "max": 1,
-        "default": 440
-      },
-      {
-        "index": 2,
-        "symbol": "exp_fm",
-        "name": "Exp FM",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
-      },
-      {
-        "index": 3,
-        "symbol": "lin_fm",
-        "name": "Lin FM",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
-      },
-      {
-        "index": 4,
-        "symbol": "octave",
-        "name": "Octave",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": -4,
-        "max": 4,
-        "default": 0
-      },
-      {
-        "index": 5,
-        "symbol": "tune",
-        "name": "Tune",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 0
-      },
-      {
-        "index": 6,
-        "symbol": "exp_fm_gain",
-        "name": "Exp FM gain",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0,
-        "max": 4,
-        "default": 0
-      },
-      {
-        "index": 7,
-        "symbol": "lin_fm_gain",
-        "name": "Lin FM gain",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0,
-        "max": 4,
-        "default": 0
-      },
-      {
-        "index": 8,
-        "symbol": "lp_filter",
-        "name": "LP filter",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 1
       }
     ]
   },
@@ -7041,7 +6931,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": 0.000001,
+        "min": 1e-06,
         "max": 1,
         "default": 440
       },
@@ -7151,7 +7041,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": 0.000001,
+        "min": 1e-06,
         "max": 1,
         "default": 440
       },
@@ -7535,7 +7425,7 @@
     "id": "noise-repellent",
     "label": "Repelente_de_ruido",
     "name": "Repelente de ruido",
-    "description": "Noise Repellent — broadband noise reduction (LV2)",
+    "description": "Noise Repellent \u2014 broadband noise reduction (LV2)",
     "category": "Effects",
     "wasmFile": "Repelente_de_ruido.wasm",
     "processorFile": "processor.js",
@@ -7609,7 +7499,7 @@
       {
         "index": 6,
         "symbol": "tonal_reduction",
-        "name": "Reducción tonal",
+        "name": "Reducci\u00f3n tonal",
         "dir": "input",
         "type": "control",
         "legacy": false,
@@ -7620,7 +7510,7 @@
       {
         "index": 7,
         "symbol": "suppression",
-        "name": "Supresión",
+        "name": "Supresi\u00f3n",
         "dir": "input",
         "type": "control",
         "legacy": false,

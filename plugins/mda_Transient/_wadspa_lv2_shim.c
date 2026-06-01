@@ -23,7 +23,28 @@ static LV2_URID urid_map_fn(LV2_URID_Map_Handle h, const char *uri) {
 
 static LV2_URID_Map   g_map_iface   = { NULL, urid_map_fn };
 static LV2_Feature    g_map_feature  = { LV2_URID__map, &g_map_iface };
-static const LV2_Feature *g_features[] = { &g_map_feature, NULL };
+
+#ifndef LV2_OPTIONS_H
+#define LV2_OPTIONS_H
+typedef enum { LV2_OPTIONS_INSTANCE=0,LV2_OPTIONS_RESOURCE,LV2_OPTIONS_BLANK,LV2_OPTIONS_PORT } LV2_Options_Context;
+typedef struct { LV2_Options_Context context; uint32_t subject; LV2_URID key; uint32_t size; LV2_URID type; const void *value; } LV2_Options_Option;
+#endif
+#ifndef LV2_OPTIONS__options
+#define LV2_OPTIONS__options "http://lv2plug.in/ns/ext/options#options"
+#endif
+#ifndef LV2_BUF_SIZE__nominalBlockLength
+#define LV2_BUF_SIZE__nominalBlockLength "http://lv2plug.in/ns/ext/buf-size#nominalBlockLength"
+#endif
+#ifndef LV2_BUF_SIZE__maxBlockLength
+#define LV2_BUF_SIZE__maxBlockLength "http://lv2plug.in/ns/ext/buf-size#maxBlockLength"
+#endif
+static LV2_URID g_opt_urid_nom;
+static LV2_URID g_opt_urid_max;
+static LV2_URID g_opt_urid_int;
+static int32_t  g_opt_block_size = BLOCK_SIZE;
+static LV2_Options_Option g_options[3];
+static LV2_Feature g_opt_feature = { LV2_OPTIONS__options, g_options };
+static const LV2_Feature *g_features[] = { &g_map_feature, &g_opt_feature, NULL };
 
 static float g_in_left_in[BLOCK_SIZE];
 static float g_in_right_in[BLOCK_SIZE];
@@ -40,7 +61,22 @@ static const LV2_Descriptor *g_desc   = NULL;
 static LV2_Handle            g_handle = NULL;
 
 EMSCRIPTEN_KEEPALIVE void shim_init(unsigned long sample_rate) {
-    g_desc   = lv2_descriptor(0);
+    g_opt_urid_nom = urid_map_fn(NULL, LV2_BUF_SIZE__nominalBlockLength);
+    g_opt_urid_max = urid_map_fn(NULL, LV2_BUF_SIZE__maxBlockLength);
+    g_opt_urid_int = urid_map_fn(NULL, "http://lv2plug.in/ns/ext/atom#Int");
+    g_options[0].context=LV2_OPTIONS_INSTANCE; g_options[0].subject=0;
+    g_options[0].key=g_opt_urid_nom; g_options[0].size=sizeof(int32_t);
+    g_options[0].type=g_opt_urid_int; g_options[0].value=&g_opt_block_size;
+    g_options[1].context=LV2_OPTIONS_INSTANCE; g_options[1].subject=0;
+    g_options[1].key=g_opt_urid_max; g_options[1].size=sizeof(int32_t);
+    g_options[1].type=g_opt_urid_int; g_options[1].value=&g_opt_block_size;
+    g_options[2].key=0; g_options[2].value=NULL;
+    { const char *_uri = "http://moddevices.com/plugins/mda/Transient";
+      for (int _i = 0; ; _i++) {
+          g_desc = lv2_descriptor(_i);
+          if (!g_desc || strcmp(g_desc->URI, _uri) == 0) break;
+      }
+    }
     g_handle = g_desc->instantiate(g_desc, (double)sample_rate, "", g_features);
     g_desc->connect_port(g_handle, 0, &g_ctrl_attack);
     g_desc->connect_port(g_handle, 1, &g_ctrl_release);
