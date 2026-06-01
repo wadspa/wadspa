@@ -270,7 +270,7 @@ import { loadPlugin } from './core.js';
 // MIDI-driven LV2 plugins appear here; audio-driven LV2 plugins appear in the effects catalog.
 let INSTRUMENTS = [];
 try {
-  INSTRUMENTS = await fetch('./instruments.json').then(r => {
+  INSTRUMENTS = await fetch('./instruments.json', { cache: 'no-cache' }).then(r => {
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     return r.json();
   });
@@ -280,7 +280,7 @@ try {
 
 let EFFECTS = [];
 try {
-  EFFECTS = await fetch('./plugins/catalog.json').then(r => {
+  EFFECTS = await fetch('./plugins/catalog.json', { cache: 'no-cache' }).then(r => {
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     return r.json();
   });
