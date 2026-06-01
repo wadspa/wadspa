@@ -8,8 +8,9 @@
   ],
   "scripts": {
     "link-toolchain": "npm link --workspace=toolchain",
-    "test": "node scripts/test-instruments.js",
+    "test": "node scripts/test-instruments.js && node scripts/test-effects.js",
     "test:lv2": "node scripts/test-instruments.js",
+    "test:effects": "node scripts/test-effects.js",
     "build": "node scripts/build-archive.js",
     "build:skip": "node scripts/build-archive.js --skip-existing",
     "build:archive": "node scripts/build-archive.js",
