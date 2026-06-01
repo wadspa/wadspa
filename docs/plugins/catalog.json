@@ -560,7 +560,7 @@
         "dir": "input",
         "type": "control",
         "min": 0,
-        "max": 3,
+        "max": 2,
         "default": 0
       },
       {
@@ -4511,7 +4511,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": 0,
+        "min": 1,
         "max": 16000,
         "default": 1000
       },
