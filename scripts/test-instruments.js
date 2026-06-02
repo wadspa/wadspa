@@ -12,13 +12,30 @@
  *   node scripts/test-instruments.js [--only <id>]
  */
 
-import { readFileSync, readdirSync } from 'fs';
+import { readFileSync, readdirSync, existsSync } from 'fs';
 import { join, dirname }            from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { readLv2Registry }          from './lib/lv2-registry.js';
 
 const ROOT        = join(dirname(fileURLToPath(import.meta.url)), '..');
 const PLUGINS     = join(ROOT, 'plugins');
+const SOUNDFONTS  = join(ROOT, 'docs', 'soundfonts');
+
+// Find the first available SF2 in docs/soundfonts/ for testing SF2-capable plugins.
+function findTestSF2() {
+    if (!existsSync(SOUNDFONTS)) return null;
+    const f = readdirSync(SOUNDFONTS).find(n => n.endsWith('.sf2'));
+    return f ? join(SOUNDFONTS, f) : null;
+}
+
+// Load an SF2 file into a WASM module that exports _shim_load_sf2 + _malloc/_free.
+function loadSF2IntoWasm(mod, sf2Path) {
+    const bytes = readFileSync(sf2Path);
+    const ptr   = mod._malloc(bytes.length);
+    mod.HEAPU8.set(bytes, ptr);
+    mod._shim_load_sf2(ptr, bytes.length);
+    mod._free(ptr);
+}
 const SAMPLE_RATE = 44100;
 const BLOCK_SIZE  = 128;
 const BLOCKS      = 64;   // ~186 ms — enough for ADSR attack and time-windowed effects
@@ -65,6 +82,18 @@ for (const inst of lv2Plugins) {
         const outBufFns = Object.keys(mod).filter(k => k.startsWith('_shim_output_buf_'));
         const inBufFns  = Object.keys(mod).filter(k => k.startsWith('_shim_input_buf_'));
         if (outBufFns.length === 0) throw new Error('no _shim_output_buf_* functions exported');
+
+        // SF2-capable plugins (e.g. tsf) export _shim_load_sf2 and need an SF2
+        // loaded before they produce any sound.
+        if (typeof mod._shim_load_sf2 === 'function') {
+            const sf2Path = findTestSF2();
+            if (!sf2Path) {
+                console.log('⏭  skipped (no SF2 in docs/soundfonts/ — run fetch-soundfonts.js)');
+                skipped++;
+                continue;
+            }
+            loadSF2IntoWasm(mod, sf2Path);
+        }
 
         const hasMidi = typeof mod._shim_midi_note_on === 'function';
         const audioDriven = !hasMidi && inBufFns.length > 0;
