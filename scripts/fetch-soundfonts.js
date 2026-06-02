@@ -24,7 +24,7 @@ const SOUNDFONTS = [
         file:    'TimGM6mb.sf2',
         size_mb: 5.8,
         license: 'GPL v2',
-        url:     'https://raw.githubusercontent.com/musescore/MuseScore/3.x/share/sound/TimGM6mb.sf2',
+        url:     'https://raw.githubusercontent.com/craffel/pretty-midi/main/pretty_midi/TimGM6mb.sf2',
     },
 ];
 
