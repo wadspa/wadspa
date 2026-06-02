@@ -412,6 +412,13 @@
     ]
   },
   {
+    "id": "tsf",
+    "description": "TinySoundFont — General MIDI SF2 soundfont synthesizer, 16-channel polyphonic",
+    "category": "Instruments",
+    "buildScript": "scripts/build-tsf.js",
+    "noTest": true
+  },
+  {
     "id": "samplv1",
     "description": "samplv1 — polyphonic sampler LV2",
     "category": "Instruments",

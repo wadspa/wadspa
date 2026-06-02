@@ -135,20 +135,24 @@ for (const entry of lv2Plugins) {
     try {
         if (existsSync(distDir)) rmSync(distDir, { recursive: true, force: true });
 
-        const flags = [`--include "${LV2_INCLUDE}"`];
-        if (entry.threads)       flags.push('--threads');
-        if (entry.memoryGrowth)  flags.push('--memory-growth');
-        for (const f of entry.embedFiles  ?? []) flags.push(`--embed-file "${f}"`);
-        for (const i of entry.includes    ?? []) flags.push(`--include "${join(ROOT, i)}"`);
-        for (const d of entry.defines     ?? []) flags.push(`--define "${d}"`);
-        if (entry.sources) {
-            const srcs = (Array.isArray(entry.sources) ? entry.sources : [entry.sources])
-                .map(s => join(dir, s)).join(',');
-            flags.push(`--sources "${srcs}"`);
+        let out;
+        if (entry.buildScript) {
+            out = run(`node "${join(ROOT, entry.buildScript)}"`, { cwd: ROOT });
+        } else {
+            const flags = [`--include "${LV2_INCLUDE}"`];
+            if (entry.threads)       flags.push('--threads');
+            if (entry.memoryGrowth)  flags.push('--memory-growth');
+            for (const f of entry.embedFiles  ?? []) flags.push(`--embed-file "${f}"`);
+            for (const i of entry.includes    ?? []) flags.push(`--include "${join(ROOT, i)}"`);
+            for (const d of entry.defines     ?? []) flags.push(`--define "${d}"`);
+            if (entry.sources) {
+                const srcs = (Array.isArray(entry.sources) ? entry.sources : [entry.sources])
+                    .map(s => join(dir, s)).join(',');
+                flags.push(`--sources "${srcs}"`);
+            }
+            const cmd = `wadspa build-lv2 "${dir}" ${flags.join(' ')}`;
+            out = run(cmd, { cwd: dir });
         }
-
-        const cmd = `wadspa build-lv2 "${dir}" ${flags.join(' ')}`;
-        const out = run(cmd, { cwd: dir });
         console.log(out.trim().split('\n').map(l => '   ' + l).join('\n'));
 
         deploy(entry, distDir, instrumentEntries, effectEntries);

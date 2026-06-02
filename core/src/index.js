@@ -114,6 +114,27 @@ class WadspNode {
         return this;
     }
 
+    // Load an SF2 soundfont into a TSF-capable plugin.
+    // urlOrBuffer: a URL string (fetched) or an ArrayBuffer (used directly).
+    // Returns a Promise that resolves to this node when the SF2 is loaded.
+    async loadSF2(urlOrBuffer) {
+        let buffer;
+        if (typeof urlOrBuffer === 'string') {
+            const res = await fetch(urlOrBuffer);
+            if (!res.ok) throw new Error(`Failed to fetch SF2: ${res.status} ${urlOrBuffer}`);
+            buffer = await res.arrayBuffer();
+        } else {
+            buffer = urlOrBuffer;
+        }
+        return new Promise((resolve, reject) => {
+            this.#node.port.onmessage = ({ data }) => {
+                if (data.type === 'sf2loaded') resolve(this);
+                else if (data.type === 'error') reject(new Error(data.message));
+            };
+            this.#node.port.postMessage({ type: 'loadSF2', buffer }, [buffer]);
+        });
+    }
+
     noteOn(note, velocity = 100, channel = 0) {
         return this.midi(0x90 | channel, note, velocity);
     }
