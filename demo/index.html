@@ -375,6 +375,7 @@ async function rewire() {
     prev = node;
   }
   prev.output.connect(ctx.destination);
+  console.log('[wadspa] rewire: ctx=' + ctx.state + ' synth.output=' + synth.output.constructor.name);
 }
 
 // ── Piano ────────────────────────────────────────────────────────
@@ -401,6 +402,7 @@ function mousePress(semi) {
   const note = midiNote(semi);
   mouseHeld = { semi, note };
   markKey(semi, true);
+  console.log('[wadspa] noteOn', note, 'ctx=' + ctx?.state, 'synth=' + !!synth);
   synth?.noteOn(note, 100);
 }
 function mouseRelease() {
@@ -655,10 +657,11 @@ function setSF2Status(msg) {
 
 async function switchInstrument(inst) {
   if (!ctx) return;
-  if (synth) { synth.output.disconnect(); synth = null; }
+  if (synth) { safeDisconnect(synth); synth = null; }
   setStatus(`loading ${inst.name}…`);
   try {
     synth = await loadPlugin(ctx, instrumentModule(inst));
+    console.log('[wadspa] loadPlugin done, ctx=' + ctx.state);
     activeInstrument = inst;
     buildSynthControls(synth, inst);
     rewire();
