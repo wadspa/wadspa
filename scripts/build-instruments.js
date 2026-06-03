@@ -85,6 +85,7 @@ function buildCatalogueEntry(manifestEntry, distDir) {
         category:      manifestEntry.category ?? (hasMidiInput ? 'LV2 Instruments' : 'LV2 Effects'),
         wasmFile,
         processorFile: 'processor.js',
+        ...(meta.sf2 && { sf2: true }),
         ports: meta.ports.map(p => {
             if (p.type !== 'control') return p;
             return { ...p, default: resolveDefault(p.default, p.min, p.max) };

@@ -58,12 +58,16 @@
     #status { font-size: 0.75rem; color: var(--muted); }
 
     /* ── Main layout ─────────────────────────────────────────── */
-    main { display: grid; grid-template-rows: auto 1fr; height: calc(100vh - 46px); }
+    main {
+      display: flex; flex-direction: row;
+      height: calc(100vh - 46px); overflow: hidden;
+    }
 
     /* ── Synth + keyboard section ────────────────────────────── */
     #synth-section {
-      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
       display: flex; gap: 0; flex-wrap: wrap;
+      flex-shrink: 0; overflow-y: auto;
     }
     #synth-header {
       display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;
@@ -92,6 +96,7 @@
 
     /* ── Effects chain ───────────────────────────────────────── */
     #chain-section {
+      flex: 1; min-width: 0;
       padding: 1rem 1.4rem;
       overflow-y: auto;
     }
@@ -124,12 +129,12 @@
 
     /* ── Plugin cards ─────────────────────────────────────────── */
     #chain-cards {
-      display: flex; align-items: flex-start; flex-wrap: wrap; gap: 0.6rem;
+      display: flex; align-items: center; flex-wrap: wrap; gap: 0.6rem;
     }
-    .arrow { align-self: center; font-size: 1rem; color: var(--muted); flex-shrink: 0; margin-top: -1.5rem; }
+    .arrow { align-self: center; font-size: 1rem; color: var(--muted); flex-shrink: 0; }
     .out-badge {
       align-self: center; font-size: 0.72rem; color: var(--accent2); border: 1px solid var(--accent2);
-      padding: 0.2rem 0.5rem; border-radius: 3px; flex-shrink: 0; margin-top: -1.5rem;
+      padding: 0.2rem 0.5rem; border-radius: 3px; flex-shrink: 0;
     }
 
     .card {
@@ -185,6 +190,45 @@
 
     /* ── Synth sliders ────────────────────────────────────────── */
     #synth-ctrls { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; margin-top: 0.4rem; }
+
+    /* ── SF2 library panel ───────────────────────────────────── */
+    #sf2-panel { margin-top: 0.5rem; border-top: 1px solid var(--border); padding-top: 0.55rem; display: none; }
+    .sf2-status {
+      font-size: 0.7rem; color: var(--muted); margin-bottom: 0.45rem;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .sf2-status .sf2-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: var(--muted); flex-shrink: 0;
+    }
+    .sf2-status .sf2-dot.loaded { background: var(--accent2); }
+    .sf2-lib-row {
+      display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.45rem;
+    }
+    .sf2-lib-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .sf2-lib-item {
+      padding: 0.2rem 0.55rem; font-family: monospace; font-size: 0.72rem;
+      background: var(--surface); color: var(--text); border: 1px solid var(--border);
+      border-radius: 3px; cursor: pointer; white-space: nowrap;
+    }
+    .sf2-lib-item:hover { border-color: var(--accent2); color: var(--accent2); }
+    .sf2-lib-item.active { border-color: var(--accent2); color: var(--accent2); }
+    .sf2-lib-item:disabled { opacity: 0.4; cursor: default; }
+    .sf2-upload-btn {
+      padding: 0.2rem 0.55rem; font-family: monospace; font-size: 0.72rem;
+      background: var(--surface); color: var(--accent); border: 1px solid var(--border);
+      border-radius: 3px; cursor: pointer; white-space: nowrap;
+    }
+    .sf2-upload-btn:hover { border-color: var(--accent); }
+    .sf2-program-row {
+      display: none; align-items: center; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.3rem;
+    }
+    .sf2-program-row.visible { display: flex; }
+    .sf2-program-row select {
+      padding: 0.2rem 0.4rem; font-family: monospace; font-size: 0.72rem;
+      background: var(--surface); color: var(--text); border: 1px solid var(--border);
+      border-radius: 3px; cursor: pointer;
+    }
+    .sf2-program-row select:focus { outline: none; border-color: var(--accent); }
   </style>
 </head>
 <body>
@@ -227,6 +271,7 @@
         <div class="piano" id="piano"></div>
       </div>
       <div id="synth-ctrls"></div>
+      <div id="sf2-panel"></div>
     </div>
   </div>
 
@@ -265,7 +310,7 @@ import { loadPlugin } from './core.js';
 // MIDI-driven LV2 plugins appear here; audio-driven LV2 plugins appear in the effects catalog.
 let INSTRUMENTS = [];
 try {
-  INSTRUMENTS = await fetch('./instruments.json').then(r => {
+  INSTRUMENTS = await fetch('./instruments.json', { cache: 'no-cache' }).then(r => {
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     return r.json();
   });
@@ -275,7 +320,7 @@ try {
 
 let EFFECTS = [];
 try {
-  EFFECTS = await fetch('./plugins/catalog.json').then(r => {
+  EFFECTS = await fetch('./plugins/catalog.json', { cache: 'no-cache' }).then(r => {
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     return r.json();
   });
@@ -408,19 +453,64 @@ document.getElementById('oct-up').onclick = () => { if (octave < 8) { octave++; 
 
 buildPiano();
 
+// ── GM program table ──────────────────────────────────────────
+const GM_CATEGORIES = [
+  { name: 'Piano',         programs: ['Acoustic Grand Piano','Bright Acoustic Piano','Electric Grand Piano','Honky-tonk Piano','Electric Piano 1','Electric Piano 2','Harpsichord','Clavinet'] },
+  { name: 'Chromatic Perc',programs: ['Celesta','Glockenspiel','Music Box','Vibraphone','Marimba','Xylophone','Tubular Bells','Dulcimer'] },
+  { name: 'Organ',         programs: ['Drawbar Organ','Percussive Organ','Rock Organ','Church Organ','Reed Organ','Accordion','Harmonica','Tango Accordion'] },
+  { name: 'Guitar',        programs: ['Nylon Guitar','Steel Guitar','Jazz Guitar','Clean Guitar','Muted Guitar','Overdriven Guitar','Distortion Guitar','Guitar Harmonics'] },
+  { name: 'Bass',          programs: ['Acoustic Bass','Finger Bass','Pick Bass','Fretless Bass','Slap Bass 1','Slap Bass 2','Synth Bass 1','Synth Bass 2'] },
+  { name: 'Strings',       programs: ['Violin','Viola','Cello','Contrabass','Tremolo Strings','Pizzicato Strings','Orchestral Harp','Timpani'] },
+  { name: 'Ensemble',      programs: ['String Ensemble 1','String Ensemble 2','Synth Strings 1','Synth Strings 2','Choir Aahs','Voice Oohs','Synth Choir','Orchestra Hit'] },
+  { name: 'Brass',         programs: ['Trumpet','Trombone','Tuba','Muted Trumpet','French Horn','Brass Section','Synth Brass 1','Synth Brass 2'] },
+  { name: 'Reed',          programs: ['Soprano Sax','Alto Sax','Tenor Sax','Baritone Sax','Oboe','English Horn','Bassoon','Clarinet'] },
+  { name: 'Pipe',          programs: ['Piccolo','Flute','Recorder','Pan Flute','Blown Bottle','Shakuhachi','Whistle','Ocarina'] },
+  { name: 'Synth Lead',    programs: ['Square Lead','Sawtooth Lead','Calliope Lead','Chiff Lead','Charang Lead','Voice Lead','Fifths Lead','Bass+Lead'] },
+  { name: 'Synth Pad',     programs: ['New Age Pad','Warm Pad','Polysynth Pad','Choir Pad','Bowed Pad','Metallic Pad','Halo Pad','Sweep Pad'] },
+  { name: 'Synth FX',      programs: ['Rain','Soundtrack','Crystal','Atmosphere','Brightness','Goblins','Echoes','Sci-fi'] },
+  { name: 'Ethnic',        programs: ['Sitar','Banjo','Shamisen','Koto','Kalimba','Bag Pipe','Fiddle','Shanai'] },
+  { name: 'Percussive',    programs: ['Tinkle Bell','Agogo','Steel Drums','Woodblock','Taiko Drum','Melodic Tom','Synth Drum','Reverse Cymbal'] },
+  { name: 'Sound Effects', programs: ['Fret Noise','Breath Noise','Seashore','Bird Tweet','Telephone Ring','Helicopter','Applause','Gunshot'] },
+];
+// Flat program number by [catIndex][progIndex] = catIndex*8 + progIndex
+
+// ── SF2 state ─────────────────────────────────────────────────
+let sf2LoadedName = null;
+let sf2LibCatalog = [];
+
+// Try to load the bundled soundfont catalog (only present if fetch-soundfonts.js was run)
+try {
+  sf2LibCatalog = await fetch('./soundfonts/catalog.json', { cache: 'no-cache' })
+    .then(r => r.ok ? r.json() : [])
+    .catch(() => []);
+} catch { sf2LibCatalog = []; }
+
 // ── Synth controls (built after loadPlugin) ───────────────────
 function buildSynthControls(node, inst) {
   const ctrls = document.getElementById('synth-ctrls');
-  const ctrlPorts = inst.ports.filter(p => p.type === 'control' && p.dir === 'input');
   ctrls.innerHTML = '';
+
+  // SF2 panel — shown only for TSF-capable instruments
+  const sf2Panel = document.getElementById('sf2-panel');
+  if (inst.sf2) {
+    sf2Panel.style.display = 'block';
+    buildSF2Panel(node);
+  } else {
+    sf2Panel.style.display = 'none';
+  }
+
+  const ctrlPorts = inst.ports.filter(p => p.type === 'control' && p.dir === 'input');
   for (const p of ctrlPorts) {
+    const min = p.min ?? 0;
+    const max = p.max ?? 1;
+    const def = p.default ?? min;
     const row = document.createElement('div');
     row.className = 'ctrl-row';
-    const fmt = p.max <= 1 ? v => v.toFixed(2) : p.max <= 10 ? v => v.toFixed(2) + ' s' : v => v.toFixed(1);
+    const fmt = max <= 1 ? v => v.toFixed(2) : max <= 10 ? v => v.toFixed(2) + ' s' : v => v.toFixed(1);
     row.innerHTML = `<label>${p.name}</label>
       <div class="ctrl-line">
-        <input type="range" min="${p.min}" max="${p.max}" step="${(p.max-p.min)/200}" value="${p.default}">
-        <span class="val">${fmt(p.default)}</span>
+        <input type="range" min="${min}" max="${max}" step="${(max-min)/200}" value="${def}">
+        <span class="val">${fmt(def)}</span>
       </div>`;
     const slider = row.querySelector('input');
     const val    = row.querySelector('.val');
@@ -429,7 +519,132 @@ function buildSynthControls(node, inst) {
       node.set(p.name, v);
     });
     ctrls.appendChild(row);
+    if (def !== null && def !== undefined) node.set(p.name, def);
   }
+}
+
+function buildSF2Panel(node) {
+  const panel = document.getElementById('sf2-panel');
+  panel.innerHTML = '';
+
+  // Status
+  const statusRow = document.createElement('div');
+  statusRow.className = 'sf2-status';
+  const dot  = document.createElement('span'); dot.className = 'sf2-dot';
+  const name = document.createElement('span'); name.id = 'sf2-name-lbl';
+  name.textContent = sf2LoadedName ? `${sf2LoadedName} loaded` : 'no soundfont loaded';
+  if (sf2LoadedName) dot.classList.add('loaded');
+  statusRow.append(dot, name);
+  panel.appendChild(statusRow);
+
+  // Library row
+  const libRow = document.createElement('div');
+  libRow.className = 'sf2-lib-row';
+  const lbl = document.createElement('span');
+  lbl.className = 'sf2-lib-label';
+  lbl.textContent = 'soundfonts';
+  libRow.appendChild(lbl);
+
+  for (const sf of sf2LibCatalog) {
+    const btn = document.createElement('button');
+    btn.className = 'sf2-lib-item' + (sf2LoadedName === sf.name ? ' active' : '');
+    btn.textContent = `${sf.name} (${sf.size_mb} MB)`;
+    btn.addEventListener('click', () => loadSF2FromUrl(`./soundfonts/${sf.file}`, sf.name, node));
+    libRow.appendChild(btn);
+  }
+
+  // Upload button
+  const uploadLabel = document.createElement('label');
+  uploadLabel.className = 'sf2-upload-btn';
+  uploadLabel.textContent = 'upload SF2…';
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file'; fileInput.accept = '.sf2';
+  fileInput.style.display = 'none';
+  fileInput.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (file) loadSF2FromFile(file, node);
+  });
+  uploadLabel.appendChild(fileInput);
+  libRow.appendChild(uploadLabel);
+  panel.appendChild(libRow);
+
+  // GM program picker (hidden until SF2 is loaded)
+  const progRow = document.createElement('div');
+  progRow.className = 'sf2-program-row' + (sf2LoadedName ? ' visible' : '');
+  progRow.id = 'sf2-program-row';
+
+  const catSel  = document.createElement('select'); catSel.id = 'sf2-cat-sel';
+  const progSel = document.createElement('select'); progSel.id = 'sf2-prog-sel';
+
+  GM_CATEGORIES.forEach((cat, ci) => {
+    const opt = document.createElement('option');
+    opt.value = ci; opt.textContent = cat.name;
+    catSel.appendChild(opt);
+  });
+
+  function rebuildProgSel(catIdx) {
+    progSel.innerHTML = '';
+    GM_CATEGORIES[catIdx].programs.forEach((pname, pi) => {
+      const opt = document.createElement('option');
+      opt.value = catIdx * 8 + pi;
+      opt.textContent = `${catIdx * 8 + pi + 1}. ${pname}`;
+      progSel.appendChild(opt);
+    });
+  }
+  rebuildProgSel(0);
+
+  catSel.addEventListener('change', () => {
+    rebuildProgSel(parseInt(catSel.value));
+    const program = parseInt(progSel.value);
+    node.midi(0xC0, program, 0); // program change ch 0
+  });
+  progSel.addEventListener('change', () => {
+    const program = parseInt(progSel.value);
+    node.midi(0xC0, program, 0);
+  });
+
+  progRow.append(catSel, progSel);
+  panel.appendChild(progRow);
+}
+
+async function loadSF2FromUrl(url, displayName, node) {
+  setSF2Status(`loading ${displayName}…`);
+  try {
+    await node.loadSF2(url);
+    onSF2Loaded(displayName);
+  } catch (e) {
+    setSF2Status(`error: ${e.message}`);
+    console.error(e);
+  }
+}
+
+async function loadSF2FromFile(file, node) {
+  setSF2Status(`loading ${file.name}…`);
+  try {
+    const buffer = await file.arrayBuffer();
+    await node.loadSF2(buffer);
+    onSF2Loaded(file.name);
+  } catch (e) {
+    setSF2Status(`error: ${e.message}`);
+    console.error(e);
+  }
+}
+
+function onSF2Loaded(name) {
+  sf2LoadedName = name;
+  setSF2Status(`${name} loaded`);
+  const dot = document.querySelector('#sf2-panel .sf2-dot');
+  if (dot) dot.classList.add('loaded');
+  const progRow = document.getElementById('sf2-program-row');
+  if (progRow) progRow.classList.add('visible');
+  document.querySelectorAll('.sf2-lib-item').forEach(btn =>
+    btn.classList.toggle('active', btn.textContent.startsWith(name)));
+}
+
+function setSF2Status(msg) {
+  const el = document.getElementById('sf2-name-lbl');
+  if (el) el.textContent = msg;
+  setStatus(msg);
 }
 
 async function switchInstrument(inst) {
@@ -452,6 +667,20 @@ async function switchInstrument(inst) {
 }
 
 // ── Effects chain UI ──────────────────────────────────────────
+function resolvePortDefault(p) {
+  const d = p.default;
+  if (d === null || d === undefined) return null;
+  if (typeof d === 'number') return d;
+  const s = String(d);
+  if (s === 'min')    return p.min;
+  if (s === 'max')    return p.max;
+  if (s === 'low')    return p.min + (p.max - p.min) * 0.25;
+  if (s === 'high')   return p.min + (p.max - p.min) * 0.75;
+  if (s === 'middle') return p.min + (p.max - p.min) * 0.5;
+  const n = parseFloat(s);
+  return isNaN(n) ? null : n;
+}
+
 function cardFmt(p, v) {
   if (p.max - p.min > 100) return v.toFixed(0);
   if (p.max <= 1)  return v.toFixed(2);
@@ -510,6 +739,10 @@ function renderChain() {
         valEl.textContent = cardFmt(p, v);
         node.set(p.name, v);
       });
+      // Dispatch the catalog default immediately so the WASM starts at the
+      // displayed value rather than whatever the C shim compiled in.
+      const def = resolvePortDefault(p);
+      if (def !== null) node.set(p.name, def);
     }
 
     container.appendChild(card);
@@ -543,7 +776,12 @@ async function addEffect(eff) {
     const mod  = pluginModule(eff);
     const node = await loadPlugin(ctx, mod);
     chain.push({ eff, node });
-    await rewire();
+    try {
+      await rewire();
+    } catch (e) {
+      chain.pop();
+      throw e;
+    }
     renderChain();
     setStatus(`${eff.name} added`);
   } catch (e) {

@@ -11,6 +11,7 @@ export const meta         = {
       "name": "Mode",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0
@@ -21,6 +22,7 @@ export const meta         = {
       "name": "Dynamics",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 100,
       "default": 100
@@ -31,6 +33,7 @@ export const meta         = {
       "name": "Mix",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 100,
       "default": 100
@@ -41,6 +44,7 @@ export const meta         = {
       "name": "Glide",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 100,
       "default": 97
@@ -51,6 +55,7 @@ export const meta         = {
       "name": "Transpose",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -36,
       "max": 36,
       "default": 0
@@ -61,6 +66,7 @@ export const meta         = {
       "name": "Maximum",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 39,
       "max": 7350,
       "default": 6500
@@ -71,6 +77,7 @@ export const meta         = {
       "name": "Trigger",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -60,
       "max": 0,
       "default": -30
@@ -81,6 +88,7 @@ export const meta         = {
       "name": "Output",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -20,
       "max": 20,
       "default": 0
@@ -91,6 +99,7 @@ export const meta         = {
       "name": "Left In",
       "dir": "input",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -101,6 +110,7 @@ export const meta         = {
       "name": "Right In",
       "dir": "input",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -111,6 +121,7 @@ export const meta         = {
       "name": "Left Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -121,6 +132,7 @@ export const meta         = {
       "name": "Right Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null

@@ -11,6 +11,7 @@ export const meta         = {
       "name": "Word Len",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 8,
       "max": 24,
       "default": 16
@@ -21,6 +22,7 @@ export const meta         = {
       "name": "Dither",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 3,
       "default": 0
@@ -31,6 +33,7 @@ export const meta         = {
       "name": "Dith Amp",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 4,
       "default": 2
@@ -41,6 +44,7 @@ export const meta         = {
       "name": "DC Trim",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -2,
       "max": 2,
       "default": 0
@@ -51,6 +55,7 @@ export const meta         = {
       "name": "Zoom",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -80,
       "max": 0,
       "default": 0
@@ -61,6 +66,7 @@ export const meta         = {
       "name": "Left In",
       "dir": "input",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -71,6 +77,7 @@ export const meta         = {
       "name": "Right In",
       "dir": "input",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -81,6 +88,7 @@ export const meta         = {
       "name": "Left Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -91,6 +99,7 @@ export const meta         = {
       "name": "Right Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null

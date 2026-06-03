@@ -1,0 +1,41 @@
+import createTAP_ReverberatorPlugin from './TAP_Reverberator.js';
+
+let mod = null;
+const inPtrs  = [0, 0];
+const outPtrs = [0, 0];
+const SETTERS = {"decay":"_shim_set_decay","drylevel":"_shim_set_drylevel","wetlevel":"_shim_set_wetlevel","combs_en":"_shim_set_combs_en","allps_en":"_shim_set_allps_en","bandpass_en":"_shim_set_bandpass_en","stereo_enh":"_shim_set_stereo_enh","mode":"_shim_set_mode"};
+
+class WadspProcessor extends AudioWorkletProcessor {
+    constructor() {
+        super();
+        this.port.onmessage = async ({ data }) => {
+            if (data.type === 'setup') {
+                try {
+                    mod = await createTAP_ReverberatorPlugin({ wasmBinary: data.wasm, locateFile: (p, d) => d + p });
+                    mod._shim_init(sampleRate);
+                    inPtrs[0]  = mod._shim_input_buf_inputl() >> 2;
+                    inPtrs[1]  = mod._shim_input_buf_inputr() >> 2;
+                    outPtrs[0] = mod._shim_output_buf_outputl() >> 2;
+                    outPtrs[1] = mod._shim_output_buf_outputr() >> 2;
+                    this.port.postMessage({ type: 'ready' });
+                } catch (e) {
+                    this.port.postMessage({ type: 'error', message: e.message });
+                }
+            } else if (data.type === 'set') {
+                if (mod) { const fn = SETTERS[data.symbol]; if (fn) mod[fn](data.value); }
+            }
+        };
+    }
+
+    process(inputs, outputs) {
+        if (!mod) return true;
+        const _cL = inputs[0]?.[0]; if (_cL && _cL.length) mod.HEAPF32.set(_cL, inPtrs[0]);
+        const _cR = inputs[0]?.[1]; if (_cR && _cR.length) mod.HEAPF32.set(_cR, inPtrs[1]);
+        mod._shim_run(128);
+        outputs[0][0].set(mod.HEAPF32.subarray(outPtrs[0], outPtrs[0] + 128));
+        outputs[1][0].set(mod.HEAPF32.subarray(outPtrs[1], outPtrs[1] + 128));
+        return true;
+    }
+}
+
+registerProcessor('wadspa-TAP_Reverberator', WadspProcessor);

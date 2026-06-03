@@ -11,6 +11,7 @@ export const meta         = {
       "name": "L Delay",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 330,
       "default": 250
@@ -21,6 +22,7 @@ export const meta         = {
       "name": "R/L Delay",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 2,
       "default": 1
@@ -31,6 +33,7 @@ export const meta         = {
       "name": "R Delay Fixed Ratios",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0
@@ -41,6 +44,7 @@ export const meta         = {
       "name": "Feedback",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 100,
       "default": 70
@@ -51,6 +55,7 @@ export const meta         = {
       "name": "Fb Tone\\nLo<>Hi",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -1,
       "max": 1,
       "default": 0
@@ -61,6 +66,7 @@ export const meta         = {
       "name": "FX Mix",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 100,
       "default": 33
@@ -71,6 +77,7 @@ export const meta         = {
       "name": "Output",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -12,
       "max": 6,
       "default": 0
@@ -81,6 +88,7 @@ export const meta         = {
       "name": "Left In",
       "dir": "input",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -91,6 +99,7 @@ export const meta         = {
       "name": "Right In",
       "dir": "input",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -101,6 +110,7 @@ export const meta         = {
       "name": "Left Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -111,6 +121,7 @@ export const meta         = {
       "name": "Right Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null

@@ -11,6 +11,7 @@ export const meta         = {
       "name": "OSC Mix",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 1
@@ -21,6 +22,7 @@ export const meta         = {
       "name": "OSC Tune",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0.37
@@ -31,6 +33,7 @@ export const meta         = {
       "name": "OSC Fine",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0.25
@@ -41,6 +44,7 @@ export const meta         = {
       "name": "Glide",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0.3
@@ -51,6 +55,7 @@ export const meta         = {
       "name": "Gld Rate",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0.32
@@ -61,6 +66,7 @@ export const meta         = {
       "name": "Gld Bend",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0.5
@@ -71,6 +77,7 @@ export const meta         = {
       "name": "VCF Freq",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0.9
@@ -81,6 +88,7 @@ export const meta         = {
       "name": "VCF Reso",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0.6
@@ -91,6 +99,7 @@ export const meta         = {
       "name": "VCF Env",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0.12
@@ -101,6 +110,7 @@ export const meta         = {
       "name": "VCF LFO",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0
@@ -111,6 +121,7 @@ export const meta         = {
       "name": "VCF Vel",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0.5
@@ -121,6 +132,7 @@ export const meta         = {
       "name": "VCF Att",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0.9
@@ -131,6 +143,7 @@ export const meta         = {
       "name": "VCF Dec",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0.89
@@ -141,6 +154,7 @@ export const meta         = {
       "name": "VCF Sus",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0.9
@@ -151,6 +165,7 @@ export const meta         = {
       "name": "VCF Rel",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0.73
@@ -161,6 +176,7 @@ export const meta         = {
       "name": "ENV Att",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0
@@ -171,6 +187,7 @@ export const meta         = {
       "name": "ENV Dec",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0.5
@@ -181,6 +198,7 @@ export const meta         = {
       "name": "ENV Sus",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 1
@@ -191,6 +209,7 @@ export const meta         = {
       "name": "ENV Rel",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0.71
@@ -201,6 +220,7 @@ export const meta         = {
       "name": "LFO Rate",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0.81
@@ -211,6 +231,7 @@ export const meta         = {
       "name": "Vibrato",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0.65
@@ -221,6 +242,7 @@ export const meta         = {
       "name": "Noise",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0
@@ -231,6 +253,7 @@ export const meta         = {
       "name": "Octave",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0.5
@@ -241,6 +264,7 @@ export const meta         = {
       "name": "Tuning",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0.5
@@ -251,6 +275,7 @@ export const meta         = {
       "name": "Left Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -261,6 +286,7 @@ export const meta         = {
       "name": "Right Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -271,6 +297,7 @@ export const meta         = {
       "name": "Event In",
       "dir": "input",
       "type": "midi",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null

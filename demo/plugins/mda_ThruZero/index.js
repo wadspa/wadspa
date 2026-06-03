@@ -11,6 +11,7 @@ export const meta         = {
       "name": "Rate",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0.01,
       "max": 10,
       "default": 0.08
@@ -21,6 +22,7 @@ export const meta         = {
       "name": "Depth",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 42,
       "default": 20
@@ -31,6 +33,7 @@ export const meta         = {
       "name": "Mix",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 100,
       "default": 47
@@ -41,6 +44,7 @@ export const meta         = {
       "name": "Feedback",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -100,
       "max": 100,
       "default": -40
@@ -51,6 +55,7 @@ export const meta         = {
       "name": "Depth Mod",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 100,
       "default": 100
@@ -61,6 +66,7 @@ export const meta         = {
       "name": "Left In",
       "dir": "input",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -71,6 +77,7 @@ export const meta         = {
       "name": "Right In",
       "dir": "input",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -81,6 +88,7 @@ export const meta         = {
       "name": "Left Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -91,6 +99,7 @@ export const meta         = {
       "name": "Right Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null

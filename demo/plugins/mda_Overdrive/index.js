@@ -11,6 +11,7 @@ export const meta         = {
       "name": "Drive",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 100,
       "default": 50
@@ -21,6 +22,7 @@ export const meta         = {
       "name": "Muffle",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 100,
       "default": 0
@@ -31,6 +33,7 @@ export const meta         = {
       "name": "Level",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -20,
       "max": 20,
       "default": 4
@@ -41,6 +44,7 @@ export const meta         = {
       "name": "Left In",
       "dir": "input",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -51,6 +55,7 @@ export const meta         = {
       "name": "Right In",
       "dir": "input",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -61,6 +66,7 @@ export const meta         = {
       "name": "Left Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -71,6 +77,7 @@ export const meta         = {
       "name": "Right Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null

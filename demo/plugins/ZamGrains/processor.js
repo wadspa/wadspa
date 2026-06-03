@@ -1,0 +1,37 @@
+import createZamGrainsPlugin from './ZamGrains.js';
+
+let mod = null;
+const inPtrs  = [0];
+const outPtrs = [0];
+const SETTERS = {"gain":"_shim_set_gain","grains":"_shim_set_grains","gs":"_shim_set_gs","ps":"_shim_set_ps","time":"_shim_set_time","freeze":"_shim_set_freeze"};
+
+class WadspProcessor extends AudioWorkletProcessor {
+    constructor() {
+        super();
+        this.port.onmessage = async ({ data }) => {
+            if (data.type === 'setup') {
+                try {
+                    mod = await createZamGrainsPlugin({ wasmBinary: data.wasm, locateFile: (p, d) => d + p });
+                    mod._shim_init(sampleRate);
+                    inPtrs[0]  = mod._shim_input_buf_lv2_audio_in_1() >> 2;
+                    outPtrs[0] = mod._shim_output_buf_lv2_audio_out_1() >> 2;
+                    this.port.postMessage({ type: 'ready' });
+                } catch (e) {
+                    this.port.postMessage({ type: 'error', message: e.message });
+                }
+            } else if (data.type === 'set') {
+                if (mod) { const fn = SETTERS[data.symbol]; if (fn) mod[fn](data.value); }
+            }
+        };
+    }
+
+    process(inputs, outputs) {
+        if (!mod) return true;
+        const _c0 = inputs[0]?.[0]; if (_c0 && _c0.length) mod.HEAPF32.set(_c0, inPtrs[0]);
+        mod._shim_run(128);
+        outputs[0][0].set(mod.HEAPF32.subarray(outPtrs[0], outPtrs[0] + 128));
+        return true;
+    }
+}
+
+registerProcessor('wadspa-ZamGrains', WadspProcessor);

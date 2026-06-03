@@ -6378,5 +6378,48 @@
         "default": 8
       }
     ]
+  },
+  {
+    "id": "tsf",
+    "label": "tsf",
+    "name": "TinySoundFont",
+    "description": "TinySoundFont — General MIDI SF2 soundfont synthesizer, 16-channel polyphonic",
+    "category": "Instruments",
+    "wasmFile": "tsf.wasm",
+    "processorFile": "processor.js",
+    "sf2": true,
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "midi_in",
+        "name": "MIDI In",
+        "dir": "input",
+        "type": "midi"
+      },
+      {
+        "index": 1,
+        "symbol": "out_l",
+        "name": "Audio Out L",
+        "dir": "output",
+        "type": "audio"
+      },
+      {
+        "index": 2,
+        "symbol": "out_r",
+        "name": "Audio Out R",
+        "dir": "output",
+        "type": "audio"
+      },
+      {
+        "index": 3,
+        "symbol": "gain",
+        "name": "Gain",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 2,
+        "default": 0.5
+      }
+    ]
   }
 ]

@@ -11,6 +11,7 @@ export const meta         = {
       "name": "Listen",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 3,
       "default": 3
@@ -21,6 +22,7 @@ export const meta         = {
       "name": "L <> M",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 88,
       "max": 1020,
       "default": 550
@@ -31,6 +33,7 @@ export const meta         = {
       "name": "M <> H",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 112,
       "max": 19606,
       "default": 9859
@@ -41,6 +44,7 @@ export const meta         = {
       "name": "L Dist",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 60,
       "default": 45
@@ -51,6 +55,7 @@ export const meta         = {
       "name": "M Dist",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 60,
       "default": 45
@@ -61,6 +66,7 @@ export const meta         = {
       "name": "H Dist",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 60,
       "default": 45
@@ -71,6 +77,7 @@ export const meta         = {
       "name": "L Out",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -20,
       "max": 20,
       "default": 6
@@ -81,6 +88,7 @@ export const meta         = {
       "name": "M Out",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -20,
       "max": 20,
       "default": 0
@@ -91,6 +99,7 @@ export const meta         = {
       "name": "H Out",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -20,
       "max": 20,
       "default": 0
@@ -101,6 +110,7 @@ export const meta         = {
       "name": "Mode",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0
@@ -111,6 +121,7 @@ export const meta         = {
       "name": "Left In",
       "dir": "input",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -121,6 +132,7 @@ export const meta         = {
       "name": "Right In",
       "dir": "input",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -131,6 +143,7 @@ export const meta         = {
       "name": "Left Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -141,6 +154,7 @@ export const meta         = {
       "name": "Right Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null

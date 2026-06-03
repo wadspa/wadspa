@@ -11,6 +11,7 @@ export const meta         = {
       "name": "Thresh",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -40,
       "max": 0,
       "default": -16
@@ -21,6 +22,7 @@ export const meta         = {
       "name": "Ratio",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -17,
       "max": 0.5,
       "default": -10
@@ -31,6 +33,7 @@ export const meta         = {
       "name": "Output",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 40,
       "default": 4
@@ -41,6 +44,7 @@ export const meta         = {
       "name": "Attack",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 2,
       "max": 1571,
       "default": 283.14
@@ -51,6 +55,7 @@ export const meta         = {
       "name": "Release",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 1,
       "max": 1571,
       "default": 864.6
@@ -61,6 +66,7 @@ export const meta         = {
       "name": "Limiter",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -20,
       "max": 10,
       "default": 10
@@ -71,6 +77,7 @@ export const meta         = {
       "name": "Gate Thr",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -60,
       "max": 0,
       "default": -60
@@ -81,6 +88,7 @@ export const meta         = {
       "name": "Gate Att",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 5,
       "max": 15782,
       "default": 5
@@ -91,6 +99,7 @@ export const meta         = {
       "name": "Gate Rel",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 9,
       "max": 17384,
       "default": 173.93
@@ -101,6 +110,7 @@ export const meta         = {
       "name": "Mix",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 100,
       "default": 100
@@ -111,6 +121,7 @@ export const meta         = {
       "name": "Left In",
       "dir": "input",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -121,6 +132,7 @@ export const meta         = {
       "name": "Right In",
       "dir": "input",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -131,6 +143,7 @@ export const meta         = {
       "name": "Left Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -141,6 +154,7 @@ export const meta         = {
       "name": "Right Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null

@@ -11,6 +11,7 @@ export const meta         = {
       "name": "Width",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -100,
       "max": 100,
       "default": 56
@@ -21,6 +22,7 @@ export const meta         = {
       "name": "Delay",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0.45,
       "max": 47.62,
       "default": 22.43
@@ -31,6 +33,7 @@ export const meta         = {
       "name": "Balance",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -100,
       "max": 100,
       "default": 0
@@ -41,6 +44,7 @@ export const meta         = {
       "name": "Mod",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 47.62,
       "default": 0
@@ -51,6 +55,7 @@ export const meta         = {
       "name": "Rate",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0.1,
       "max": 100,
       "default": 50
@@ -61,6 +66,7 @@ export const meta         = {
       "name": "Left In",
       "dir": "input",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -71,6 +77,7 @@ export const meta         = {
       "name": "Right In",
       "dir": "input",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -81,6 +88,7 @@ export const meta         = {
       "name": "Left Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -91,6 +99,7 @@ export const meta         = {
       "name": "Right Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null

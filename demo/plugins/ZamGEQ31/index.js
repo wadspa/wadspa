@@ -1,0 +1,363 @@
+export { default } from './ZamGEQ31.js';
+export const meta         = {
+  "uri": "urn:zamaudio:ZamGEQ31",
+  "label": "ZamGEQ31",
+  "name": "ZamGEQ31",
+  "exportName": "createZamGEQ31Plugin",
+  "ports": [
+    {
+      "index": 0,
+      "symbol": "lv2_audio_in_1",
+      "name": "Audio Input 1",
+      "dir": "input",
+      "type": "audio",
+      "legacy": false,
+      "min": null,
+      "max": null,
+      "default": null
+    },
+    {
+      "index": 1,
+      "symbol": "lv2_audio_out_1",
+      "name": "Audio Output 1",
+      "dir": "output",
+      "type": "audio",
+      "legacy": false,
+      "min": null,
+      "max": null,
+      "default": null
+    },
+    {
+      "index": 2,
+      "symbol": "master",
+      "name": "Master Gain",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -30,
+      "max": 30,
+      "default": 0
+    },
+    {
+      "index": 3,
+      "symbol": "band1",
+      "name": "32Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 4,
+      "symbol": "band2",
+      "name": "40Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 5,
+      "symbol": "band3",
+      "name": "50Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 6,
+      "symbol": "band4",
+      "name": "63Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 7,
+      "symbol": "band5",
+      "name": "79Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 8,
+      "symbol": "band6",
+      "name": "100Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 9,
+      "symbol": "band7",
+      "name": "126Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 10,
+      "symbol": "band8",
+      "name": "158Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 11,
+      "symbol": "band9",
+      "name": "200Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 12,
+      "symbol": "band10",
+      "name": "251Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 13,
+      "symbol": "band11",
+      "name": "316Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 14,
+      "symbol": "band12",
+      "name": "398Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 15,
+      "symbol": "band13",
+      "name": "501Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 16,
+      "symbol": "band14",
+      "name": "631Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 17,
+      "symbol": "band15",
+      "name": "794Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 18,
+      "symbol": "band16",
+      "name": "999Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 19,
+      "symbol": "band17",
+      "name": "1257Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 20,
+      "symbol": "band18",
+      "name": "1584Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 21,
+      "symbol": "band19",
+      "name": "1997Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 22,
+      "symbol": "band20",
+      "name": "2514Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 23,
+      "symbol": "band21",
+      "name": "3165Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 24,
+      "symbol": "band22",
+      "name": "3986Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 25,
+      "symbol": "band23",
+      "name": "5017Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 26,
+      "symbol": "band24",
+      "name": "6318Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 27,
+      "symbol": "band25",
+      "name": "7963Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 28,
+      "symbol": "band26",
+      "name": "10032Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 29,
+      "symbol": "band27",
+      "name": "12662Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 30,
+      "symbol": "band28",
+      "name": "16081Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    },
+    {
+      "index": 31,
+      "symbol": "band29",
+      "name": "20801Hz",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": -12,
+      "max": 12,
+      "default": 0
+    }
+  ]
+};
+export const wasmUrl      = new URL('./ZamGEQ31.wasm',  import.meta.url).href;
+export const processorUrl = new URL('./processor.js',      import.meta.url).href;

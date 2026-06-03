@@ -1,0 +1,286 @@
+export { default } from './Sorcer.js';
+export const meta         = {
+  "uri": "http://www.openavproductions.com/sorcer",
+  "label": "Sorcer",
+  "name": "Sorcer",
+  "exportName": "createSorcerPlugin",
+  "ports": [
+    {
+      "index": 0,
+      "symbol": "attack",
+      "name": "attack",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0.01,
+      "max": 1,
+      "default": 0.01
+    },
+    {
+      "index": 1,
+      "symbol": "decay",
+      "name": "decay",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0.3
+    },
+    {
+      "index": 2,
+      "symbol": "release",
+      "name": "release",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0.2
+    },
+    {
+      "index": 3,
+      "symbol": "sustain",
+      "name": "sustain",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 1
+    },
+    {
+      "index": 4,
+      "symbol": "vol",
+      "name": "vol",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0.3
+    },
+    {
+      "index": 5,
+      "symbol": "compAttack",
+      "name": "compAttack",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0
+    },
+    {
+      "index": 6,
+      "symbol": "compMakeup",
+      "name": "compMakeup",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0
+    },
+    {
+      "index": 7,
+      "symbol": "compRelease",
+      "name": "compRelease",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0
+    },
+    {
+      "index": 8,
+      "symbol": "compThreshold",
+      "name": "compThreshold",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0
+    },
+    {
+      "index": 9,
+      "symbol": "compressorEnable",
+      "name": "compressorEnable",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0
+    },
+    {
+      "index": 10,
+      "symbol": "filter1cutoff",
+      "name": "filter1cutoff",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 1
+    },
+    {
+      "index": 11,
+      "symbol": "filter1lfo1range",
+      "name": "filter1lfo1range",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0
+    },
+    {
+      "index": 12,
+      "symbol": "lfo1_wavetable1pos",
+      "name": "lfo1_wavetable1pos",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0
+    },
+    {
+      "index": 13,
+      "symbol": "lfo1_wavetable2pos",
+      "name": "lfo1_wavetable2pos",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0
+    },
+    {
+      "index": 14,
+      "symbol": "lfo1amp",
+      "name": "lfo1amp",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0.1
+    },
+    {
+      "index": 15,
+      "symbol": "lfo1freq",
+      "name": "lfo1freq",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0.3
+    },
+    {
+      "index": 16,
+      "symbol": "osc1vol",
+      "name": "osc1vol",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0.3
+    },
+    {
+      "index": 17,
+      "symbol": "osc2vol",
+      "name": "osc2vol",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0.3
+    },
+    {
+      "index": 18,
+      "symbol": "osc3vol",
+      "name": "osc3vol",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0.3
+    },
+    {
+      "index": 19,
+      "symbol": "output_db",
+      "name": "output_db",
+      "dir": "output",
+      "type": "control",
+      "legacy": false,
+      "min": -96,
+      "max": 10,
+      "default": -96
+    },
+    {
+      "index": 20,
+      "symbol": "wavetable1pos",
+      "name": "wavetable1pos",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0
+    },
+    {
+      "index": 21,
+      "symbol": "wavetable2pos",
+      "name": "wavetable2pos",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 0,
+      "max": 1,
+      "default": 0
+    },
+    {
+      "index": 22,
+      "symbol": "out0",
+      "name": "out0",
+      "dir": "output",
+      "type": "audio",
+      "legacy": false,
+      "min": null,
+      "max": null,
+      "default": null
+    },
+    {
+      "index": 23,
+      "symbol": "midiin",
+      "name": "midiin",
+      "dir": "input",
+      "type": "midi",
+      "legacy": false,
+      "min": null,
+      "max": null,
+      "default": null
+    },
+    {
+      "index": 24,
+      "symbol": "nvoices",
+      "name": "Polyphony",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "min": 1,
+      "max": 16,
+      "default": 8
+    }
+  ]
+};
+export const wasmUrl      = new URL('./Sorcer.wasm',  import.meta.url).href;
+export const processorUrl = new URL('./processor.js',      import.meta.url).href;

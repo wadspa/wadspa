@@ -11,6 +11,7 @@ export const meta         = {
       "name": "Thresh",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -40,
       "max": 0,
       "default": -16
@@ -21,6 +22,7 @@ export const meta         = {
       "name": "Output",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -20,
       "max": 20,
       "default": 4
@@ -31,6 +33,7 @@ export const meta         = {
       "name": "Release",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 1,
       "max": 1571,
       "default": 758.5
@@ -41,6 +44,7 @@ export const meta         = {
       "name": "Attack",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1563,
       "default": 234.45
@@ -51,6 +55,7 @@ export const meta         = {
       "name": "Knee",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 1,
       "default": 0
@@ -61,6 +66,7 @@ export const meta         = {
       "name": "Left In",
       "dir": "input",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -71,6 +77,7 @@ export const meta         = {
       "name": "Right In",
       "dir": "input",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -81,6 +88,7 @@ export const meta         = {
       "name": "Left Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -91,6 +99,7 @@ export const meta         = {
       "name": "Right Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null

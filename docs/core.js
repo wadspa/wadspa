@@ -53,10 +53,13 @@ export async function loadPlugin(ctx, pluginModule) {
 
     const hasMidi = meta.ports.some(p => p.type === 'midi' && p.dir === 'input');
 
+    const pending = {};
+
     await new Promise((resolve, reject) => {
         workletNode.port.onmessage = ({ data }) => {
             if (data.type === 'ready') resolve();
             if (data.type === 'error') reject(new Error(data.message));
+            if (data.type === 'sf2loaded' && pending.sf2) { pending.sf2(); delete pending.sf2; }
         };
         workletNode.port.postMessage(
             { type: 'setup', wasm: wasmBytes, inBufs, outBufs, setters: setterMap },
@@ -73,7 +76,7 @@ export async function loadPlugin(ctx, pluginModule) {
         outputNode = merger;
     }
 
-    return new WadspNode(workletNode, outputNode, meta, hasMidi);
+    return new WadspNode(workletNode, outputNode, meta, hasMidi, pending);
 }
 
 class WadspNode {
@@ -81,11 +84,13 @@ class WadspNode {
     #meta;
     #controls;
     #hasMidi;
+    #pending;
 
-    constructor(workletNode, outputNode, meta, hasMidi = false) {
+    constructor(workletNode, outputNode, meta, hasMidi = false, pending = {}) {
         this.#node     = workletNode;
         this.#meta     = meta;
         this.#hasMidi  = hasMidi;
+        this.#pending  = pending;
         this.#controls = new Map(
             meta.ports
                 .filter(p => p.type === 'control' && p.dir === 'input')
@@ -130,6 +135,21 @@ class WadspNode {
         const bend = Math.round(semitones * 8192 / 2) + 8192;
         const clamped = Math.max(0, Math.min(16383, bend));
         return this.midi(0xE0 | channel, clamped & 0x7F, clamped >> 7);
+    }
+
+    async loadSF2(urlOrBuffer) {
+        let buffer;
+        if (typeof urlOrBuffer === 'string') {
+            const resp = await fetch(urlOrBuffer);
+            if (!resp.ok) throw new Error(`Failed to fetch SF2: ${resp.status} ${urlOrBuffer}`);
+            buffer = await resp.arrayBuffer();
+        } else {
+            buffer = urlOrBuffer;
+        }
+        return new Promise(resolve => {
+            this.#pending.sf2 = resolve;
+            this.#node.port.postMessage({ type: 'loadSF2', buffer }, [buffer]);
+        });
     }
 
     get node()     { return this.#node; }

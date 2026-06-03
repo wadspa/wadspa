@@ -11,6 +11,7 @@ export const meta         = {
       "name": "Freq",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 100,
       "default": 33
@@ -21,6 +22,7 @@ export const meta         = {
       "name": "Res",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 100,
       "default": 70
@@ -31,6 +33,7 @@ export const meta         = {
       "name": "Output",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -20,
       "max": 20,
       "default": 0
@@ -41,6 +44,7 @@ export const meta         = {
       "name": "Env->VCF",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -100,
       "max": 100,
       "default": 70
@@ -51,6 +55,7 @@ export const meta         = {
       "name": "Attack",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 160.83,
       "default": 0
@@ -61,6 +66,7 @@ export const meta         = {
       "name": "Release",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 1.56,
       "max": 15511.64,
       "default": 7250
@@ -71,6 +77,7 @@ export const meta         = {
       "name": "LFO->VCF",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -100,
       "max": 100,
       "default": 40
@@ -81,6 +88,7 @@ export const meta         = {
       "name": "LFO Rate",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0.01,
       "max": 100,
       "default": 40
@@ -91,6 +99,7 @@ export const meta         = {
       "name": "Trigger",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": -37,
       "max": 3,
       "default": -37
@@ -101,6 +110,7 @@ export const meta         = {
       "name": "Max Freq",
       "dir": "input",
       "type": "control",
+      "legacy": false,
       "min": 0,
       "max": 100,
       "default": 75
@@ -111,6 +121,7 @@ export const meta         = {
       "name": "Left In",
       "dir": "input",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -121,6 +132,7 @@ export const meta         = {
       "name": "Right In",
       "dir": "input",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -131,6 +143,7 @@ export const meta         = {
       "name": "Left Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
@@ -141,6 +154,7 @@ export const meta         = {
       "name": "Right Out",
       "dir": "output",
       "type": "audio",
+      "legacy": false,
       "min": null,
       "max": null,
       "default": null
