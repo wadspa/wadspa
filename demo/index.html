@@ -360,10 +360,14 @@ let ctx    = null;
 let synth  = null;
 const chain = [];   // array of { eff, node }
 
+function safeDisconnect(node) {
+  try { node.output.disconnect(); } catch (_) {}
+}
+
 async function rewire() {
   if (!ctx || !synth) return;
-  synth.output.disconnect();
-  for (const { node } of chain) node.output.disconnect();
+  safeDisconnect(synth);
+  for (const { node } of chain) safeDisconnect(node);
 
   let prev = synth;
   for (const { node } of chain) {
@@ -728,7 +732,7 @@ function renderChain() {
 
     card.querySelector('.remove-btn').addEventListener('click', async () => {
       chain.splice(i, 1);
-      node.output.disconnect();
+      safeDisconnect(node);
       renderChain();
       rewire();
     });
