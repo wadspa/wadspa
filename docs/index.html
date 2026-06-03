@@ -393,6 +393,7 @@ function markKey(semi, on) {
 
 function mousePress(semi) {
   if (mouseHeld) { if (mouseHeld.semi === semi) return; mouseRelease(); }
+  ctx?.resume();
   const note = midiNote(semi);
   mouseHeld = { semi, note };
   markKey(semi, true);
@@ -433,6 +434,7 @@ window.addEventListener('keydown', e => {
   if (k === '-') { if (octave > 0) { octave--; document.getElementById('oct-lbl').textContent = `octave ${octave}`; } return; }
   if (k === '=') { if (octave < 8) { octave++; document.getElementById('oct-lbl').textContent = `octave ${octave}`; } return; }
   if (k in KMAP && !pressedKeys.has(k)) {
+    ctx?.resume();
     pressedKeys.add(k);
     const semi = KMAP[k], note = midiNote(semi);
     kbActive.set(k, { semi, note });
