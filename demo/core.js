@@ -34,7 +34,8 @@ export async function loadPlugin(ctx, pluginModule) {
 
     const stereoOut = audioOut.length === 2;
     const stereoIn  = stereoOut && audioIn.length === 2;
-    const nIn  = audioIn.length === 0 ? 0 : (stereoIn ? 1 : audioIn.length);
+    // Safari requires numberOfInputs >= 1 or it won't call process() on the worklet.
+    const nIn  = audioIn.length === 0 ? 1 : (stereoIn ? 1 : audioIn.length);
     // Stereo plugins get 2 separate mono outputs merged via ChannelMergerNode.
     // Using outputChannelCount:[2] on a single output is unreliable in Safari.
     const nOut = stereoOut ? 2 : (audioOut.length || 1);
