@@ -86,6 +86,7 @@ function buildCatalogueEntry(manifestEntry, distDir) {
         wasmFile,
         processorFile: 'processor.js',
         ...(meta.sf2 && { sf2: true }),
+        ...(manifestEntry.sampleType && { sampleType: manifestEntry.sampleType }),
         ports: meta.ports.map(p => {
             if (p.type !== 'control') return p;
             return { ...p, default: resolveDefault(p.default, p.min, p.max) };
@@ -141,11 +142,13 @@ for (const entry of lv2Plugins) {
             out = run(`node "${join(ROOT, entry.buildScript)}"`, { cwd: ROOT });
         } else {
             const flags = [`--include "${LV2_INCLUDE}"`];
-            if (entry.threads)       flags.push('--threads');
-            if (entry.memoryGrowth)  flags.push('--memory-growth');
-            for (const f of entry.embedFiles  ?? []) flags.push(`--embed-file "${f}"`);
-            for (const i of entry.includes    ?? []) flags.push(`--include "${join(ROOT, i)}"`);
-            for (const d of entry.defines     ?? []) flags.push(`--define "${d}"`);
+            if (entry.threads)            flags.push('--threads');
+            if (entry.memoryGrowth)       flags.push('--memory-growth');
+            if (entry.allowMemoryGrowth)  flags.push('--memory-growth');
+            for (const f of entry.embedFiles    ?? []) flags.push(`--embed-file "${f}"`);
+            for (const i of entry.includes      ?? []) flags.push(`--include "${join(ROOT, i)}"`);
+            for (const d of entry.defines       ?? []) flags.push(`--define "${d}"`);
+            for (const e of entry.extraExports  ?? []) flags.push(`--extra-export "${e}"`);
             if (entry.sources) {
                 const srcs = (Array.isArray(entry.sources) ? entry.sources : [entry.sources])
                     .map(s => join(dir, s)).join(',');

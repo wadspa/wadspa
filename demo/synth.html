@@ -219,6 +219,19 @@
       border-radius: 3px; cursor: pointer; white-space: nowrap;
     }
     .sf2-upload-btn:hover { border-color: var(--accent); }
+    .sample-url-input {
+      flex: 1; min-width: 0; padding: 0.2rem 0.4rem; font-family: monospace; font-size: 0.7rem;
+      background: var(--surface); color: var(--text); border: 1px solid var(--border);
+      border-radius: 3px; outline: none;
+    }
+    .sample-url-input:focus { border-color: var(--accent); }
+    #sample-panel { margin-top: 0.5rem; border-top: 1px solid var(--border); padding-top: 0.55rem; display: none; }
+    .sample-pad-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.25rem; margin-top: 0.4rem; }
+    .sample-pad { padding: 0.2rem 0.1rem; font-size: 0.6rem; font-family: monospace;
+      background: var(--surface); color: var(--muted); border: 1px solid var(--border);
+      border-radius: 3px; cursor: pointer; text-align: center; white-space: nowrap; overflow: hidden; }
+    .sample-pad:hover { border-color: var(--accent); color: var(--text); }
+    .sample-pad.loaded { border-color: var(--accent2); color: var(--accent2); }
     .sf2-program-row {
       display: none; align-items: center; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.3rem;
     }
@@ -271,6 +284,7 @@
         <div class="piano" id="piano"></div>
       </div>
       <div id="synth-ctrls"></div>
+      <div id="sample-panel"></div>
       <div id="sf2-panel"></div>
     </div>
   </div>
@@ -360,10 +374,14 @@ let ctx    = null;
 let synth  = null;
 const chain = [];   // array of { eff, node }
 
+function safeDisconnect(node) {
+  try { node.output.disconnect(); } catch (_) {}
+}
+
 async function rewire() {
   if (!ctx || !synth) return;
-  synth.output.disconnect();
-  for (const { node } of chain) node.output.disconnect();
+  safeDisconnect(synth);
+  for (const { node } of chain) safeDisconnect(node);
 
   let prev = synth;
   for (const { node } of chain) {
@@ -371,6 +389,7 @@ async function rewire() {
     prev = node;
   }
   prev.output.connect(ctx.destination);
+  console.log('[wadspa] rewire: ctx=' + ctx.state + ' synth.output=' + synth.output.constructor.name);
 }
 
 // ── Piano ────────────────────────────────────────────────────────
@@ -393,9 +412,11 @@ function markKey(semi, on) {
 
 function mousePress(semi) {
   if (mouseHeld) { if (mouseHeld.semi === semi) return; mouseRelease(); }
+  ctx?.resume();
   const note = midiNote(semi);
   mouseHeld = { semi, note };
   markKey(semi, true);
+  console.log('[wadspa] noteOn', note, 'ctx=' + ctx?.state, 'synth=' + !!synth);
   synth?.noteOn(note, 100);
 }
 function mouseRelease() {
@@ -433,6 +454,7 @@ window.addEventListener('keydown', e => {
   if (k === '-') { if (octave > 0) { octave--; document.getElementById('oct-lbl').textContent = `octave ${octave}`; } return; }
   if (k === '=') { if (octave < 8) { octave++; document.getElementById('oct-lbl').textContent = `octave ${octave}`; } return; }
   if (k in KMAP && !pressedKeys.has(k)) {
+    ctx?.resume();
     pressedKeys.add(k);
     const semi = KMAP[k], note = midiNote(semi);
     kbActive.set(k, { semi, note });
@@ -499,6 +521,15 @@ function buildSynthControls(node, inst) {
     sf2Panel.style.display = 'none';
   }
 
+  // Sample panel — shown for sample-based instruments (samplv1, drumkv1)
+  const samplePanel = document.getElementById('sample-panel');
+  if (inst.sampleType) {
+    samplePanel.style.display = 'block';
+    buildSamplePanel(node, inst);
+  } else {
+    samplePanel.style.display = 'none';
+  }
+
   const ctrlPorts = inst.ports.filter(p => p.type === 'control' && p.dir === 'input');
   for (const p of ctrlPorts) {
     const min = p.min ?? 0;
@@ -520,6 +551,140 @@ function buildSynthControls(node, inst) {
     });
     ctrls.appendChild(row);
     if (def !== null && def !== undefined) node.set(p.name, def);
+  }
+}
+
+// GM percussion note map (note → name) for drumkv1 pad grid
+const GM_DRUMS = {
+  35:'Bass Drum 2', 36:'Bass Drum 1', 38:'Snare',    39:'Hand Clap',
+  40:'Snare 2',     41:'Low Floor Tom', 42:'Hi-Hat Closed', 43:'High Floor Tom',
+  44:'Hi-Hat Pedal',45:'Low Tom',    46:'Hi-Hat Open', 47:'Low-Mid Tom',
+  48:'High-Mid Tom',49:'Crash 1',    50:'High Tom',   51:'Ride 1',
+  52:'Chinese',     53:'Ride Bell', 54:'Tambourine', 55:'Splash',
+  56:'Cowbell',     57:'Crash 2',   58:'Vibraslap',  59:'Ride 2',
+  60:'Hi Bongo',    61:'Low Bongo', 62:'Conga Mute', 63:'Conga Open',
+  64:'Low Conga',   65:'High Timbale',66:'Low Timbale',
+};
+
+async function loadSampleFromUrl(url, node, note = null) {
+  const label = url.split('/').pop();
+  setSampleStatus(`loading ${label}…`);
+  try {
+    if (note !== null) {
+      await node.loadPad(note, url);
+      document.querySelector(`.sample-pad[data-note="${note}"]`)?.classList.add('loaded');
+    } else {
+      await node.loadSample(url);
+    }
+    setSampleStatus(`${label} loaded`);
+  } catch (e) {
+    setSampleStatus(`error: ${e.message}`);
+    console.error(e);
+  }
+}
+
+function setSampleStatus(msg) {
+  const el = document.getElementById('sample-status-lbl');
+  if (el) el.textContent = msg;
+}
+
+function buildSamplePanel(node, inst) {
+  const panel = document.getElementById('sample-panel');
+  panel.innerHTML = '';
+
+  // Status row
+  const statusRow = document.createElement('div');
+  statusRow.className = 'sf2-status';
+  const dot = document.createElement('span'); dot.className = 'sf2-dot';
+  const lbl = document.createElement('span'); lbl.id = 'sample-status-lbl';
+  lbl.textContent = 'no sample loaded';
+  statusRow.append(dot, lbl);
+  panel.appendChild(statusRow);
+
+  // URL input row (works for both single and kit — for kit, loads to all pads)
+  const urlRow = document.createElement('div');
+  urlRow.className = 'sf2-lib-row';
+  const urlInput = document.createElement('input');
+  urlInput.type = 'text';
+  urlInput.className = 'sample-url-input';
+  urlInput.placeholder = inst.sampleType === 'kit'
+    ? 'kit manifest URL (JSON) or single WAV URL'
+    : 'paste WAV URL (raw.githubusercontent.com, CDN…)';
+  const urlBtn = document.createElement('button');
+  urlBtn.className = 'sf2-upload-btn'; urlBtn.textContent = 'load';
+  urlBtn.addEventListener('click', async () => {
+    const url = urlInput.value.trim();
+    if (!url) return;
+    if (inst.sampleType === 'kit' && url.endsWith('.json')) {
+      // Fetch kit manifest
+      setSampleStatus('loading kit manifest…');
+      try {
+        const manifest = await fetch(url, { cache: 'no-cache' }).then(r => r.json());
+        for (const [noteStr, wavUrl] of Object.entries(manifest.pads ?? manifest)) {
+          const note = parseInt(noteStr);
+          if (!isNaN(note)) await loadSampleFromUrl(wavUrl, node, note);
+        }
+        setSampleStatus('kit loaded');
+        document.querySelector('#sample-panel .sf2-dot')?.classList.add('loaded');
+      } catch (e) { setSampleStatus(`error: ${e.message}`); }
+    } else {
+      await loadSampleFromUrl(url, node, inst.sampleType === 'kit' ? null : null);
+      document.querySelector('#sample-panel .sf2-dot')?.classList.add('loaded');
+    }
+  });
+  urlRow.append(urlInput, urlBtn);
+  panel.appendChild(urlRow);
+
+  // File upload
+  const uploadRow = document.createElement('div');
+  uploadRow.className = 'sf2-lib-row';
+  const uploadLabel = document.createElement('label');
+  uploadLabel.className = 'sf2-upload-btn';
+  uploadLabel.textContent = inst.sampleType === 'kit' ? 'upload WAV…' : 'upload WAV…';
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file'; fileInput.accept = '.wav,.aif,.aiff,.flac,.ogg';
+  fileInput.style.display = 'none';
+  fileInput.addEventListener('change', async e => {
+    const file = e.target.files[0]; if (!file) return;
+    setSampleStatus(`loading ${file.name}…`);
+    try {
+      const buf = await file.arrayBuffer();
+      await node.loadSample(buf);
+      setSampleStatus(`${file.name} loaded`);
+      document.querySelector('#sample-panel .sf2-dot')?.classList.add('loaded');
+    } catch (err) { setSampleStatus(`error: ${err.message}`); }
+  });
+  uploadLabel.appendChild(fileInput);
+  uploadRow.appendChild(uploadLabel);
+  panel.appendChild(uploadRow);
+
+  // Drum pad grid for kit instruments
+  if (inst.sampleType === 'kit') {
+    const grid = document.createElement('div');
+    grid.className = 'sample-pad-grid';
+    for (const [note, name] of Object.entries(GM_DRUMS)) {
+      const pad = document.createElement('div');
+      pad.className = 'sample-pad';
+      pad.dataset.note = note;
+      pad.textContent = `${name}\n${note}`;
+      pad.title = `MIDI note ${note} — click to upload WAV`;
+      pad.addEventListener('click', () => {
+        const fi = document.createElement('input');
+        fi.type = 'file'; fi.accept = '.wav,.aif,.aiff,.flac,.ogg';
+        fi.addEventListener('change', async e => {
+          const f = e.target.files[0]; if (!f) return;
+          setSampleStatus(`loading ${f.name} → note ${note}…`);
+          try {
+            await node.loadPad(parseInt(note), await f.arrayBuffer());
+            pad.classList.add('loaded');
+            setSampleStatus(`${f.name} → note ${note} loaded`);
+          } catch (err) { setSampleStatus(`error: ${err.message}`); }
+        });
+        fi.click();
+      });
+      grid.appendChild(pad);
+    }
+    panel.appendChild(grid);
   }
 }
 
@@ -567,6 +732,21 @@ function buildSF2Panel(node) {
   uploadLabel.appendChild(fileInput);
   libRow.appendChild(uploadLabel);
   panel.appendChild(libRow);
+
+  // URL input row
+  const urlRow = document.createElement('div');
+  urlRow.className = 'sf2-lib-row';
+  const urlInput = document.createElement('input');
+  urlInput.type = 'text'; urlInput.placeholder = 'paste SF2 URL (GitHub raw, CDN…)';
+  urlInput.className = 'sample-url-input';
+  const urlBtn = document.createElement('button');
+  urlBtn.className = 'sf2-upload-btn'; urlBtn.textContent = 'load';
+  urlBtn.addEventListener('click', () => {
+    const url = urlInput.value.trim();
+    if (url) loadSF2FromUrl(url, url.split('/').pop(), node);
+  });
+  urlRow.append(urlInput, urlBtn);
+  panel.appendChild(urlRow);
 
   // GM program picker (hidden until SF2 is loaded)
   const progRow = document.createElement('div');
@@ -649,10 +829,11 @@ function setSF2Status(msg) {
 
 async function switchInstrument(inst) {
   if (!ctx) return;
-  if (synth) { synth.output.disconnect(); synth = null; }
+  if (synth) { safeDisconnect(synth); synth = null; }
   setStatus(`loading ${inst.name}…`);
   try {
     synth = await loadPlugin(ctx, instrumentModule(inst));
+    console.log('[wadspa] loadPlugin done, ctx=' + ctx.state);
     activeInstrument = inst;
     buildSynthControls(synth, inst);
     rewire();
@@ -726,7 +907,7 @@ function renderChain() {
 
     card.querySelector('.remove-btn').addEventListener('click', async () => {
       chain.splice(i, 1);
-      node.output.disconnect();
+      safeDisconnect(node);
       renderChain();
       rewire();
     });

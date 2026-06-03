@@ -177,7 +177,7 @@
   },
   {
     "id": "mda_Overdrive",
-    "description": "The Overdrive effect has a variety of sonic possibilities: adding body to drum loops, fuzz guitar, as well as that typical muffled “standing outside of a nig...",
+    "description": "The Overdrive effect has a variety of sonic possibilities: adding body to drum loops, fuzz guitar, as well as that typical muffled \u201cstanding outside of a nig...",
     "sources": [
       "mda_Overdrive_lv2.cpp",
       "mdaOverdrive.cpp"
@@ -297,7 +297,7 @@
   },
   {
     "id": "amsynth",
-    "description": "amsynth — analog modeling synthesizer, 32-voice polyphonic",
+    "description": "amsynth \u2014 analog modeling synthesizer, 32-voice polyphonic",
     "category": "Instruments",
     "sources": [
       "lv2plugin.cpp",
@@ -322,7 +322,7 @@
   },
   {
     "id": "drumkv1",
-    "description": "drumkv1 — sample-based drum synthesizer with per-pad synthesis and effects",
+    "description": "drumkv1 \u2014 sample-based drum synthesizer with per-pad synthesis and effects",
     "category": "Instruments",
     "noTest": true,
     "includes": [
@@ -341,11 +341,18 @@
       "drumkv1_sched_wasm.cpp",
       "drumkv1_sample_stub.cpp",
       "drumkv1_lv2.cpp"
-    ]
+    ],
+    "extraExports": [
+      "_shim_load_pad",
+      "_shim_sample_set_pcm",
+      "_shim_load_sample"
+    ],
+    "allowMemoryGrowth": true,
+    "sampleType": "kit"
   },
   {
     "id": "so-404",
-    "description": "SO-404 Bass Synthesizer — TB-303-style bass synth clone",
+    "description": "SO-404 Bass Synthesizer \u2014 TB-303-style bass synth clone",
     "category": "Instruments",
     "sources": [
       "so-404.c",
@@ -354,7 +361,7 @@
   },
   {
     "id": "so-kl5",
-    "description": "SO-kl5 Piano Synthesizer — electric piano clone",
+    "description": "SO-kl5 Piano Synthesizer \u2014 electric piano clone",
     "category": "Instruments",
     "sources": [
       "so-kl5.c",
@@ -363,7 +370,7 @@
   },
   {
     "id": "so-666",
-    "description": "SO-666 Feedback Synthesizer — feedback oscillator synth",
+    "description": "SO-666 Feedback Synthesizer \u2014 feedback oscillator synth",
     "category": "Instruments",
     "sources": [
       "so-666.c",
@@ -372,7 +379,7 @@
   },
   {
     "id": "padthv1",
-    "description": "padthv1 — polyphonic additive (PADsynth) synthesizer",
+    "description": "padthv1 \u2014 polyphonic additive (PADsynth) synthesizer",
     "category": "Instruments",
     "includes": [
       "toolchain/kissfft",
@@ -397,7 +404,7 @@
   },
   {
     "id": "synthv1",
-    "description": "synthv1 — dual-oscillator polyphonic analog synthesizer",
+    "description": "synthv1 \u2014 dual-oscillator polyphonic analog synthesizer",
     "category": "Instruments",
     "includes": [
       "plugins/synthv1/qt_stub"
@@ -413,13 +420,13 @@
   },
   {
     "id": "tsf",
-    "description": "TinySoundFont — General MIDI SF2 soundfont synthesizer, 16-channel polyphonic",
+    "description": "TinySoundFont \u2014 General MIDI SF2 soundfont synthesizer, 16-channel polyphonic",
     "category": "Instruments",
     "buildScript": "scripts/build-tsf.js"
   },
   {
     "id": "samplv1",
-    "description": "samplv1 — polyphonic sampler LV2",
+    "description": "samplv1 \u2014 polyphonic sampler LV2",
     "category": "Instruments",
     "noTest": true,
     "includes": [
@@ -438,7 +445,13 @@
       "samplv1_sched_wasm.cpp",
       "samplv1_pshifter.cpp",
       "samplv1_lv2.cpp"
-    ]
+    ],
+    "extraExports": [
+      "_shim_sample_set_pcm",
+      "_shim_load_sample"
+    ],
+    "allowMemoryGrowth": true,
+    "sampleType": "single"
   },
   {
     "id": "fil4",
@@ -524,7 +537,7 @@
   },
   {
     "id": "sorcer",
-    "description": "Sorcer — wavetable synthesiser LV2",
+    "description": "Sorcer \u2014 wavetable synthesiser LV2",
     "category": "Instruments",
     "includes": [
       "toolchain"
@@ -553,7 +566,7 @@
   },
   {
     "id": "noise-repellent",
-    "description": "Noise Repellent — broadband noise reduction (LV2)",
+    "description": "Noise Repellent \u2014 broadband noise reduction (LV2)",
     "category": "Effects",
     "includes": [
       "plugins/noise-repellent/libspecbleach/src",

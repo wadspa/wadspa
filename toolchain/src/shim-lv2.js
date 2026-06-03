@@ -287,7 +287,7 @@ export function generateLv2Shim(descriptor) {
     // Plugin handle
     lines.push('');
     lines.push('static const LV2_Descriptor *g_desc   = NULL;');
-    lines.push('static LV2_Handle            g_handle = NULL;');
+    lines.push('LV2_Handle                   g_handle = NULL;');
     lines.push('');
 
     // Forward declaration so shim_init can call shim_midi_clear before it is defined
@@ -452,7 +452,7 @@ export function generateLv2Shim(descriptor) {
 }
 
 // Exported function list for emcc's EXPORTED_FUNCTIONS flag
-export function lv2ExportedFunctions(descriptor) {
+export function lv2ExportedFunctions(descriptor, extraExports = []) {
     const { ports } = descriptor;
     const fns = ['_shim_init', '_shim_run'];
 
@@ -467,6 +467,10 @@ export function lv2ExportedFunctions(descriptor) {
     if (ports.some(p => p.type === 'midi' && p.dir === 'input')) {
         fns.push('_shim_midi_clear', '_shim_midi_note_on', '_shim_midi_note_off',
                  '_shim_midi_cc', '_shim_midi_pitch_bend');
+    }
+
+    for (const fn of extraExports) {
+        if (!fns.includes(fn)) fns.push(fn);
     }
 
     return fns;
@@ -563,6 +567,25 @@ class WadspProcessor extends AudioWorkletProcessor {
                 } catch (e) {
                     this.port.postMessage({ type: 'error', message: e.message });
                 }${midiHandler}
+            } else if (data.type === 'loadSample') {
+                if (!mod) return;
+                const pcm = new Float32Array(data.buffer);
+                const ptr = mod._malloc(pcm.byteLength);
+                mod.HEAPF32.set(pcm, ptr >> 2);
+                if (typeof mod._shim_sample_set_pcm === 'function')
+                    mod._shim_sample_set_pcm(ptr, pcm.length, data.srate);
+                if (typeof mod._shim_load_sample === 'function')
+                    mod._shim_load_sample();
+                mod._free(ptr);
+                this.port.postMessage({ type: 'sampleloaded' });
+            } else if (data.type === 'loadPad') {
+                if (!mod || typeof mod._shim_load_pad !== 'function') return;
+                const pcm = new Float32Array(data.buffer);
+                const ptr = mod._malloc(pcm.byteLength);
+                mod.HEAPF32.set(pcm, ptr >> 2);
+                mod._shim_load_pad(data.note, ptr, pcm.length, data.srate);
+                mod._free(ptr);
+                this.port.postMessage({ type: 'padloaded', note: data.note });
             } else if (data.type === 'set') {
                 if (mod) { const fn = SETTERS[data.symbol]; if (fn) mod[fn](data.value); }
             }

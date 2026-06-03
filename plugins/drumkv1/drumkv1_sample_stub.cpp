@@ -1,9 +1,50 @@
-// drumkv1_sample_stub.cpp — libsndfile-free sample implementation.
-// open() generates 0.5s of white noise so drums are audible without files.
+// drumkv1_sample_stub.cpp — libsndfile-free sample implementation with per-pad PCM injection.
+// JS calls shim_load_pad(note, ptr, frames, srate) to load a decoded WAV for one MIDI note.
+// The filename "/pcm/<note>" is used as a sentinel so open() picks up the right buffer.
 #include "drumkv1_sample.h"
+#include "drumkv1_lv2.h"
 #include <cstdlib>
 #include <cstring>
 #include <cmath>
+#include <cstdio>
+#include <emscripten.h>
+
+struct PadPCM { float* data = nullptr; uint32_t len = 0; float srate = 44100.f; };
+static PadPCM g_pads[128];
+
+extern "C" { extern LV2_Handle g_handle; }
+
+extern "C" {
+
+EMSCRIPTEN_KEEPALIVE void shim_load_pad(int note, const float* data, int frames, float srate) {
+    if (note < 0 || note > 127) return;
+    delete[] g_pads[note].data;
+    g_pads[note].data  = new float[frames];
+    g_pads[note].len   = (uint32_t)frames;
+    g_pads[note].srate = srate;
+    ::memcpy(g_pads[note].data, data, frames * sizeof(float));
+
+    if (!g_handle) return;
+    drumkv1_lv2 *p = static_cast<drumkv1_lv2 *>(g_handle);
+    drumkv1_element *elem = p->element(note);
+    if (!elem) elem = p->addElement(note);
+    if (elem) {
+        char path[32]; ::snprintf(path, sizeof(path), "/pcm/%d", note);
+        elem->setSampleFile(path);
+    }
+}
+
+EMSCRIPTEN_KEEPALIVE void shim_sample_set_pcm(const float*, int, float) {}
+EMSCRIPTEN_KEEPALIVE void shim_load_sample() {}
+
+} // extern "C"
+
+// Helper: if filename matches "/pcm/<note>", return note, else -1.
+static int pcm_note_from_path(const char *filename) {
+    if (!filename || ::strncmp(filename, "/pcm/", 5) != 0) return -1;
+    int n = ::atoi(filename + 5);
+    return (n >= 0 && n <= 127) ? n : -1;
+}
 
 // ── drumkv1_sample ──────────────────────────────────────────────────────────
 
@@ -31,23 +72,31 @@ bool drumkv1_sample::open(const char *filename, float freq0)
 {
     close();
 
-    // Generate a short (0.5s) white-noise burst as placeholder sample.
-    const uint32_t nframes = (uint32_t)(m_srate * 0.5f) + 4; // +4 for interp guard
     m_nchannels = 1;
-    m_rate0     = m_srate;
     m_freq0     = freq0 > 0.0f ? freq0 : 440.0f;
-    m_ratio     = m_rate0 / (m_freq0 * m_srate);
-    m_nframes   = nframes;
 
-    m_pframes = new float *[1];
-    m_pframes[0] = new float[nframes + 4](); // +4 for hermite overread
-    // Fill with white noise, amplitude decays over time
-    unsigned rng = 0x12345678u;
-    for (uint32_t i = 0; i < nframes; ++i) {
-        rng = rng * 1664525u + 1013904223u;
-        float n = (float)(int)rng / 2147483648.0f; // -1..1
-        float env = 1.0f - (float)i / (float)nframes;
-        m_pframes[0][i] = n * env * 0.5f;
+    const int note = pcm_note_from_path(filename);
+    if (note >= 0 && g_pads[note].data && g_pads[note].len > 0) {
+        // Use injected PCM for this pad.
+        const PadPCM& pad = g_pads[note];
+        m_rate0   = pad.srate;
+        m_nframes = pad.len;
+        m_pframes = new float*[1];
+        m_pframes[0] = new float[m_nframes + 4]();
+        ::memcpy(m_pframes[0], pad.data, m_nframes * sizeof(float));
+    } else {
+        // Fallback: short white-noise burst.
+        const uint32_t nframes = (uint32_t)(m_srate * 0.5f) + 4;
+        m_rate0   = m_srate;
+        m_nframes = nframes;
+        m_pframes = new float*[1];
+        m_pframes[0] = new float[nframes + 4]();
+        unsigned rng = 0x12345678u;
+        for (uint32_t i = 0; i < nframes; ++i) {
+            rng = rng * 1664525u + 1013904223u;
+            float n = (float)(int)rng / 2147483648.0f;
+            m_pframes[0][i] = n * (1.0f - (float)i / nframes) * 0.5f;
+        }
     }
 
     // Store filename

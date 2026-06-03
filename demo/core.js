@@ -60,7 +60,9 @@ export async function loadPlugin(ctx, pluginModule) {
         workletNode.port.onmessage = ({ data }) => {
             if (data.type === 'ready') resolve();
             if (data.type === 'error') reject(new Error(data.message));
-            if (data.type === 'sf2loaded' && pending.sf2) { pending.sf2(); delete pending.sf2; }
+            if (data.type === 'sf2loaded'    && pending.sf2)            { pending.sf2();            delete pending.sf2; }
+            if (data.type === 'sampleloaded' && pending.sample)        { pending.sample();          delete pending.sample; }
+            if (data.type === 'padloaded'    && pending[`pad${data.note}`]) { pending[`pad${data.note}`](); delete pending[`pad${data.note}`]; }
         };
         workletNode.port.postMessage(
             { type: 'setup', wasm: wasmBytes, inBufs, outBufs, setters: setterMap },
@@ -77,7 +79,7 @@ export async function loadPlugin(ctx, pluginModule) {
         outputNode = merger;
     }
 
-    return new WadspNode(workletNode, outputNode, meta, hasMidi, pending);
+    return new WadspNode(workletNode, outputNode, meta, hasMidi, pending, ctx);
 }
 
 class WadspNode {
@@ -86,12 +88,14 @@ class WadspNode {
     #controls;
     #hasMidi;
     #pending;
+    #ctx;
 
-    constructor(workletNode, outputNode, meta, hasMidi = false, pending = {}) {
+    constructor(workletNode, outputNode, meta, hasMidi = false, pending = {}, ctx = null) {
         this.#node     = workletNode;
         this.#meta     = meta;
         this.#hasMidi  = hasMidi;
         this.#pending  = pending;
+        this.#ctx      = ctx;
         this.#controls = new Map(
             meta.ports
                 .filter(p => p.type === 'control' && p.dir === 'input')
@@ -136,6 +140,38 @@ class WadspNode {
         const bend = Math.round(semitones * 8192 / 2) + 8192;
         const clamped = Math.max(0, Math.min(16383, bend));
         return this.midi(0xE0 | channel, clamped & 0x7F, clamped >> 7);
+    }
+
+    // Decode a URL or ArrayBuffer as audio, return { pcm: Float32Array, srate: number }
+    async #decodeAudio(urlOrBuffer) {
+        let arrayBuf;
+        if (typeof urlOrBuffer === 'string') {
+            const resp = await fetch(urlOrBuffer, { cache: 'no-cache' });
+            if (!resp.ok) throw new Error(`Failed to fetch sample: ${resp.status} ${urlOrBuffer}`);
+            arrayBuf = await resp.arrayBuffer();
+        } else {
+            arrayBuf = urlOrBuffer;
+        }
+        const decoded = await this.#ctx.decodeAudioData(arrayBuf);
+        return { pcm: decoded.getChannelData(0), srate: decoded.sampleRate };
+    }
+
+    async loadSample(urlOrBuffer) {
+        const { pcm, srate } = await this.#decodeAudio(urlOrBuffer);
+        const buffer = pcm.buffer.slice(pcm.byteOffset, pcm.byteOffset + pcm.byteLength);
+        return new Promise(resolve => {
+            this.#pending.sample = resolve;
+            this.#node.port.postMessage({ type: 'loadSample', buffer, srate }, [buffer]);
+        });
+    }
+
+    async loadPad(note, urlOrBuffer) {
+        const { pcm, srate } = await this.#decodeAudio(urlOrBuffer);
+        const buffer = pcm.buffer.slice(pcm.byteOffset, pcm.byteOffset + pcm.byteLength);
+        return new Promise(resolve => {
+            this.#pending[`pad${note}`] = resolve;
+            this.#node.port.postMessage({ type: 'loadPad', note, buffer, srate }, [buffer]);
+        });
     }
 
     async loadSF2(urlOrBuffer) {

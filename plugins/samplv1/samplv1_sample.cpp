@@ -1,8 +1,37 @@
-// samplv1_sample.cpp — WASM stub: generates a sine-wave sample instead of loading a file.
+// samplv1_sample.cpp — WASM stub with PCM injection support.
+// JS calls shim_load_sample_pcm(ptr, frames, srate) to load a decoded WAV,
+// then the next open() call (triggered by shim_load_sample_trigger) uses it.
 #include "samplv1_sample.h"
 #include <cmath>
 #include <cstring>
 #include <cstdlib>
+#include <emscripten.h>
+
+// Global PCM buffer set from JS before triggering a reload.
+static float*    g_pcm       = nullptr;
+static uint32_t  g_pcm_len   = 0;
+static float     g_pcm_srate = 44100.0f;
+
+#include "samplv1_lv2.h"
+extern "C" { extern LV2_Handle g_handle; }  // defined in _wadspa_lv2_shim.c
+
+extern "C" {
+
+EMSCRIPTEN_KEEPALIVE void shim_sample_set_pcm(const float* data, int frames, float srate) {
+    delete[] g_pcm;
+    g_pcm = new float[frames];
+    ::memcpy(g_pcm, data, frames * sizeof(float));
+    g_pcm_len   = (uint32_t)frames;
+    g_pcm_srate = srate;
+}
+
+EMSCRIPTEN_KEEPALIVE void shim_load_sample() {
+    if (!g_handle || !g_pcm) return;
+    samplv1_lv2 *p = static_cast<samplv1_lv2 *>(g_handle);
+    p->setSampleFile("/pcm", p->octaves());
+}
+
+} // extern "C"
 
 samplv1_sample::samplv1_sample(float srate)
     : m_srate(srate), m_ntabs(1),
@@ -34,26 +63,34 @@ samplv1_sample::~samplv1_sample() { close(); }
 bool samplv1_sample::open(const char *filename, float freq0, uint16_t /*otabs*/)
 {
     close();
-    m_filename  = ::strdup(filename ? filename : "");
-    m_freq0     = (freq0 > 0.0f ? freq0 : 440.0f);
-    m_rate0     = 44100.0f;
-
-    // Allocate: 1 tab, 1 channel, 256 frames — float ***m_pframes[tab][ch][frame]
-    const uint32_t N = 256;
-    m_ntabs     = 1;
+    m_filename = ::strdup(filename ? filename : "");
+    m_freq0    = (freq0 > 0.0f ? freq0 : 440.0f);
+    m_ntabs    = 1;
     m_nchannels = 1;
-    m_nframes   = N;
 
-    m_pframes       = new float **[m_ntabs];
-    m_pframes[0]    = new float  *[m_nchannels];
-    m_pframes[0][0] = new float   [N];
-
-    for (uint32_t i = 0; i < N; ++i)
-        m_pframes[0][0][i] = 0.5f * sinf(2.0f * float(M_PI) * i / N);
+    if (g_pcm && g_pcm_len > 0) {
+        // Use PCM data injected from JS (decoded WAV via decodeAudioData).
+        m_rate0   = g_pcm_srate;
+        m_nframes = g_pcm_len;
+        m_pframes       = new float **[1];
+        m_pframes[0]    = new float  *[1];
+        m_pframes[0][0] = new float   [m_nframes + 4](); // +4 hermite guard
+        ::memcpy(m_pframes[0][0], g_pcm, m_nframes * sizeof(float));
+    } else {
+        // Fallback: one cycle of a sine wave (silent until real sample loaded).
+        const uint32_t N = 256;
+        m_rate0   = 44100.0f;
+        m_nframes = N;
+        m_pframes       = new float **[1];
+        m_pframes[0]    = new float  *[1];
+        m_pframes[0][0] = new float   [N];
+        for (uint32_t i = 0; i < N; ++i)
+            m_pframes[0][0][i] = 0.5f * sinf(2.0f * float(M_PI) * i / N);
+    }
 
     m_ratio       = m_rate0 / (m_freq0 * m_srate);
-    m_offset_end  = N;
-    m_offset_end2 = N;
+    m_offset_end  = m_nframes;
+    m_offset_end2 = m_nframes;
     return true;
 }
 

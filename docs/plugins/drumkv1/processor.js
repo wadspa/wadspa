@@ -30,6 +30,25 @@ class WadspProcessor extends AudioWorkletProcessor {
                 else if (type === 0x80 || (type === 0x90 && data2 === 0)) mod._shim_midi_note_off(ch, data1);
                 else if (type === 0xB0) mod._shim_midi_cc(ch, data1, data2);
                 else if (type === 0xE0) mod._shim_midi_pitch_bend(ch, ((data2 << 7) | data1) - 8192);
+            } else if (data.type === 'loadSample') {
+                if (!mod) return;
+                const pcm = new Float32Array(data.buffer);
+                const ptr = mod._malloc(pcm.byteLength);
+                mod.HEAPF32.set(pcm, ptr >> 2);
+                if (typeof mod._shim_sample_set_pcm === 'function')
+                    mod._shim_sample_set_pcm(ptr, pcm.length, data.srate);
+                if (typeof mod._shim_load_sample === 'function')
+                    mod._shim_load_sample();
+                mod._free(ptr);
+                this.port.postMessage({ type: 'sampleloaded' });
+            } else if (data.type === 'loadPad') {
+                if (!mod || typeof mod._shim_load_pad !== 'function') return;
+                const pcm = new Float32Array(data.buffer);
+                const ptr = mod._malloc(pcm.byteLength);
+                mod.HEAPF32.set(pcm, ptr >> 2);
+                mod._shim_load_pad(data.note, ptr, pcm.length, data.srate);
+                mod._free(ptr);
+                this.port.postMessage({ type: 'padloaded', note: data.note });
             } else if (data.type === 'set') {
                 if (mod) { const fn = SETTERS[data.symbol]; if (fn) mod[fn](data.value); }
             }

@@ -147,17 +147,18 @@ async function buildLv2(args) {
 
     const lv2Opts = {
         includes: [], defines: [], sources: null, out: null, name: null,
-        threads: false, embedFiles: [], allowMemoryGrowth: false,
+        threads: false, embedFiles: [], allowMemoryGrowth: false, extraExports: [],
     };
     for (let i = 2; i < args.length; i++) {
-        if      (args[i] === '--out')           lv2Opts.out     = resolve(args[++i]);
-        else if (args[i] === '--name')          lv2Opts.name    = args[++i];
-        else if (args[i] === '--include')       lv2Opts.includes.push(resolve(args[++i]));
-        else if (args[i] === '--define')        lv2Opts.defines.push(args[++i]);
-        else if (args[i] === '--sources')       lv2Opts.sources = args[++i].split(',').map(s => resolve(pluginDir, s.trim()));
-        else if (args[i] === '--threads')       lv2Opts.threads = true;
-        else if (args[i] === '--memory-growth') lv2Opts.allowMemoryGrowth = true;
-        else if (args[i] === '--embed-file')    lv2Opts.embedFiles.push(args[++i]);
+        if      (args[i] === '--out')            lv2Opts.out     = resolve(args[++i]);
+        else if (args[i] === '--name')           lv2Opts.name    = args[++i];
+        else if (args[i] === '--include')        lv2Opts.includes.push(resolve(args[++i]));
+        else if (args[i] === '--define')         lv2Opts.defines.push(args[++i]);
+        else if (args[i] === '--sources')        lv2Opts.sources = args[++i].split(',').map(s => resolve(pluginDir, s.trim()));
+        else if (args[i] === '--threads')        lv2Opts.threads = true;
+        else if (args[i] === '--memory-growth')  lv2Opts.allowMemoryGrowth = true;
+        else if (args[i] === '--embed-file')     lv2Opts.embedFiles.push(args[++i]);
+        else if (args[i] === '--extra-export')   lv2Opts.extraExports.push(args[++i]);
         else { console.error(`Unknown option: ${args[i]}`); usage(); }
     }
 
@@ -196,7 +197,7 @@ async function buildLv2(args) {
     compilePlugin({
         sources:           [...lv2Sources, lv2ShimPath],
         outJs:             lv2OutJs,
-        exportedFns:       lv2ExportedFunctions(lv2Desc),
+        exportedFns:       lv2ExportedFunctions(lv2Desc, lv2Opts.extraExports),
         includeFlags:      [pluginDir, ...lv2Opts.includes],
         defines:           lv2Opts.defines,
         exportName:        lv2ExportName,
