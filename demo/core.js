@@ -140,7 +140,7 @@ class WadspNode {
     async loadSF2(urlOrBuffer) {
         let buffer;
         if (typeof urlOrBuffer === 'string') {
-            const resp = await fetch(urlOrBuffer);
+            const resp = await fetch(urlOrBuffer, { cache: 'no-cache' });
             if (!resp.ok) throw new Error(`Failed to fetch SF2: ${resp.status} ${urlOrBuffer}`);
             buffer = await resp.arrayBuffer();
         } else {

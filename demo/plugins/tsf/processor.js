@@ -21,6 +21,10 @@ class WadspProcessor extends AudioWorkletProcessor {
             } else if (data.type === 'loadSF2') {
                 if (!mod) return;
                 const bytes = new Uint8Array(data.buffer);
+                if (bytes.length < 12) {
+                    this.port.postMessage({ type: 'error', message: `SF2 data too small (${bytes.length} bytes) — may be a stale cache` });
+                    return;
+                }
                 const ptr = mod._malloc(bytes.length);
                 mod.HEAPU8.set(bytes, ptr);
                 mod._shim_load_sf2(ptr, bytes.length);
