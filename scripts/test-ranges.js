@@ -11,7 +11,14 @@
 import { existsSync, readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { portUiRange, portValueForSet, visibleControlPorts } from '../docs/control-utils.js';
+import {
+    AUDIBLE_FREQUENCY_MAX_HZ,
+    AUDIBLE_FREQUENCY_MIN_HZ,
+    isAudibleFrequencyPort,
+    portUiRange,
+    portValueForSet,
+    visibleControlPorts,
+} from '../docs/control-utils.js';
 import { readLv2Registry } from './lib/lv2-registry.js';
 import { parseLv2Ttl } from '../toolchain/src/shim-lv2.js';
 
@@ -116,6 +123,14 @@ function validateVisibleControlSet(scope, ports) {
             issues.push(`${scope} ${port.name}: CV/modulation port is exposed as a slider`);
         }
     }
+
+    for (const port of visible) {
+        const range = portUiRange(port, SAMPLE_RATE);
+        if (!Number.isFinite(range.min) || !Number.isFinite(range.max) || range.min === range.max) {
+            issues.push(`${scope} ${port.name}: visible slider has invalid UI range ${range.min}..${range.max}`);
+        }
+        validateAudibleFrequencyUiRange(scope, port, range);
+    }
 }
 
 function validateSampleRateUiDispatch(scope, port) {
@@ -144,9 +159,25 @@ function validateSampleRateUiDispatch(scope, port) {
     const actualDefault = rawDefault >= Math.min(min, max) && rawDefault <= Math.max(min, max)
         ? rawDefault * SAMPLE_RATE
         : rawDefault;
-    const defaultTolerance = Math.max(1e-6, Math.abs(actualDefault) * 1e-6);
-    if (Math.abs(hostValue - actualDefault) > defaultTolerance) {
-        issues.push(`${scope} ${port.name}: UI dispatch default ${hostValue} differs from expected ${actualDefault} Hz`);
+    const expectedDefault = isAudibleFrequencyPort(port)
+        ? clamp(actualDefault, AUDIBLE_FREQUENCY_MIN_HZ, AUDIBLE_FREQUENCY_MAX_HZ)
+        : actualDefault;
+    const defaultTolerance = Math.max(1e-6, Math.abs(expectedDefault) * 1e-6);
+    if (Math.abs(hostValue - expectedDefault) > defaultTolerance) {
+        issues.push(`${scope} ${port.name}: UI dispatch default ${hostValue} differs from expected ${expectedDefault} Hz`);
+    }
+}
+
+function validateAudibleFrequencyUiRange(scope, port, range) {
+    if (!isAudibleFrequencyPort(port)) return;
+
+    const lo = Math.min(range.min, range.max);
+    const hi = Math.max(range.min, range.max);
+    if (lo < AUDIBLE_FREQUENCY_MIN_HZ || hi > AUDIBLE_FREQUENCY_MAX_HZ) {
+        issues.push(`${scope} ${port.name}: audible frequency UI range ${lo}..${hi} Hz exceeds ${AUDIBLE_FREQUENCY_MIN_HZ}..${AUDIBLE_FREQUENCY_MAX_HZ} Hz`);
+    }
+    if (Number.isFinite(range.value) && (range.value < lo || range.value > hi)) {
+        issues.push(`${scope} ${port.name}: default UI value ${range.value} outside ${lo}..${hi} Hz`);
     }
 }
 
@@ -169,4 +200,8 @@ function resolveDefault(defaultValue, min, max) {
     if (s === '440') return 440;
     const parsed = parseFloat(s);
     return Number.isFinite(parsed) ? parsed : null;
+}
+
+function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
 }
