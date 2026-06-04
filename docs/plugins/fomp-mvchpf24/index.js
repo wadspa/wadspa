@@ -76,7 +76,8 @@ export const meta         = {
       "min": 0.000001,
       "max": 1,
       "default": 440,
-      "sampleRate": true
+      "sampleRate": true,
+      "logarithmic": true
     },
     {
       "index": 6,

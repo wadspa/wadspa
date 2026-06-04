@@ -231,6 +231,7 @@ function parsePortBlock(block) {
     const integer = /lv2:integer\b|port-props#integer/.test(block);
     const enumeration = /lv2:enumeration\b|port-props#enumeration/.test(block);
     const toggled = /lv2:toggled\b|port-props#toggled/.test(block);
+    const logarithmic = /port-props#logarithmic/.test(block);
     const scalePoints = parseScalePoints(block);
     const scaleValues = scalePoints
         .map(point => point.value)
@@ -249,6 +250,7 @@ function parsePortBlock(block) {
         ...(integer && { integer: true }),
         ...(enumeration && { enumeration: true }),
         ...(toggled && { toggled: true }),
+        ...(logarithmic && { logarithmic: true }),
         ...(scalePoints.length > 0 && { scalePoints }),
     };
 }

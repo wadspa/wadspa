@@ -16,7 +16,10 @@ import {
     AUDIBLE_FREQUENCY_MIN_HZ,
     isAudibleFrequencyPort,
     portUiRange,
+    portValueFromSlider,
     portValueForSet,
+    sliderRangeForPort,
+    usesLogSlider,
     visibleControlPorts,
 } from '../docs/control-utils.js';
 import { readLv2Registry } from './lib/lv2-registry.js';
@@ -130,6 +133,7 @@ function validateVisibleControlSet(scope, ports) {
             issues.push(`${scope} ${port.name}: visible slider has invalid UI range ${range.min}..${range.max}`);
         }
         validateAudibleFrequencyUiRange(scope, port, range);
+        validateLogSliderMapping(scope, port, range);
     }
 }
 
@@ -178,6 +182,37 @@ function validateAudibleFrequencyUiRange(scope, port, range) {
     }
     if (Number.isFinite(range.value) && (range.value < lo || range.value > hi)) {
         issues.push(`${scope} ${port.name}: default UI value ${range.value} outside ${lo}..${hi} Hz`);
+    }
+}
+
+function validateLogSliderMapping(scope, port, range) {
+    if (!usesLogSlider(port, range)) return;
+
+    const slider = sliderRangeForPort(port, range);
+    if (slider.min !== 0 || slider.max !== 1 || !Number.isFinite(slider.value)) {
+        issues.push(`${scope} ${port.name}: logarithmic slider must use normalized 0..1 control range`);
+        return;
+    }
+
+    const values = [0, 0.25, 0.5, 0.75, 1]
+        .map(position => portValueFromSlider(port, position, range));
+    const lo = Math.min(range.min, range.max);
+    const hi = Math.max(range.min, range.max);
+    const tolerance = Math.max(1e-6, hi * 1e-9);
+    for (const value of values) {
+        if (!Number.isFinite(value) || value < lo - tolerance || value > hi + tolerance) {
+            issues.push(`${scope} ${port.name}: logarithmic slider maps outside ${lo}..${hi}`);
+            return;
+        }
+    }
+    for (let i = 1; i < values.length; i++) {
+        const monotonic = range.min <= range.max
+            ? values[i] > values[i - 1]
+            : values[i] < values[i - 1];
+        if (!monotonic) {
+            issues.push(`${scope} ${port.name}: logarithmic slider is not monotonic`);
+            return;
+        }
     }
 }
 

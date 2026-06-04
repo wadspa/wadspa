@@ -75,7 +75,8 @@ export const meta         = {
       "cv": false,
       "min": 50,
       "max": 1000,
-      "default": 223.607
+      "default": 223.607,
+      "logarithmic": true
     },
     {
       "index": 6,
@@ -111,7 +112,8 @@ export const meta         = {
       "cv": false,
       "min": 1500,
       "max": 24000,
-      "default": 6000
+      "default": 6000,
+      "logarithmic": true
     },
     {
       "index": 9,
@@ -123,7 +125,8 @@ export const meta         = {
       "cv": false,
       "min": 40,
       "max": 10000,
-      "default": 159.054
+      "default": 159.054,
+      "logarithmic": true
     },
     {
       "index": 10,
@@ -147,7 +150,8 @@ export const meta         = {
       "cv": false,
       "min": 40,
       "max": 10000,
-      "default": 2514.87
+      "default": 2514.87,
+      "logarithmic": true
     },
     {
       "index": 12,

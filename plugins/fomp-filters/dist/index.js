@@ -77,7 +77,8 @@ export const meta         = {
       "cv": false,
       "min": 20,
       "max": 2000,
-      "default": 200
+      "default": 200,
+      "logarithmic": true
     },
     {
       "index": 6,
@@ -89,7 +90,8 @@ export const meta         = {
       "cv": false,
       "min": 0.125,
       "max": 8,
-      "default": 1
+      "default": 1,
+      "logarithmic": true
     },
     {
       "index": 7,
@@ -126,7 +128,8 @@ export const meta         = {
       "cv": false,
       "min": 40,
       "max": 4000,
-      "default": 400
+      "default": 400,
+      "logarithmic": true
     },
     {
       "index": 10,
@@ -138,7 +141,8 @@ export const meta         = {
       "cv": false,
       "min": 0.125,
       "max": 8,
-      "default": 1
+      "default": 1,
+      "logarithmic": true
     },
     {
       "index": 11,
@@ -175,7 +179,8 @@ export const meta         = {
       "cv": false,
       "min": 100,
       "max": 10000,
-      "default": 1000
+      "default": 1000,
+      "logarithmic": true
     },
     {
       "index": 14,
@@ -187,7 +192,8 @@ export const meta         = {
       "cv": false,
       "min": 0.125,
       "max": 8,
-      "default": 1
+      "default": 1,
+      "logarithmic": true
     },
     {
       "index": 15,
@@ -224,7 +230,8 @@ export const meta         = {
       "cv": false,
       "min": 200,
       "max": 20000,
-      "default": 2000
+      "default": 2000,
+      "logarithmic": true
     },
     {
       "index": 18,
@@ -236,7 +243,8 @@ export const meta         = {
       "cv": false,
       "min": 0.125,
       "max": 8,
-      "default": 1
+      "default": 1,
+      "logarithmic": true
     },
     {
       "index": 19,

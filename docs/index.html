@@ -336,10 +336,13 @@ if ('serviceWorker' in navigator) {
 <script type="module">
 import { loadPlugin } from './core.js';
 import {
+  defaultPortValueForUi,
   formatPortValue,
   portUiRange as computePortUiRange,
+  portValueFromSlider,
   portValueForSet,
   scalePointOptions,
+  sliderRangeForPort,
   usesMenuControl,
   visibleControlPorts,
 } from './control-utils.js';
@@ -561,21 +564,22 @@ function buildSynthControls(node, inst) {
   const ctrlPorts = visibleControlPorts(inst.ports);
   for (const p of ctrlPorts) {
     const range = portUiRange(p);
+    const initialValue = defaultPortValueForUi(p, currentSampleRate());
     const row = document.createElement('div');
     row.className = 'ctrl-row';
     row.innerHTML = `<label>${escapeHtml(p.name)}</label>
       <div class="ctrl-line">
-        ${controlMarkup(p, range)}
-        <span class="val">${formatPortValue(p, range.value)}</span>
+        ${controlMarkup(p, range, initialValue)}
+        <span class="val">${formatPortValue(p, initialValue)}</span>
       </div>`;
     const control = row.querySelector('input, select');
     const val    = row.querySelector('.val');
     control.addEventListener(control.tagName === 'SELECT' ? 'change' : 'input', () => {
-      const v = parseFloat(control.value); val.textContent = formatPortValue(p, v);
+      const v = readControlValue(p, control); val.textContent = formatPortValue(p, v);
       node.set(p.name, portValueForSet(p, v, control));
     });
     ctrls.appendChild(row);
-    if (Number.isFinite(range.value)) node.set(p.name, portValueForSet(p, range.value, control));
+    if (Number.isFinite(initialValue)) node.set(p.name, portValueForSet(p, initialValue, control));
   }
 }
 
@@ -885,15 +889,27 @@ function portUiRange(p) {
   return computePortUiRange(p, currentSampleRate());
 }
 
-function controlMarkup(p, range) {
+function controlMarkup(p, range, value = range.value) {
   if (usesMenuControl(p)) {
     return `<select data-port="${escapeAttr(p.name)}">${scalePointOptions(p).map(point => `
-          <option value="${point.value}"${Math.abs(point.value - range.value) < 1e-6 ? ' selected' : ''}>${escapeHtml(point.label)}</option>`).join('')}
+          <option value="${point.value}"${Math.abs(point.value - value) < 1e-6 ? ' selected' : ''}>${escapeHtml(point.label)}</option>`).join('')}
         </select>`;
   }
-  return `<input type="range" min="${range.min}" max="${range.max}"
-                   step="${range.step}" value="${range.value}"
+  if (p.toggled) {
+    return `<input type="checkbox" value="1"${value >= 0.5 ? ' checked' : ''}
                    data-port="${escapeAttr(p.name)}">`;
+  }
+  const slider = sliderRangeForPort(p, range, value);
+  return `<input type="range" min="${slider.min}" max="${slider.max}"
+                   step="${slider.step}" value="${slider.value}"
+                   data-port="${escapeAttr(p.name)}">`;
+}
+
+function readControlValue(p, control) {
+  if (control.type === 'checkbox') return control.checked ? 1 : 0;
+  const raw = parseFloat(control.value);
+  if (control.tagName === 'SELECT') return raw;
+  return portValueFromSlider(p, raw, portUiRange(p));
 }
 
 function escapeHtml(value) {
@@ -1116,14 +1132,18 @@ function renderChain() {
         <span>${eff.name}</span>
         <button class="remove-btn" title="remove">×</button>
       </div>
-      ${ctrlPorts.map(p => `
+      ${ctrlPorts.map(p => {
+        const range = portUiRange(p);
+        const value = defaultPortValueForUi(p, currentSampleRate(), { activateEffectToggles: true });
+        return `
         <div class="ctrl-row">
           <label>${escapeHtml(p.name)}</label>
           <div class="ctrl-line">
-            ${controlMarkup(p, portUiRange(p))}
-            <span class="val">${formatPortValue(p, portUiRange(p).value)}</span>
+            ${controlMarkup(p, range, value)}
+            <span class="val">${formatPortValue(p, value)}</span>
           </div>
-        </div>`).join('')}
+        </div>`;
+      }).join('')}
     `;
 
     card.querySelector('.remove-btn').addEventListener('click', async () => {
@@ -1137,12 +1157,13 @@ function renderChain() {
       const control = card.querySelector(`[data-port="${CSS.escape(p.name)}"]`);
       const valEl  = control.closest('.ctrl-line').querySelector('.val');
       control.addEventListener(control.tagName === 'SELECT' ? 'change' : 'input', () => {
-        const v = parseFloat(control.value);
+        const v = readControlValue(p, control);
         valEl.textContent = formatPortValue(p, v);
         node.set(p.name, portValueForSet(p, v, control));
       });
       const range = portUiRange(p);
-      if (Number.isFinite(range.value)) node.set(p.name, portValueForSet(p, range.value, control));
+      const value = defaultPortValueForUi(p, currentSampleRate(), { activateEffectToggles: true });
+      if (Number.isFinite(value)) node.set(p.name, portValueForSet(p, value, control));
     }
 
     // ── Curve editor (shaper plugins) ──────────────────────────

@@ -75,6 +75,52 @@ export function portValueForSet(_p, uiValue, _control, _sampleRate = 44100) {
   return uiValue;
 }
 
+export function defaultPortValueForUi(p, sampleRate = 44100, options = {}) {
+  const range = portUiRange(p, sampleRate);
+  if (options.activateEffectToggles && shouldActivateToggleByDefault(p)) return 1;
+  return range.value;
+}
+
+export function shouldActivateToggleByDefault(p) {
+  if (!p?.toggled) return false;
+  const text = controlText(p);
+  if (/\b(bypass|reset|learn|listen|residual|sidechain|sync|invert|swap|stereo|haas|detection|reverse|loop|freeze|insane|mode|control\s*mode)\b/i.test(text)) {
+    return false;
+  }
+  return /\b(enable|enabled|active|process|on|filter|section|shelf|peak|band|highpass|lowpass|compressor)\b/i.test(text);
+}
+
+export function sliderRangeForPort(p, uiRange, value = uiRange.value) {
+  if (!usesLogSlider(p, uiRange)) return uiRange;
+  return { min: 0, max: 1, value: sliderValueFromPortValue(p, value, uiRange), step: 'any' };
+}
+
+export function portValueFromSlider(p, sliderValue, uiRange) {
+  if (!usesLogSlider(p, uiRange)) return sliderValue;
+  const min = Math.min(uiRange.min, uiRange.max);
+  const max = Math.max(uiRange.min, uiRange.max);
+  const fraction = clamp(Number(sliderValue), 0, 1);
+  const value = Math.exp(Math.log(min) + (Math.log(max) - Math.log(min)) * fraction);
+  return uiRange.min <= uiRange.max ? value : min + max - value;
+}
+
+export function sliderValueFromPortValue(p, value, uiRange) {
+  if (!usesLogSlider(p, uiRange)) return value;
+  const min = Math.min(uiRange.min, uiRange.max);
+  const max = Math.max(uiRange.min, uiRange.max);
+  if (!(min > 0) || !(max > min) || !Number.isFinite(value)) return 0;
+  const clamped = clamp(value, min, max);
+  const fraction = (Math.log(clamped) - Math.log(min)) / (Math.log(max) - Math.log(min));
+  return uiRange.min <= uiRange.max ? fraction : 1 - fraction;
+}
+
+export function usesLogSlider(p, uiRange = portUiRange(p)) {
+  if (!p?.logarithmic || usesMenuControl(p)) return false;
+  const min = Math.min(uiRange.min, uiRange.max);
+  const max = Math.max(uiRange.min, uiRange.max);
+  return min > 0 && max > min;
+}
+
 export function scalePointOptions(p) {
   const seen = new Set();
   return (p.scalePoints ?? [])
@@ -129,6 +175,8 @@ export function formatPortValue(p, value) {
   if (!Number.isFinite(value)) return '';
   const pointLabel = scalePointLabel(p, value);
   if (pointLabel) return pointLabel;
+
+  if (p.toggled) return value >= 0.5 ? 'on' : 'off';
 
   const text = `${p.name ?? ''} ${p.symbol ?? ''}`;
   if (portUsesHz(p)) {

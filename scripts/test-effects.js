@@ -16,7 +16,7 @@
 import { readFileSync, readdirSync } from 'fs';
 import { join, dirname }             from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
-import { portUiRange, portValueForSet, visibleControlPorts } from '../docs/control-utils.js';
+import { defaultPortValueForUi, portValueForSet, visibleControlPorts } from '../docs/control-utils.js';
 
 const ROOT         = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DOCS_PLUGINS = join(ROOT, 'docs', 'plugins');
@@ -121,7 +121,7 @@ async function renderPeak(eff, factory, wasmBinary, SETTERS, overrides = new Map
         const key = setterKey(p);
         const uiValue = overrides.has(key)
             ? uiValueForPort(p, overrides.get(key))
-            : portUiRange(p, SAMPLE_RATE).value;
+            : defaultPortValueForUi(p, SAMPLE_RATE, { activateEffectToggles: true });
         if (!Number.isFinite(uiValue)) continue;
         const fn = SETTERS[key];
         if (fn && typeof mod[fn] === 'function') {

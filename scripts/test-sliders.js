@@ -19,6 +19,7 @@
 import { existsSync, readFileSync, readdirSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
+import { portUiRange, portValueFromSlider, sliderRangeForPort } from '../docs/control-utils.js';
 import { readLv2Registry } from './lib/lv2-registry.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -420,9 +421,11 @@ function writeCString(mod, value) {
 }
 
 function candidateValues(port) {
-    const min = Number(port.min);
-    const max = Number(port.max);
-    const def = resolveDefault(port.default, min, max);
+    const uiRange = portUiRange(port, SAMPLE_RATE);
+    const slider = sliderRangeForPort(port, uiRange);
+    const min = Number(slider.min);
+    const max = Number(slider.max);
+    const def = Number(uiRange.value);
     const mid = min + (max - min) * 0.5;
     const quarter = min + (max - min) * 0.25;
     const threeQuarter = min + (max - min) * 0.75;
@@ -439,7 +442,8 @@ function candidateValues(port) {
 
     const seen = new Set();
     const candidates = [];
-    for (const [label, value] of raw) {
+    for (const [label, sliderValue] of raw) {
+        const value = portValueFromSlider(port, sliderValue, uiRange);
         if (!Number.isFinite(value)) continue;
         if (Number.isFinite(def) && Math.abs(value - def) <= Math.max(1e-7, Math.abs(def) * 1e-7)) {
             continue;
