@@ -440,6 +440,10 @@ void padthv1_sample::reset_normalize (void)
 
 	for (i = 0; i < m_nsize; ++i) {
 		const float p = m_table[i];
+		if (!std::isfinite(p)) {
+			m_table[i] = 0.0f;
+			continue;
+		}
 		if (pmax < p)
 			pmax = p;
 		else

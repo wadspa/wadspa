@@ -732,7 +732,7 @@ void ZamDynamicEQPlugin::run(const float** inputs, float** outputs, uint32_t fra
 				bw2 = fc2 / qq2;
 				peq(dcgain,boost2,bwgain2,w02,bw2,&a0y,&a1y,&a2y,&b0y,&b1y,&b2y,&gainy);
 				run_peq2(in, &out);
-			} else {
+			} else if (toghigh) {
 				bwh = 2.f*M_PI*targetfreq / srate;
 				boosth = from_dB(controlgain);
 				Ahh = sqrt(boosth);

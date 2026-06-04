@@ -20,6 +20,16 @@ function defaultValue(port) {
     }
 }
 
+function shouldScaleDefaultBySampleRate(port) {
+    if (!port.sampleRate) return false;
+    const value = defaultValue(port);
+    const min = Number(port.min);
+    const max = Number(port.max);
+    if (!Number.isFinite(value)) return false;
+    if (!Number.isFinite(min) || !Number.isFinite(max)) return true;
+    return value >= Math.min(min, max) && value <= Math.max(min, max);
+}
+
 function symbolName(portName) {
     return portName
         .toLowerCase()
@@ -64,6 +74,11 @@ export function generateShim(descriptor) {
         if (p.type === 'audio' && p.dir === 'input')   lines.push(`    g_desc->connect_port(g_handle, ${p.index}, g_in_${sym});`);
         if (p.type === 'audio' && p.dir === 'output')  lines.push(`    g_desc->connect_port(g_handle, ${p.index}, g_out_${sym});`);
         if (p.type === 'control')                       lines.push(`    g_desc->connect_port(g_handle, ${p.index}, &g_ctrl_${sym});`);
+    }
+
+    for (const p of ctrlIn.filter(shouldScaleDefaultBySampleRate)) {
+        const sym = symbolName(p.name);
+        lines.push(`    g_ctrl_${sym} *= (float)sample_rate;`);
     }
 
     lines.push('    if (g_desc->activate) g_desc->activate(g_handle);');

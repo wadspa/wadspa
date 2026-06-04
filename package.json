@@ -12,6 +12,7 @@
     "test:lv2": "node scripts/test-instruments.js",
     "test:effects": "node scripts/test-effects.js",
     "test:sliders": "node scripts/test-sliders.js",
+    "test:controls": "node scripts/test-controls.js",
     "build": "node scripts/build-archive.js",
     "build:skip": "node scripts/build-archive.js --skip-existing",
     "build:archive": "node scripts/build-archive.js",

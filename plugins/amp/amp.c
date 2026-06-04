@@ -1,81 +1,277 @@
-#include <math.h>
 #include <stdlib.h>
+#include <string.h>
+#ifndef _WIN32
+#include "config.h"
+#endif
+
+#ifdef ENABLE_NLS
+#include <libintl.h>
+#endif
+
+#define         _ISOC9X_SOURCE  1
+#define         _ISOC99_SOURCE  1
+#define         __USE_ISOC99    1
+#define         __USE_ISOC9X    1
+
+#ifndef _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES
+#endif
+#include <math.h>
+
 #include "ladspa.h"
 
-#define PORT_GAIN   0
-#define PORT_INPUT  1
-#define PORT_OUTPUT 2
+#ifdef _WIN32
+#define _WINDOWS_DLL_EXPORT_ __declspec(dllexport)
+int bIsFirstTime = 1;
+#ifdef _MSC_VER
+static void swh_init(); // forward declaration
+#else
+static void __attribute__((constructor)) swh_init(); // forward declaration
+#endif
+#else
+#define _WINDOWS_DLL_EXPORT_
+#endif
+
+#line 10 "/Users/sethtenenbaum/wadspa/swh-plugins/amp_1181.xml"
+
+#include "ladspa-util.h"
+
+#define AMP_GAIN                       0
+#define AMP_INPUT                      1
+#define AMP_OUTPUT                     2
+
+static LADSPA_Descriptor *ampDescriptor = NULL;
 
 typedef struct {
-    LADSPA_Data *gain;
-    LADSPA_Data *input;
-    LADSPA_Data *output;
+	LADSPA_Data *gain;
+	LADSPA_Data *input;
+	LADSPA_Data *output;
+	LADSPA_Data run_adding_gain;
 } Amp;
 
-static LADSPA_Handle amp_instantiate(const LADSPA_Descriptor *desc, unsigned long rate) {
-    return calloc(1, sizeof(Amp));
-}
-
-static void amp_connect_port(LADSPA_Handle handle, unsigned long port, LADSPA_Data *data) {
-    Amp *amp = (Amp *)handle;
-    switch (port) {
-        case PORT_GAIN:   amp->gain   = data; break;
-        case PORT_INPUT:  amp->input  = data; break;
-        case PORT_OUTPUT: amp->output = data; break;
-    }
-}
-
-static void amp_run(LADSPA_Handle handle, unsigned long count) {
-    Amp *amp = (Amp *)handle;
-    float coef = *amp->gain > -90.0f ? powf(10.0f, *amp->gain * 0.05f) : 0.0f;
-    for (unsigned long i = 0; i < count; i++) {
-        amp->output[i] = amp->input[i] * coef;
-    }
-}
-
-static void amp_cleanup(LADSPA_Handle handle) {
-    free(handle);
-}
-
-static LADSPA_PortDescriptor port_descriptors[] = {
-    LADSPA_PORT_INPUT  | LADSPA_PORT_CONTROL,
-    LADSPA_PORT_INPUT  | LADSPA_PORT_AUDIO,
-    LADSPA_PORT_OUTPUT | LADSPA_PORT_AUDIO,
-};
-
-static const char *port_names[] = {
-    "Gain (dB)",
-    "Input",
-    "Output",
-};
-
-static LADSPA_PortRangeHint port_hints[] = {
-    { LADSPA_HINT_BOUNDED_BELOW | LADSPA_HINT_BOUNDED_ABOVE | LADSPA_HINT_DEFAULT_0, -70.0f, 70.0f },
-    { 0, 0.0f, 0.0f },
-    { 0, 0.0f, 0.0f },
-};
-
-static LADSPA_Descriptor descriptor = {
-    .UniqueID          = 1181,
-    .Label             = "amp",
-    .Properties        = LADSPA_PROPERTY_HARD_RT_CAPABLE,
-    .Name              = "Simple Amplifier",
-    .Maker             = "wabspa",
-    .Copyright         = "GPL",
-    .PortCount         = 3,
-    .PortDescriptors   = port_descriptors,
-    .PortNames         = port_names,
-    .PortRangeHints    = port_hints,
-    .instantiate       = amp_instantiate,
-    .connect_port      = amp_connect_port,
-    .activate          = NULL,
-    .run               = amp_run,
-    .run_adding        = NULL,
-    .set_run_adding_gain = NULL,
-    .deactivate        = NULL,
-    .cleanup           = amp_cleanup,
-};
-
+_WINDOWS_DLL_EXPORT_
 const LADSPA_Descriptor *ladspa_descriptor(unsigned long index) {
-    return index == 0 ? &descriptor : NULL;
+
+#ifdef _WIN32
+	if (bIsFirstTime) {
+		swh_init();
+		bIsFirstTime = 0;
+	}
+#endif
+	switch (index) {
+	case 0:
+		return ampDescriptor;
+	default:
+		return NULL;
+	}
 }
+
+static void cleanupAmp(LADSPA_Handle instance) {
+	free(instance);
+}
+
+static void connectPortAmp(
+ LADSPA_Handle instance,
+ unsigned long port,
+ LADSPA_Data *data) {
+	Amp *plugin;
+
+	plugin = (Amp *)instance;
+	switch (port) {
+	case AMP_GAIN:
+		plugin->gain = data;
+		break;
+	case AMP_INPUT:
+		plugin->input = data;
+		break;
+	case AMP_OUTPUT:
+		plugin->output = data;
+		break;
+	}
+}
+
+static LADSPA_Handle instantiateAmp(
+ const LADSPA_Descriptor *descriptor,
+ unsigned long s_rate) {
+	Amp *plugin_data = (Amp *)calloc(1, sizeof(Amp));
+	plugin_data->run_adding_gain = 1.0f;
+
+	return (LADSPA_Handle)plugin_data;
+}
+
+#undef buffer_write
+#undef RUN_ADDING
+#undef RUN_REPLACING
+
+#define buffer_write(b, v) (b = v)
+#define RUN_ADDING    0
+#define RUN_REPLACING 1
+
+static void runAmp(LADSPA_Handle instance, unsigned long sample_count) {
+	Amp *plugin_data = (Amp *)instance;
+
+	/* Amps gain (dB) (float value) */
+	const LADSPA_Data gain = *(plugin_data->gain);
+
+	/* Input (array of floats of length sample_count) */
+	const LADSPA_Data * const input = plugin_data->input;
+
+	/* Output (array of floats of length sample_count) */
+	LADSPA_Data * const output = plugin_data->output;
+
+#line 19 "/Users/sethtenenbaum/wadspa/swh-plugins/amp_1181.xml"
+	unsigned long pos;
+	float coef = DB_CO(gain);
+
+	for (pos = 0; pos < sample_count; pos++) {
+	  buffer_write(output[pos], input[pos] * coef);
+	}
+}
+#undef buffer_write
+#undef RUN_ADDING
+#undef RUN_REPLACING
+
+#define buffer_write(b, v) (b += (v) * run_adding_gain)
+#define RUN_ADDING    1
+#define RUN_REPLACING 0
+
+static void setRunAddingGainAmp(LADSPA_Handle instance, LADSPA_Data gain) {
+	((Amp *)instance)->run_adding_gain = gain;
+}
+
+static void runAddingAmp(LADSPA_Handle instance, unsigned long sample_count) {
+	Amp *plugin_data = (Amp *)instance;
+	LADSPA_Data run_adding_gain = plugin_data->run_adding_gain;
+
+	/* Amps gain (dB) (float value) */
+	const LADSPA_Data gain = *(plugin_data->gain);
+
+	/* Input (array of floats of length sample_count) */
+	const LADSPA_Data * const input = plugin_data->input;
+
+	/* Output (array of floats of length sample_count) */
+	LADSPA_Data * const output = plugin_data->output;
+
+#line 19 "/Users/sethtenenbaum/wadspa/swh-plugins/amp_1181.xml"
+	unsigned long pos;
+	float coef = DB_CO(gain);
+
+	for (pos = 0; pos < sample_count; pos++) {
+	  buffer_write(output[pos], input[pos] * coef);
+	}
+}
+
+#ifdef _MSC_VER
+static void swh_init() {
+#else
+static void __attribute__((constructor)) swh_init() {
+#endif
+	char **port_names;
+	LADSPA_PortDescriptor *port_descriptors;
+	LADSPA_PortRangeHint *port_range_hints;
+
+#ifdef ENABLE_NLS
+#define D_(s) dgettext(PACKAGE, s)
+	bindtextdomain(PACKAGE, PACKAGE_LOCALE_DIR);
+#else
+#define D_(s) (s)
+#endif
+
+
+	ampDescriptor =
+	 (LADSPA_Descriptor *)malloc(sizeof(LADSPA_Descriptor));
+
+	if (ampDescriptor) {
+		ampDescriptor->UniqueID = 1181;
+		ampDescriptor->Label = "amp";
+		ampDescriptor->Properties =
+		 LADSPA_PROPERTY_HARD_RT_CAPABLE;
+		ampDescriptor->Name =
+		 D_("Simple amplifier");
+		ampDescriptor->Maker =
+		 "Steve Harris <steve@plugin.org.uk>";
+		ampDescriptor->Copyright =
+		 "GPL";
+		ampDescriptor->PortCount = 3;
+
+		port_descriptors = (LADSPA_PortDescriptor *)calloc(3,
+		 sizeof(LADSPA_PortDescriptor));
+		ampDescriptor->PortDescriptors =
+		 (const LADSPA_PortDescriptor *)port_descriptors;
+
+		port_range_hints = (LADSPA_PortRangeHint *)calloc(3,
+		 sizeof(LADSPA_PortRangeHint));
+		ampDescriptor->PortRangeHints =
+		 (const LADSPA_PortRangeHint *)port_range_hints;
+
+		port_names = (char **)calloc(3, sizeof(char*));
+		ampDescriptor->PortNames =
+		 (const char **)port_names;
+
+		/* Parameters for Amps gain (dB) */
+		port_descriptors[AMP_GAIN] =
+		 LADSPA_PORT_INPUT | LADSPA_PORT_CONTROL;
+		port_names[AMP_GAIN] =
+		 D_("Amps gain (dB)");
+		port_range_hints[AMP_GAIN].HintDescriptor =
+		 LADSPA_HINT_BOUNDED_BELOW | LADSPA_HINT_BOUNDED_ABOVE | LADSPA_HINT_DEFAULT_0;
+		port_range_hints[AMP_GAIN].LowerBound = -70;
+		port_range_hints[AMP_GAIN].UpperBound = +70;
+
+		/* Parameters for Input */
+		port_descriptors[AMP_INPUT] =
+		 LADSPA_PORT_INPUT | LADSPA_PORT_AUDIO;
+		port_names[AMP_INPUT] =
+		 D_("Input");
+		port_range_hints[AMP_INPUT].HintDescriptor = 0;
+
+		/* Parameters for Output */
+		port_descriptors[AMP_OUTPUT] =
+		 LADSPA_PORT_OUTPUT | LADSPA_PORT_AUDIO;
+		port_names[AMP_OUTPUT] =
+		 D_("Output");
+		port_range_hints[AMP_OUTPUT].HintDescriptor = 0;
+
+		ampDescriptor->activate = NULL;
+		ampDescriptor->cleanup = cleanupAmp;
+		ampDescriptor->connect_port = connectPortAmp;
+		ampDescriptor->deactivate = NULL;
+		ampDescriptor->instantiate = instantiateAmp;
+		ampDescriptor->run = runAmp;
+		ampDescriptor->run_adding = runAddingAmp;
+		ampDescriptor->set_run_adding_gain = setRunAddingGainAmp;
+	}
+}
+#ifdef _MSC_VER
+static void swh_fini() {
+#else
+static void __attribute__((destructor)) swh_fini() {
+#endif
+	if (ampDescriptor) {
+		free((LADSPA_PortDescriptor *)ampDescriptor->PortDescriptors);
+		free((char **)ampDescriptor->PortNames);
+		free((LADSPA_PortRangeHint *)ampDescriptor->PortRangeHints);
+		free(ampDescriptor);
+	}
+	ampDescriptor = NULL;
+
+}
+
+#ifdef _MSC_VER
+#include <windows.h>
+BOOL APIENTRY DllMain(HMODULE hModule,
+	DWORD  ul_reason_for_call,
+	LPVOID lpReserved)
+{
+	switch (ul_reason_for_call)
+	{
+	case DLL_PROCESS_ATTACH:
+		swh_init();
+		break;
+	case DLL_PROCESS_DETACH:
+		swh_fini();
+		break;
+	}
+	return TRUE;
+}
+#endif

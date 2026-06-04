@@ -118,6 +118,7 @@ function parsePortBlock(block) {
                    || /atom:supports\s+<[^>]*MidiEvent>/.test(block);
     const isAudio   = /\ba\s+lv2:AudioPort\b/.test(block) || /lv2:AudioPort\b/.test(block);
     const isControl = /\ba\s+lv2:ControlPort\b/.test(block) || /lv2:ControlPort\b/.test(block);
+    const isCv      = /\ba\s+lv2:CVPort\b/.test(block) || /lv2:CVPort\b/.test(block);
     const isAtom    = /\ba\s+atom:AtomPort\b/.test(block)  || /atom:AtomPort\b/.test(block);
     // Old LV2 event port API (pre-atom, used by plugins from ~2008-2013)
     const isLegacyEvent = /\ba\s+ev:EventPort\b/.test(block) || /ev:EventPort\b/.test(block)
@@ -137,13 +138,18 @@ function parsePortBlock(block) {
     const min = parseFloat((block.match(/lv2:minimum\s+([\d.eE+\-]+)/) || [])[1]);
     const max = parseFloat((block.match(/lv2:maximum\s+([\d.eE+\-]+)/) || [])[1]);
     const def = parseFloat((block.match(/lv2:default\s+([\d.eE+\-]+)/)  || [])[1]);
+    const sampleRate = /lv2:sampleRate\b|port-props#sampleRate/.test(block);
+    const integer = /lv2:integer\b|port-props#integer/.test(block);
 
     return {
         index, symbol, name, dir, type,
         legacy: isLegacyEvent,   // true → old LV2 event API (not atom)
+        cv: isCv,
         min:  isNaN(min) ? null : min,
         max:  isNaN(max) ? null : max,
         default: isNaN(def) ? null : def,
+        ...(sampleRate && { sampleRate: true }),
+        ...(integer && { integer: true }),
     };
 }
 
@@ -164,6 +170,7 @@ export function generateLv2Shim(descriptor, extraExports = [], extraFeatures = [
     const audioOut  = ports.filter(p => p.type === 'audio'   && p.dir === 'output');
     const ctrlIn    = ports.filter(p => p.type === 'control' && p.dir === 'input');
     const ctrlOut   = ports.filter(p => p.type === 'control' && p.dir === 'output');
+    const cvIn      = ctrlIn.filter(p => p.cv);
     const midiIn    = ports.filter(p => p.type === 'midi'    && p.dir === 'input');
     const atomIn    = ports.filter(p => p.type === 'atom'    && p.dir === 'input');
     const atomOut   = ports.filter(p => p.type === 'atom'    && p.dir === 'output');
@@ -272,6 +279,7 @@ export function generateLv2Shim(descriptor, extraExports = [], extraFeatures = [
     // Control scalars
     for (const p of ctrlIn)  lines.push(`static float g_ctrl_${p.symbol} = ${floatLit(p.default)};`);
     for (const p of ctrlOut) lines.push(`static float g_ctrl_${p.symbol} = 0.0f;`);
+    for (const p of cvIn)    lines.push(`static float g_cv_${p.symbol}[BLOCK_SIZE];`);
 
     // Output atom buffers — plugin writes into these; size is set before each run
     for (const p of atomOut) lines.push(`static uint8_t g_atom_out_${p.symbol}[MIDI_BUF_SIZE];`);
@@ -352,7 +360,8 @@ export function generateLv2Shim(descriptor, extraExports = [], extraFeatures = [
         const sym = p.symbol;
         if (p.type === 'audio' && p.dir === 'input')    lines.push(`    g_desc->connect_port(g_handle, ${p.index}, g_in_${sym});`);
         if (p.type === 'audio' && p.dir === 'output')   lines.push(`    g_desc->connect_port(g_handle, ${p.index}, g_out_${sym});`);
-        if (p.type === 'control')                         lines.push(`    g_desc->connect_port(g_handle, ${p.index}, &g_ctrl_${sym});`);
+        if (p.type === 'control' && p.cv && p.dir === 'input') lines.push(`    g_desc->connect_port(g_handle, ${p.index}, g_cv_${sym});`);
+        else if (p.type === 'control')                         lines.push(`    g_desc->connect_port(g_handle, ${p.index}, &g_ctrl_${sym});`);
         if (p.type === 'midi' && p.dir === 'input') {
             if (p.legacy) {
                 lines.push(`    g_desc->connect_port(g_handle, ${p.index}, g_legacy_evt);`);
@@ -436,6 +445,12 @@ export function generateLv2Shim(descriptor, extraExports = [], extraFeatures = [
         lines.push('EMSCRIPTEN_KEEPALIVE void shim_midi_cc(uint8_t ch, uint8_t cc, uint8_t val)');
         lines.push('    { uint8_t m[3] = {(uint8_t)(0xB0|ch), cc, val}; push_midi(m, 3); }');
         lines.push('');
+        lines.push('EMSCRIPTEN_KEEPALIVE void shim_midi_poly_pressure(uint8_t ch, uint8_t note, uint8_t val)');
+        lines.push('    { uint8_t m[3] = {(uint8_t)(0xA0|ch), note, val}; push_midi(m, 3); }');
+        lines.push('');
+        lines.push('EMSCRIPTEN_KEEPALIVE void shim_midi_channel_pressure(uint8_t ch, uint8_t val)');
+        lines.push('    { uint8_t m[2] = {(uint8_t)(0xD0|ch), val}; push_midi(m, 2); }');
+        lines.push('');
         lines.push('EMSCRIPTEN_KEEPALIVE void shim_midi_pitch_bend(uint8_t ch, int16_t bend) {');
         lines.push('    uint16_t u = (uint16_t)(bend + 8192);');
         lines.push('    uint8_t m[3] = {(uint8_t)(0xE0|ch), (uint8_t)(u & 0x7F), (uint8_t)(u >> 7)};');
@@ -457,6 +472,9 @@ export function generateLv2Shim(descriptor, extraExports = [], extraFeatures = [
     // shim_run
     lines.push('');
     lines.push('EMSCRIPTEN_KEEPALIVE void shim_run(unsigned long count) {');
+    for (const p of cvIn) {
+        lines.push(`    for (unsigned long _i = 0; _i < count && _i < BLOCK_SIZE; _i++) g_cv_${p.symbol}[_i] = g_ctrl_${p.symbol};`);
+    }
     // Set output atom buffer capacities so plugins know how much space they can use
     for (const p of atomOut) {
         lines.push(`    *(uint32_t*)g_atom_out_${p.symbol} = MIDI_BUF_SIZE - 8; /* atom.size = capacity */`);
@@ -484,7 +502,8 @@ export function lv2ExportedFunctions(descriptor, extraExports = []) {
 
     if (ports.some(p => p.type === 'midi' && p.dir === 'input')) {
         fns.push('_shim_midi_clear', '_shim_midi_note_on', '_shim_midi_note_off',
-                 '_shim_midi_cc', '_shim_midi_pitch_bend');
+                 '_shim_midi_cc', '_shim_midi_poly_pressure',
+                 '_shim_midi_channel_pressure', '_shim_midi_pitch_bend');
     }
 
     for (const fn of extraExports) {
@@ -561,7 +580,9 @@ export function generateLv2Processor(descriptor, label, extraFeatures = []) {
                 const ch   = status & 0x0F;
                 if      (type === 0x90 && data2 > 0) mod._shim_midi_note_on(ch, data1, data2);
                 else if (type === 0x80 || (type === 0x90 && data2 === 0)) mod._shim_midi_note_off(ch, data1);
+                else if (type === 0xA0 && mod._shim_midi_poly_pressure) mod._shim_midi_poly_pressure(ch, data1, data2);
                 else if (type === 0xB0) mod._shim_midi_cc(ch, data1, data2);
+                else if (type === 0xD0 && mod._shim_midi_channel_pressure) mod._shim_midi_channel_pressure(ch, data1);
                 else if (type === 0xE0) mod._shim_midi_pitch_bend(ch, ((data2 << 7) | data1) - 8192);` : '';
 
     return `import ${exportName} from './${label}.js';

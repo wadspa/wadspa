@@ -2,13 +2,13 @@ export { default } from './amp.js';
 export const meta         = {
   "id": 1181,
   "label": "amp",
-  "name": "Simple Amplifier",
-  "maker": "wabspa",
+  "name": "Simple amplifier",
+  "maker": "Steve Harris <steve@plugin.org.uk>",
   "exportName": "createampPlugin",
   "ports": [
     {
       "index": 0,
-      "name": "Gain (dB)",
+      "name": "Amps gain (dB)",
       "dir": "input",
       "type": "control",
       "min": -70,

@@ -114,9 +114,11 @@ function deploy(manifestEntry, distDir, catalogEntries) {
 
 let passed = 0, failed = 0, skipped = 0;
 const catalogEntries = [];
+const processedIds = [];
 
 for (const entry of manifest) {
     if (onlyId && entry.id !== onlyId) continue;
+    processedIds.push(entry.id);
 
     const dir     = join(PLUGINS, entry.id);
     const distDir = join(dir, 'dist');
@@ -161,8 +163,7 @@ for (const entry of manifest) {
         for (const d of entry.extraDirs ?? []) {
             const srcD  = join(SHARED, d);
             const destD = join(dir, d);
-            mkdirSync(destD, { recursive: true });
-            run(`cp -rn "${srcD}/." "${destD}/"`);
+            copyDirContents(srcD, destD);
         }
 
         // 6. Build
@@ -192,9 +193,18 @@ for (const entry of manifest) {
 
 // Write catalog
 if (catalogEntries.length > 0 && existsSync(DOCS_PLUGINS)) {
+    let existingEntries = [];
+    if (onlyId) {
+        const catalogPath = join(DOCS_PLUGINS, 'catalog.json');
+        if (existsSync(catalogPath)) existingEntries = JSON.parse(readFileSync(catalogPath, 'utf8'));
+    }
+    const processed = new Set(processedIds);
     writeFileSync(
         join(DOCS_PLUGINS, 'catalog.json'),
-        JSON.stringify(catalogEntries, null, 2)
+        JSON.stringify([
+            ...existingEntries.filter(entry => !processed.has(entry.id)),
+            ...catalogEntries,
+        ], null, 2)
     );
     console.log(`\nCatalogue: ${catalogEntries.length} plugins → docs/plugins/catalog.json`);
 }

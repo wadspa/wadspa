@@ -57,9 +57,12 @@ static float g_ctrl_exp_fm_gain = 0.0f;
 static float g_ctrl_res = 0.0f;
 static float g_ctrl_res_gain = 0.0f;
 static float g_ctrl_out_gain = 0.0f;
+static float g_cv_fm[BLOCK_SIZE];
+static float g_cv_exp_fm[BLOCK_SIZE];
+static float g_cv_res_mod[BLOCK_SIZE];
 
 static const LV2_Descriptor *g_desc   = NULL;
-static LV2_Handle            g_handle = NULL;
+LV2_Handle                   g_handle = NULL;
 
 EMSCRIPTEN_KEEPALIVE void shim_init(unsigned long sample_rate) {
     g_opt_urid_nom = urid_map_fn(NULL, LV2_BUF_SIZE__nominalBlockLength);
@@ -81,9 +84,9 @@ EMSCRIPTEN_KEEPALIVE void shim_init(unsigned long sample_rate) {
     g_handle = g_desc->instantiate(g_desc, (double)sample_rate, "", g_features);
     g_desc->connect_port(g_handle, 0, g_in_in);
     g_desc->connect_port(g_handle, 1, g_out_out);
-    g_desc->connect_port(g_handle, 2, &g_ctrl_fm);
-    g_desc->connect_port(g_handle, 3, &g_ctrl_exp_fm);
-    g_desc->connect_port(g_handle, 4, &g_ctrl_res_mod);
+    g_desc->connect_port(g_handle, 2, g_cv_fm);
+    g_desc->connect_port(g_handle, 3, g_cv_exp_fm);
+    g_desc->connect_port(g_handle, 4, g_cv_res_mod);
     g_desc->connect_port(g_handle, 5, &g_ctrl_in_gain);
     g_desc->connect_port(g_handle, 6, &g_ctrl_freq);
     g_desc->connect_port(g_handle, 7, &g_ctrl_exp_fm_gain);
@@ -115,5 +118,8 @@ EMSCRIPTEN_KEEPALIVE void  shim_set_out_gain(float v) { g_ctrl_out_gain = v; }
 EMSCRIPTEN_KEEPALIVE float shim_get_out_gain()        { return g_ctrl_out_gain; }
 
 EMSCRIPTEN_KEEPALIVE void shim_run(unsigned long count) {
+    for (unsigned long _i = 0; _i < count && _i < BLOCK_SIZE; _i++) g_cv_fm[_i] = g_ctrl_fm;
+    for (unsigned long _i = 0; _i < count && _i < BLOCK_SIZE; _i++) g_cv_exp_fm[_i] = g_ctrl_exp_fm;
+    for (unsigned long _i = 0; _i < count && _i < BLOCK_SIZE; _i++) g_cv_res_mod[_i] = g_ctrl_res_mod;
     g_desc->run(g_handle, count);
 }

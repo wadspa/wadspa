@@ -3,7 +3,7 @@ import createampPlugin from './amp.js';
 let mod = null;
 const inPtrs  = [0];
 const outPtrs = [0];
-const SETTERS = {"0":"_shim_set_gain_db"};
+const SETTERS = {"0":"_shim_set_amps_gain_db"};
 
 class WadspProcessor extends AudioWorkletProcessor {
     constructor() {
@@ -11,7 +11,7 @@ class WadspProcessor extends AudioWorkletProcessor {
         this.port.onmessage = async ({ data }) => {
             if (data.type === 'setup') {
                 try {
-                    mod = await createampPlugin({ wasmBinary: data.wasm });
+                    mod = await createampPlugin({ wasmBinary: data.wasm, locateFile: (p, d) => d + p });
                     mod._shim_init(sampleRate);
                     inPtrs[0]  = mod._shim_input_buf_input() >> 2;
                     outPtrs[0] = mod._shim_output_buf_output() >> 2;

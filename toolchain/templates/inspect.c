@@ -6,16 +6,18 @@
 extern const LADSPA_Descriptor *ladspa_descriptor(unsigned long index);
 
 static const char *default_hint(LADSPA_PortRangeHintDescriptor h) {
-    if (h & LADSPA_HINT_DEFAULT_MINIMUM) return "min";
-    if (h & LADSPA_HINT_DEFAULT_MAXIMUM) return "max";
-    if (h & LADSPA_HINT_DEFAULT_LOW)     return "low";
-    if (h & LADSPA_HINT_DEFAULT_HIGH)    return "high";
-    if (h & LADSPA_HINT_DEFAULT_0)       return "0";
-    if (h & LADSPA_HINT_DEFAULT_1)       return "1";
-    if (h & LADSPA_HINT_DEFAULT_100)     return "100";
-    if (h & LADSPA_HINT_DEFAULT_440)     return "440";
-    if (h & LADSPA_HINT_DEFAULT_MIDDLE)  return "middle";
-    return "none";
+    switch (h & LADSPA_HINT_DEFAULT_MASK) {
+        case LADSPA_HINT_DEFAULT_MINIMUM: return "min";
+        case LADSPA_HINT_DEFAULT_LOW:     return "low";
+        case LADSPA_HINT_DEFAULT_MIDDLE:  return "middle";
+        case LADSPA_HINT_DEFAULT_HIGH:    return "high";
+        case LADSPA_HINT_DEFAULT_MAXIMUM: return "max";
+        case LADSPA_HINT_DEFAULT_0:       return "0";
+        case LADSPA_HINT_DEFAULT_1:       return "1";
+        case LADSPA_HINT_DEFAULT_100:     return "100";
+        case LADSPA_HINT_DEFAULT_440:     return "440";
+        default:                          return "none";
+    }
 }
 
 static void json_str(const char *s) {

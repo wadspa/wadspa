@@ -62,7 +62,7 @@ static LV2_URID g_urid_atom_chunk;
 static LV2_URID g_urid_atom_sequence;
 
 static const LV2_Descriptor *g_desc   = NULL;
-static LV2_Handle            g_handle = NULL;
+LV2_Handle                   g_handle = NULL;
 
 void shim_midi_clear(void);
 
@@ -129,6 +129,12 @@ EMSCRIPTEN_KEEPALIVE void shim_midi_note_off(uint8_t ch, uint8_t note)
 
 EMSCRIPTEN_KEEPALIVE void shim_midi_cc(uint8_t ch, uint8_t cc, uint8_t val)
     { uint8_t m[3] = {(uint8_t)(0xB0|ch), cc, val}; push_midi(m, 3); }
+
+EMSCRIPTEN_KEEPALIVE void shim_midi_poly_pressure(uint8_t ch, uint8_t note, uint8_t val)
+    { uint8_t m[3] = {(uint8_t)(0xA0|ch), note, val}; push_midi(m, 3); }
+
+EMSCRIPTEN_KEEPALIVE void shim_midi_channel_pressure(uint8_t ch, uint8_t val)
+    { uint8_t m[2] = {(uint8_t)(0xD0|ch), val}; push_midi(m, 2); }
 
 EMSCRIPTEN_KEEPALIVE void shim_midi_pitch_bend(uint8_t ch, int16_t bend) {
     uint16_t u = (uint16_t)(bend + 8192);

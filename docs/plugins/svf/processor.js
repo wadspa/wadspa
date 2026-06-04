@@ -1,7 +1,6 @@
 import createsvfPlugin from './svf.js';
 
 let mod = null;
-let dirty = false;
 const inPtrs  = [0];
 const outPtrs = [0];
 const SETTERS = {"2":"_shim_set_filter_type_0_none_1_lp_2_hp_3_bp_4_br_5_ap","3":"_shim_set_filter_freq","4":"_shim_set_filter_q","5":"_shim_set_filter_resonance"};
@@ -21,15 +20,13 @@ class WadspProcessor extends AudioWorkletProcessor {
                     this.port.postMessage({ type: 'error', message: e.message });
                 }
             } else if (data.type === 'set') {
-                if (mod) { const fn = SETTERS[data.index]; if (fn) mod[fn](data.value); dirty = true; }
+                if (mod) { const fn = SETTERS[data.index]; if (fn) mod[fn](data.value); }
             }
         };
     }
 
     process(inputs, outputs) {
         if (!mod) return true;
-        // Reset filter state after any control change to prevent IIR instability spikes.
-        if (dirty) { mod._shim_init(sampleRate); dirty = false; }
         const _c0 = inputs[0]?.[0]; if (_c0 && _c0.length) mod.HEAPF32.set(_c0, inPtrs[0]);
         mod._shim_run(128);
         outputs[0][0].set(mod.HEAPF32.subarray(outPtrs[0], outPtrs[0] + 128));

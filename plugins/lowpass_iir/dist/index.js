@@ -13,7 +13,7 @@ export const meta         = {
       "type": "control",
       "min": 0.0001,
       "max": 0.45,
-      "default": "max",
+      "default": "high",
       "logarithmic": true,
       "sampleRate": true
     },
@@ -24,7 +24,7 @@ export const meta         = {
       "type": "control",
       "min": 1,
       "max": 10,
-      "default": "min",
+      "default": "1",
       "integer": true
     },
     {

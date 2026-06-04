@@ -3,7 +3,7 @@ export const meta         = {
   "id": 1907,
   "label": "dj_eq_mono",
   "name": "DJ EQ (mono)",
-  "maker": "wabspa",
+  "maker": "Steve Harris <steve@plugin.org.uk>",
   "exportName": "createdj_eq_monoPlugin",
   "ports": [
     {
@@ -47,11 +47,10 @@ export const meta         = {
     },
     {
       "index": 5,
-      "name": "Latency",
+      "name": "latency",
       "dir": "output",
       "type": "control",
-      "default": "none",
-      "integer": true
+      "default": "none"
     }
   ]
 };

@@ -1,5 +1,5 @@
 {
-  "name": "@wadspa/dj_eq_mono",
+  "name": "@wadspa/dj-eq-mono",
   "version": "0.1.0",
   "type": "module",
   "main": "./index.js",

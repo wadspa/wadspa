@@ -11,7 +11,7 @@ class WadspProcessor extends AudioWorkletProcessor {
         this.port.onmessage = async ({ data }) => {
             if (data.type === 'setup') {
                 try {
-                    mod = await createdj_eq_monoPlugin({ wasmBinary: data.wasm });
+                    mod = await createdj_eq_monoPlugin({ wasmBinary: data.wasm, locateFile: (p, d) => d + p });
                     mod._shim_init(sampleRate);
                     inPtrs[0]  = mod._shim_input_buf_input() >> 2;
                     outPtrs[0] = mod._shim_output_buf_output() >> 2;

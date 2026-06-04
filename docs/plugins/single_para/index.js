@@ -22,7 +22,7 @@ export const meta         = {
       "type": "control",
       "min": 0,
       "max": 0.4,
-      "default": "min",
+      "default": "440",
       "sampleRate": true
     },
     {
@@ -32,7 +32,7 @@ export const meta         = {
       "type": "control",
       "min": 0,
       "max": 4,
-      "default": "min"
+      "default": "1"
     },
     {
       "index": 3,

@@ -55,7 +55,7 @@ static float g_ctrl_freq = 0.5f;
 static float g_ctrl_mix = 0.5f;
 
 static const LV2_Descriptor *g_desc   = NULL;
-static LV2_Handle            g_handle = NULL;
+LV2_Handle                   g_handle = NULL;
 
 EMSCRIPTEN_KEEPALIVE void shim_init(unsigned long sample_rate) {
     g_opt_urid_nom = urid_map_fn(NULL, LV2_BUF_SIZE__nominalBlockLength);

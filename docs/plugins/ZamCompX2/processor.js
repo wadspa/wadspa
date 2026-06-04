@@ -22,6 +22,25 @@ class WadspProcessor extends AudioWorkletProcessor {
                 } catch (e) {
                     this.port.postMessage({ type: 'error', message: e.message });
                 }
+            } else if (data.type === 'loadSample') {
+                if (!mod) return;
+                const pcm = new Float32Array(data.buffer);
+                const ptr = mod._malloc(pcm.byteLength);
+                mod.HEAPF32.set(pcm, ptr >> 2);
+                if (typeof mod._shim_sample_set_pcm === 'function')
+                    mod._shim_sample_set_pcm(ptr, pcm.length, data.srate);
+                if (typeof mod._shim_load_sample === 'function')
+                    mod._shim_load_sample();
+                mod._free(ptr);
+                this.port.postMessage({ type: 'sampleloaded' });
+            } else if (data.type === 'loadPad') {
+                if (!mod || typeof mod._shim_load_pad !== 'function') return;
+                const pcm = new Float32Array(data.buffer);
+                const ptr = mod._malloc(pcm.byteLength);
+                mod.HEAPF32.set(pcm, ptr >> 2);
+                mod._shim_load_pad(data.note, ptr, pcm.length, data.srate);
+                mod._free(ptr);
+                this.port.postMessage({ type: 'padloaded', note: data.note });
             } else if (data.type === 'set') {
                 if (mod) { const fn = SETTERS[data.symbol]; if (fn) mod[fn](data.value); }
             }
@@ -30,8 +49,9 @@ class WadspProcessor extends AudioWorkletProcessor {
 
     process(inputs, outputs) {
         if (!mod) return true;
-        const _c0 = inputs[0]?.[0]; if (_c0 && _c0.length) mod.HEAPF32.set(_c0, inPtrs[0]);
-        const _c1 = inputs[0]?.[1]; if (_c1 && _c1.length) mod.HEAPF32.set(_c1, inPtrs[1]);
+        const _cL = inputs[0]?.[0]; if (_cL && _cL.length) mod.HEAPF32.set(_cL, inPtrs[0]);
+        const _cR = inputs[0]?.[1]; if (_cR && _cR.length) mod.HEAPF32.set(_cR, inPtrs[1]);
+        const _c2 = inputs[2]?.[0]; if (_c2 && _c2.length) mod.HEAPF32.set(_c2, inPtrs[2]);
         mod._shim_run(128);
         outputs[0][0].set(mod.HEAPF32.subarray(outPtrs[0], outPtrs[0] + 128));
         outputs[1][0].set(mod.HEAPF32.subarray(outPtrs[1], outPtrs[1] + 128));

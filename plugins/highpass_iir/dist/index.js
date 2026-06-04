@@ -24,7 +24,7 @@ export const meta         = {
       "type": "control",
       "min": 1,
       "max": 10,
-      "default": "min",
+      "default": "1",
       "integer": true
     },
     {

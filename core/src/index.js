@@ -73,7 +73,7 @@ export async function loadPlugin(ctx, pluginModule) {
         outputNode = merger;
     }
 
-    return new WadspNode(workletNode, outputNode, meta, hasMidi);
+    return new WadspNode(workletNode, outputNode, meta, hasMidi, ctx);
 }
 
 class WadspNode {
@@ -81,26 +81,28 @@ class WadspNode {
     #meta;
     #controls;
     #hasMidi;
+    #ctx;
 
-    constructor(workletNode, outputNode, meta, hasMidi = false) {
+    constructor(workletNode, outputNode, meta, hasMidi = false, ctx = null) {
         this.#node     = workletNode;
         this.#meta     = meta;
         this.#hasMidi  = hasMidi;
-        this.#controls = new Map(
-            meta.ports
-                .filter(p => p.type === 'control' && p.dir === 'input')
-                .map(p => [normalizeKey(p.name), p])
-        );
+        this.#ctx      = ctx;
+        this.#controls = controlMap(meta);
         this.input  = workletNode;
         this.output = outputNode;
     }
 
     set(portName, value) {
         const port = this.#resolve(portName);
+        const numeric = Number(value);
+        const scaled = shouldScaleBySampleRate(port, numeric, this.#ctx)
+            ? numeric * this.#ctx.sampleRate
+            : numeric;
         // LV2 controls use symbol; LADSPA controls use index
         const msg = port.symbol
-            ? { type: 'set', symbol: port.symbol, value: Number(value) }
-            : { type: 'set', index:  port.index,  value: Number(value) };
+            ? { type: 'set', symbol: port.symbol, value: scaled }
+            : { type: 'set', index:  port.index,  value: scaled };
         this.#node.port.postMessage(msg);
         return this;
     }
@@ -147,6 +149,14 @@ class WadspNode {
         return this.midi(0xB0 | channel, controller, value);
     }
 
+    polyPressure(note, value, channel = 0) {
+        return this.midi(0xA0 | channel, note, value);
+    }
+
+    channelPressure(value, channel = 0) {
+        return this.midi(0xD0 | channel, value, 0);
+    }
+
     pitchBend(semitones, channel = 0) {
         const bend = Math.round(semitones * 8192 / 2) + 8192;
         const clamped = Math.max(0, Math.min(16383, bend));
@@ -165,5 +175,23 @@ class WadspNode {
 }
 
 function normalizeKey(name) {
-    return name.toLowerCase().replace(/[\s_()[\]-]+/g, '');
+    return String(name).toLowerCase().replace(/[\s_()[\]-]+/g, '');
+}
+
+function controlMap(meta) {
+    const controls = new Map();
+    for (const port of meta.ports.filter(p => p.type === 'control' && p.dir === 'input')) {
+        for (const alias of [port.name, port.symbol, port.index]) {
+            if (alias !== undefined && alias !== null) controls.set(normalizeKey(alias), port);
+        }
+    }
+    return controls;
+}
+
+function shouldScaleBySampleRate(port, value, ctx) {
+    if (!ctx || !port.sampleRate || !Number.isFinite(value)) return false;
+    const min = Number(port.min);
+    const max = Number(port.max);
+    if (!Number.isFinite(min) || !Number.isFinite(max)) return true;
+    return value >= Math.min(min, max) && value <= Math.max(min, max);
 }

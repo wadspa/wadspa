@@ -31,7 +31,7 @@ export const meta         = {
       "type": "control",
       "min": 2,
       "max": 800,
-      "default": "min"
+      "default": "middle"
     },
     {
       "index": 3,
@@ -40,7 +40,7 @@ export const meta         = {
       "type": "control",
       "min": -30,
       "max": 0,
-      "default": "min"
+      "default": "max"
     },
     {
       "index": 4,
@@ -49,7 +49,7 @@ export const meta         = {
       "type": "control",
       "min": 1,
       "max": 20,
-      "default": "min"
+      "default": "1"
     },
     {
       "index": 5,

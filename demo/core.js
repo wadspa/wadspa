@@ -96,21 +96,21 @@ class WadspNode {
         this.#hasMidi  = hasMidi;
         this.#pending  = pending;
         this.#ctx      = ctx;
-        this.#controls = new Map(
-            meta.ports
-                .filter(p => p.type === 'control' && p.dir === 'input')
-                .map(p => [normalizeKey(p.name), p])
-        );
+        this.#controls = controlMap(meta);
         this.input  = workletNode;
         this.output = outputNode;
     }
 
     set(portName, value) {
         const port = this.#resolve(portName);
+        const numeric = Number(value);
+        const scaled = shouldScaleBySampleRate(port, numeric, this.#ctx)
+            ? numeric * this.#ctx.sampleRate
+            : numeric;
         // LV2 controls use symbol; LADSPA controls use index
         const msg = port.symbol
-            ? { type: 'set', symbol: port.symbol, value: Number(value) }
-            : { type: 'set', index:  port.index,  value: Number(value) };
+            ? { type: 'set', symbol: port.symbol, value: scaled }
+            : { type: 'set', index:  port.index,  value: scaled };
         this.#node.port.postMessage(msg);
         return this;
     }
@@ -134,6 +134,14 @@ class WadspNode {
 
     cc(controller, value, channel = 0) {
         return this.midi(0xB0 | channel, controller, value);
+    }
+
+    polyPressure(note, value, channel = 0) {
+        return this.midi(0xA0 | channel, note, value);
+    }
+
+    channelPressure(value, channel = 0) {
+        return this.midi(0xD0 | channel, value, 0);
     }
 
     pitchBend(semitones, channel = 0) {
@@ -208,7 +216,25 @@ class WadspNode {
 }
 
 function normalizeKey(name) {
-    return name.toLowerCase().replace(/[\s_()[\]-]+/g, '');
+    return String(name).toLowerCase().replace(/[\s_()[\]-]+/g, '');
+}
+
+function controlMap(meta) {
+    const controls = new Map();
+    for (const port of meta.ports.filter(p => p.type === 'control' && p.dir === 'input')) {
+        for (const alias of [port.name, port.symbol, port.index]) {
+            if (alias !== undefined && alias !== null) controls.set(normalizeKey(alias), port);
+        }
+    }
+    return controls;
+}
+
+function shouldScaleBySampleRate(port, value, ctx) {
+    if (!ctx || !port.sampleRate || !Number.isFinite(value)) return false;
+    const min = Number(port.min);
+    const max = Number(port.max);
+    if (!Number.isFinite(min) || !Number.isFinite(max)) return true;
+    return value >= Math.min(min, max) && value <= Math.max(min, max);
 }
 
 // Build a sample-based plugin and load all sample slots in one call.

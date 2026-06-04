@@ -36,6 +36,15 @@ static void __attribute__((constructor)) swh_init(); // forward declaration
 
 #include "ladspa-util.h"
 
+static inline float valve_transfer_term(float x, float dist)
+{
+  const float driven = dist * x;
+  if (driven > -1.0e-4f && driven < 1.0e-4f) {
+    return 1.0f / dist;
+  }
+  return x / (1.0f - f_exp(f_clamp(-driven, -60.0f, 60.0f)));
+}
+
 #define VALVE_Q_P                      0
 #define VALVE_DIST_P                   1
 #define VALVE_INPUT                    2
@@ -74,7 +83,7 @@ static void activateValve(LADSPA_Handle instance) {
 	Valve *plugin_data = (Valve *)instance;
 	LADSPA_Data itm1 = plugin_data->itm1;
 	LADSPA_Data otm1 = plugin_data->otm1;
-#line 21 "/Users/sethtenenbaum/wadspa/swh-plugins/valve_1209.xml"
+#line 30 "/Users/sethtenenbaum/wadspa/swh-plugins/valve_1209.xml"
 	itm1 = 0.0f;
 	otm1 = 0.0f;
 	plugin_data->itm1 = itm1;
@@ -143,20 +152,16 @@ static void runValve(LADSPA_Handle instance, unsigned long sample_count) {
 	LADSPA_Data itm1 = plugin_data->itm1;
 	LADSPA_Data otm1 = plugin_data->otm1;
 
-#line 26 "/Users/sethtenenbaum/wadspa/swh-plugins/valve_1209.xml"
+#line 35 "/Users/sethtenenbaum/wadspa/swh-plugins/valve_1209.xml"
 	unsigned long pos;
 	LADSPA_Data fx;
 	
 	const float q = q_p - 0.999f;
-	const float dist = dist_p * 40.0f + 0.1f;
+	const float dist = f_clamp(dist_p, 0.0f, 0.85f) * 40.0f + 0.1f;
 	
 	if (q == 0.0f) {
 	        for (pos = 0; pos < sample_count; pos++) {
-	                if (input[pos] == q) {
-	                        fx = 1.0f / dist;
-	                } else {
-	                        fx = input[pos] / (1.0f - f_exp(-dist * input[pos]));
-	                }
+	                fx = valve_transfer_term(input[pos], dist);
 	                otm1 = 0.999f * otm1 + fx - itm1;
 	                round_to_zero(&otm1);
 	                itm1 = fx;
@@ -164,13 +169,7 @@ static void runValve(LADSPA_Handle instance, unsigned long sample_count) {
 	        }
 	} else {
 	        for (pos = 0; pos < sample_count; pos++) {
-	                if (input[pos] == q) {
-	                        fx = 1.0f / dist + q / (1.0f - f_exp(dist * q));
-	                } else {
-	                        fx = (input[pos] - q) /
-	                         (1.0f - f_exp(-dist * (input[pos] - q))) +
-	                         q / (1.0f - f_exp(dist * q));
-	                }
+	                fx = valve_transfer_term(input[pos] - q, dist) - valve_transfer_term(-q, dist);
 	                otm1 = 0.999f * otm1 + fx - itm1;
 	                round_to_zero(&otm1);
 	                itm1 = fx;
@@ -211,20 +210,16 @@ static void runAddingValve(LADSPA_Handle instance, unsigned long sample_count) {
 	LADSPA_Data itm1 = plugin_data->itm1;
 	LADSPA_Data otm1 = plugin_data->otm1;
 
-#line 26 "/Users/sethtenenbaum/wadspa/swh-plugins/valve_1209.xml"
+#line 35 "/Users/sethtenenbaum/wadspa/swh-plugins/valve_1209.xml"
 	unsigned long pos;
 	LADSPA_Data fx;
 	
 	const float q = q_p - 0.999f;
-	const float dist = dist_p * 40.0f + 0.1f;
+	const float dist = f_clamp(dist_p, 0.0f, 0.85f) * 40.0f + 0.1f;
 	
 	if (q == 0.0f) {
 	        for (pos = 0; pos < sample_count; pos++) {
-	                if (input[pos] == q) {
-	                        fx = 1.0f / dist;
-	                } else {
-	                        fx = input[pos] / (1.0f - f_exp(-dist * input[pos]));
-	                }
+	                fx = valve_transfer_term(input[pos], dist);
 	                otm1 = 0.999f * otm1 + fx - itm1;
 	                round_to_zero(&otm1);
 	                itm1 = fx;
@@ -232,13 +227,7 @@ static void runAddingValve(LADSPA_Handle instance, unsigned long sample_count) {
 	        }
 	} else {
 	        for (pos = 0; pos < sample_count; pos++) {
-	                if (input[pos] == q) {
-	                        fx = 1.0f / dist + q / (1.0f - f_exp(dist * q));
-	                } else {
-	                        fx = (input[pos] - q) /
-	                         (1.0f - f_exp(-dist * (input[pos] - q))) +
-	                         q / (1.0f - f_exp(dist * q));
-	                }
+	                fx = valve_transfer_term(input[pos] - q, dist) - valve_transfer_term(-q, dist);
 	                otm1 = 0.999f * otm1 + fx - itm1;
 	                round_to_zero(&otm1);
 	                itm1 = fx;

@@ -28,7 +28,9 @@ class WadspProcessor extends AudioWorkletProcessor {
                 const ch   = status & 0x0F;
                 if      (type === 0x90 && data2 > 0) mod._shim_midi_note_on(ch, data1, data2);
                 else if (type === 0x80 || (type === 0x90 && data2 === 0)) mod._shim_midi_note_off(ch, data1);
+                else if (type === 0xA0 && mod._shim_midi_poly_pressure) mod._shim_midi_poly_pressure(ch, data1, data2);
                 else if (type === 0xB0) mod._shim_midi_cc(ch, data1, data2);
+                else if (type === 0xD0 && mod._shim_midi_channel_pressure) mod._shim_midi_channel_pressure(ch, data1);
                 else if (type === 0xE0) mod._shim_midi_pitch_bend(ch, ((data2 << 7) | data1) - 8192);
             } else if (data.type === 'loadSample') {
                 if (!mod) return;

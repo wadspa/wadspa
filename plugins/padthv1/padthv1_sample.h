@@ -29,6 +29,7 @@
 #define __padthv1_sample_h
 
 #include <cstdint>
+#include <cmath>
 
 #include <fftw3.h>
 
@@ -116,20 +117,32 @@ public:
 	// iterate.
 	float sample(float& phase, float freq) const
 	{
-		const uint32_t i = uint32_t(phase);
-		const float alpha = phase - float(i);
 		const float p0 = float(m_nsize);
+		if (!(m_freq0 > 0.0f) || !std::isfinite(freq) || !std::isfinite(phase)) {
+			phase = 0.0f;
+			return 0.0f;
+		}
 
 		phase += (freq / m_freq0);
+		if (std::isfinite(phase)) {
+			phase = std::fmod(phase, p0);
+			if (phase < 0.0f)
+				phase += p0;
+		} else {
+			phase = 0.0f;
+		}
 
-		if (phase >= p0)
-			phase -= p0;
+		const uint32_t i = uint32_t(phase);
+		const float alpha = phase - float(i);
 
 		const float x0 = m_table[i];
 		const float x1 = m_table[i + 1];
 	#if 1	// cubic interp.
 		const float x2 = m_table[i + 2];
 		const float x3 = m_table[i + 3];
+		if (!std::isfinite(x0) || !std::isfinite(x1)
+			|| !std::isfinite(x2) || !std::isfinite(x3))
+			return 0.0f;
 
 		const float c1 = (x2 - x0) * 0.5f;
 		const float b1 = (x1 - x2);
