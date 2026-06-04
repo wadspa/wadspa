@@ -149,6 +149,8 @@ class WadspNode {
             const resp = await fetch(urlOrBuffer, { cache: 'no-cache' });
             if (!resp.ok) throw new Error(`Failed to fetch sample: ${resp.status} ${urlOrBuffer}`);
             arrayBuf = await resp.arrayBuffer();
+        } else if (urlOrBuffer instanceof Blob) {
+            arrayBuf = await urlOrBuffer.arrayBuffer();
         } else {
             arrayBuf = urlOrBuffer;
         }
@@ -189,6 +191,13 @@ class WadspNode {
         });
     }
 
+    // Send a state key/value pair to DPF plugins that support it (WANT_STATE=1).
+    // key and value are plain strings; the processor converts them to C strings.
+    setPluginState(key, value) {
+        this.#node.port.postMessage({ type: 'setState', key: String(key), value: String(value) });
+        return this;
+    }
+
     get node()     { return this.#node; }
     get ports()    { return this.#meta.ports; }
     get hasMidi()  { return this.#hasMidi; }
@@ -202,4 +211,23 @@ class WadspNode {
 
 function normalizeKey(name) {
     return name.toLowerCase().replace(/[\s_()[\]-]+/g, '');
+}
+
+// Build a sample-based plugin and load all sample slots in one call.
+// sampleInputs: { [slotId]: string | File | ArrayBuffer }
+// Slots with a non-null defaultUrl are loaded from that URL when no input is provided.
+export async function build(ctx, pluginModule, sampleInputs = {}) {
+    const node = await loadPlugin(ctx, pluginModule);
+    const slots = pluginModule.sampleSlots;
+    if (!slots || slots.length === 0) return node;
+    for (const slot of slots) {
+        const src = sampleInputs[slot.id] ?? slot.defaultUrl;
+        if (src == null) continue;
+        if (slot.type === 'pad') {
+            await node.loadPad(slot.note, src);
+        } else {
+            await node.loadSample(src);
+        }
+    }
+    return node;
 }

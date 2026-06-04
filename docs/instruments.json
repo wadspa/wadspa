@@ -6003,6 +6003,225 @@
     "wasmFile": "drumkv1.wasm",
     "processorFile": "processor.js",
     "sampleType": "kit",
+    "sampleSlots": [
+      {
+        "id": "pad_35",
+        "type": "pad",
+        "note": 35,
+        "name": "Bass Drum 2",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_36",
+        "type": "pad",
+        "note": 36,
+        "name": "Bass Drum 1",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_38",
+        "type": "pad",
+        "note": 38,
+        "name": "Snare",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_39",
+        "type": "pad",
+        "note": 39,
+        "name": "Hand Clap",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_40",
+        "type": "pad",
+        "note": 40,
+        "name": "Snare 2",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_41",
+        "type": "pad",
+        "note": 41,
+        "name": "Low Floor Tom",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_42",
+        "type": "pad",
+        "note": 42,
+        "name": "Hi-Hat Closed",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_43",
+        "type": "pad",
+        "note": 43,
+        "name": "High Floor Tom",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_44",
+        "type": "pad",
+        "note": 44,
+        "name": "Hi-Hat Pedal",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_45",
+        "type": "pad",
+        "note": 45,
+        "name": "Low Tom",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_46",
+        "type": "pad",
+        "note": 46,
+        "name": "Hi-Hat Open",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_47",
+        "type": "pad",
+        "note": 47,
+        "name": "Low-Mid Tom",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_48",
+        "type": "pad",
+        "note": 48,
+        "name": "High-Mid Tom",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_49",
+        "type": "pad",
+        "note": 49,
+        "name": "Crash 1",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_50",
+        "type": "pad",
+        "note": 50,
+        "name": "High Tom",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_51",
+        "type": "pad",
+        "note": 51,
+        "name": "Ride 1",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_52",
+        "type": "pad",
+        "note": 52,
+        "name": "Chinese",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_53",
+        "type": "pad",
+        "note": 53,
+        "name": "Ride Bell",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_54",
+        "type": "pad",
+        "note": 54,
+        "name": "Tambourine",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_55",
+        "type": "pad",
+        "note": 55,
+        "name": "Splash",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_56",
+        "type": "pad",
+        "note": 56,
+        "name": "Cowbell",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_57",
+        "type": "pad",
+        "note": 57,
+        "name": "Crash 2",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_58",
+        "type": "pad",
+        "note": 58,
+        "name": "Vibraslap",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_59",
+        "type": "pad",
+        "note": 59,
+        "name": "Ride 2",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_60",
+        "type": "pad",
+        "note": 60,
+        "name": "Hi Bongo",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_61",
+        "type": "pad",
+        "note": 61,
+        "name": "Low Bongo",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_62",
+        "type": "pad",
+        "note": 62,
+        "name": "Conga Mute",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_63",
+        "type": "pad",
+        "note": 63,
+        "name": "Conga Open",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_64",
+        "type": "pad",
+        "note": 64,
+        "name": "Low Conga",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_65",
+        "type": "pad",
+        "note": 65,
+        "name": "High Timbale",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_66",
+        "type": "pad",
+        "note": 66,
+        "name": "Low Timbale",
+        "defaultUrl": null
+      }
+    ],
     "ports": [
       {
         "index": 0,
@@ -6421,6 +6640,435 @@
         "min": 0,
         "max": 1,
         "default": 1
+      }
+    ]
+  },
+  {
+    "id": "string-machine",
+    "label": "String_machine",
+    "name": "String machine",
+    "description": "String machine — polyphonic string ensemble synthesizer LV2",
+    "category": "Instruments",
+    "wasmFile": "String_machine.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "lv2_audio_out_1",
+        "name": "Audio Output 1",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 1,
+        "symbol": "lv2_audio_out_2",
+        "name": "Audio Output 2",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 2,
+        "symbol": "lv2_events_in",
+        "name": "Events Input",
+        "dir": "input",
+        "type": "midi",
+        "legacy": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 3,
+        "symbol": "osc_detune",
+        "name": "Oscillator detune",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.00159999995958
+      },
+      {
+        "index": 4,
+        "symbol": "osc_hp_cutoff_upper",
+        "name": "Oscillator HP Cutoff 4'",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -20,
+        "max": 60,
+        "default": 8
+      },
+      {
+        "index": 5,
+        "symbol": "osc_hp_cutoff_lower",
+        "name": "Oscillator HP Cutoff 8'",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -20,
+        "max": 60,
+        "default": 8
+      },
+      {
+        "index": 6,
+        "symbol": "osc_pwm_depth",
+        "name": "Oscillator PWM Depth",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 100,
+        "default": 0
+      },
+      {
+        "index": 7,
+        "symbol": "osc_pwm_frequency",
+        "name": "Oscillator PWM Frequency",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0.10000000149,
+        "max": 5,
+        "default": 0.25
+      },
+      {
+        "index": 8,
+        "symbol": "osc_enhance_upper",
+        "name": "Oscillator enhance 4'",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 0.5,
+        "default": 0
+      },
+      {
+        "index": 9,
+        "symbol": "osc_enhance_lower",
+        "name": "Oscillator enhance 8'",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 0.5,
+        "default": 0
+      },
+      {
+        "index": 10,
+        "symbol": "flt_lp_cutoff_upper",
+        "name": "Filters LP Cutoff 4'",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -20,
+        "max": 120,
+        "default": 5.19999980927
+      },
+      {
+        "index": 11,
+        "symbol": "flt_hp_cutoff_upper",
+        "name": "Filters HP Cutoff 4'",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -20,
+        "max": 120,
+        "default": 12.1999998093
+      },
+      {
+        "index": 12,
+        "symbol": "flt_lp_cutoff_lower",
+        "name": "Filters LP Cutoff 8'",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -20,
+        "max": 120,
+        "default": 16.3999996185
+      },
+      {
+        "index": 13,
+        "symbol": "flt_hp_cutoff_lower",
+        "name": "Filters HP Cutoff 8'",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -20,
+        "max": 120,
+        "default": -0.40000000596
+      },
+      {
+        "index": 14,
+        "symbol": "flt_hs_cutoff_eq",
+        "name": "Filters HS Cutoff 4'",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -20,
+        "max": 120,
+        "default": 24.7999992371
+      },
+      {
+        "index": 15,
+        "symbol": "flt_hs_boost_eq",
+        "name": "Filters HS Boost 4'",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -20,
+        "max": 20,
+        "default": 6
+      },
+      {
+        "index": 16,
+        "symbol": "mix_gain_upper",
+        "name": "Mix Gain 4'",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -20,
+        "max": 0,
+        "default": 0
+      },
+      {
+        "index": 17,
+        "symbol": "mix_gain_lower",
+        "name": "Mix Gain 8'",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -20,
+        "max": 0,
+        "default": 0
+      },
+      {
+        "index": 18,
+        "symbol": "env_attack",
+        "name": "Envelope attack",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0.00999999977648,
+        "max": 10,
+        "default": 0.193900004029
+      },
+      {
+        "index": 19,
+        "symbol": "env_hold",
+        "name": "Envelope hold",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0.00999999977648,
+        "max": 10,
+        "default": 0.00999999977648
+      },
+      {
+        "index": 20,
+        "symbol": "env_decay",
+        "name": "Envelope decay",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0.00999999977648,
+        "max": 10,
+        "default": 10
+      },
+      {
+        "index": 21,
+        "symbol": "env_sustain",
+        "name": "Envelope sustain",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -60,
+        "max": 0,
+        "default": 0
+      },
+      {
+        "index": 22,
+        "symbol": "env_release",
+        "name": "Envelope release",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0.00999999977648,
+        "max": 10,
+        "default": 3
+      },
+      {
+        "index": 23,
+        "symbol": "cho_enabled",
+        "name": "Chorus enabled",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 1,
+        "default": 1
+      },
+      {
+        "index": 24,
+        "symbol": "cho_depth",
+        "name": "Chorus global depth",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 100,
+        "default": 100
+      },
+      {
+        "index": 25,
+        "symbol": "cho_rate1",
+        "name": "Chorus rate 1",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 1,
+        "max": 9,
+        "default": 5.83459997177
+      },
+      {
+        "index": 26,
+        "symbol": "cho_depth1",
+        "name": "Chorus depth 1",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 100,
+        "default": 30.7099990845
+      },
+      {
+        "index": 27,
+        "symbol": "cho_rate2",
+        "name": "Chorus rate 2",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0.10000000149,
+        "max": 0.899999976158,
+        "default": 0.583500027657
+      },
+      {
+        "index": 28,
+        "symbol": "cho_depth2",
+        "name": "Chorus depth 2",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 100,
+        "default": 90.5500030518
+      },
+      {
+        "index": 29,
+        "symbol": "cho_model",
+        "name": "Chorus model",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 1,
+        "default": 1
+      },
+      {
+        "index": 30,
+        "symbol": "master_gain",
+        "name": "Master Gain",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": -60,
+        "max": 20,
+        "default": 3
+      },
+      {
+        "index": 31,
+        "symbol": "polyphony",
+        "name": "Polyphony",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "min": 1,
+        "max": 32,
+        "default": 16
+      },
+      {
+        "index": 32,
+        "symbol": "osc_current_detune_upper",
+        "name": "Oscillator detune 4'",
+        "dir": "output",
+        "type": "control",
+        "legacy": false,
+        "min": -1,
+        "max": 1,
+        "default": -1
+      },
+      {
+        "index": 33,
+        "symbol": "osc_current_detune_lower",
+        "name": "Oscillator detune 8'",
+        "dir": "output",
+        "type": "control",
+        "legacy": false,
+        "min": -1,
+        "max": 1,
+        "default": -1
+      },
+      {
+        "index": 34,
+        "symbol": "cho_current_phase1",
+        "name": "Chorus phase 1",
+        "dir": "output",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 6.28318548203,
+        "default": 0
+      },
+      {
+        "index": 35,
+        "symbol": "cho_current_phase2",
+        "name": "Chorus phase 2",
+        "dir": "output",
+        "type": "control",
+        "legacy": false,
+        "min": 0,
+        "max": 6.28318548203,
+        "default": 0
+      },
+      {
+        "index": 36,
+        "symbol": "master_current_level1",
+        "name": "Master level 1",
+        "dir": "output",
+        "type": "control",
+        "legacy": false,
+        "min": -100,
+        "max": 100,
+        "default": -100
+      },
+      {
+        "index": 37,
+        "symbol": "master_current_level2",
+        "name": "Master level 2",
+        "dir": "output",
+        "type": "control",
+        "legacy": false,
+        "min": -100,
+        "max": 100,
+        "default": -100
       }
     ]
   }

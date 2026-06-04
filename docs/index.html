@@ -142,6 +142,7 @@
       border-radius: 6px; padding: 0.7rem 0.8rem; min-width: 160px; max-width: 220px;
       flex-shrink: 0; position: relative;
     }
+    .card.has-shaper { max-width: 240px; min-width: 200px; }
     .card.loading { opacity: 0.5; }
     .card-title {
       font-size: 0.75rem; font-weight: bold; color: var(--accent);
@@ -160,6 +161,21 @@
     .ctrl-row .ctrl-line { display: flex; align-items: center; gap: 0.4rem; }
     .ctrl-row input[type=range] { flex: 1; accent-color: var(--accent); height: 3px; }
     .ctrl-row .val { font-size: 0.62rem; color: #aaa; min-width: 3rem; text-align: right; }
+
+    /* ── Curve/shaper editor ─────────────────────────────────── */
+    .shaper-wrap { margin-top: 0.5rem; }
+    .shaper-canvas {
+      display: block; width: 100%; aspect-ratio: 1;
+      background: #111; border: 1px solid var(--border); border-radius: 3px;
+      cursor: crosshair; touch-action: none;
+    }
+    .shaper-btns { display: flex; gap: 0.3rem; margin-top: 0.3rem; flex-wrap: wrap; }
+    .shaper-btn {
+      padding: 0.15rem 0.45rem; font-family: monospace; font-size: 0.6rem;
+      background: var(--surface); color: var(--muted); border: 1px solid var(--border);
+      border-radius: 2px; cursor: pointer;
+    }
+    .shaper-btn:hover { color: var(--text); border-color: var(--accent); }
 
     /* ── Synth card (special) ─────────────────────────────────── */
     #synth-card {
@@ -869,6 +885,192 @@ function cardFmt(p, v) {
   return v.toFixed(1);
 }
 
+// ── Canvas waveshaper editor ──────────────────────────────────────────────
+// Points are stored in wolf-shaper's state format: "x,y,tension,curveType;"
+// x,y ∈ [0,1] where 0 = signal minimum, 1 = signal maximum.
+// CurveType: 0=Exponential 1=Linear 2=Bezier 3=Bounce — we always emit Linear(1).
+
+function shaperPointsToState(pts) {
+  return pts.map(p => `${p.x},${p.y},0x0p+0,1`).join(';') + ';';
+}
+
+function buildShaperCanvas(card, node) {
+  const SIZE = 160;
+
+  // Default: identity line (two endpoints)
+  let pts = [{ x: 0, y: 0 }, { x: 1, y: 1 }];
+
+  const wrap = document.createElement('div');
+  wrap.className = 'shaper-wrap';
+
+  const canvas = document.createElement('canvas');
+  canvas.className = 'shaper-canvas';
+  canvas.width = SIZE; canvas.height = SIZE;
+  wrap.appendChild(canvas);
+
+  const btns = document.createElement('div');
+  btns.className = 'shaper-btns';
+
+  const PRESETS = {
+    'linear':    [{ x:0, y:0 }, { x:1, y:1 }],
+    'hard clip': [{ x:0, y:0 }, { x:0.3, y:0.8 }, { x:0.7, y:0.8 }, { x:1, y:1 }],
+    'soft clip': [{ x:0, y:0 }, { x:0.3, y:0.65 }, { x:0.7, y:0.85 }, { x:1, y:1 }],
+    'fold':      [{ x:0, y:0 }, { x:0.3, y:1 }, { x:0.7, y:0 }, { x:1, y:1 }],
+    'invert':    [{ x:0, y:1 }, { x:1, y:0 }],
+  };
+
+  for (const [label, preset] of Object.entries(PRESETS)) {
+    const b = document.createElement('button');
+    b.className = 'shaper-btn'; b.textContent = label;
+    b.addEventListener('click', () => {
+      pts = preset.map(p => ({ ...p }));
+      drawCurve();
+      node.setPluginState('graph', shaperPointsToState(pts));
+    });
+    btns.appendChild(b);
+  }
+
+  const addBtn = document.createElement('button');
+  addBtn.className = 'shaper-btn'; addBtn.textContent = '+ point';
+  addBtn.addEventListener('click', () => {
+    // Insert midpoint between the two middle points
+    const mid = Math.floor((pts.length - 1) / 2);
+    const mx = (pts[mid].x + pts[mid + 1].x) / 2;
+    const my = (pts[mid].y + pts[mid + 1].y) / 2;
+    pts.splice(mid + 1, 0, { x: mx, y: my });
+    drawCurve();
+    node.setPluginState('graph', shaperPointsToState(pts));
+  });
+  btns.appendChild(addBtn);
+
+  wrap.appendChild(btns);
+  card.appendChild(wrap);
+
+  const ctx = canvas.getContext('2d');
+  let dragging = null; // index of dragged point
+
+  function ptToCanvas(p) {
+    return { cx: p.x * SIZE, cy: (1 - p.y) * SIZE };
+  }
+  function canvasToPt(cx, cy) {
+    return { x: Math.max(0, Math.min(1, cx / SIZE)),
+             y: Math.max(0, Math.min(1, 1 - cy / SIZE)) };
+  }
+
+  function drawCurve() {
+    ctx.clearRect(0, 0, SIZE, SIZE);
+
+    // Grid
+    ctx.strokeStyle = '#222'; ctx.lineWidth = 0.5;
+    for (let i = 1; i < 4; i++) {
+      const g = i * SIZE / 4;
+      ctx.beginPath(); ctx.moveTo(g, 0); ctx.lineTo(g, SIZE); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, g); ctx.lineTo(SIZE, g); ctx.stroke();
+    }
+    // Diagonal reference
+    ctx.strokeStyle = '#333'; ctx.lineWidth = 0.5;
+    ctx.beginPath(); ctx.moveTo(0, SIZE); ctx.lineTo(SIZE, 0); ctx.stroke();
+
+    // Curve (catmull-rom through pts)
+    ctx.strokeStyle = '#4477ee'; ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    const sorted = [...pts].sort((a, b) => a.x - b.x);
+    const { cx: x0, cy: y0 } = ptToCanvas(sorted[0]);
+    ctx.moveTo(x0, y0);
+    for (let i = 0; i < sorted.length - 1; i++) {
+      const p0 = ptToCanvas(sorted[Math.max(0, i - 1)]);
+      const p1 = ptToCanvas(sorted[i]);
+      const p2 = ptToCanvas(sorted[i + 1]);
+      const p3 = ptToCanvas(sorted[Math.min(sorted.length - 1, i + 2)]);
+      const steps = 20;
+      for (let t = 1; t <= steps; t++) {
+        const s = t / steps;
+        const s2 = s * s, s3 = s2 * s;
+        const h1 =  2*s3 - 3*s2 + 1, h2 = -2*s3 + 3*s2;
+        const h3 =    s3 - 2*s2 + s, h4 =    s3 -   s2;
+        const tx1 = (p2.cx - p0.cx) * 0.5, ty1 = (p2.cy - p0.cy) * 0.5;
+        const tx2 = (p3.cx - p1.cx) * 0.5, ty2 = (p3.cy - p1.cy) * 0.5;
+        ctx.lineTo(h1*p1.cx + h2*p2.cx + h3*tx1 + h4*tx2,
+                   h1*p1.cy + h2*p2.cy + h3*ty1 + h4*ty2);
+      }
+    }
+    ctx.stroke();
+
+    // Control points
+    for (let i = 0; i < pts.length; i++) {
+      const { cx, cy } = ptToCanvas(pts[i]);
+      ctx.fillStyle = i === dragging ? '#33cc88' : '#4477ee';
+      ctx.beginPath(); ctx.arc(cx, cy, 5, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+
+  function getRect() { return canvas.getBoundingClientRect(); }
+  function evCoords(e) {
+    const r = getRect(), cl = e.touches ? e.touches[0].clientX : e.clientX,
+          ct = e.touches ? e.touches[0].clientY : e.clientY;
+    return { cx: (cl - r.left) * SIZE / r.width, cy: (ct - r.top) * SIZE / r.height };
+  }
+  function hitTest(cx, cy) {
+    const R = 8 * SIZE / getRect().width;
+    for (let i = 0; i < pts.length; i++) {
+      const p = ptToCanvas(pts[i]);
+      if (Math.hypot(p.cx - cx, p.cy - cy) < R) return i;
+    }
+    return -1;
+  }
+
+  canvas.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    const { cx, cy } = evCoords(e);
+    const hit = hitTest(cx, cy);
+    if (hit >= 0) {
+      dragging = hit;
+    } else {
+      // Add point on double-click or right-click
+      if (e.detail === 2 || e.button === 2) {
+        const np = canvasToPt(cx, cy);
+        pts.push(np);
+        pts.sort((a, b) => a.x - b.x);
+        dragging = pts.findIndex(p => p === np);
+        drawCurve();
+        node.setPluginState('graph', shaperPointsToState(pts));
+      }
+    }
+  });
+
+  canvas.addEventListener('pointermove', e => {
+    if (dragging === null) return;
+    e.preventDefault();
+    const { cx, cy } = evCoords(e);
+    const np = canvasToPt(cx, cy);
+    // Anchor endpoints on x-axis
+    if (dragging === 0) pts[dragging] = { x: 0, y: np.y };
+    else if (dragging === pts.length - 1) pts[dragging] = { x: 1, y: np.y };
+    else pts[dragging] = np;
+    drawCurve();
+    node.setPluginState('graph', shaperPointsToState(pts));
+  });
+
+  canvas.addEventListener('pointerup',     () => { dragging = null; });
+  canvas.addEventListener('pointercancel', () => { dragging = null; });
+
+  // Right-click removes interior points
+  canvas.addEventListener('contextmenu', e => {
+    e.preventDefault();
+    const { cx, cy } = evCoords(e);
+    const hit = hitTest(cx, cy);
+    if (hit > 0 && hit < pts.length - 1) {
+      pts.splice(hit, 1);
+      drawCurve();
+      node.setPluginState('graph', shaperPointsToState(pts));
+    }
+  });
+
+  drawCurve();
+  // Push default identity curve to plugin immediately
+  node.setPluginState('graph', shaperPointsToState(pts));
+}
+
 function renderChain() {
   const container = document.getElementById('chain-cards');
   const outBadge  = document.getElementById('out-badge');
@@ -884,7 +1086,7 @@ function renderChain() {
     }
 
     const card = document.createElement('div');
-    card.className = 'card';
+    card.className = 'card' + (eff.shaper ? ' has-shaper' : '');
 
     const ctrlPorts = eff.ports.filter(p => p.type === 'control' && p.dir === 'input');
 
@@ -920,11 +1122,12 @@ function renderChain() {
         valEl.textContent = cardFmt(p, v);
         node.set(p.name, v);
       });
-      // Dispatch the catalog default immediately so the WASM starts at the
-      // displayed value rather than whatever the C shim compiled in.
       const def = resolvePortDefault(p);
       if (def !== null) node.set(p.name, def);
     }
+
+    // ── Curve editor (shaper plugins) ──────────────────────────
+    if (eff.shaper) buildShaperCanvas(card, node);
 
     container.appendChild(card);
   }

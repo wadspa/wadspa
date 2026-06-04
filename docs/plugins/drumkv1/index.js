@@ -427,3 +427,222 @@ export const meta         = {
 };
 export const wasmUrl      = new URL('./drumkv1.wasm',  import.meta.url).href;
 export const processorUrl = new URL('./processor.js',      import.meta.url).href;
+export const sampleSlots = [
+  {
+    "id": "pad_35",
+    "type": "pad",
+    "note": 35,
+    "name": "Bass Drum 2",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_36",
+    "type": "pad",
+    "note": 36,
+    "name": "Bass Drum 1",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_38",
+    "type": "pad",
+    "note": 38,
+    "name": "Snare",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_39",
+    "type": "pad",
+    "note": 39,
+    "name": "Hand Clap",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_40",
+    "type": "pad",
+    "note": 40,
+    "name": "Snare 2",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_41",
+    "type": "pad",
+    "note": 41,
+    "name": "Low Floor Tom",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_42",
+    "type": "pad",
+    "note": 42,
+    "name": "Hi-Hat Closed",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_43",
+    "type": "pad",
+    "note": 43,
+    "name": "High Floor Tom",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_44",
+    "type": "pad",
+    "note": 44,
+    "name": "Hi-Hat Pedal",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_45",
+    "type": "pad",
+    "note": 45,
+    "name": "Low Tom",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_46",
+    "type": "pad",
+    "note": 46,
+    "name": "Hi-Hat Open",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_47",
+    "type": "pad",
+    "note": 47,
+    "name": "Low-Mid Tom",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_48",
+    "type": "pad",
+    "note": 48,
+    "name": "High-Mid Tom",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_49",
+    "type": "pad",
+    "note": 49,
+    "name": "Crash 1",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_50",
+    "type": "pad",
+    "note": 50,
+    "name": "High Tom",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_51",
+    "type": "pad",
+    "note": 51,
+    "name": "Ride 1",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_52",
+    "type": "pad",
+    "note": 52,
+    "name": "Chinese",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_53",
+    "type": "pad",
+    "note": 53,
+    "name": "Ride Bell",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_54",
+    "type": "pad",
+    "note": 54,
+    "name": "Tambourine",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_55",
+    "type": "pad",
+    "note": 55,
+    "name": "Splash",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_56",
+    "type": "pad",
+    "note": 56,
+    "name": "Cowbell",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_57",
+    "type": "pad",
+    "note": 57,
+    "name": "Crash 2",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_58",
+    "type": "pad",
+    "note": 58,
+    "name": "Vibraslap",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_59",
+    "type": "pad",
+    "note": 59,
+    "name": "Ride 2",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_60",
+    "type": "pad",
+    "note": 60,
+    "name": "Hi Bongo",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_61",
+    "type": "pad",
+    "note": 61,
+    "name": "Low Bongo",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_62",
+    "type": "pad",
+    "note": 62,
+    "name": "Conga Mute",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_63",
+    "type": "pad",
+    "note": 63,
+    "name": "Conga Open",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_64",
+    "type": "pad",
+    "note": 64,
+    "name": "Low Conga",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_65",
+    "type": "pad",
+    "note": 65,
+    "name": "High Timbale",
+    "defaultUrl": null
+  },
+  {
+    "id": "pad_66",
+    "type": "pad",
+    "note": 66,
+    "name": "Low Timbale",
+    "defaultUrl": null
+  }
+];

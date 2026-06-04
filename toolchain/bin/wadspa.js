@@ -147,7 +147,7 @@ async function buildLv2(args) {
 
     const lv2Opts = {
         includes: [], defines: [], sources: null, out: null, name: null,
-        threads: false, embedFiles: [], allowMemoryGrowth: false, extraExports: [],
+        threads: false, embedFiles: [], allowMemoryGrowth: false, extraExports: [], extraFeatures: [],
     };
     for (let i = 2; i < args.length; i++) {
         if      (args[i] === '--out')            lv2Opts.out     = resolve(args[++i]);
@@ -159,6 +159,7 @@ async function buildLv2(args) {
         else if (args[i] === '--memory-growth')  lv2Opts.allowMemoryGrowth = true;
         else if (args[i] === '--embed-file')     lv2Opts.embedFiles.push(args[++i]);
         else if (args[i] === '--extra-export')   lv2Opts.extraExports.push(args[++i]);
+        else if (args[i] === '--extra-feature')  lv2Opts.extraFeatures.push(args[++i]);
         else { console.error(`Unknown option: ${args[i]}`); usage(); }
     }
 
@@ -173,7 +174,7 @@ async function buildLv2(args) {
 
     // Step 2: generate LV2 shim
     console.log('→ Generating LV2 shim.c...');
-    const lv2ShimSrc  = generateLv2Shim(lv2Desc);
+    const lv2ShimSrc  = generateLv2Shim(lv2Desc, lv2Opts.extraExports, lv2Opts.extraFeatures ?? []);
     const lv2ShimPath = join(pluginDir, '_wadspa_lv2_shim.c');
     writeFileSync(lv2ShimPath, lv2ShimSrc);
 
@@ -212,7 +213,7 @@ async function buildLv2(args) {
     const lv2PkgName = lv2Opts.name ?? `@wadspa/${lv2Label.toLowerCase()}`;
     const lv2Meta = { uri: lv2Desc.uri, label: lv2Label, name: lv2Desc.label, exportName: lv2ExportName, ports: lv2Desc.ports };
 
-    writeFileSync(join(lv2OutDir, 'processor.js'), generateLv2Processor(lv2Desc, lv2Label));
+    writeFileSync(join(lv2OutDir, 'processor.js'), generateLv2Processor(lv2Desc, lv2Label, lv2Opts.extraFeatures));
 
     const lv2IndexJs = `\
 export { default } from './${lv2Label}.js';

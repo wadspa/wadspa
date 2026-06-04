@@ -98,6 +98,8 @@ bool drumkv1_sample::open(const char *filename, float freq0)
             m_pframes[0][i] = n * (1.0f - (float)i / nframes) * 0.5f;
         }
     }
+    // pitch ratio: maps the stored sample rate to the plugin sample rate at the reference note
+    m_ratio = m_rate0 / (m_freq0 * m_srate);
 
     // Store filename
     if (filename) {
@@ -173,3 +175,5 @@ float drumkv1_sample::zero_crossing_k(uint32_t i) const
     const float denom = f[i+1] - f[i];
     return denom != 0.0f ? -f[i] / denom : 0.0f;
 }
+
+

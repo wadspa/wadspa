@@ -91,7 +91,7 @@ static LV2_URID g_urid_atom_chunk;
 static LV2_URID g_urid_atom_sequence;
 
 static const LV2_Descriptor *g_desc   = NULL;
-static LV2_Handle            g_handle = NULL;
+LV2_Handle                   g_handle = NULL;
 
 void shim_midi_clear(void);
 

@@ -157,7 +157,7 @@ function floatLit(n) {
     return (s.includes('.') || s.includes('e')) ? s + 'f' : s + '.0f';
 }
 
-export function generateLv2Shim(descriptor) {
+export function generateLv2Shim(descriptor, extraExports = [], extraFeatures = []) {
     const { ports } = descriptor;
 
     const audioIn   = ports.filter(p => p.type === 'audio'   && p.dir === 'input');
@@ -246,6 +246,20 @@ export function generateLv2Shim(descriptor) {
         lines.push('static LV2_Feature g_evt_feature = { "http://lv2plug.in/ns/ext/event", &g_evt_feature_data };');
         lines.push('#pragma GCC diagnostic pop');
         lines.push('static const LV2_Feature *g_features[] = { &g_map_feature, &g_opt_feature, &g_uri_map_feature, &g_evt_feature, NULL };');
+    } else if (extraFeatures.includes('worker')) {
+        // Some DPF plugins (WANT_STATE=1) require LV2_Worker_Schedule.
+        // Inline the minimal worker types (no lv2/worker.h needed in sysroot).
+        lines.push('/* Inlined LV2 Worker types */');
+        lines.push('#define LV2_WORKER__schedule "http://lv2plug.in/ns/ext/worker#schedule"');
+        lines.push('typedef enum { LV2_WORKER_SUCCESS=0, LV2_WORKER_ERR_UNKNOWN=1 } LV2_Worker_Status;');
+        lines.push('typedef void* LV2_Worker_Schedule_Handle;');
+        lines.push('typedef LV2_Worker_Status (*LV2_Worker_Schedule_Func)(LV2_Worker_Schedule_Handle, uint32_t, const void*);');
+        lines.push('typedef struct { LV2_Worker_Schedule_Handle handle; LV2_Worker_Schedule_Func schedule_work; } LV2_Worker_Schedule;');
+        lines.push('static LV2_Worker_Status noop_worker_schedule(LV2_Worker_Schedule_Handle h, uint32_t sz, const void *d)');
+        lines.push('    { (void)h; (void)sz; (void)d; return LV2_WORKER_SUCCESS; }');
+        lines.push('static LV2_Worker_Schedule g_worker_sched = { NULL, noop_worker_schedule };');
+        lines.push('static LV2_Feature g_worker_feature = { LV2_WORKER__schedule, &g_worker_sched };');
+        lines.push('static const LV2_Feature *g_features[] = { &g_map_feature, &g_opt_feature, &g_worker_feature, NULL };');
     } else {
         lines.push('static const LV2_Feature *g_features[] = { &g_map_feature, &g_opt_feature, NULL };');
     }
@@ -360,6 +374,10 @@ export function generateLv2Shim(descriptor) {
 
     lines.push('    if (g_desc->activate) g_desc->activate(g_handle);');
     if (midiIn.length > 0) lines.push('    shim_midi_clear();');
+    if (extraFeatures.includes('worker')) {
+        // Call into the DPF LV2 backend to register the instance for state bridge.
+        lines.push('    { extern void wadspa_register_plugin_lv2(LV2_Handle); wadspa_register_plugin_lv2(g_handle); }');
+    }
     lines.push('}');
     lines.push('');
 
@@ -477,7 +495,7 @@ export function lv2ExportedFunctions(descriptor, extraExports = []) {
 }
 
 // Processor.js for LV2 instruments — adds MIDI message handling
-export function generateLv2Processor(descriptor, label) {
+export function generateLv2Processor(descriptor, label, extraFeatures = []) {
     const { ports } = descriptor;
     const audioIn   = ports.filter(p => p.type === 'audio' && p.dir === 'input');
     const audioOut  = ports.filter(p => p.type === 'audio' && p.dir === 'output');
@@ -587,7 +605,15 @@ class WadspProcessor extends AudioWorkletProcessor {
                 mod._free(ptr);
                 this.port.postMessage({ type: 'padloaded', note: data.note });
             } else if (data.type === 'set') {
-                if (mod) { const fn = SETTERS[data.symbol]; if (fn) mod[fn](data.value); }
+                if (mod) { const fn = SETTERS[data.symbol]; if (fn) mod[fn](data.value); }${extraFeatures.includes('worker') ? `
+            } else if (data.type === 'setState') {
+                if (!mod || typeof mod._shim_set_plugin_state !== 'function') return;
+                const enc = new TextEncoder();
+                const kb = enc.encode(data.key + '\\0'), vb = enc.encode(data.value + '\\0');
+                const kp = mod._malloc(kb.length), vp = mod._malloc(vb.length);
+                mod.HEAPU8.set(kb, kp); mod.HEAPU8.set(vb, vp);
+                mod._shim_set_plugin_state(kp, vp);
+                mod._free(kp); mod._free(vp);` : ''}
             }
         };
     }

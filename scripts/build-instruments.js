@@ -86,7 +86,9 @@ function buildCatalogueEntry(manifestEntry, distDir) {
         wasmFile,
         processorFile: 'processor.js',
         ...(meta.sf2 && { sf2: true }),
-        ...(manifestEntry.sampleType && { sampleType: manifestEntry.sampleType }),
+        ...(manifestEntry.sampleType  && { sampleType:  manifestEntry.sampleType }),
+        ...(manifestEntry.sampleSlots && { sampleSlots: manifestEntry.sampleSlots }),
+        ...(manifestEntry.shaper      && { shaper:      true }),
         ports: meta.ports.map(p => {
             if (p.type !== 'control') return p;
             return { ...p, default: resolveDefault(p.default, p.min, p.max) };
@@ -112,6 +114,14 @@ function deploy(manifestEntry, distDir, instrumentEntries, effectEntries) {
     const dest = join(DOCS_PLUGINS, manifestEntry.id);
     rmSync(dest, { recursive: true, force: true });
     copyDirContents(distDir, dest);
+
+    if (manifestEntry.sampleSlots) {
+        const indexPath = join(dest, 'index.js');
+        const current = readFileSync(indexPath, 'utf8');
+        if (!current.includes('export const sampleSlots')) {
+            writeFileSync(indexPath, `${current}export const sampleSlots = ${JSON.stringify(manifestEntry.sampleSlots, null, 2)};\n`);
+        }
+    }
 }
 
 let passed = 0, failed = 0, skipped = 0;
@@ -149,6 +159,7 @@ for (const entry of lv2Plugins) {
             for (const i of entry.includes      ?? []) flags.push(`--include "${join(ROOT, i)}"`);
             for (const d of entry.defines       ?? []) flags.push(`--define "${d}"`);
             for (const e of entry.extraExports  ?? []) flags.push(`--extra-export "${e}"`);
+            for (const f of entry.extraFeatures ?? []) flags.push(`--extra-feature "${f}"`);
             if (entry.sources) {
                 const srcs = (Array.isArray(entry.sources) ? entry.sources : [entry.sources])
                     .map(s => join(dir, s)).join(',');

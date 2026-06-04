@@ -966,3 +966,6 @@ export const meta         = {
 };
 export const wasmUrl      = new URL('./samplv1.wasm',  import.meta.url).href;
 export const processorUrl = new URL('./processor.js',      import.meta.url).href;
+export const sampleSlots = [
+  { "id": "sample", "type": "sample", "name": "Sample", "defaultUrl": null }
+];
