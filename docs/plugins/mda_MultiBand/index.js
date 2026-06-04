@@ -15,7 +15,14 @@ export const meta         = {
       "cv": false,
       "min": 0,
       "max": 1,
-      "default": 1
+      "default": 1,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "Low",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 1,
@@ -160,7 +167,8 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 0,
-      "integer": true
+      "integer": true,
+      "toggled": true
     },
     {
       "index": 13,

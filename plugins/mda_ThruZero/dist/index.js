@@ -15,7 +15,13 @@ export const meta         = {
       "cv": false,
       "min": 0.01,
       "max": 10,
-      "default": 0.08
+      "default": 0.08,
+      "scalePoints": [
+        {
+          "label": "-",
+          "value": 0.01
+        }
+      ]
     },
     {
       "index": 1,

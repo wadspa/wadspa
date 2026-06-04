@@ -12,6 +12,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": -12,
       "max": 12,
       "default": 0
@@ -19,13 +20,14 @@ export const meta         = {
     {
       "index": 1,
       "symbol": "Rate",
-      "name": "Rate",
+      "name": "Rate Shift [%]",
       "dir": "input",
       "type": "control",
       "legacy": false,
-      "min": null,
-      "max": null,
-      "default": null
+      "cv": false,
+      "min": -50,
+      "max": 100,
+      "default": 0
     },
     {
       "index": 2,
@@ -34,6 +36,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": -90,
       "max": 20,
       "default": -90
@@ -45,6 +48,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": -90,
       "max": 20,
       "default": 0
@@ -56,6 +60,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 16027,
       "default": 0
@@ -67,6 +72,7 @@ export const meta         = {
       "dir": "input",
       "type": "audio",
       "legacy": false,
+      "cv": false,
       "min": null,
       "max": null,
       "default": null
@@ -78,6 +84,7 @@ export const meta         = {
       "dir": "output",
       "type": "audio",
       "legacy": false,
+      "cv": false,
       "min": null,
       "max": null,
       "default": null

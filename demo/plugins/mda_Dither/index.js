@@ -12,6 +12,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 8,
       "max": 24,
       "default": 16
@@ -23,9 +24,18 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 3,
-      "default": 0
+      "default": 0,
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "Truncation",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 2,
@@ -34,6 +44,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 4,
       "default": 2
@@ -45,6 +56,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": -2,
       "max": 2,
       "default": 0
@@ -56,9 +68,16 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": -80,
       "max": 0,
-      "default": 0
+      "default": 0,
+      "scalePoints": [
+        {
+          "label": "OFF",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 5,
@@ -67,6 +86,7 @@ export const meta         = {
       "dir": "input",
       "type": "audio",
       "legacy": false,
+      "cv": false,
       "min": null,
       "max": null,
       "default": null
@@ -78,6 +98,7 @@ export const meta         = {
       "dir": "input",
       "type": "audio",
       "legacy": false,
+      "cv": false,
       "min": null,
       "max": null,
       "default": null
@@ -89,6 +110,7 @@ export const meta         = {
       "dir": "output",
       "type": "audio",
       "legacy": false,
+      "cv": false,
       "min": null,
       "max": null,
       "default": null
@@ -100,6 +122,7 @@ export const meta         = {
       "dir": "output",
       "type": "audio",
       "legacy": false,
+      "cv": false,
       "min": null,
       "max": null,
       "default": null

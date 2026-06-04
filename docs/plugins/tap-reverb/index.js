@@ -52,7 +52,14 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 1,
-      "integer": true
+      "integer": true,
+      "toggled": true,
+      "scalePoints": [
+        {
+          "label": "Off",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 4,
@@ -65,7 +72,14 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 1,
-      "integer": true
+      "integer": true,
+      "toggled": true,
+      "scalePoints": [
+        {
+          "label": "Off",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 5,
@@ -78,7 +92,14 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 1,
-      "integer": true
+      "integer": true,
+      "toggled": true,
+      "scalePoints": [
+        {
+          "label": "Off",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 6,
@@ -91,7 +112,14 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 1,
-      "integer": true
+      "integer": true,
+      "toggled": true,
+      "scalePoints": [
+        {
+          "label": "Off",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 7,
@@ -104,7 +132,14 @@ export const meta         = {
       "min": 0,
       "max": 42,
       "default": 0,
-      "integer": true
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "AfterBurn",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 8,

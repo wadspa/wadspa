@@ -12,6 +12,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 30,
       "default": 0
@@ -23,6 +24,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 20,
       "default": 0
@@ -34,6 +36,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": -90,
       "max": 20,
       "default": 0
@@ -45,6 +48,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": -90,
       "max": 20,
       "default": 0
@@ -56,6 +60,7 @@ export const meta         = {
       "dir": "output",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 6300,
       "default": 6300
@@ -67,6 +72,7 @@ export const meta         = {
       "dir": "input",
       "type": "audio",
       "legacy": false,
+      "cv": false,
       "min": null,
       "max": null,
       "default": null
@@ -78,6 +84,7 @@ export const meta         = {
       "dir": "output",
       "type": "audio",
       "legacy": false,
+      "cv": false,
       "min": null,
       "max": null,
       "default": null

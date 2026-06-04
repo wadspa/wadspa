@@ -33,7 +33,7 @@ export const meta         = {
       "type": "control",
       "min": 0,
       "max": 1,
-      "default": "min"
+      "default": "middle"
     },
     {
       "index": 3,
@@ -62,7 +62,7 @@ export const meta         = {
       "type": "control",
       "min": 0,
       "max": 4,
-      "default": "min"
+      "default": "1"
     },
     {
       "index": 6,
@@ -80,7 +80,7 @@ export const meta         = {
       "type": "control",
       "min": 0.0001,
       "max": 0.49,
-      "default": "min",
+      "default": "middle",
       "logarithmic": true,
       "sampleRate": true
     },
@@ -91,7 +91,7 @@ export const meta         = {
       "type": "control",
       "min": 0,
       "max": 4,
-      "default": "min"
+      "default": "1"
     },
     {
       "index": 9,
@@ -109,7 +109,7 @@ export const meta         = {
       "type": "control",
       "min": 0.0001,
       "max": 0.49,
-      "default": "max",
+      "default": "high",
       "logarithmic": true,
       "sampleRate": true
     },
@@ -120,7 +120,7 @@ export const meta         = {
       "type": "control",
       "min": 0,
       "max": 4,
-      "default": "min"
+      "default": "1"
     },
     {
       "index": 12,
@@ -138,7 +138,7 @@ export const meta         = {
       "type": "control",
       "min": 0.0001,
       "max": 0.49,
-      "default": "min",
+      "default": "max",
       "logarithmic": true,
       "sampleRate": true
     },
@@ -149,7 +149,7 @@ export const meta         = {
       "type": "control",
       "min": 0,
       "max": 1,
-      "default": "min"
+      "default": "middle"
     },
     {
       "index": 15,

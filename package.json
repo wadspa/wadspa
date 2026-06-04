@@ -8,9 +8,10 @@
   ],
   "scripts": {
     "link-toolchain": "npm link --workspace=toolchain",
-    "test": "node scripts/test-instruments.js && node scripts/test-effects.js && node scripts/test-sliders.js",
+    "test": "node scripts/test-ranges.js && node scripts/test-instruments.js && node scripts/test-effects.js && node scripts/test-sliders.js",
     "test:lv2": "node scripts/test-instruments.js",
     "test:effects": "node scripts/test-effects.js",
+    "test:ranges": "node scripts/test-ranges.js",
     "test:sliders": "node scripts/test-sliders.js",
     "test:controls": "node scripts/test-controls.js",
     "build": "node scripts/build-archive.js",

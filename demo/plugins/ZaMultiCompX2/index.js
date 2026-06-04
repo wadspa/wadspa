@@ -12,6 +12,7 @@ export const meta         = {
       "dir": "input",
       "type": "audio",
       "legacy": false,
+      "cv": false,
       "min": null,
       "max": null,
       "default": null
@@ -23,6 +24,7 @@ export const meta         = {
       "dir": "input",
       "type": "audio",
       "legacy": false,
+      "cv": false,
       "min": null,
       "max": null,
       "default": null
@@ -34,6 +36,7 @@ export const meta         = {
       "dir": "output",
       "type": "audio",
       "legacy": false,
+      "cv": false,
       "min": null,
       "max": null,
       "default": null
@@ -45,6 +48,7 @@ export const meta         = {
       "dir": "output",
       "type": "audio",
       "legacy": false,
+      "cv": false,
       "min": null,
       "max": null,
       "default": null
@@ -56,6 +60,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0.10000000149,
       "max": 100,
       "default": 10
@@ -67,6 +72,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0.10000000149,
       "max": 100,
       "default": 10
@@ -78,6 +84,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0.10000000149,
       "max": 100,
       "default": 10
@@ -89,6 +96,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 1,
       "max": 500,
       "default": 80
@@ -100,6 +108,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 1,
       "max": 500,
       "default": 80
@@ -111,6 +120,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 1,
       "max": 500,
       "default": 80
@@ -122,6 +132,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 8,
       "default": 0
@@ -133,6 +144,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 8,
       "default": 0
@@ -144,6 +156,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 8,
       "default": 0
@@ -155,6 +168,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 1,
       "max": 20,
       "default": 4
@@ -166,6 +180,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 1,
       "max": 20,
       "default": 4
@@ -177,6 +192,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 1,
       "max": 20,
       "default": 4
@@ -188,6 +204,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": -60,
       "max": 0,
       "default": -20
@@ -199,6 +216,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": -60,
       "max": 0,
       "default": -18
@@ -210,6 +228,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": -60,
       "max": 0,
       "default": -16
@@ -221,6 +240,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 30,
       "default": 0
@@ -232,6 +252,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 30,
       "default": 0
@@ -243,6 +264,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 30,
       "default": 0
@@ -254,6 +276,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 20,
       "max": 1400,
       "default": 160
@@ -265,6 +288,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 1400,
       "max": 14000,
       "default": 1400
@@ -276,9 +300,11 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 1,
-      "default": 0
+      "default": 0,
+      "toggled": true
     },
     {
       "index": 25,
@@ -287,9 +313,11 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 1,
-      "default": 0
+      "default": 0,
+      "toggled": true
     },
     {
       "index": 26,
@@ -298,9 +326,11 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 1,
-      "default": 0
+      "default": 0,
+      "toggled": true
     },
     {
       "index": 27,
@@ -309,9 +339,11 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 1,
-      "default": 0
+      "default": 0,
+      "toggled": true
     },
     {
       "index": 28,
@@ -320,9 +352,11 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 1,
-      "default": 0
+      "default": 0,
+      "toggled": true
     },
     {
       "index": 29,
@@ -331,9 +365,11 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 1,
-      "default": 0
+      "default": 0,
+      "toggled": true
     },
     {
       "index": 30,
@@ -342,9 +378,11 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 1,
-      "default": 1
+      "default": 1,
+      "toggled": true
     },
     {
       "index": 31,
@@ -353,6 +391,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": -12,
       "max": 12,
       "default": 0
@@ -364,6 +403,7 @@ export const meta         = {
       "dir": "output",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": -45,
       "max": 20,
       "default": null
@@ -375,6 +415,7 @@ export const meta         = {
       "dir": "output",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": -45,
       "max": 20,
       "default": null
@@ -386,6 +427,7 @@ export const meta         = {
       "dir": "output",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": -45,
       "max": 20,
       "default": null
@@ -397,6 +439,7 @@ export const meta         = {
       "dir": "output",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": -45,
       "max": 20,
       "default": null
@@ -408,6 +451,7 @@ export const meta         = {
       "dir": "output",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": -45,
       "max": 20,
       "default": null
@@ -419,6 +463,7 @@ export const meta         = {
       "dir": "output",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 20,
       "default": null
@@ -430,6 +475,7 @@ export const meta         = {
       "dir": "output",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 20,
       "default": null
@@ -441,6 +487,7 @@ export const meta         = {
       "dir": "output",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 20,
       "default": null

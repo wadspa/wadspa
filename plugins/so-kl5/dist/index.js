@@ -37,9 +37,21 @@ export const meta         = {
       "type": "control",
       "legacy": false,
       "cv": false,
-      "min": null,
-      "max": null,
-      "default": 0
+      "min": 0,
+      "max": 1,
+      "default": 0,
+      "enumeration": true,
+      "toggled": true,
+      "scalePoints": [
+        {
+          "label": "Midi Commands",
+          "value": 0
+        },
+        {
+          "label": "Control Ports",
+          "value": 1
+        }
+      ]
     },
     {
       "index": 3,
@@ -112,7 +124,13 @@ export const meta         = {
       "min": 0,
       "max": 16,
       "default": 0,
-      "integer": true
+      "integer": true,
+      "scalePoints": [
+        {
+          "label": "Off",
+          "value": 16
+        }
+      ]
     }
   ]
 };

@@ -54,7 +54,14 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 0,
-      "integer": true
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "Integrator Off",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 4,
@@ -92,7 +99,14 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 1,
-      "integer": true
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "Even",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 7,
@@ -104,8 +118,7 @@ export const meta         = {
       "cv": false,
       "min": -20,
       "max": 20,
-      "default": 0,
-      "integer": true
+      "default": 0
     },
     {
       "index": 8,

@@ -159,10 +159,21 @@ export const meta         = {
       "type": "control",
       "legacy": false,
       "cv": false,
-      "min": null,
-      "max": null,
-      "default": null,
-      "integer": true
+      "min": 0,
+      "max": 1,
+      "default": 1,
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "Disabled",
+          "value": 0
+        },
+        {
+          "label": "Enabled",
+          "value": 1
+        }
+      ]
     },
     {
       "index": 13,
@@ -450,7 +461,8 @@ export const meta         = {
       "cv": false,
       "min": 0,
       "max": 1,
-      "default": 0
+      "default": 0,
+      "toggled": true
     },
     {
       "index": 37,
@@ -462,7 +474,8 @@ export const meta         = {
       "cv": false,
       "min": 0,
       "max": 1,
-      "default": 1
+      "default": 1,
+      "toggled": true
     }
   ]
 };

@@ -28,7 +28,14 @@ export const meta         = {
       "min": 0,
       "max": 3,
       "default": 0,
-      "integer": true
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "Truncation",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 2,
@@ -64,7 +71,13 @@ export const meta         = {
       "cv": false,
       "min": -80,
       "max": 0,
-      "default": 0
+      "default": 0,
+      "scalePoints": [
+        {
+          "label": "OFF",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 5,

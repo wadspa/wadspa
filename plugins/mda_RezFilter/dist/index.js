@@ -111,7 +111,13 @@ export const meta         = {
       "cv": false,
       "min": -37,
       "max": 3,
-      "default": -37
+      "default": -37,
+      "scalePoints": [
+        {
+          "label": "FREE RUN",
+          "value": -37
+        }
+      ]
     },
     {
       "index": 9,

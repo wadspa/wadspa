@@ -16,7 +16,14 @@ export const meta         = {
       "min": 0,
       "max": 3,
       "default": 3,
-      "integer": true
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "Low",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 1,
@@ -125,7 +132,14 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 0,
-      "integer": true
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "Bipolar",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 10,

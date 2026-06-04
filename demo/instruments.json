@@ -15,6 +15,7 @@
         "dir": "input",
         "type": "midi",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -26,6 +27,7 @@
         "dir": "output",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -37,6 +39,7 @@
         "dir": "output",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -48,6 +51,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -59,6 +63,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0.001,
         "max": 4,
         "default": 0.01
@@ -70,6 +75,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0.001,
         "max": 4,
         "default": 0.1
@@ -81,6 +87,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.7
@@ -92,6 +99,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0.001,
         "max": 8,
         "default": 0.3
@@ -103,6 +111,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.7
@@ -125,6 +134,7 @@
         "dir": "input",
         "type": "midi",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -136,6 +146,7 @@
         "dir": "output",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -147,6 +158,7 @@
         "dir": "output",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -158,6 +170,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0.5,
         "max": 8,
         "default": 2
@@ -169,6 +182,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 10,
         "default": 3
@@ -180,6 +194,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0.01,
         "max": 4,
         "default": 0.5
@@ -191,6 +206,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0.001,
         "max": 4,
         "default": 0.01
@@ -202,6 +218,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0.001,
         "max": 4,
         "default": 0.3
@@ -213,6 +230,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -224,6 +242,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0.001,
         "max": 8,
         "default": 0.5
@@ -235,6 +254,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.7
@@ -257,6 +277,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 2.5,
         "max": 4000,
         "default": 2.5
@@ -268,9 +289,16 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 46.5,
         "max": 7000,
-        "default": 6124
+        "default": 6124,
+        "scalePoints": [
+          {
+            "label": "Inf",
+            "value": 7000
+          }
+        ]
       },
       {
         "index": 2,
@@ -279,6 +307,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 46.5,
         "max": 7000,
         "default": 424.42
@@ -290,9 +319,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 40,
-        "default": 28
+        "default": 28,
+        "integer": true
       },
       {
         "index": 4,
@@ -301,6 +332,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0.001,
         "max": 0.75,
         "default": 0.24675
@@ -312,6 +344,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 100,
         "default": 23
@@ -323,6 +356,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 17,
         "max": 7000,
         "default": 4600
@@ -334,6 +368,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 100,
         "default": 5
@@ -345,9 +380,16 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 46.5,
         "max": 7000,
-        "default": 6485
+        "default": 6485,
+        "scalePoints": [
+          {
+            "label": "Inf",
+            "value": 7000
+          }
+        ]
       },
       {
         "index": 9,
@@ -356,6 +398,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 100,
         "default": 90
@@ -367,6 +410,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 100,
         "default": 0
@@ -378,9 +422,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -3,
         "max": 3,
-        "default": 0
+        "default": 0,
+        "integer": true
       },
       {
         "index": 12,
@@ -389,6 +435,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -100,
         "max": 100,
         "default": 0
@@ -400,6 +447,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 100,
         "default": 44.7
@@ -411,6 +459,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 100,
         "default": 0
@@ -422,6 +471,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 25,
         "default": 10.35
@@ -433,6 +483,7 @@
         "dir": "output",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -444,6 +495,7 @@
         "dir": "output",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -455,6 +507,7 @@
         "dir": "input",
         "type": "midi",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -477,6 +530,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -488,6 +542,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.37
@@ -499,6 +554,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.25
@@ -510,6 +566,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.3
@@ -521,6 +578,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.32
@@ -532,6 +590,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -543,6 +602,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.9
@@ -554,6 +614,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.6
@@ -565,6 +626,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.12
@@ -576,6 +638,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -587,6 +650,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -598,6 +662,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.9
@@ -609,6 +674,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.89
@@ -620,6 +686,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.9
@@ -631,6 +698,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.73
@@ -642,6 +710,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -653,6 +722,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -664,6 +734,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -675,6 +746,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.71
@@ -686,6 +758,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.81
@@ -697,6 +770,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.65
@@ -708,6 +782,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -719,6 +794,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -730,6 +806,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -741,6 +818,7 @@
         "dir": "output",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -752,6 +830,7 @@
         "dir": "output",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -763,6 +842,7 @@
         "dir": "input",
         "type": "midi",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -785,6 +865,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 3,
         "max": 23,
         "default": 8.5
@@ -796,6 +877,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0.01,
         "max": 1.4,
         "default": 0.12
@@ -807,6 +889,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -50,
         "max": 50,
         "default": 0
@@ -818,6 +901,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -50,
         "max": 50,
         "default": 0
@@ -829,6 +913,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -100,
         "max": 100,
         "default": 0
@@ -840,6 +925,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0.1,
         "max": 37,
         "default": 4
@@ -851,6 +937,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 100,
         "default": 0
@@ -862,6 +949,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 200,
         "default": 100
@@ -873,9 +961,12 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 1
+        "default": 1,
+        "integer": true,
+        "toggled": true
       },
       {
         "index": 9,
@@ -884,6 +975,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -50,
         "max": 50,
         "default": 0
@@ -895,6 +987,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 50,
         "default": 7.3
@@ -906,6 +999,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 100,
         "default": 0
@@ -917,6 +1011,7 @@
         "dir": "output",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -928,6 +1023,7 @@
         "dir": "output",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -939,6 +1035,7 @@
         "dir": "input",
         "type": "midi",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -961,6 +1058,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 100,
         "default": 50
@@ -972,6 +1070,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 100,
         "default": 50
@@ -983,6 +1082,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -50,
         "max": 50,
         "default": 0
@@ -994,6 +1094,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 100,
         "default": 50
@@ -1005,6 +1106,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 100,
         "default": 80.3
@@ -1016,6 +1118,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 100,
         "default": 25.1
@@ -1027,6 +1130,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 100,
         "default": 37.6
@@ -1038,6 +1142,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 200,
         "default": 100
@@ -1049,9 +1154,18 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 1
+        "default": 1,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "8 voices",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 9,
@@ -1060,6 +1174,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -50,
         "max": 50,
         "default": 0
@@ -1071,6 +1186,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 50,
         "default": 12.3
@@ -1082,6 +1198,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -50,
         "max": 50,
         "default": 0
@@ -1093,6 +1210,7 @@
         "dir": "output",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -1104,6 +1222,7 @@
         "dir": "output",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -1115,6 +1234,7 @@
         "dir": "input",
         "type": "midi",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -1137,6 +1257,7 @@
         "dir": "input",
         "type": "midi",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -1148,6 +1269,7 @@
         "dir": "output",
         "type": "atom",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -1159,6 +1281,7 @@
         "dir": "output",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -1170,6 +1293,7 @@
         "dir": "output",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -1181,6 +1305,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 2.5,
         "default": 0
@@ -1192,6 +1317,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 2.5,
         "default": 0
@@ -1203,6 +1329,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -1214,6 +1341,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 2.5,
         "default": 0
@@ -1225,9 +1353,34 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 4,
-        "default": 2
+        "default": 2,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "sine",
+            "value": 0
+          },
+          {
+            "label": "square / pulse",
+            "value": 1
+          },
+          {
+            "label": "triangle / saw",
+            "value": 2
+          },
+          {
+            "label": "white noise",
+            "value": 3
+          },
+          {
+            "label": "noise + sample & hold",
+            "value": 4
+          }
+        ]
       },
       {
         "index": 9,
@@ -1236,6 +1389,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 2.5,
         "default": 0
@@ -1247,6 +1401,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 2.5,
         "default": 0
@@ -1258,6 +1413,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -1269,6 +1425,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 2.5,
         "default": 0
@@ -1280,6 +1437,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 0.97,
         "default": 0
@@ -1291,6 +1449,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -16,
         "max": 16,
         "default": 0
@@ -1302,6 +1461,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -0.5,
         "max": 1.5,
         "default": 1.5
@@ -1313,6 +1473,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -1324,9 +1485,34 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 4,
-        "default": 2
+        "default": 2,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "sine",
+            "value": 0
+          },
+          {
+            "label": "square / pulse",
+            "value": 1
+          },
+          {
+            "label": "triangle / saw",
+            "value": 2
+          },
+          {
+            "label": "white noise",
+            "value": 3
+          },
+          {
+            "label": "noise + sample & hold",
+            "value": 4
+          }
+        ]
       },
       {
         "index": 18,
@@ -1335,6 +1521,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.67
@@ -1346,6 +1533,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 7.5,
         "default": 0
@@ -1357,9 +1545,42 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 6,
-        "default": 0
+        "default": 0,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "sine",
+            "value": 0
+          },
+          {
+            "label": "square",
+            "value": 1
+          },
+          {
+            "label": "triangle",
+            "value": 2
+          },
+          {
+            "label": "white noise",
+            "value": 3
+          },
+          {
+            "label": "noise + sample & hold",
+            "value": 4
+          },
+          {
+            "label": "sawtooth (up)",
+            "value": 5
+          },
+          {
+            "label": "sawtooth (down)",
+            "value": 6
+          }
+        ]
       },
       {
         "index": 21,
@@ -1368,6 +1589,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -3,
         "max": 4,
         "default": 0
@@ -1379,9 +1601,24 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "scalePoints": [
+          {
+            "label": "osc 1",
+            "value": -1
+          },
+          {
+            "label": "both",
+            "value": 0
+          },
+          {
+            "label": "osc 2",
+            "value": 1
+          }
+        ]
       },
       {
         "index": 23,
@@ -1390,6 +1627,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1.259921,
         "default": 0
@@ -1401,6 +1639,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": -1
@@ -1412,6 +1651,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": -1
@@ -1423,6 +1663,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -1434,6 +1675,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -1445,6 +1687,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -1456,6 +1699,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -1467,6 +1711,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -1478,6 +1723,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -1489,6 +1735,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -1500,6 +1747,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 0.9,
         "default": 0
@@ -1511,6 +1759,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -1522,6 +1771,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -1533,9 +1783,26 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 2,
-        "default": 0
+        "default": 0,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "poly",
+            "value": 0
+          },
+          {
+            "label": "mono",
+            "value": 1
+          },
+          {
+            "label": "legato",
+            "value": 2
+          }
+        ]
       },
       {
         "index": 37,
@@ -1544,9 +1811,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -12,
         "max": 12,
-        "default": 0
+        "default": 0,
+        "integer": true
       },
       {
         "index": 38,
@@ -1555,9 +1824,26 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 2,
-        "default": 0
+        "default": 0,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "low pass",
+            "value": 0
+          },
+          {
+            "label": "high pass",
+            "value": 1
+          },
+          {
+            "label": "band pass",
+            "value": 2
+          }
+        ]
       },
       {
         "index": 39,
@@ -1566,9 +1852,22 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 1
+        "default": 1,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "12 dB / octave",
+            "value": 0
+          },
+          {
+            "label": "24 dB / octave",
+            "value": 1
+          }
+        ]
       },
       {
         "index": 40,
@@ -1577,9 +1876,26 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 2,
-        "default": 0
+        "default": 0,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "osc 1+2",
+            "value": 0
+          },
+          {
+            "label": "osc 1",
+            "value": 1
+          },
+          {
+            "label": "osc 2",
+            "value": 2
+          }
+        ]
       },
       {
         "index": 41,
@@ -1588,6 +1904,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -1599,6 +1916,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -1610,6 +1928,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -1621,9 +1940,725 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "always",
+            "value": 0
+          },
+          {
+            "label": "legato",
+            "value": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "drumkv1",
+    "label": "drumkv1",
+    "name": "drumkv1",
+    "description": "drumkv1 — sample-based drum synthesizer with per-pad synthesis and effects",
+    "category": "Instruments",
+    "wasmFile": "drumkv1.wasm",
+    "processorFile": "processor.js",
+    "sampleType": "kit",
+    "sampleSlots": [
+      {
+        "id": "pad_35",
+        "type": "pad",
+        "note": 35,
+        "name": "Bass Drum 2",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_36",
+        "type": "pad",
+        "note": 36,
+        "name": "Bass Drum 1",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_38",
+        "type": "pad",
+        "note": 38,
+        "name": "Snare",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_39",
+        "type": "pad",
+        "note": 39,
+        "name": "Hand Clap",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_40",
+        "type": "pad",
+        "note": 40,
+        "name": "Snare 2",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_41",
+        "type": "pad",
+        "note": 41,
+        "name": "Low Floor Tom",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_42",
+        "type": "pad",
+        "note": 42,
+        "name": "Hi-Hat Closed",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_43",
+        "type": "pad",
+        "note": 43,
+        "name": "High Floor Tom",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_44",
+        "type": "pad",
+        "note": 44,
+        "name": "Hi-Hat Pedal",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_45",
+        "type": "pad",
+        "note": 45,
+        "name": "Low Tom",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_46",
+        "type": "pad",
+        "note": 46,
+        "name": "Hi-Hat Open",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_47",
+        "type": "pad",
+        "note": 47,
+        "name": "Low-Mid Tom",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_48",
+        "type": "pad",
+        "note": 48,
+        "name": "High-Mid Tom",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_49",
+        "type": "pad",
+        "note": 49,
+        "name": "Crash 1",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_50",
+        "type": "pad",
+        "note": 50,
+        "name": "High Tom",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_51",
+        "type": "pad",
+        "note": 51,
+        "name": "Ride 1",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_52",
+        "type": "pad",
+        "note": 52,
+        "name": "Chinese",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_53",
+        "type": "pad",
+        "note": 53,
+        "name": "Ride Bell",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_54",
+        "type": "pad",
+        "note": 54,
+        "name": "Tambourine",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_55",
+        "type": "pad",
+        "note": 55,
+        "name": "Splash",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_56",
+        "type": "pad",
+        "note": 56,
+        "name": "Cowbell",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_57",
+        "type": "pad",
+        "note": 57,
+        "name": "Crash 2",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_58",
+        "type": "pad",
+        "note": 58,
+        "name": "Vibraslap",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_59",
+        "type": "pad",
+        "note": 59,
+        "name": "Ride 2",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_60",
+        "type": "pad",
+        "note": 60,
+        "name": "Hi Bongo",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_61",
+        "type": "pad",
+        "note": 61,
+        "name": "Low Bongo",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_62",
+        "type": "pad",
+        "note": 62,
+        "name": "Conga Mute",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_63",
+        "type": "pad",
+        "note": 63,
+        "name": "Conga Open",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_64",
+        "type": "pad",
+        "note": 64,
+        "name": "Low Conga",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_65",
+        "type": "pad",
+        "note": 65,
+        "name": "High Timbale",
+        "defaultUrl": null
+      },
+      {
+        "id": "pad_66",
+        "type": "pad",
+        "note": 66,
+        "name": "Low Timbale",
+        "defaultUrl": null
+      }
+    ],
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "in",
+        "name": "MIDI In",
+        "dir": "input",
+        "type": "midi",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 1,
+        "symbol": "notify",
+        "name": "Notify",
+        "dir": "output",
+        "type": "atom",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 2,
+        "symbol": "in_L",
+        "name": "Audio In L",
+        "dir": "input",
+        "type": "audio",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 3,
+        "symbol": "in_R",
+        "name": "Audio In R",
+        "dir": "input",
+        "type": "audio",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 4,
+        "symbol": "Out_L",
+        "name": "Audio Out L",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 5,
+        "symbol": "Out_R",
+        "name": "Audio Out R",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 6,
+        "symbol": "GEN1_SAMPLE",
+        "name": "GEN1 Sample",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 127,
+        "default": 36,
+        "integer": true
+      },
+      {
+        "index": 7,
+        "symbol": "DEF1_PITCHBEND",
+        "name": "DEF1 Pitchbend",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 4,
+        "default": 0.2
+      },
+      {
+        "index": 8,
+        "symbol": "DEF1_MODWHEEL",
+        "name": "DEF1 Modwheel",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.2
+      },
+      {
+        "index": 9,
+        "symbol": "DEF1_PRESSURE",
+        "name": "DEF1 Pressure",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.2
+      },
+      {
+        "index": 10,
+        "symbol": "DEF1_VELOCITY",
+        "name": "DEF1 Velocity",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.2
+      },
+      {
+        "index": 11,
+        "symbol": "DEF1_CHANNEL",
+        "name": "DEF1 Channel",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 16,
+        "default": 0,
+        "integer": true
+      },
+      {
+        "index": 12,
+        "symbol": "DEF1_NOTEOFF",
+        "name": "DEF1 Note Off",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 1,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Disabled",
+            "value": 0
+          },
+          {
+            "label": "Enabled",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "index": 13,
+        "symbol": "CHO1_WET",
+        "name": "Chorus Wet",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
+      },
+      {
+        "index": 14,
+        "symbol": "CHO1_DELAY",
+        "name": "Chorus Delay",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 15,
+        "symbol": "CHO1_FEEDB",
+        "name": "Chorus Feedback",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 16,
+        "symbol": "CHO1_RATE",
+        "name": "Chorus Rate",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 17,
+        "symbol": "CHO1_MOD",
+        "name": "Chorus Modulation",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 18,
+        "symbol": "FLA1_WET",
+        "name": "Flanger Wet",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 19,
+        "symbol": "FLA1_DELAY",
+        "name": "Flanger Delay",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 20,
+        "symbol": "FLA1_FEEDB",
+        "name": "Flanger Feedback",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 21,
+        "symbol": "FLA1_DAFT",
+        "name": "Flanger Daft",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 22,
+        "symbol": "PHA1_WET",
+        "name": "Phaser Wet",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 23,
+        "symbol": "PHA1_RATE",
+        "name": "Phaser Rate",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 24,
+        "symbol": "PHA1_FEEDB",
+        "name": "Phaser Feedback",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 25,
+        "symbol": "PHA1_DEPTH",
+        "name": "Phaser Depth",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 26,
+        "symbol": "PHA1_DAFT",
+        "name": "Phaser Daft",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 27,
+        "symbol": "DEL1_WET",
+        "name": "Delay Wet",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 28,
+        "symbol": "DEL1_DELAY",
+        "name": "Delay Delay",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 29,
+        "symbol": "DEL1_FEEDB",
+        "name": "Delay Feedback",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 30,
+        "symbol": "DEL1_BPM",
+        "name": "Delay BPM",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 360,
+        "default": 180
+      },
+      {
+        "index": 31,
+        "symbol": "REV1_WET",
+        "name": "Reverb Wet",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 32,
+        "symbol": "REV1_ROOM",
+        "name": "Reverb Room",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 33,
+        "symbol": "REV1_DAMP",
+        "name": "Reverb Damp",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 34,
+        "symbol": "REV1_FEEDB",
+        "name": "Reverb Feedback",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 35,
+        "symbol": "REV1_WIDTH",
+        "name": "Reverb Width",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": -1,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 36,
+        "symbol": "DYN1_COMPRESS",
+        "name": "Dynamic Compressor",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "toggled": true
+      },
+      {
+        "index": 37,
+        "symbol": "DYN1_LIMITER",
+        "name": "Dynamic Limiter",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 1,
+        "toggled": true
       }
     ]
   },
@@ -1643,6 +2678,7 @@
         "dir": "output",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -1654,6 +2690,7 @@
         "dir": "input",
         "type": "midi",
         "legacy": true,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -1665,9 +2702,22 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": 0
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "enumeration": true,
+        "toggled": true,
+        "scalePoints": [
+          {
+            "label": "Midi Commands",
+            "value": 0
+          },
+          {
+            "label": "Control Ports",
+            "value": 1
+          }
+        ]
       },
       {
         "index": 3,
@@ -1676,6 +2726,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 127,
         "default": 100
@@ -1687,6 +2738,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 127,
         "default": 50
@@ -1698,6 +2750,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 127,
         "default": 100
@@ -1709,6 +2762,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 127,
         "default": 80
@@ -1720,6 +2774,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 127,
         "default": 64
@@ -1731,6 +2786,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 127,
         "default": 100
@@ -1742,9 +2798,17 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 16,
-        "default": 0
+        "default": 0,
+        "integer": true,
+        "scalePoints": [
+          {
+            "label": "Off",
+            "value": 16
+          }
+        ]
       }
     ]
   },
@@ -1764,6 +2828,7 @@
         "dir": "output",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -1775,6 +2840,7 @@
         "dir": "input",
         "type": "midi",
         "legacy": true,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -1786,9 +2852,22 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": 0
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "enumeration": true,
+        "toggled": true,
+        "scalePoints": [
+          {
+            "label": "Midi Commands",
+            "value": 0
+          },
+          {
+            "label": "Control Ports",
+            "value": 1
+          }
+        ]
       },
       {
         "index": 3,
@@ -1797,6 +2876,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -1808,6 +2888,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 0.907,
         "default": 0.625
@@ -1819,6 +2900,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0.0125,
         "max": 0.3333,
         "default": 0.1725
@@ -1830,6 +2912,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0.00625,
         "max": 0.165,
         "default": 0.01125
@@ -1841,6 +2924,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 127,
         "default": 100
@@ -1852,9 +2936,17 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 16,
-        "default": 0
+        "default": 0,
+        "integer": true,
+        "scalePoints": [
+          {
+            "label": "Off",
+            "value": 16
+          }
+        ]
       }
     ]
   },
@@ -1874,6 +2966,7 @@
         "dir": "output",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -1885,6 +2978,7 @@
         "dir": "input",
         "type": "midi",
         "legacy": true,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -1896,9 +2990,22 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": 0
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "enumeration": true,
+        "toggled": true,
+        "scalePoints": [
+          {
+            "label": "Midi Commands",
+            "value": 0
+          },
+          {
+            "label": "Control Ports",
+            "value": 1
+          }
+        ]
       },
       {
         "index": 3,
@@ -1907,6 +3014,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.25
@@ -1918,6 +3026,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -1929,6 +3038,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0.25,
         "max": 0.885,
         "default": 0.57
@@ -1940,6 +3050,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 127,
         "default": 100
@@ -1951,9 +3062,17 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 16,
-        "default": 0
+        "default": 0,
+        "integer": true,
+        "scalePoints": [
+          {
+            "label": "Off",
+            "value": 16
+          }
+        ]
       }
     ]
   },
@@ -1973,6 +3092,7 @@
         "dir": "input",
         "type": "midi",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -1984,6 +3104,7 @@
         "dir": "output",
         "type": "atom",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -1995,6 +3116,7 @@
         "dir": "input",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -2006,6 +3128,7 @@
         "dir": "input",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -2017,6 +3140,7 @@
         "dir": "output",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -2028,6 +3152,7 @@
         "dir": "output",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -2039,9 +3164,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 127,
-        "default": 60
+        "default": 60,
+        "integer": true
       },
       {
         "index": 7,
@@ -2050,6 +3177,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 2,
         "max": 200,
         "default": 40
@@ -2061,6 +3189,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -2072,9 +3201,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 2,
         "max": 64,
-        "default": 32
+        "default": 32,
+        "integer": true
       },
       {
         "index": 10,
@@ -2083,9 +3214,34 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 4,
+        "default": 4,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Rect",
+            "value": 0
+          },
+          {
+            "label": "Triang",
+            "value": 1
+          },
+          {
+            "label": "Welch",
+            "value": 2
+          },
+          {
+            "label": "Hann",
+            "value": 3
+          },
+          {
+            "label": "Gauss",
+            "value": 4
+          }
+        ]
       },
       {
         "index": 11,
@@ -2094,6 +3250,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": -0.1
@@ -2105,6 +3262,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -2116,9 +3274,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 127,
-        "default": 60
+        "default": 60,
+        "integer": true
       },
       {
         "index": 14,
@@ -2127,6 +3287,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 2,
         "max": 200,
         "default": 40
@@ -2138,6 +3299,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -2149,9 +3311,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 2,
         "max": 64,
-        "default": 32
+        "default": 32,
+        "integer": true
       },
       {
         "index": 17,
@@ -2160,9 +3324,34 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 4,
+        "default": 4,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Rect",
+            "value": 0
+          },
+          {
+            "label": "Triang",
+            "value": 1
+          },
+          {
+            "label": "Welch",
+            "value": 2
+          },
+          {
+            "label": "Hann",
+            "value": 3
+          },
+          {
+            "label": "Gauss",
+            "value": 4
+          }
+        ]
       },
       {
         "index": 18,
@@ -2171,6 +3360,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0.1
@@ -2182,6 +3372,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -2193,6 +3384,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -2204,6 +3396,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -2215,6 +3408,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -2226,6 +3420,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -4,
         "max": 4,
         "default": 0
@@ -2237,6 +3432,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -2248,6 +3444,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -2259,9 +3456,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 1
+        "default": 1,
+        "toggled": true
       },
       {
         "index": 27,
@@ -2270,6 +3469,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -2281,6 +3481,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -2292,9 +3493,30 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 3,
+        "default": 0,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "LPF",
+            "value": 0
+          },
+          {
+            "label": "BPF",
+            "value": 1
+          },
+          {
+            "label": "HPF",
+            "value": 2
+          },
+          {
+            "label": "BRF",
+            "value": 3
+          }
+        ]
       },
       {
         "index": 30,
@@ -2303,9 +3525,30 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 3,
+        "default": 0,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "12dB/oct",
+            "value": 0
+          },
+          {
+            "label": "24dB/oct",
+            "value": 1
+          },
+          {
+            "label": "Biquad",
+            "value": 2
+          },
+          {
+            "label": "Formant",
+            "value": 3
+          }
+        ]
       },
       {
         "index": 31,
@@ -2314,6 +3557,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 1
@@ -2325,6 +3569,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -2336,6 +3581,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.2
@@ -2347,6 +3593,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -2358,6 +3605,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -2369,9 +3617,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 1
+        "default": 1,
+        "toggled": true
       },
       {
         "index": 37,
@@ -2380,9 +3630,34 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 4,
+        "default": 1,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Pulse",
+            "value": 0
+          },
+          {
+            "label": "Saw",
+            "value": 1
+          },
+          {
+            "label": "Sine",
+            "value": 2
+          },
+          {
+            "label": "Rand",
+            "value": 3
+          },
+          {
+            "label": "Noise",
+            "value": 4
+          }
+        ]
       },
       {
         "index": 38,
@@ -2391,6 +3666,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -2402,6 +3678,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 360,
         "default": 180
@@ -2413,6 +3690,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -2424,9 +3702,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 42,
@@ -2435,6 +3715,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -2446,6 +3727,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -2457,6 +3739,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -2468,6 +3751,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -2479,6 +3763,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -2490,6 +3775,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -2501,6 +3787,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -2512,6 +3799,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -2523,6 +3811,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -2534,6 +3823,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.1
@@ -2545,6 +3835,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -2556,6 +3847,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -2567,6 +3859,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -2578,6 +3871,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -2589,6 +3883,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.1
@@ -2600,6 +3895,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -2611,6 +3907,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -2622,6 +3919,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -2633,6 +3931,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -2644,6 +3943,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -2655,6 +3955,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -2666,6 +3967,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 4,
         "default": 0.2
@@ -2677,6 +3979,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.2
@@ -2688,6 +3991,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.2
@@ -2699,6 +4003,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.2
@@ -2710,9 +4015,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 16,
-        "default": 0
+        "default": 0,
+        "integer": true
       },
       {
         "index": 68,
@@ -2721,9 +4028,26 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 2,
+        "default": 0,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Poly",
+            "value": 0
+          },
+          {
+            "label": "Mono",
+            "value": 1
+          },
+          {
+            "label": "Legato",
+            "value": 2
+          }
+        ]
       },
       {
         "index": 69,
@@ -2732,6 +4056,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -2743,6 +4068,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -2754,6 +4080,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -2765,6 +4092,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -2776,6 +4104,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -2787,6 +4116,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -2798,6 +4128,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -2809,6 +4140,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -2820,6 +4152,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -2831,6 +4164,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -2842,6 +4176,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -2853,6 +4188,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -2864,6 +4200,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -2875,6 +4212,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -2886,6 +4224,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -2897,6 +4236,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -2908,6 +4248,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -2919,6 +4260,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 360,
         "default": 180
@@ -2930,6 +4272,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -2941,6 +4284,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -2952,6 +4296,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -2963,6 +4308,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -2974,6 +4320,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -2985,9 +4332,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 93,
@@ -2996,9 +4345,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 1
+        "default": 1,
+        "toggled": true
       },
       {
         "index": 94,
@@ -3007,9 +4358,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 127,
-        "default": 0
+        "default": 0,
+        "integer": true
       },
       {
         "index": 95,
@@ -3018,9 +4371,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 127,
-        "default": 127
+        "default": 127,
+        "integer": true
       }
     ]
   },
@@ -3040,6 +4395,7 @@
         "dir": "input",
         "type": "midi",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -3051,6 +4407,7 @@
         "dir": "output",
         "type": "atom",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -3062,6 +4419,7 @@
         "dir": "input",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -3073,6 +4431,7 @@
         "dir": "input",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -3084,6 +4443,7 @@
         "dir": "output",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -3095,6 +4455,7 @@
         "dir": "output",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -3106,9 +4467,34 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 4,
+        "default": 1,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Pulse",
+            "value": 0
+          },
+          {
+            "label": "Saw",
+            "value": 1
+          },
+          {
+            "label": "Sine",
+            "value": 2
+          },
+          {
+            "label": "Rand",
+            "value": 3
+          },
+          {
+            "label": "Noise",
+            "value": 4
+          }
+        ]
       },
       {
         "index": 7,
@@ -3117,6 +4503,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -3128,9 +4515,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 9,
@@ -3139,9 +4528,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 10,
@@ -3150,9 +4541,34 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 4,
+        "default": 1,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Pulse",
+            "value": 0
+          },
+          {
+            "label": "Saw",
+            "value": 1
+          },
+          {
+            "label": "Sine",
+            "value": 2
+          },
+          {
+            "label": "Rand",
+            "value": 3
+          },
+          {
+            "label": "Noise",
+            "value": 4
+          }
+        ]
       },
       {
         "index": 11,
@@ -3161,6 +4577,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -3172,9 +4589,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 13,
@@ -3183,9 +4602,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 14,
@@ -3194,6 +4615,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -3205,6 +4627,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.1
@@ -3216,6 +4639,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -3227,6 +4651,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -3238,6 +4663,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -4,
         "max": 4,
         "default": 0
@@ -3249,6 +4675,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -3260,6 +4687,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -3271,6 +4699,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -3282,9 +4711,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 1
+        "default": 1,
+        "toggled": true
       },
       {
         "index": 23,
@@ -3293,6 +4724,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -3304,6 +4736,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -3315,9 +4748,30 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 3,
+        "default": 0,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "LPF",
+            "value": 0
+          },
+          {
+            "label": "BPF",
+            "value": 1
+          },
+          {
+            "label": "HPF",
+            "value": 2
+          },
+          {
+            "label": "BRF",
+            "value": 3
+          }
+        ]
       },
       {
         "index": 26,
@@ -3326,9 +4780,30 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 3,
+        "default": 0,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "12dB/oct",
+            "value": 0
+          },
+          {
+            "label": "24dB/oct",
+            "value": 1
+          },
+          {
+            "label": "Biquad",
+            "value": 2
+          },
+          {
+            "label": "Formant",
+            "value": 3
+          }
+        ]
       },
       {
         "index": 27,
@@ -3337,6 +4812,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 1
@@ -3348,6 +4824,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -3359,6 +4836,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.2
@@ -3370,6 +4848,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -3381,6 +4860,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -3392,9 +4872,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 1
+        "default": 1,
+        "toggled": true
       },
       {
         "index": 33,
@@ -3403,9 +4885,34 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 4,
+        "default": 1,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Pulse",
+            "value": 0
+          },
+          {
+            "label": "Saw",
+            "value": 1
+          },
+          {
+            "label": "Sine",
+            "value": 2
+          },
+          {
+            "label": "Rand",
+            "value": 3
+          },
+          {
+            "label": "Noise",
+            "value": 4
+          }
+        ]
       },
       {
         "index": 34,
@@ -3414,6 +4921,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -3425,6 +4933,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 360,
         "default": 180
@@ -3436,6 +4945,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -3447,9 +4957,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 38,
@@ -3458,6 +4970,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -3469,6 +4982,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -3480,6 +4994,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -3491,6 +5006,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -3502,6 +5018,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -3513,6 +5030,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -3524,6 +5042,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -3535,6 +5054,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -3546,6 +5066,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -3557,6 +5078,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.1
@@ -3568,6 +5090,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -3579,6 +5102,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -3590,6 +5114,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -3601,6 +5126,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -3612,6 +5138,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.1
@@ -3623,6 +5150,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -3634,6 +5162,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.1
@@ -3645,6 +5174,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -3656,6 +5186,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -3667,6 +5198,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -3678,6 +5210,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -3689,6 +5222,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 4,
         "default": 0.2
@@ -3700,6 +5234,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.2
@@ -3711,6 +5246,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.2
@@ -3722,6 +5258,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.2
@@ -3733,9 +5270,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 16,
-        "default": 0
+        "default": 0,
+        "integer": true
       },
       {
         "index": 64,
@@ -3744,9 +5283,26 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 2,
+        "default": 0,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Poly",
+            "value": 0
+          },
+          {
+            "label": "Mono",
+            "value": 1
+          },
+          {
+            "label": "Legato",
+            "value": 2
+          }
+        ]
       },
       {
         "index": 65,
@@ -3755,9 +5311,34 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 4,
+        "default": 1,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Pulse",
+            "value": 0
+          },
+          {
+            "label": "Saw",
+            "value": 1
+          },
+          {
+            "label": "Sine",
+            "value": 2
+          },
+          {
+            "label": "Rand",
+            "value": 3
+          },
+          {
+            "label": "Noise",
+            "value": 4
+          }
+        ]
       },
       {
         "index": 66,
@@ -3766,6 +5347,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -3777,9 +5359,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 68,
@@ -3788,9 +5372,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 69,
@@ -3799,9 +5385,34 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 4,
+        "default": 1,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Pulse",
+            "value": 0
+          },
+          {
+            "label": "Saw",
+            "value": 1
+          },
+          {
+            "label": "Sine",
+            "value": 2
+          },
+          {
+            "label": "Rand",
+            "value": 3
+          },
+          {
+            "label": "Noise",
+            "value": 4
+          }
+        ]
       },
       {
         "index": 70,
@@ -3810,6 +5421,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -3821,9 +5433,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 72,
@@ -3832,9 +5446,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 73,
@@ -3843,6 +5459,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -3854,6 +5471,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.1
@@ -3865,6 +5483,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -3876,6 +5495,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -3887,6 +5507,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -4,
         "max": 4,
         "default": -2
@@ -3898,6 +5519,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -3909,6 +5531,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -3920,6 +5543,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -3931,9 +5555,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 1
+        "default": 1,
+        "toggled": true
       },
       {
         "index": 82,
@@ -3942,6 +5568,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -3953,6 +5580,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -3964,9 +5592,30 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 3,
+        "default": 0,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "LPF",
+            "value": 0
+          },
+          {
+            "label": "BPF",
+            "value": 1
+          },
+          {
+            "label": "HPF",
+            "value": 2
+          },
+          {
+            "label": "BRF",
+            "value": 3
+          }
+        ]
       },
       {
         "index": 85,
@@ -3975,9 +5624,30 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 3,
+        "default": 0,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "12dB/oct",
+            "value": 0
+          },
+          {
+            "label": "24dB/oct",
+            "value": 1
+          },
+          {
+            "label": "Biquad",
+            "value": 2
+          },
+          {
+            "label": "Formant",
+            "value": 3
+          }
+        ]
       },
       {
         "index": 86,
@@ -3986,6 +5656,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 1
@@ -3997,6 +5668,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -4008,6 +5680,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.2
@@ -4019,6 +5692,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -4030,6 +5704,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -4041,9 +5716,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 1
+        "default": 1,
+        "toggled": true
       },
       {
         "index": 92,
@@ -4052,9 +5729,34 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 4,
+        "default": 1,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Pulse",
+            "value": 0
+          },
+          {
+            "label": "Saw",
+            "value": 1
+          },
+          {
+            "label": "Sine",
+            "value": 2
+          },
+          {
+            "label": "Rand",
+            "value": 3
+          },
+          {
+            "label": "Noise",
+            "value": 4
+          }
+        ]
       },
       {
         "index": 93,
@@ -4063,6 +5765,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -4074,6 +5777,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 360,
         "default": 180
@@ -4085,6 +5789,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -4096,9 +5801,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 97,
@@ -4107,6 +5814,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -4118,6 +5826,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -4129,6 +5838,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -4140,6 +5850,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -4151,6 +5862,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -4162,6 +5874,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -4173,6 +5886,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -4184,6 +5898,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -4195,6 +5910,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -4206,6 +5922,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.1
@@ -4217,6 +5934,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -4228,6 +5946,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -4239,6 +5958,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -4250,6 +5970,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -4261,6 +5982,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.1
@@ -4272,6 +5994,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -4283,6 +6006,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.1
@@ -4294,6 +6018,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -4305,6 +6030,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -4316,6 +6042,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -4327,6 +6054,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -4338,6 +6066,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 4,
         "default": 0.2
@@ -4349,6 +6078,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.2
@@ -4360,6 +6090,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.2
@@ -4371,6 +6102,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.2
@@ -4382,9 +6114,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 16,
-        "default": 0
+        "default": 0,
+        "integer": true
       },
       {
         "index": 123,
@@ -4393,9 +6127,26 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 2,
+        "default": 0,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Poly",
+            "value": 0
+          },
+          {
+            "label": "Mono",
+            "value": 1
+          },
+          {
+            "label": "Legato",
+            "value": 2
+          }
+        ]
       },
       {
         "index": 124,
@@ -4404,6 +6155,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -4415,6 +6167,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -4426,6 +6179,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -4437,6 +6191,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -4448,6 +6203,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -4459,6 +6215,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -4470,6 +6227,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -4481,6 +6239,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -4492,6 +6251,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -4503,6 +6263,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -4514,6 +6275,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -4525,6 +6287,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -4536,6 +6299,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -4547,6 +6311,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -4558,6 +6323,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -4569,6 +6335,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -4580,6 +6347,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -4591,6 +6359,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 360,
         "default": 180
@@ -4602,6 +6371,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -4613,6 +6383,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -4624,6 +6395,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -4635,6 +6407,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -4646,6 +6419,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -4657,9 +6431,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 148,
@@ -4668,9 +6444,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 1
+        "default": 1,
+        "toggled": true
       },
       {
         "index": 149,
@@ -4679,9 +6457,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 127,
-        "default": 0
+        "default": 0,
+        "integer": true
       },
       {
         "index": 150,
@@ -4690,295 +6470,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 127,
-        "default": 127
-      }
-    ]
-  },
-  {
-    "id": "sorcer",
-    "label": "Sorcer",
-    "name": "Sorcer",
-    "description": "Sorcer — wavetable synthesiser LV2",
-    "category": "Instruments",
-    "wasmFile": "Sorcer.wasm",
-    "processorFile": "processor.js",
-    "ports": [
-      {
-        "index": 0,
-        "symbol": "attack",
-        "name": "attack",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0.01,
-        "max": 1,
-        "default": 0.01
-      },
-      {
-        "index": 1,
-        "symbol": "decay",
-        "name": "decay",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.3
-      },
-      {
-        "index": 2,
-        "symbol": "release",
-        "name": "release",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.2
-      },
-      {
-        "index": 3,
-        "symbol": "sustain",
-        "name": "sustain",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 1
-      },
-      {
-        "index": 4,
-        "symbol": "vol",
-        "name": "vol",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.3
-      },
-      {
-        "index": 5,
-        "symbol": "compAttack",
-        "name": "compAttack",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 0
-      },
-      {
-        "index": 6,
-        "symbol": "compMakeup",
-        "name": "compMakeup",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 0
-      },
-      {
-        "index": 7,
-        "symbol": "compRelease",
-        "name": "compRelease",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 0
-      },
-      {
-        "index": 8,
-        "symbol": "compThreshold",
-        "name": "compThreshold",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 0
-      },
-      {
-        "index": 9,
-        "symbol": "compressorEnable",
-        "name": "compressorEnable",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 0
-      },
-      {
-        "index": 10,
-        "symbol": "filter1cutoff",
-        "name": "filter1cutoff",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 1
-      },
-      {
-        "index": 11,
-        "symbol": "filter1lfo1range",
-        "name": "filter1lfo1range",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 0
-      },
-      {
-        "index": 12,
-        "symbol": "lfo1_wavetable1pos",
-        "name": "lfo1_wavetable1pos",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 0
-      },
-      {
-        "index": 13,
-        "symbol": "lfo1_wavetable2pos",
-        "name": "lfo1_wavetable2pos",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 0
-      },
-      {
-        "index": 14,
-        "symbol": "lfo1amp",
-        "name": "lfo1amp",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.1
-      },
-      {
-        "index": 15,
-        "symbol": "lfo1freq",
-        "name": "lfo1freq",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.3
-      },
-      {
-        "index": 16,
-        "symbol": "osc1vol",
-        "name": "osc1vol",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.3
-      },
-      {
-        "index": 17,
-        "symbol": "osc2vol",
-        "name": "osc2vol",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.3
-      },
-      {
-        "index": 18,
-        "symbol": "osc3vol",
-        "name": "osc3vol",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.3
-      },
-      {
-        "index": 19,
-        "symbol": "output_db",
-        "name": "output_db",
-        "dir": "output",
-        "type": "control",
-        "legacy": false,
-        "min": -96,
-        "max": 10,
-        "default": -96
-      },
-      {
-        "index": 20,
-        "symbol": "wavetable1pos",
-        "name": "wavetable1pos",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 0
-      },
-      {
-        "index": 21,
-        "symbol": "wavetable2pos",
-        "name": "wavetable2pos",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 0
-      },
-      {
-        "index": 22,
-        "symbol": "out0",
-        "name": "out0",
-        "dir": "output",
-        "type": "audio",
-        "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
-      },
-      {
-        "index": 23,
-        "symbol": "midiin",
-        "name": "midiin",
-        "dir": "input",
-        "type": "midi",
-        "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
-      },
-      {
-        "index": 24,
-        "symbol": "nvoices",
-        "name": "Polyphony",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 1,
-        "max": 16,
-        "default": 8
+        "default": 127,
+        "integer": true
       }
     ]
   },
@@ -5034,6 +6530,14 @@
     "wasmFile": "samplv1.wasm",
     "processorFile": "processor.js",
     "sampleType": "single",
+    "sampleSlots": [
+      {
+        "id": "sample",
+        "type": "sample",
+        "name": "Sample",
+        "defaultUrl": null
+      }
+    ],
     "ports": [
       {
         "index": 0,
@@ -5042,6 +6546,7 @@
         "dir": "input",
         "type": "midi",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -5053,6 +6558,7 @@
         "dir": "output",
         "type": "atom",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -5064,6 +6570,7 @@
         "dir": "input",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -5075,6 +6582,7 @@
         "dir": "input",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -5086,6 +6594,7 @@
         "dir": "output",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -5097,6 +6606,7 @@
         "dir": "output",
         "type": "audio",
         "legacy": false,
+        "cv": false,
         "min": null,
         "max": null,
         "default": null
@@ -5108,9 +6618,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 127,
-        "default": 60
+        "default": 60,
+        "integer": true
       },
       {
         "index": 7,
@@ -5119,9 +6631,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 8,
@@ -5130,9 +6644,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 9,
@@ -5141,6 +6657,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -5152,6 +6669,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -5163,9 +6681,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 12,
@@ -5174,6 +6694,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -5185,6 +6706,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -5196,6 +6718,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -4,
         "max": 4,
         "default": 0
@@ -5207,6 +6730,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -5218,6 +6742,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -5229,6 +6754,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -5240,9 +6766,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 1
+        "default": 1,
+        "toggled": true
       },
       {
         "index": 19,
@@ -5251,6 +6779,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -5262,6 +6791,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -5273,9 +6803,30 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 3,
+        "default": 0,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "LPF",
+            "value": 0
+          },
+          {
+            "label": "BPF",
+            "value": 1
+          },
+          {
+            "label": "HPF",
+            "value": 2
+          },
+          {
+            "label": "BRF",
+            "value": 3
+          }
+        ]
       },
       {
         "index": 22,
@@ -5284,9 +6835,30 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 3,
+        "default": 0,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "12dB/oct",
+            "value": 0
+          },
+          {
+            "label": "24dB/oct",
+            "value": 1
+          },
+          {
+            "label": "Biquad",
+            "value": 2
+          },
+          {
+            "label": "Formant",
+            "value": 3
+          }
+        ]
       },
       {
         "index": 23,
@@ -5295,6 +6867,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 1
@@ -5306,6 +6879,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -5317,6 +6891,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.2
@@ -5328,6 +6903,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -5339,6 +6915,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -5350,9 +6927,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 1
+        "default": 1,
+        "toggled": true
       },
       {
         "index": 29,
@@ -5361,9 +6940,34 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 4,
+        "default": 1,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Pulse",
+            "value": 0
+          },
+          {
+            "label": "Saw",
+            "value": 1
+          },
+          {
+            "label": "Sine",
+            "value": 2
+          },
+          {
+            "label": "Rand",
+            "value": 3
+          },
+          {
+            "label": "Noise",
+            "value": 4
+          }
+        ]
       },
       {
         "index": 30,
@@ -5372,6 +6976,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -5383,6 +6988,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 360,
         "default": 180
@@ -5394,6 +7000,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -5405,9 +7012,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 34,
@@ -5416,6 +7025,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -5427,6 +7037,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -5438,6 +7049,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -5449,6 +7061,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -5460,6 +7073,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -5471,6 +7085,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -5482,6 +7097,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -5493,6 +7109,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.1
@@ -5504,6 +7121,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -5515,6 +7133,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -5526,9 +7145,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 1
+        "default": 1,
+        "toggled": true
       },
       {
         "index": 45,
@@ -5537,6 +7158,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -5548,6 +7170,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -5559,6 +7182,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.1
@@ -5570,6 +7194,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -5581,6 +7206,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -5592,6 +7218,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -5603,6 +7230,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -5614,6 +7242,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 1
@@ -5625,6 +7254,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -5636,6 +7266,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 4,
         "default": 0.2
@@ -5647,6 +7278,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.2
@@ -5658,6 +7290,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.2
@@ -5669,6 +7302,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.2
@@ -5680,9 +7314,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 16,
-        "default": 0
+        "default": 0,
+        "integer": true
       },
       {
         "index": 59,
@@ -5691,9 +7327,26 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 2,
+        "default": 0,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Poly",
+            "value": 0
+          },
+          {
+            "label": "Mono",
+            "value": 1
+          },
+          {
+            "label": "Legato",
+            "value": 2
+          }
+        ]
       },
       {
         "index": 60,
@@ -5702,6 +7355,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -5713,6 +7367,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -5724,6 +7379,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -5735,6 +7391,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -5746,6 +7403,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -5757,6 +7415,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -5768,6 +7427,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -5779,6 +7439,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -5790,6 +7451,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -5801,6 +7463,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -5812,6 +7475,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -5823,6 +7487,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -5834,6 +7499,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -5845,6 +7511,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -5856,6 +7523,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -5867,6 +7535,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -5878,6 +7547,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -5889,6 +7559,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 360,
         "default": 180
@@ -5900,6 +7571,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
@@ -5911,6 +7583,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -5922,6 +7595,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -5933,6 +7607,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0.5
@@ -5944,6 +7619,7 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": -1,
         "max": 1,
         "default": 0
@@ -5955,9 +7631,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 84,
@@ -5966,9 +7644,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 1
+        "default": 1,
+        "toggled": true
       },
       {
         "index": 85,
@@ -5977,9 +7657,11 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 127,
-        "default": 0
+        "default": 0,
+        "integer": true
       },
       {
         "index": 86,
@@ -5988,439 +7670,802 @@
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 127,
-        "default": 127
+        "default": 127,
+        "integer": true
       }
     ]
   },
   {
-    "id": "drumkv1",
-    "label": "drumkv1",
-    "name": "drumkv1",
-    "description": "drumkv1 — sample-based drum synthesizer with per-pad synthesis and effects",
+    "id": "sorcer",
+    "label": "Sorcer",
+    "name": "Sorcer",
+    "description": "Sorcer — wavetable synthesiser LV2",
     "category": "Instruments",
-    "wasmFile": "drumkv1.wasm",
+    "wasmFile": "Sorcer.wasm",
     "processorFile": "processor.js",
-    "sampleType": "kit",
     "ports": [
       {
         "index": 0,
-        "symbol": "in",
-        "name": "MIDI In",
+        "symbol": "attack",
+        "name": "attack",
         "dir": "input",
-        "type": "midi",
+        "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0.01,
+        "max": 1,
+        "default": 0.01
       },
       {
         "index": 1,
-        "symbol": "notify",
-        "name": "Notify",
-        "dir": "output",
-        "type": "atom",
+        "symbol": "decay",
+        "name": "decay",
+        "dir": "input",
+        "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.3
       },
       {
         "index": 2,
-        "symbol": "in_L",
-        "name": "Audio In L",
+        "symbol": "release",
+        "name": "release",
         "dir": "input",
-        "type": "audio",
+        "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.2
       },
       {
         "index": 3,
-        "symbol": "in_R",
-        "name": "Audio In R",
+        "symbol": "sustain",
+        "name": "sustain",
         "dir": "input",
-        "type": "audio",
+        "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 1
       },
       {
         "index": 4,
-        "symbol": "Out_L",
-        "name": "Audio Out L",
-        "dir": "output",
-        "type": "audio",
+        "symbol": "vol",
+        "name": "vol",
+        "dir": "input",
+        "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.3
       },
       {
         "index": 5,
-        "symbol": "Out_R",
-        "name": "Audio Out R",
-        "dir": "output",
-        "type": "audio",
+        "symbol": "compAttack",
+        "name": "compAttack",
+        "dir": "input",
+        "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0
       },
       {
         "index": 6,
-        "symbol": "GEN1_SAMPLE",
-        "name": "GEN1 Sample",
+        "symbol": "compMakeup",
+        "name": "compMakeup",
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
-        "max": 127,
-        "default": 36
+        "max": 1,
+        "default": 0
       },
       {
         "index": 7,
-        "symbol": "DEF1_PITCHBEND",
-        "name": "DEF1 Pitchbend",
+        "symbol": "compRelease",
+        "name": "compRelease",
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
-        "max": 4,
-        "default": 0.2
+        "max": 1,
+        "default": 0
       },
       {
         "index": 8,
-        "symbol": "DEF1_MODWHEEL",
-        "name": "DEF1 Modwheel",
+        "symbol": "compThreshold",
+        "name": "compThreshold",
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0.2
+        "default": 0
       },
       {
         "index": 9,
-        "symbol": "DEF1_PRESSURE",
-        "name": "DEF1 Pressure",
+        "symbol": "compressorEnable",
+        "name": "compressorEnable",
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0.2
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 10,
-        "symbol": "DEF1_VELOCITY",
-        "name": "DEF1 Velocity",
+        "symbol": "filter1cutoff",
+        "name": "filter1cutoff",
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0.2
+        "default": 1
       },
       {
         "index": 11,
-        "symbol": "DEF1_CHANNEL",
-        "name": "DEF1 Channel",
+        "symbol": "filter1lfo1range",
+        "name": "filter1lfo1range",
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
-        "max": 16,
+        "max": 1,
         "default": 0
       },
       {
         "index": 12,
-        "symbol": "DEF1_NOTEOFF",
-        "name": "DEF1 Note Off",
+        "symbol": "lfo1_wavetable1pos",
+        "name": "lfo1_wavetable1pos",
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0
       },
       {
         "index": 13,
-        "symbol": "CHO1_WET",
-        "name": "Chorus Wet",
+        "symbol": "lfo1_wavetable2pos",
+        "name": "lfo1_wavetable2pos",
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
       },
       {
         "index": 14,
-        "symbol": "CHO1_DELAY",
-        "name": "Chorus Delay",
+        "symbol": "lfo1amp",
+        "name": "lfo1amp",
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0.5
+        "default": 0.1
       },
       {
         "index": 15,
-        "symbol": "CHO1_FEEDB",
-        "name": "Chorus Feedback",
+        "symbol": "lfo1freq",
+        "name": "lfo1freq",
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0.5
+        "default": 0.3
       },
       {
         "index": 16,
-        "symbol": "CHO1_RATE",
-        "name": "Chorus Rate",
+        "symbol": "osc1vol",
+        "name": "osc1vol",
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0.5
+        "default": 0.3
       },
       {
         "index": 17,
-        "symbol": "CHO1_MOD",
-        "name": "Chorus Modulation",
+        "symbol": "osc2vol",
+        "name": "osc2vol",
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0.5
+        "default": 0.3
       },
       {
         "index": 18,
-        "symbol": "FLA1_WET",
-        "name": "Flanger Wet",
+        "symbol": "osc3vol",
+        "name": "osc3vol",
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.3
+      },
+      {
+        "index": 19,
+        "symbol": "output_db",
+        "name": "output_db",
+        "dir": "output",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": -96,
+        "max": 10,
+        "default": -96
+      },
+      {
+        "index": 20,
+        "symbol": "wavetable1pos",
+        "name": "wavetable1pos",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
       },
       {
-        "index": 19,
-        "symbol": "FLA1_DELAY",
-        "name": "Flanger Delay",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.5
-      },
-      {
-        "index": 20,
-        "symbol": "FLA1_FEEDB",
-        "name": "Flanger Feedback",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.5
-      },
-      {
         "index": 21,
-        "symbol": "FLA1_DAFT",
-        "name": "Flanger Daft",
+        "symbol": "wavetable2pos",
+        "name": "wavetable2pos",
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
         "default": 0
       },
       {
         "index": 22,
-        "symbol": "PHA1_WET",
-        "name": "Phaser Wet",
-        "dir": "input",
-        "type": "control",
+        "symbol": "out0",
+        "name": "out0",
+        "dir": "output",
+        "type": "audio",
         "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 0
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
       },
       {
         "index": 23,
-        "symbol": "PHA1_RATE",
-        "name": "Phaser Rate",
+        "symbol": "midiin",
+        "name": "midiin",
         "dir": "input",
-        "type": "control",
+        "type": "midi",
         "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.5
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
       },
       {
         "index": 24,
-        "symbol": "PHA1_FEEDB",
-        "name": "Phaser Feedback",
+        "symbol": "nvoices",
+        "name": "Polyphony",
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
+        "min": 1,
+        "max": 16,
+        "default": 8,
+        "integer": true
+      }
+    ]
+  },
+  {
+    "id": "string-machine",
+    "label": "String_machine",
+    "name": "String machine",
+    "description": "String machine — polyphonic string ensemble synthesizer LV2",
+    "category": "Instruments",
+    "wasmFile": "String_machine.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "lv2_audio_out_1",
+        "name": "Audio Output 1",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 1,
+        "symbol": "lv2_audio_out_2",
+        "name": "Audio Output 2",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 2,
+        "symbol": "lv2_events_in",
+        "name": "Events Input",
+        "dir": "input",
+        "type": "midi",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 3,
+        "symbol": "osc_detune",
+        "name": "Oscillator detune",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0.5
+        "default": 0.00159999995958
+      },
+      {
+        "index": 4,
+        "symbol": "osc_hp_cutoff_upper",
+        "name": "Oscillator HP Cutoff 4'",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": -20,
+        "max": 60,
+        "default": 8
+      },
+      {
+        "index": 5,
+        "symbol": "osc_hp_cutoff_lower",
+        "name": "Oscillator HP Cutoff 8'",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": -20,
+        "max": 60,
+        "default": 8
+      },
+      {
+        "index": 6,
+        "symbol": "osc_pwm_depth",
+        "name": "Oscillator PWM Depth",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 100,
+        "default": 0
+      },
+      {
+        "index": 7,
+        "symbol": "osc_pwm_frequency",
+        "name": "Oscillator PWM Frequency",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0.10000000149,
+        "max": 5,
+        "default": 0.25
+      },
+      {
+        "index": 8,
+        "symbol": "osc_enhance_upper",
+        "name": "Oscillator enhance 4'",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 0.5,
+        "default": 0
+      },
+      {
+        "index": 9,
+        "symbol": "osc_enhance_lower",
+        "name": "Oscillator enhance 8'",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 0.5,
+        "default": 0
+      },
+      {
+        "index": 10,
+        "symbol": "flt_lp_cutoff_upper",
+        "name": "Filters LP Cutoff 4'",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": -20,
+        "max": 120,
+        "default": 5.19999980927
+      },
+      {
+        "index": 11,
+        "symbol": "flt_hp_cutoff_upper",
+        "name": "Filters HP Cutoff 4'",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": -20,
+        "max": 120,
+        "default": 12.1999998093
+      },
+      {
+        "index": 12,
+        "symbol": "flt_lp_cutoff_lower",
+        "name": "Filters LP Cutoff 8'",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": -20,
+        "max": 120,
+        "default": 16.3999996185
+      },
+      {
+        "index": 13,
+        "symbol": "flt_hp_cutoff_lower",
+        "name": "Filters HP Cutoff 8'",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": -20,
+        "max": 120,
+        "default": -0.40000000596
+      },
+      {
+        "index": 14,
+        "symbol": "flt_hs_cutoff_eq",
+        "name": "Filters HS Cutoff 4'",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": -20,
+        "max": 120,
+        "default": 24.7999992371
+      },
+      {
+        "index": 15,
+        "symbol": "flt_hs_boost_eq",
+        "name": "Filters HS Boost 4'",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": -20,
+        "max": 20,
+        "default": 6
+      },
+      {
+        "index": 16,
+        "symbol": "mix_gain_upper",
+        "name": "Mix Gain 4'",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": -20,
+        "max": 0,
+        "default": 0
+      },
+      {
+        "index": 17,
+        "symbol": "mix_gain_lower",
+        "name": "Mix Gain 8'",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": -20,
+        "max": 0,
+        "default": 0
+      },
+      {
+        "index": 18,
+        "symbol": "env_attack",
+        "name": "Envelope attack",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0.00999999977648,
+        "max": 10,
+        "default": 0.193900004029
+      },
+      {
+        "index": 19,
+        "symbol": "env_hold",
+        "name": "Envelope hold",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0.00999999977648,
+        "max": 10,
+        "default": 0.00999999977648
+      },
+      {
+        "index": 20,
+        "symbol": "env_decay",
+        "name": "Envelope decay",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0.00999999977648,
+        "max": 10,
+        "default": 10
+      },
+      {
+        "index": 21,
+        "symbol": "env_sustain",
+        "name": "Envelope sustain",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": -60,
+        "max": 0,
+        "default": 0
+      },
+      {
+        "index": 22,
+        "symbol": "env_release",
+        "name": "Envelope release",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0.00999999977648,
+        "max": 10,
+        "default": 3
+      },
+      {
+        "index": 23,
+        "symbol": "cho_enabled",
+        "name": "Chorus enabled",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 1,
+        "integer": true,
+        "toggled": true
+      },
+      {
+        "index": 24,
+        "symbol": "cho_depth",
+        "name": "Chorus global depth",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 100,
+        "default": 100
       },
       {
         "index": 25,
-        "symbol": "PHA1_DEPTH",
-        "name": "Phaser Depth",
+        "symbol": "cho_rate1",
+        "name": "Chorus rate 1",
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.5
+        "cv": false,
+        "min": 1,
+        "max": 9,
+        "default": 5.83459997177
       },
       {
         "index": 26,
-        "symbol": "PHA1_DAFT",
-        "name": "Phaser Daft",
+        "symbol": "cho_depth1",
+        "name": "Chorus depth 1",
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
-        "max": 1,
-        "default": 0
+        "max": 100,
+        "default": 30.7099990845
       },
       {
         "index": 27,
-        "symbol": "DEL1_WET",
-        "name": "Delay Wet",
+        "symbol": "cho_rate2",
+        "name": "Chorus rate 2",
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 0
+        "cv": false,
+        "min": 0.10000000149,
+        "max": 0.899999976158,
+        "default": 0.583500027657
       },
       {
         "index": 28,
-        "symbol": "DEL1_DELAY",
-        "name": "Delay Delay",
+        "symbol": "cho_depth2",
+        "name": "Chorus depth 2",
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
-        "max": 1,
-        "default": 0.5
+        "max": 100,
+        "default": 90.5500030518
       },
       {
         "index": 29,
-        "symbol": "DEL1_FEEDB",
-        "name": "Delay Feedback",
+        "symbol": "cho_model",
+        "name": "Chorus model",
         "dir": "input",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0.5
+        "default": 1,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Digital delay",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 30,
-        "symbol": "DEL1_BPM",
-        "name": "Delay BPM",
+        "symbol": "master_gain",
+        "name": "Master Gain",
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": 0,
-        "max": 360,
-        "default": 180
+        "cv": false,
+        "min": -60,
+        "max": 20,
+        "default": 3
       },
       {
         "index": 31,
-        "symbol": "REV1_WET",
-        "name": "Reverb Wet",
+        "symbol": "polyphony",
+        "name": "Polyphony",
         "dir": "input",
         "type": "control",
         "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 0
+        "cv": false,
+        "min": 1,
+        "max": 32,
+        "default": 16,
+        "integer": true
       },
       {
         "index": 32,
-        "symbol": "REV1_ROOM",
-        "name": "Reverb Room",
-        "dir": "input",
+        "symbol": "osc_current_detune_upper",
+        "name": "Oscillator detune 4'",
+        "dir": "output",
         "type": "control",
         "legacy": false,
-        "min": 0,
+        "cv": false,
+        "min": -1,
         "max": 1,
-        "default": 0.5
+        "default": -1
       },
       {
         "index": 33,
-        "symbol": "REV1_DAMP",
-        "name": "Reverb Damp",
-        "dir": "input",
+        "symbol": "osc_current_detune_lower",
+        "name": "Oscillator detune 8'",
+        "dir": "output",
         "type": "control",
         "legacy": false,
-        "min": 0,
+        "cv": false,
+        "min": -1,
         "max": 1,
-        "default": 0.5
+        "default": -1
       },
       {
         "index": 34,
-        "symbol": "REV1_FEEDB",
-        "name": "Reverb Feedback",
-        "dir": "input",
+        "symbol": "cho_current_phase1",
+        "name": "Chorus phase 1",
+        "dir": "output",
         "type": "control",
         "legacy": false,
+        "cv": false,
         "min": 0,
-        "max": 1,
-        "default": 0.5
+        "max": 6.28318548203,
+        "default": 0
       },
       {
         "index": 35,
-        "symbol": "REV1_WIDTH",
-        "name": "Reverb Width",
-        "dir": "input",
+        "symbol": "cho_current_phase2",
+        "name": "Chorus phase 2",
+        "dir": "output",
         "type": "control",
         "legacy": false,
-        "min": -1,
-        "max": 1,
+        "cv": false,
+        "min": 0,
+        "max": 6.28318548203,
         "default": 0
       },
       {
         "index": 36,
-        "symbol": "DYN1_COMPRESS",
-        "name": "Dynamic Compressor",
-        "dir": "input",
+        "symbol": "master_current_level1",
+        "name": "Master level 1",
+        "dir": "output",
         "type": "control",
         "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 0
+        "cv": false,
+        "min": -100,
+        "max": 100,
+        "default": -100
       },
       {
         "index": 37,
-        "symbol": "DYN1_LIMITER",
-        "name": "Dynamic Limiter",
-        "dir": "input",
+        "symbol": "master_current_level2",
+        "name": "Master level 2",
+        "dir": "output",
         "type": "control",
         "legacy": false,
-        "min": 0,
-        "max": 1,
-        "default": 1
+        "cv": false,
+        "min": -100,
+        "max": 100,
+        "default": -100
       }
     ]
   }

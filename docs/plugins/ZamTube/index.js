@@ -87,7 +87,15 @@ export const meta         = {
       "cv": false,
       "min": 0,
       "max": 24,
-      "default": 0
+      "default": 0,
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "1959 Bassman 5F6-A",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 7,
@@ -111,7 +119,8 @@ export const meta         = {
       "cv": false,
       "min": 0,
       "max": 1,
-      "default": 0
+      "default": 0,
+      "toggled": true
     }
   ]
 };

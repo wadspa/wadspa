@@ -61,10 +61,7 @@ export function parseLv2Ttl(pluginDir) {
     // multi-port Turtle syntax where only the first block follows lv2:port.
     const ports = [];
     function extractPortsFromSrc(src) {
-        const portBlockRe = /\[([^\]]+)\]/gs;
-        let portMatch;
-        while ((portMatch = portBlockRe.exec(src)) !== null) {
-            const block = portMatch[1];
+        for (const block of bracketBlocks(stripTtlLineComments(src))) {
             const port  = parsePortBlock(block);
             if (port) ports.push(port);
         }
@@ -98,6 +95,98 @@ export function parseLv2Ttl(pluginDir) {
     });
 
     return { uri: pluginUri, label, ports: uniquePorts };
+}
+
+function bracketBlocks(src) {
+    const blocks = [];
+    let depth = 0;
+    let start = -1;
+    let quote = null;
+    let escaped = false;
+
+    for (let i = 0; i < src.length; i++) {
+        const ch = src[i];
+
+        if (quote) {
+            if (escaped) {
+                escaped = false;
+            } else if (ch === '\\') {
+                escaped = true;
+            } else if (ch === quote) {
+                quote = null;
+            }
+            continue;
+        }
+
+        if (ch === '"' || ch === "'") {
+            quote = ch;
+            continue;
+        }
+
+        if (ch === '[') {
+            if (depth === 0) start = i + 1;
+            depth++;
+        } else if (ch === ']' && depth > 0) {
+            depth--;
+            if (depth === 0 && start >= 0) {
+                blocks.push(src.slice(start, i));
+                start = -1;
+            }
+        }
+    }
+
+    return blocks;
+}
+
+function stripTtlLineComments(src) {
+    let out = '';
+    let quote = null;
+    let inIri = false;
+    let escaped = false;
+
+    for (let i = 0; i < src.length; i++) {
+        const ch = src[i];
+
+        if (quote) {
+            out += ch;
+            if (escaped) {
+                escaped = false;
+            } else if (ch === '\\') {
+                escaped = true;
+            } else if (ch === quote) {
+                quote = null;
+            }
+            continue;
+        }
+
+        if (inIri) {
+            out += ch;
+            if (ch === '>') inIri = false;
+            continue;
+        }
+
+        if (ch === '"' || ch === "'") {
+            quote = ch;
+            out += ch;
+            continue;
+        }
+
+        if (ch === '<') {
+            inIri = true;
+            out += ch;
+            continue;
+        }
+
+        if (ch === '#') {
+            while (i < src.length && src[i] !== '\n') i++;
+            if (i < src.length) out += src[i];
+            continue;
+        }
+
+        out += ch;
+    }
+
+    return out;
 }
 
 function parsePortBlock(block) {
@@ -140,17 +229,46 @@ function parsePortBlock(block) {
     const def = parseFloat((block.match(/lv2:default\s+([\d.eE+\-]+)/)  || [])[1]);
     const sampleRate = /lv2:sampleRate\b|port-props#sampleRate/.test(block);
     const integer = /lv2:integer\b|port-props#integer/.test(block);
+    const enumeration = /lv2:enumeration\b|port-props#enumeration/.test(block);
+    const toggled = /lv2:toggled\b|port-props#toggled/.test(block);
+    const scalePoints = parseScalePoints(block);
+    const scaleValues = scalePoints
+        .map(point => point.value)
+        .filter(Number.isFinite);
+    const resolvedMin = isNaN(min) && scaleValues.length > 0 ? Math.min(...scaleValues) : min;
+    const resolvedMax = isNaN(max) && scaleValues.length > 0 ? Math.max(...scaleValues) : max;
 
     return {
         index, symbol, name, dir, type,
         legacy: isLegacyEvent,   // true → old LV2 event API (not atom)
         cv: isCv,
-        min:  isNaN(min) ? null : min,
-        max:  isNaN(max) ? null : max,
+        min:  isNaN(resolvedMin) ? null : resolvedMin,
+        max:  isNaN(resolvedMax) ? null : resolvedMax,
         default: isNaN(def) ? null : def,
         ...(sampleRate && { sampleRate: true }),
         ...(integer && { integer: true }),
+        ...(enumeration && { enumeration: true }),
+        ...(toggled && { toggled: true }),
+        ...(scalePoints.length > 0 && { scalePoints }),
     };
+}
+
+function parseScalePoints(block) {
+    const points = [];
+    const scalePointRe = /lv2:scalePoint\s+\[([\s\S]*?)\]\s*;?/g;
+    let match;
+    while ((match = scalePointRe.exec(block)) !== null) {
+        const point = match[1];
+        const valueMatch = point.match(/rdf:value\s+([\d.eE+\-]+)/);
+        if (!valueMatch) continue;
+        const value = parseFloat(valueMatch[1]);
+        if (isNaN(value)) continue;
+        const quotedLabel = point.match(/rdfs:label\s+"([^"]*)"/);
+        const bareLabel = point.match(/rdfs:label\s+([^;\]]+)/);
+        const label = (quotedLabel?.[1] ?? bareLabel?.[1] ?? String(value)).trim();
+        points.push({ label, value });
+    }
+    return points.sort((a, b) => a.value - b.value);
 }
 
 // ──────────────────────────────────────────────────────────────────────────

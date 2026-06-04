@@ -39,7 +39,8 @@ export const meta         = {
       "cv": false,
       "min": 0,
       "max": 1,
-      "default": 0
+      "default": 0,
+      "toggled": true
     },
     {
       "index": 3,

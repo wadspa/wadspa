@@ -12,9 +12,18 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 3,
-      "default": 3
+      "default": 3,
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "Low",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 1,
@@ -23,6 +32,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 88,
       "max": 1020,
       "default": 550
@@ -34,6 +44,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 112,
       "max": 19606,
       "default": 9859
@@ -45,6 +56,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 60,
       "default": 45
@@ -56,6 +68,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 60,
       "default": 45
@@ -67,6 +80,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 60,
       "default": 45
@@ -78,6 +92,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": -20,
       "max": 20,
       "default": 6
@@ -89,6 +104,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": -20,
       "max": 20,
       "default": 0
@@ -100,6 +116,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": -20,
       "max": 20,
       "default": 0
@@ -111,9 +128,18 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 1,
-      "default": 0
+      "default": 0,
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "Bipolar",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 10,
@@ -122,6 +148,7 @@ export const meta         = {
       "dir": "input",
       "type": "audio",
       "legacy": false,
+      "cv": false,
       "min": null,
       "max": null,
       "default": null
@@ -133,6 +160,7 @@ export const meta         = {
       "dir": "input",
       "type": "audio",
       "legacy": false,
+      "cv": false,
       "min": null,
       "max": null,
       "default": null
@@ -144,6 +172,7 @@ export const meta         = {
       "dir": "output",
       "type": "audio",
       "legacy": false,
+      "cv": false,
       "min": null,
       "max": null,
       "default": null
@@ -155,6 +184,7 @@ export const meta         = {
       "dir": "output",
       "type": "audio",
       "legacy": false,
+      "cv": false,
       "min": null,
       "max": null,
       "default": null

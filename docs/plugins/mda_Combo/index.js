@@ -16,7 +16,14 @@ export const meta         = {
       "min": 0,
       "max": 6,
       "default": 1,
-      "integer": true
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "D.I. (flat frequency response)",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 1,
@@ -65,7 +72,8 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 0,
-      "integer": true
+      "integer": true,
+      "toggled": true
     },
     {
       "index": 5,

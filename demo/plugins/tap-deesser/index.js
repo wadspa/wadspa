@@ -12,6 +12,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": -50,
       "max": 10,
       "default": 0
@@ -23,6 +24,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 2000,
       "max": 16000,
       "default": 5500
@@ -34,9 +36,22 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 1,
-      "default": 0
+      "default": 0,
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "Highpass",
+          "value": 0
+        },
+        {
+          "label": "Bandpass",
+          "value": 1
+        }
+      ]
     },
     {
       "index": 3,
@@ -45,9 +60,22 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 1,
-      "default": 0
+      "default": 0,
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "Audio",
+          "value": 0
+        },
+        {
+          "label": "Sidechain",
+          "value": 1
+        }
+      ]
     },
     {
       "index": 4,
@@ -56,6 +84,7 @@ export const meta         = {
       "dir": "output",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 10,
       "default": 0
@@ -67,6 +96,7 @@ export const meta         = {
       "dir": "input",
       "type": "audio",
       "legacy": false,
+      "cv": false,
       "min": null,
       "max": null,
       "default": null
@@ -78,6 +108,7 @@ export const meta         = {
       "dir": "output",
       "type": "audio",
       "legacy": false,
+      "cv": false,
       "min": null,
       "max": null,
       "default": null

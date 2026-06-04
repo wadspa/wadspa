@@ -1826,6 +1826,46 @@
     ]
   },
   {
+    "id": "valve",
+    "label": "valve",
+    "name": "Valve saturation",
+    "category": "Distortion",
+    "wasmFile": "valve.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "name": "Distortion level",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 1,
+        "name": "Distortion character",
+        "dir": "input",
+        "type": "control",
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 2,
+        "name": "Input",
+        "dir": "input",
+        "type": "audio"
+      },
+      {
+        "index": 3,
+        "name": "Output",
+        "dir": "output",
+        "type": "audio"
+      }
+    ]
+  },
+  {
     "id": "mda_SubSynth",
     "label": "MDA_SubSynth",
     "name": "MDA SubSynth",
@@ -1844,7 +1884,14 @@
         "cv": false,
         "min": 0,
         "max": 0.75,
-        "default": 0.5
+        "default": 0.5,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Distort",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 1,
@@ -2096,7 +2143,14 @@
         "min": 0,
         "max": 4,
         "default": 0,
-        "integer": true
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "None",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 11,
@@ -2108,7 +2162,13 @@
         "cv": false,
         "min": -45,
         "max": 0,
-        "default": -45
+        "default": -45,
+        "scalePoints": [
+          {
+            "label": "OFF",
+            "value": -45
+          }
+        ]
       },
       {
         "index": 12,
@@ -2287,7 +2347,14 @@
         "min": 0,
         "max": 3,
         "default": 3,
-        "integer": true
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Low",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 1,
@@ -2396,7 +2463,14 @@
         "min": 0,
         "max": 1,
         "default": 0,
-        "integer": true
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Bipolar",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 10,
@@ -2468,7 +2542,14 @@
         "min": 0,
         "max": 6,
         "default": 1,
-        "integer": true
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "D.I. (flat frequency response)",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 1,
@@ -2517,7 +2598,8 @@
         "min": 0,
         "max": 1,
         "default": 0,
-        "integer": true
+        "integer": true,
+        "toggled": true
       },
       {
         "index": 5,
@@ -2746,7 +2828,14 @@
         "min": 0,
         "max": 1,
         "default": 0,
-        "integer": true
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Integrator Off",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 4,
@@ -2784,7 +2873,14 @@
         "min": 0,
         "max": 1,
         "default": 1,
-        "integer": true
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Even",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 7,
@@ -2796,8 +2892,7 @@
         "cv": false,
         "min": -20,
         "max": 20,
-        "default": 0,
-        "integer": true
+        "default": 0
       },
       {
         "index": 8,
@@ -2893,7 +2988,14 @@
         "min": 0,
         "max": 1,
         "default": 0,
-        "integer": true
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Free",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 3,
@@ -2941,7 +3043,13 @@
         "cv": false,
         "min": -12,
         "max": 6,
-        "default": 0
+        "default": 0,
+        "scalePoints": [
+          {
+            "label": "OFF",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 7,
@@ -3048,7 +3156,14 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0.5
+        "default": 0.5,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "5.3 ms",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 4,
@@ -3132,7 +3247,14 @@
         "min": 0,
         "max": 3,
         "default": 0,
-        "integer": true
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Truncation",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 2,
@@ -3168,7 +3290,13 @@
         "cv": false,
         "min": -80,
         "max": 0,
-        "default": 0
+        "default": 0,
+        "scalePoints": [
+          {
+            "label": "OFF",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 5,
@@ -3442,7 +3570,13 @@
         "cv": false,
         "min": -20,
         "max": 10,
-        "default": 10
+        "default": 10,
+        "scalePoints": [
+          {
+            "label": "OFF",
+            "value": 10
+          }
+        ]
       },
       {
         "index": 6,
@@ -3454,7 +3588,13 @@
         "cv": false,
         "min": -60,
         "max": 0,
-        "default": -60
+        "default": -60,
+        "scalePoints": [
+          {
+            "label": "OFF",
+            "value": -60
+          }
+        ]
       },
       {
         "index": 7,
@@ -3561,7 +3701,14 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Stereo image adjustment",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 1,
@@ -3692,7 +3839,14 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0.5
+        "default": 0.5,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Stop",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 1,
@@ -3907,7 +4061,14 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Hard",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 5,
@@ -4073,7 +4234,14 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 1
+        "default": 1,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Low",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 1,
@@ -4218,7 +4386,8 @@
         "min": 0,
         "max": 1,
         "default": 0,
-        "integer": true
+        "integer": true,
+        "toggled": true
       },
       {
         "index": 13,
@@ -4457,7 +4626,14 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 1
+        "default": 1,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Low",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 7,
@@ -4624,7 +4800,13 @@
         "cv": false,
         "min": -37,
         "max": 3,
-        "default": -37
+        "default": -37,
+        "scalePoints": [
+          {
+            "label": "FREE RUN",
+            "value": -37
+          }
+        ]
       },
       {
         "index": 9,
@@ -4885,7 +5067,14 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Tones only",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 1,
@@ -4980,7 +5169,14 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Normal",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 1,
@@ -5004,7 +5200,14 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Low",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 3,
@@ -5028,7 +5231,14 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0.5
+        "default": 0.5,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Low",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 5,
@@ -5159,7 +5369,13 @@
         "cv": false,
         "min": 0,
         "max": 47.62,
-        "default": 0
+        "default": 0,
+        "scalePoints": [
+          {
+            "label": "OFF",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 4,
@@ -5266,7 +5482,14 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Right",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 3,
@@ -5349,7 +5572,14 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "MIDI #",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 1,
@@ -5504,7 +5734,13 @@
         "cv": false,
         "min": 0.01,
         "max": 10,
-        "default": 0.08
+        "default": 0.08,
+        "scalePoints": [
+          {
+            "label": "-",
+            "value": 0.01
+          }
+        ]
       },
       {
         "index": 1,
@@ -5592,6 +5828,168 @@
       },
       {
         "index": 8,
+        "symbol": "right_out",
+        "name": "Right Out",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      }
+    ]
+  },
+  {
+    "id": "mda_Tracker",
+    "label": "MDA_Tracker",
+    "name": "MDA Tracker",
+    "description": "This plug-in tracks the frequency of the input signal with an oscillator, ring modulator or filter. The pitch tracking only works with monophonic inputs, but...",
+    "category": "LV2 Effects",
+    "wasmFile": "MDA_Tracker.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "mode",
+        "name": "Mode",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Sine oscillator",
+            "value": 0
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "symbol": "dynamics",
+        "name": "Dynamics",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 100,
+        "default": 100
+      },
+      {
+        "index": 2,
+        "symbol": "mix",
+        "name": "Mix",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 100,
+        "default": 100
+      },
+      {
+        "index": 3,
+        "symbol": "glide",
+        "name": "Glide",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 100,
+        "default": 97
+      },
+      {
+        "index": 4,
+        "symbol": "transpose",
+        "name": "Transpose",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": -36,
+        "max": 36,
+        "default": 0
+      },
+      {
+        "index": 5,
+        "symbol": "maximum",
+        "name": "Maximum",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 39,
+        "max": 7350,
+        "default": 6500
+      },
+      {
+        "index": 6,
+        "symbol": "trigger",
+        "name": "Trigger",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": -60,
+        "max": 0,
+        "default": -30
+      },
+      {
+        "index": 7,
+        "symbol": "output",
+        "name": "Output",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": -20,
+        "max": 20,
+        "default": 0
+      },
+      {
+        "index": 8,
+        "symbol": "left_in",
+        "name": "Left In",
+        "dir": "input",
+        "type": "audio",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 9,
+        "symbol": "right_in",
+        "name": "Right In",
+        "dir": "input",
+        "type": "audio",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 10,
+        "symbol": "left_out",
+        "name": "Left Out",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 11,
         "symbol": "right_out",
         "name": "Right Out",
         "dir": "output",
@@ -5754,7 +6152,14 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Constant pitch",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 1,
@@ -5873,7 +6278,14 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Left",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 1,
@@ -5921,7 +6333,13 @@
         "cv": false,
         "min": 14,
         "max": 10000,
-        "default": 1602.24
+        "default": 1602.24,
+        "scalePoints": [
+          {
+            "label": "FREEZE",
+            "value": 14
+          }
+        ]
       },
       {
         "index": 5,
@@ -5957,7 +6375,14 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 1
+        "default": 1,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "8 BAND",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 8,
@@ -6053,7 +6478,8 @@
         "min": 0,
         "max": 1,
         "default": 1,
-        "integer": true
+        "integer": true,
+        "toggled": true
       },
       {
         "index": 3,
@@ -6090,7 +6516,8 @@
         "min": 0,
         "max": 1,
         "default": 1,
-        "integer": true
+        "integer": true,
+        "toggled": true
       },
       {
         "index": 6,
@@ -6103,7 +6530,8 @@
         "min": 0,
         "max": 1,
         "default": 0,
-        "integer": true
+        "integer": true,
+        "toggled": true
       },
       {
         "index": 7,
@@ -6127,7 +6555,21 @@
         "cv": false,
         "min": 0,
         "max": 1.4,
-        "default": 0.7
+        "default": 0.7,
+        "scalePoints": [
+          {
+            "label": "-6dB @freq, no resonance",
+            "value": 0
+          },
+          {
+            "label": "-3dB @freq, flat",
+            "value": 0.7
+          },
+          {
+            "label": "0dB @freq, resonant",
+            "value": 1
+          }
+        ]
       },
       {
         "index": 9,
@@ -6140,7 +6582,8 @@
         "min": 0,
         "max": 1,
         "default": 0,
-        "integer": true
+        "integer": true,
+        "toggled": true
       },
       {
         "index": 10,
@@ -6164,7 +6607,21 @@
         "cv": false,
         "min": 0,
         "max": 1.4,
-        "default": 1
+        "default": 1,
+        "scalePoints": [
+          {
+            "label": "-6dB @freq, no resonance",
+            "value": 0
+          },
+          {
+            "label": "-3dB @freq, flat",
+            "value": 0.7
+          },
+          {
+            "label": "0dB @freq, resonant",
+            "value": 1
+          }
+        ]
       },
       {
         "index": 12,
@@ -6177,7 +6634,8 @@
         "min": 0,
         "max": 1,
         "default": 1,
-        "integer": true
+        "integer": true,
+        "toggled": true
       },
       {
         "index": 13,
@@ -6226,7 +6684,8 @@
         "min": 0,
         "max": 1,
         "default": 1,
-        "integer": true
+        "integer": true,
+        "toggled": true
       },
       {
         "index": 17,
@@ -6275,7 +6734,8 @@
         "min": 0,
         "max": 1,
         "default": 1,
-        "integer": true
+        "integer": true,
+        "toggled": true
       },
       {
         "index": 21,
@@ -6324,7 +6784,8 @@
         "min": 0,
         "max": 1,
         "default": 1,
-        "integer": true
+        "integer": true,
+        "toggled": true
       },
       {
         "index": 25,
@@ -6373,7 +6834,8 @@
         "min": 0,
         "max": 1,
         "default": 1,
-        "integer": true
+        "integer": true,
+        "toggled": true
       },
       {
         "index": 29,
@@ -6422,7 +6884,8 @@
         "min": 0,
         "max": 1,
         "default": 1,
-        "integer": true
+        "integer": true,
+        "toggled": true
       },
       {
         "index": 33,
@@ -7020,7 +7483,8 @@
         "cv": false,
         "min": null,
         "max": null,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 3,
@@ -7044,7 +7508,8 @@
         "cv": false,
         "min": null,
         "max": null,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 5,
@@ -7092,7 +7557,8 @@
         "cv": false,
         "min": null,
         "max": null,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 9,
@@ -7140,7 +7606,8 @@
         "cv": false,
         "min": null,
         "max": null,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 13,
@@ -7188,7 +7655,8 @@
         "cv": false,
         "min": null,
         "max": null,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 17,
@@ -7857,7 +8325,8 @@
         "min": 0,
         "max": 1,
         "default": 0,
-        "integer": true
+        "integer": true,
+        "toggled": true
       },
       {
         "index": 1,
@@ -7882,7 +8351,8 @@
         "min": 0,
         "max": 1,
         "default": 0,
-        "integer": true
+        "integer": true,
+        "toggled": true
       },
       {
         "index": 3,
@@ -7895,7 +8365,8 @@
         "min": 0,
         "max": 1,
         "default": 0,
-        "integer": true
+        "integer": true,
+        "toggled": true
       },
       {
         "index": 4,
@@ -7905,9 +8376,24 @@
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": 0,
+        "max": 2,
+        "default": 2,
+        "integer": true,
+        "scalePoints": [
+          {
+            "label": "SPP-MMSE (Speech)",
+            "value": 0
+          },
+          {
+            "label": "Brandt (Music)",
+            "value": 1
+          },
+          {
+            "label": "Min. Statistics (General)",
+            "value": 2
+          }
+        ]
       },
       {
         "index": 5,
@@ -7992,7 +8478,8 @@
         "min": 0,
         "max": 1,
         "default": 0,
-        "integer": true
+        "integer": true,
+        "toggled": true
       },
       {
         "index": 12,
@@ -8005,7 +8492,8 @@
         "min": 0,
         "max": 1,
         "default": 0,
-        "integer": true
+        "integer": true,
+        "toggled": true
       },
       {
         "index": 13,
@@ -8328,7 +8816,18 @@
         "min": 0,
         "max": 1,
         "default": 0,
-        "integer": true
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Highpass",
+            "value": 0
+          },
+          {
+            "label": "Bandpass",
+            "value": 1
+          }
+        ]
       },
       {
         "index": 3,
@@ -8341,7 +8840,18 @@
         "min": 0,
         "max": 1,
         "default": 0,
-        "integer": true
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Audio",
+            "value": 0
+          },
+          {
+            "label": "Sidechain",
+            "value": 1
+          }
+        ]
       },
       {
         "index": 4,
@@ -8628,7 +9138,14 @@
         "min": 0,
         "max": 14,
         "default": 0,
-        "integer": true
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "2:1 comp at -6 dB",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 7,
@@ -8772,7 +9289,14 @@
         "min": 0,
         "max": 2,
         "default": 0,
-        "integer": true
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Independent",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 9,
@@ -8785,7 +9309,14 @@
         "min": 0,
         "max": 14,
         "default": 0,
-        "integer": true
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "2:1 comp at -6 dB",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 10,
@@ -8940,7 +9471,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 1
+        "default": 1,
+        "toggled": true
       },
       {
         "index": 8,
@@ -8952,7 +9484,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 9,
@@ -8964,7 +9497,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 10,
@@ -9028,194 +9562,194 @@
       {
         "index": 0,
         "symbol": "Band1GainDb",
-        "name": "Band1GainDb",
+        "name": "Band 1 Gain [dB]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": -50,
+        "max": 20,
+        "default": 0
       },
       {
         "index": 1,
         "symbol": "Band2GainDb",
-        "name": "Band2GainDb",
+        "name": "Band 2 Gain [dB]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": -50,
+        "max": 20,
+        "default": 0
       },
       {
         "index": 2,
         "symbol": "Band3GainDb",
-        "name": "Band3GainDb",
+        "name": "Band 3 Gain [dB]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": -50,
+        "max": 20,
+        "default": 0
       },
       {
         "index": 3,
         "symbol": "Band4GainDb",
-        "name": "Band4GainDb",
+        "name": "Band 4 Gain [dB]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": -50,
+        "max": 20,
+        "default": 0
       },
       {
         "index": 4,
         "symbol": "Band5GainDb",
-        "name": "Band5GainDb",
+        "name": "Band 5 Gain [dB]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": -50,
+        "max": 20,
+        "default": 0
       },
       {
         "index": 5,
         "symbol": "Band6GainDb",
-        "name": "Band6GainDb",
+        "name": "Band 6 Gain [dB]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": -50,
+        "max": 20,
+        "default": 0
       },
       {
         "index": 6,
         "symbol": "Band7GainDb",
-        "name": "Band7GainDb",
+        "name": "Band 7 Gain [dB]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": -50,
+        "max": 20,
+        "default": 0
       },
       {
         "index": 7,
         "symbol": "Band8GainDb",
-        "name": "Band8GainDb",
+        "name": "Band 8 Gain [dB]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": -50,
+        "max": 20,
+        "default": 0
       },
       {
         "index": 8,
         "symbol": "Band1FreqHz",
-        "name": "Band1FreqHz",
+        "name": "Band 1 Freq [Hz]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": 40,
+        "max": 280,
+        "default": 100
       },
       {
         "index": 9,
         "symbol": "Band2FreqHz",
-        "name": "Band2FreqHz",
+        "name": "Band 2 Freq [Hz]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": 100,
+        "max": 500,
+        "default": 200
       },
       {
         "index": 10,
         "symbol": "Band3FreqHz",
-        "name": "Band3FreqHz",
+        "name": "Band 3 Freq [Hz]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": 200,
+        "max": 1000,
+        "default": 400
       },
       {
         "index": 11,
         "symbol": "Band4FreqHz",
-        "name": "Band4FreqHz",
+        "name": "Band 4 Freq [Hz]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": 400,
+        "max": 2800,
+        "default": 1000
       },
       {
         "index": 12,
         "symbol": "Band5FreqHz",
-        "name": "Band5FreqHz",
+        "name": "Band 5 Freq [Hz]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": 1000,
+        "max": 5000,
+        "default": 3000
       },
       {
         "index": 13,
         "symbol": "Band6FreqHz",
-        "name": "Band6FreqHz",
+        "name": "Band 6 Freq [Hz]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": 3000,
+        "max": 9000,
+        "default": 6000
       },
       {
         "index": 14,
         "symbol": "Band7FreqHz",
-        "name": "Band7FreqHz",
+        "name": "Band 7 Freq [Hz]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": 6000,
+        "max": 18000,
+        "default": 12000
       },
       {
         "index": 15,
         "symbol": "Band8FreqHz",
-        "name": "Band8FreqHz",
+        "name": "Band 8 Freq [Hz]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": 10000,
+        "max": 20000,
+        "default": 15000
       },
       {
         "index": 16,
@@ -9255,290 +9789,290 @@
       {
         "index": 0,
         "symbol": "Band1GainDb",
-        "name": "Band1GainDb",
+        "name": "Band 1 Gain [dB]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": -50,
+        "max": 20,
+        "default": 0
       },
       {
         "index": 1,
         "symbol": "Band2GainDb",
-        "name": "Band2GainDb",
+        "name": "Band 2 Gain [dB]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": -50,
+        "max": 20,
+        "default": 0
       },
       {
         "index": 2,
         "symbol": "Band3GainDb",
-        "name": "Band3GainDb",
+        "name": "Band 3 Gain [dB]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": -50,
+        "max": 20,
+        "default": 0
       },
       {
         "index": 3,
         "symbol": "Band4GainDb",
-        "name": "Band4GainDb",
+        "name": "Band 4 Gain [dB]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": -50,
+        "max": 20,
+        "default": 0
       },
       {
         "index": 4,
         "symbol": "Band5GainDb",
-        "name": "Band5GainDb",
+        "name": "Band 5 Gain [dB]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": -50,
+        "max": 20,
+        "default": 0
       },
       {
         "index": 5,
         "symbol": "Band6GainDb",
-        "name": "Band6GainDb",
+        "name": "Band 6 Gain [dB]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": -50,
+        "max": 20,
+        "default": 0
       },
       {
         "index": 6,
         "symbol": "Band7GainDb",
-        "name": "Band7GainDb",
+        "name": "Band 7 Gain [dB]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": -50,
+        "max": 20,
+        "default": 0
       },
       {
         "index": 7,
         "symbol": "Band8GainDb",
-        "name": "Band8GainDb",
+        "name": "Band 8 Gain [dB]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": -50,
+        "max": 20,
+        "default": 0
       },
       {
         "index": 8,
         "symbol": "Band1FreqHz",
-        "name": "Band1FreqHz",
+        "name": "Band 1 Freq [Hz]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": 40,
+        "max": 280,
+        "default": 100
       },
       {
         "index": 9,
         "symbol": "Band2FreqHz",
-        "name": "Band2FreqHz",
+        "name": "Band 2 Freq [Hz]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": 100,
+        "max": 500,
+        "default": 200
       },
       {
         "index": 10,
         "symbol": "Band3FreqHz",
-        "name": "Band3FreqHz",
+        "name": "Band 3 Freq [Hz]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": 200,
+        "max": 1000,
+        "default": 400
       },
       {
         "index": 11,
         "symbol": "Band4FreqHz",
-        "name": "Band4FreqHz",
+        "name": "Band 4 Freq [Hz]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": 400,
+        "max": 2800,
+        "default": 1000
       },
       {
         "index": 12,
         "symbol": "Band5FreqHz",
-        "name": "Band5FreqHz",
+        "name": "Band 5 Freq [Hz]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": 1000,
+        "max": 5000,
+        "default": 3000
       },
       {
         "index": 13,
         "symbol": "Band6FreqHz",
-        "name": "Band6FreqHz",
+        "name": "Band 6 Freq [Hz]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": 3000,
+        "max": 9000,
+        "default": 6000
       },
       {
         "index": 14,
         "symbol": "Band7FreqHz",
-        "name": "Band7FreqHz",
+        "name": "Band 7 Freq [Hz]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": 6000,
+        "max": 18000,
+        "default": 12000
       },
       {
         "index": 15,
         "symbol": "Band8FreqHz",
-        "name": "Band8FreqHz",
+        "name": "Band 8 Freq [Hz]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": 10000,
+        "max": 20000,
+        "default": 15000
       },
       {
         "index": 16,
         "symbol": "Band1BandwidthOctaves",
-        "name": "Band1BandwidthOctaves",
+        "name": "Band 1 Bandwidth [octaves]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": 0.1,
+        "max": 5,
+        "default": 1
       },
       {
         "index": 17,
         "symbol": "Band2BandwidthOctaves",
-        "name": "Band2BandwidthOctaves",
+        "name": "Band 2 Bandwidth [octaves]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": 0.1,
+        "max": 5,
+        "default": 1
       },
       {
         "index": 18,
         "symbol": "Band3BandwidthOctaves",
-        "name": "Band3BandwidthOctaves",
+        "name": "Band 3 Bandwidth [octaves]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": 0.1,
+        "max": 5,
+        "default": 1
       },
       {
         "index": 19,
         "symbol": "Band4BandwidthOctaves",
-        "name": "Band4BandwidthOctaves",
+        "name": "Band 4 Bandwidth [octaves]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": 0.1,
+        "max": 5,
+        "default": 1
       },
       {
         "index": 20,
         "symbol": "Band5BandwidthOctaves",
-        "name": "Band5BandwidthOctaves",
+        "name": "Band 5 Bandwidth [octaves]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": 0.1,
+        "max": 5,
+        "default": 1
       },
       {
         "index": 21,
         "symbol": "Band6BandwidthOctaves",
-        "name": "Band6BandwidthOctaves",
+        "name": "Band 6 Bandwidth [octaves]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": 0.1,
+        "max": 5,
+        "default": 1
       },
       {
         "index": 22,
         "symbol": "Band7BandwidthOctaves",
-        "name": "Band7BandwidthOctaves",
+        "name": "Band 7 Bandwidth [octaves]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": 0.1,
+        "max": 5,
+        "default": 1
       },
       {
         "index": 23,
         "symbol": "Band8BandwidthOctaves",
-        "name": "Band8BandwidthOctaves",
+        "name": "Band 8 Bandwidth [octaves]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": 0.1,
+        "max": 5,
+        "default": 1
       },
       {
         "index": 24,
@@ -9732,14 +10266,14 @@
       {
         "index": 1,
         "symbol": "Rate",
-        "name": "Rate",
+        "name": "Rate Shift [%]",
         "dir": "input",
         "type": "control",
         "legacy": false,
         "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
+        "min": -50,
+        "max": 100,
+        "default": 0
       },
       {
         "index": 2,
@@ -9930,7 +10464,14 @@
         "min": 0,
         "max": 1,
         "default": 1,
-        "integer": true
+        "integer": true,
+        "toggled": true,
+        "scalePoints": [
+          {
+            "label": "Off",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 4,
@@ -9943,7 +10484,14 @@
         "min": 0,
         "max": 1,
         "default": 1,
-        "integer": true
+        "integer": true,
+        "toggled": true,
+        "scalePoints": [
+          {
+            "label": "Off",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 5,
@@ -9956,7 +10504,14 @@
         "min": 0,
         "max": 1,
         "default": 1,
-        "integer": true
+        "integer": true,
+        "toggled": true,
+        "scalePoints": [
+          {
+            "label": "Off",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 6,
@@ -9969,7 +10524,14 @@
         "min": 0,
         "max": 1,
         "default": 1,
-        "integer": true
+        "integer": true,
+        "toggled": true,
+        "scalePoints": [
+          {
+            "label": "Off",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 7,
@@ -9982,7 +10544,14 @@
         "min": 0,
         "max": 42,
         "default": 0,
-        "integer": true
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "AfterBurn",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 8,
@@ -10576,7 +11145,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 11,
@@ -10767,7 +11337,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 13,
@@ -10779,7 +11350,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 14,
@@ -11090,7 +11662,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 23,
@@ -11102,7 +11675,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 24,
@@ -11114,7 +11688,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 25,
@@ -11126,7 +11701,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 26,
@@ -11138,7 +11714,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 27,
@@ -11150,7 +11727,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 28,
@@ -11557,7 +12135,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 25,
@@ -11569,7 +12148,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 26,
@@ -11581,7 +12161,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 27,
@@ -11593,7 +12174,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 28,
@@ -11605,7 +12187,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 29,
@@ -11617,7 +12200,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 30,
@@ -11629,7 +12213,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 1
+        "default": 1,
+        "toggled": true
       },
       {
         "index": 31,
@@ -11832,7 +12417,15 @@
         "cv": false,
         "min": 0,
         "max": 24,
-        "default": 0
+        "default": 0,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "1959 Bassman 5F6-A",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 7,
@@ -11856,7 +12449,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       }
     ]
   },
@@ -12572,7 +13166,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 8,
@@ -12596,7 +13191,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 10,
@@ -12751,7 +13347,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 10,
@@ -12775,7 +13372,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 12,
@@ -12990,7 +13588,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 4,
@@ -13014,7 +13613,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 6,
@@ -13134,7 +13734,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 3,
@@ -13148,6 +13749,250 @@
         "max": 4,
         "default": 3,
         "integer": true
+      }
+    ]
+  },
+  {
+    "id": "ZamDynamicEQ",
+    "label": "ZamDynamicEQ",
+    "name": "ZamDynamicEQ",
+    "description": "ZamDynamicEQ (ZamAudio LV2)",
+    "category": "Effects",
+    "wasmFile": "ZamDynamicEQ.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "lv2_audio_in_1",
+        "name": "Audio Input 1",
+        "dir": "input",
+        "type": "audio",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 1,
+        "symbol": "lv2_sidechain_in",
+        "name": "Sidechain Input",
+        "dir": "input",
+        "type": "audio",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 2,
+        "symbol": "lv2_audio_out_1",
+        "name": "Audio Output 1",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 3,
+        "symbol": "att",
+        "name": "Attack",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0.10000000149,
+        "max": 100,
+        "default": 10
+      },
+      {
+        "index": 4,
+        "symbol": "rel",
+        "name": "Release",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 1,
+        "max": 500,
+        "default": 80
+      },
+      {
+        "index": 5,
+        "symbol": "kn",
+        "name": "Knee",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 8,
+        "default": 0
+      },
+      {
+        "index": 6,
+        "symbol": "rat",
+        "name": "Ratio",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 1,
+        "max": 5,
+        "default": 1.5
+      },
+      {
+        "index": 7,
+        "symbol": "thr",
+        "name": "Threshold",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": -80,
+        "max": 0,
+        "default": 0
+      },
+      {
+        "index": 8,
+        "symbol": "max",
+        "name": "Max Boost/Cut",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 10,
+        "default": 10
+      },
+      {
+        "index": 9,
+        "symbol": "slew",
+        "name": "Slew",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 1,
+        "max": 150,
+        "default": 1
+      },
+      {
+        "index": 10,
+        "symbol": "sidech",
+        "name": "Sidechain",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "toggled": true
+      },
+      {
+        "index": 11,
+        "symbol": "togglelow",
+        "name": "Low Shelf",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "toggled": true
+      },
+      {
+        "index": 12,
+        "symbol": "togglepeak",
+        "name": "Peak",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "toggled": true
+      },
+      {
+        "index": 13,
+        "symbol": "togglehigh",
+        "name": "High Shelf",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "toggled": true
+      },
+      {
+        "index": 14,
+        "symbol": "detectfreq",
+        "name": "Detect Frequency",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 20,
+        "max": 16000,
+        "default": 1000
+      },
+      {
+        "index": 15,
+        "symbol": "targetfreq",
+        "name": "Target Frequency",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 20,
+        "max": 16000,
+        "default": 1000
+      },
+      {
+        "index": 16,
+        "symbol": "targetwidth",
+        "name": "Target width",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 1,
+        "max": 5,
+        "default": 1
+      },
+      {
+        "index": 17,
+        "symbol": "boostcut",
+        "name": "Boost / Cut",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "toggled": true
+      },
+      {
+        "index": 18,
+        "symbol": "controlgain",
+        "name": "Control Gain",
+        "dir": "output",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": -10,
+        "max": 0,
+        "default": -10
       }
     ]
   },
@@ -13255,7 +14100,8 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "toggled": true
       },
       {
         "index": 8,
@@ -13483,7 +14329,8 @@
         "min": 0,
         "max": 1,
         "default": 1,
-        "integer": true
+        "integer": true,
+        "toggled": true
       },
       {
         "index": 10,
@@ -13495,7 +14342,15 @@
         "cv": false,
         "min": 0,
         "max": 4,
-        "default": 0
+        "default": 0,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "None",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 11,
@@ -13507,7 +14362,16 @@
         "cv": false,
         "min": 0,
         "max": 1,
-        "default": 0
+        "default": 0,
+        "integer": true,
+        "enumeration": true,
+        "toggled": true,
+        "scalePoints": [
+          {
+            "label": "Unipolar",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 12,
@@ -13519,7 +14383,15 @@
         "cv": false,
         "min": 0,
         "max": 6,
-        "default": 0
+        "default": 0,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "None",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 13,
@@ -13543,7 +14415,15 @@
         "cv": false,
         "min": 0,
         "max": 6,
-        "default": 0
+        "default": 0,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "None",
+            "value": 0
+          }
+        ]
       },
       {
         "index": 15,
@@ -13568,440 +14448,6 @@
         "min": 0,
         "max": 1,
         "default": 0
-      }
-    ]
-  },
-  {
-    "id": "valve",
-    "label": "valve",
-    "name": "Valve saturation",
-    "category": "Distortion",
-    "wasmFile": "valve.wasm",
-    "processorFile": "processor.js",
-    "ports": [
-      {
-        "index": 0,
-        "name": "Distortion level",
-        "dir": "input",
-        "type": "control",
-        "min": 0,
-        "max": 1,
-        "default": 0
-      },
-      {
-        "index": 1,
-        "name": "Distortion character",
-        "dir": "input",
-        "type": "control",
-        "min": 0,
-        "max": 1,
-        "default": 0
-      },
-      {
-        "index": 2,
-        "name": "Input",
-        "dir": "input",
-        "type": "audio"
-      },
-      {
-        "index": 3,
-        "name": "Output",
-        "dir": "output",
-        "type": "audio"
-      }
-    ]
-  },
-  {
-    "id": "ZamDynamicEQ",
-    "label": "ZamDynamicEQ",
-    "name": "ZamDynamicEQ",
-    "description": "ZamDynamicEQ (ZamAudio LV2)",
-    "category": "Effects",
-    "wasmFile": "ZamDynamicEQ.wasm",
-    "processorFile": "processor.js",
-    "ports": [
-      {
-        "index": 0,
-        "symbol": "lv2_audio_in_1",
-        "name": "Audio Input 1",
-        "dir": "input",
-        "type": "audio",
-        "legacy": false,
-        "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
-      },
-      {
-        "index": 1,
-        "symbol": "lv2_sidechain_in",
-        "name": "Sidechain Input",
-        "dir": "input",
-        "type": "audio",
-        "legacy": false,
-        "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
-      },
-      {
-        "index": 2,
-        "symbol": "lv2_audio_out_1",
-        "name": "Audio Output 1",
-        "dir": "output",
-        "type": "audio",
-        "legacy": false,
-        "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
-      },
-      {
-        "index": 3,
-        "symbol": "att",
-        "name": "Attack",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0.10000000149,
-        "max": 100,
-        "default": 10
-      },
-      {
-        "index": 4,
-        "symbol": "rel",
-        "name": "Release",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 1,
-        "max": 500,
-        "default": 80
-      },
-      {
-        "index": 5,
-        "symbol": "kn",
-        "name": "Knee",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 8,
-        "default": 0
-      },
-      {
-        "index": 6,
-        "symbol": "rat",
-        "name": "Ratio",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 1,
-        "max": 5,
-        "default": 1.5
-      },
-      {
-        "index": 7,
-        "symbol": "thr",
-        "name": "Threshold",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": -80,
-        "max": 0,
-        "default": 0
-      },
-      {
-        "index": 8,
-        "symbol": "max",
-        "name": "Max Boost/Cut",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 10,
-        "default": 10
-      },
-      {
-        "index": 9,
-        "symbol": "slew",
-        "name": "Slew",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 1,
-        "max": 150,
-        "default": 1
-      },
-      {
-        "index": 10,
-        "symbol": "sidech",
-        "name": "Sidechain",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0
-      },
-      {
-        "index": 11,
-        "symbol": "togglelow",
-        "name": "Low Shelf",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0
-      },
-      {
-        "index": 12,
-        "symbol": "togglepeak",
-        "name": "Peak",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0
-      },
-      {
-        "index": 13,
-        "symbol": "togglehigh",
-        "name": "High Shelf",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0
-      },
-      {
-        "index": 14,
-        "symbol": "detectfreq",
-        "name": "Detect Frequency",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 20,
-        "max": 16000,
-        "default": 1000
-      },
-      {
-        "index": 15,
-        "symbol": "targetfreq",
-        "name": "Target Frequency",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 20,
-        "max": 16000,
-        "default": 1000
-      },
-      {
-        "index": 16,
-        "symbol": "targetwidth",
-        "name": "Target width",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 1,
-        "max": 5,
-        "default": 1
-      },
-      {
-        "index": 17,
-        "symbol": "boostcut",
-        "name": "Boost / Cut",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0
-      },
-      {
-        "index": 18,
-        "symbol": "controlgain",
-        "name": "Control Gain",
-        "dir": "output",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": -10,
-        "max": 0,
-        "default": -10
-      }
-    ]
-  },
-  {
-    "id": "mda_Tracker",
-    "label": "MDA_Tracker",
-    "name": "MDA Tracker",
-    "description": "This plug-in tracks the frequency of the input signal with an oscillator, ring modulator or filter. The pitch tracking only works with monophonic inputs, but...",
-    "category": "LV2 Effects",
-    "wasmFile": "MDA_Tracker.wasm",
-    "processorFile": "processor.js",
-    "ports": [
-      {
-        "index": 0,
-        "symbol": "mode",
-        "name": "Mode",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0
-      },
-      {
-        "index": 1,
-        "symbol": "dynamics",
-        "name": "Dynamics",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 100,
-        "default": 100
-      },
-      {
-        "index": 2,
-        "symbol": "mix",
-        "name": "Mix",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 100,
-        "default": 100
-      },
-      {
-        "index": 3,
-        "symbol": "glide",
-        "name": "Glide",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 100,
-        "default": 97
-      },
-      {
-        "index": 4,
-        "symbol": "transpose",
-        "name": "Transpose",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": -36,
-        "max": 36,
-        "default": 0
-      },
-      {
-        "index": 5,
-        "symbol": "maximum",
-        "name": "Maximum",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 39,
-        "max": 7350,
-        "default": 6500
-      },
-      {
-        "index": 6,
-        "symbol": "trigger",
-        "name": "Trigger",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": -60,
-        "max": 0,
-        "default": -30
-      },
-      {
-        "index": 7,
-        "symbol": "output",
-        "name": "Output",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": -20,
-        "max": 20,
-        "default": 0
-      },
-      {
-        "index": 8,
-        "symbol": "left_in",
-        "name": "Left In",
-        "dir": "input",
-        "type": "audio",
-        "legacy": false,
-        "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
-      },
-      {
-        "index": 9,
-        "symbol": "right_in",
-        "name": "Right In",
-        "dir": "input",
-        "type": "audio",
-        "legacy": false,
-        "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
-      },
-      {
-        "index": 10,
-        "symbol": "left_out",
-        "name": "Left Out",
-        "dir": "output",
-        "type": "audio",
-        "legacy": false,
-        "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
-      },
-      {
-        "index": 11,
-        "symbol": "right_out",
-        "name": "Right Out",
-        "dir": "output",
-        "type": "audio",
-        "legacy": false,
-        "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
       }
     ]
   }

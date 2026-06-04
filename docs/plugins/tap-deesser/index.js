@@ -40,7 +40,18 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 0,
-      "integer": true
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "Highpass",
+          "value": 0
+        },
+        {
+          "label": "Bandpass",
+          "value": 1
+        }
+      ]
     },
     {
       "index": 3,
@@ -53,7 +64,18 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 0,
-      "integer": true
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "Audio",
+          "value": 0
+        },
+        {
+          "label": "Sidechain",
+          "value": 1
+        }
+      ]
     },
     {
       "index": 4,

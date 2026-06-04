@@ -88,7 +88,14 @@ export const meta         = {
       "min": 0,
       "max": 14,
       "default": 0,
-      "integer": true
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "2:1 comp at -6 dB",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 7,

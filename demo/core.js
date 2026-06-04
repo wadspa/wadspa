@@ -199,6 +199,8 @@ class WadspNode {
         });
     }
 
+    // Send a state key/value pair to DPF plugins that support it (WANT_STATE=1).
+    // key and value are plain strings; the processor converts them to C strings.
     setPluginState(key, value) {
         this.#node.port.postMessage({ type: 'setState', key: String(key), value: String(value) });
         return this;

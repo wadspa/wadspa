@@ -15,7 +15,14 @@ export const meta         = {
       "cv": false,
       "min": 0,
       "max": 1,
-      "default": 0
+      "default": 0,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "Sine oscillator",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 1,

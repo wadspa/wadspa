@@ -1,5 +1,5 @@
 {
-  "name": "@wadspa/fastLookaheadLimiter",
+  "name": "@wadspa/fast-lookahead-limiter",
   "version": "0.1.0",
   "type": "module",
   "main": "./index.js",

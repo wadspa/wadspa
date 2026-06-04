@@ -51,7 +51,14 @@ export const meta         = {
       "cv": false,
       "min": 0,
       "max": 1,
-      "default": 0.5
+      "default": 0.5,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "5.3 ms",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 4,

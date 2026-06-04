@@ -135,10 +135,33 @@ export const meta         = {
       "type": "control",
       "legacy": false,
       "cv": false,
-      "min": null,
-      "max": null,
-      "default": null,
-      "integer": true
+      "min": 0,
+      "max": 4,
+      "default": 4,
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "Rect",
+          "value": 0
+        },
+        {
+          "label": "Triang",
+          "value": 1
+        },
+        {
+          "label": "Welch",
+          "value": 2
+        },
+        {
+          "label": "Hann",
+          "value": 3
+        },
+        {
+          "label": "Gauss",
+          "value": 4
+        }
+      ]
     },
     {
       "index": 11,
@@ -222,10 +245,33 @@ export const meta         = {
       "type": "control",
       "legacy": false,
       "cv": false,
-      "min": null,
-      "max": null,
-      "default": null,
-      "integer": true
+      "min": 0,
+      "max": 4,
+      "default": 4,
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "Rect",
+          "value": 0
+        },
+        {
+          "label": "Triang",
+          "value": 1
+        },
+        {
+          "label": "Welch",
+          "value": 2
+        },
+        {
+          "label": "Hann",
+          "value": 3
+        },
+        {
+          "label": "Gauss",
+          "value": 4
+        }
+      ]
     },
     {
       "index": 18,
@@ -333,7 +379,8 @@ export const meta         = {
       "cv": false,
       "min": 0,
       "max": 1,
-      "default": 1
+      "default": 1,
+      "toggled": true
     },
     {
       "index": 27,
@@ -367,10 +414,29 @@ export const meta         = {
       "type": "control",
       "legacy": false,
       "cv": false,
-      "min": null,
-      "max": null,
-      "default": null,
-      "integer": true
+      "min": 0,
+      "max": 3,
+      "default": 0,
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "LPF",
+          "value": 0
+        },
+        {
+          "label": "BPF",
+          "value": 1
+        },
+        {
+          "label": "HPF",
+          "value": 2
+        },
+        {
+          "label": "BRF",
+          "value": 3
+        }
+      ]
     },
     {
       "index": 30,
@@ -380,10 +446,29 @@ export const meta         = {
       "type": "control",
       "legacy": false,
       "cv": false,
-      "min": null,
-      "max": null,
-      "default": null,
-      "integer": true
+      "min": 0,
+      "max": 3,
+      "default": 0,
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "12dB/oct",
+          "value": 0
+        },
+        {
+          "label": "24dB/oct",
+          "value": 1
+        },
+        {
+          "label": "Biquad",
+          "value": 2
+        },
+        {
+          "label": "Formant",
+          "value": 3
+        }
+      ]
     },
     {
       "index": 31,
@@ -455,7 +540,8 @@ export const meta         = {
       "cv": false,
       "min": 0,
       "max": 1,
-      "default": 1
+      "default": 1,
+      "toggled": true
     },
     {
       "index": 37,
@@ -465,10 +551,33 @@ export const meta         = {
       "type": "control",
       "legacy": false,
       "cv": false,
-      "min": null,
-      "max": null,
-      "default": null,
-      "integer": true
+      "min": 0,
+      "max": 4,
+      "default": 1,
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "Pulse",
+          "value": 0
+        },
+        {
+          "label": "Saw",
+          "value": 1
+        },
+        {
+          "label": "Sine",
+          "value": 2
+        },
+        {
+          "label": "Rand",
+          "value": 3
+        },
+        {
+          "label": "Noise",
+          "value": 4
+        }
+      ]
     },
     {
       "index": 38,
@@ -516,7 +625,8 @@ export const meta         = {
       "cv": false,
       "min": 0,
       "max": 1,
-      "default": 0
+      "default": 0,
+      "toggled": true
     },
     {
       "index": 42,
@@ -839,10 +949,25 @@ export const meta         = {
       "type": "control",
       "legacy": false,
       "cv": false,
-      "min": null,
-      "max": null,
-      "default": null,
-      "integer": true
+      "min": 0,
+      "max": 2,
+      "default": 0,
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "Poly",
+          "value": 0
+        },
+        {
+          "label": "Mono",
+          "value": 1
+        },
+        {
+          "label": "Legato",
+          "value": 2
+        }
+      ]
     },
     {
       "index": 69,
@@ -1130,7 +1255,8 @@ export const meta         = {
       "cv": false,
       "min": 0,
       "max": 1,
-      "default": 0
+      "default": 0,
+      "toggled": true
     },
     {
       "index": 93,
@@ -1142,7 +1268,8 @@ export const meta         = {
       "cv": false,
       "min": 0,
       "max": 1,
-      "default": 1
+      "default": 1,
+      "toggled": true
     },
     {
       "index": 94,

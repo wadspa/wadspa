@@ -112,7 +112,14 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 1,
-      "integer": true
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "8 voices",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 9,

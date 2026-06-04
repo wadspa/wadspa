@@ -15,7 +15,14 @@ export const meta         = {
       "cv": false,
       "min": 0,
       "max": 0.75,
-      "default": 0.5
+      "default": 0.5,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "Distort",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 1,

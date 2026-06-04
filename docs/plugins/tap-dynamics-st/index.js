@@ -112,7 +112,14 @@ export const meta         = {
       "min": 0,
       "max": 2,
       "default": 0,
-      "integer": true
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "Independent",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 9,
@@ -125,7 +132,14 @@ export const meta         = {
       "min": 0,
       "max": 14,
       "default": 0,
-      "integer": true
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "2:1 comp at -6 dB",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 10,

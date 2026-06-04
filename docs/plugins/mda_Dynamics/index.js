@@ -75,7 +75,13 @@ export const meta         = {
       "cv": false,
       "min": -20,
       "max": 10,
-      "default": 10
+      "default": 10,
+      "scalePoints": [
+        {
+          "label": "OFF",
+          "value": 10
+        }
+      ]
     },
     {
       "index": 6,
@@ -87,7 +93,13 @@ export const meta         = {
       "cv": false,
       "min": -60,
       "max": 0,
-      "default": -60
+      "default": -60,
+      "scalePoints": [
+        {
+          "label": "OFF",
+          "value": -60
+        }
+      ]
     },
     {
       "index": 7,

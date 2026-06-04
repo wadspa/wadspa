@@ -112,7 +112,8 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 1,
-      "integer": true
+      "integer": true,
+      "toggled": true
     },
     {
       "index": 9,

@@ -112,7 +112,30 @@ export const meta         = {
       "min": 0,
       "max": 4,
       "default": 2,
-      "integer": true
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "sine",
+          "value": 0
+        },
+        {
+          "label": "square / pulse",
+          "value": 1
+        },
+        {
+          "label": "triangle / saw",
+          "value": 2
+        },
+        {
+          "label": "white noise",
+          "value": 3
+        },
+        {
+          "label": "noise + sample & hold",
+          "value": 4
+        }
+      ]
     },
     {
       "index": 9,
@@ -221,7 +244,30 @@ export const meta         = {
       "min": 0,
       "max": 4,
       "default": 2,
-      "integer": true
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "sine",
+          "value": 0
+        },
+        {
+          "label": "square / pulse",
+          "value": 1
+        },
+        {
+          "label": "triangle / saw",
+          "value": 2
+        },
+        {
+          "label": "white noise",
+          "value": 3
+        },
+        {
+          "label": "noise + sample & hold",
+          "value": 4
+        }
+      ]
     },
     {
       "index": 18,
@@ -258,7 +304,38 @@ export const meta         = {
       "min": 0,
       "max": 6,
       "default": 0,
-      "integer": true
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "sine",
+          "value": 0
+        },
+        {
+          "label": "square",
+          "value": 1
+        },
+        {
+          "label": "triangle",
+          "value": 2
+        },
+        {
+          "label": "white noise",
+          "value": 3
+        },
+        {
+          "label": "noise + sample & hold",
+          "value": 4
+        },
+        {
+          "label": "sawtooth (up)",
+          "value": 5
+        },
+        {
+          "label": "sawtooth (down)",
+          "value": 6
+        }
+      ]
     },
     {
       "index": 21,
@@ -282,7 +359,21 @@ export const meta         = {
       "cv": false,
       "min": -1,
       "max": 1,
-      "default": 0
+      "default": 0,
+      "scalePoints": [
+        {
+          "label": "osc 1",
+          "value": -1
+        },
+        {
+          "label": "both",
+          "value": 0
+        },
+        {
+          "label": "osc 2",
+          "value": 1
+        }
+      ]
     },
     {
       "index": 23,
@@ -451,7 +542,22 @@ export const meta         = {
       "min": 0,
       "max": 2,
       "default": 0,
-      "integer": true
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "poly",
+          "value": 0
+        },
+        {
+          "label": "mono",
+          "value": 1
+        },
+        {
+          "label": "legato",
+          "value": 2
+        }
+      ]
     },
     {
       "index": 37,
@@ -477,7 +583,22 @@ export const meta         = {
       "min": 0,
       "max": 2,
       "default": 0,
-      "integer": true
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "low pass",
+          "value": 0
+        },
+        {
+          "label": "high pass",
+          "value": 1
+        },
+        {
+          "label": "band pass",
+          "value": 2
+        }
+      ]
     },
     {
       "index": 39,
@@ -490,7 +611,18 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 1,
-      "integer": true
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "12 dB / octave",
+          "value": 0
+        },
+        {
+          "label": "24 dB / octave",
+          "value": 1
+        }
+      ]
     },
     {
       "index": 40,
@@ -503,7 +635,22 @@ export const meta         = {
       "min": 0,
       "max": 2,
       "default": 0,
-      "integer": true
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "osc 1+2",
+          "value": 0
+        },
+        {
+          "label": "osc 1",
+          "value": 1
+        },
+        {
+          "label": "osc 2",
+          "value": 2
+        }
+      ]
     },
     {
       "index": 41,
@@ -552,7 +699,18 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 0,
-      "integer": true
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "always",
+          "value": 0
+        },
+        {
+          "label": "legato",
+          "value": 1
+        }
+      ]
     }
   ]
 };

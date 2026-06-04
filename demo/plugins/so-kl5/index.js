@@ -12,6 +12,7 @@ export const meta         = {
       "dir": "output",
       "type": "audio",
       "legacy": false,
+      "cv": false,
       "min": null,
       "max": null,
       "default": null
@@ -23,6 +24,7 @@ export const meta         = {
       "dir": "input",
       "type": "midi",
       "legacy": true,
+      "cv": false,
       "min": null,
       "max": null,
       "default": null
@@ -34,9 +36,22 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
-      "min": null,
-      "max": null,
-      "default": 0
+      "cv": false,
+      "min": 0,
+      "max": 1,
+      "default": 0,
+      "enumeration": true,
+      "toggled": true,
+      "scalePoints": [
+        {
+          "label": "Midi Commands",
+          "value": 0
+        },
+        {
+          "label": "Control Ports",
+          "value": 1
+        }
+      ]
     },
     {
       "index": 3,
@@ -45,6 +60,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 1,
       "default": 0
@@ -56,6 +72,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 0.907,
       "default": 0.625
@@ -67,6 +84,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0.0125,
       "max": 0.3333,
       "default": 0.1725
@@ -78,6 +96,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0.00625,
       "max": 0.165,
       "default": 0.01125
@@ -89,6 +108,7 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 127,
       "default": 100
@@ -100,9 +120,17 @@ export const meta         = {
       "dir": "input",
       "type": "control",
       "legacy": false,
+      "cv": false,
       "min": 0,
       "max": 16,
-      "default": 0
+      "default": 0,
+      "integer": true,
+      "scalePoints": [
+        {
+          "label": "Off",
+          "value": 16
+        }
+      ]
     }
   ]
 };

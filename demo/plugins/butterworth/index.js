@@ -24,7 +24,7 @@ export const meta         = {
       "type": "control",
       "min": 0.1,
       "max": 1.41,
-      "default": "min"
+      "default": "middle"
     },
     {
       "index": 2,

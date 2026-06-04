@@ -39,7 +39,8 @@ export const meta         = {
       "cv": false,
       "min": null,
       "max": null,
-      "default": 0
+      "default": 0,
+      "toggled": true
     },
     {
       "index": 3,
@@ -63,7 +64,8 @@ export const meta         = {
       "cv": false,
       "min": null,
       "max": null,
-      "default": 0
+      "default": 0,
+      "toggled": true
     },
     {
       "index": 5,
@@ -111,7 +113,8 @@ export const meta         = {
       "cv": false,
       "min": null,
       "max": null,
-      "default": 0
+      "default": 0,
+      "toggled": true
     },
     {
       "index": 9,
@@ -159,7 +162,8 @@ export const meta         = {
       "cv": false,
       "min": null,
       "max": null,
-      "default": 0
+      "default": 0,
+      "toggled": true
     },
     {
       "index": 13,
@@ -207,7 +211,8 @@ export const meta         = {
       "cv": false,
       "min": null,
       "max": null,
-      "default": 0
+      "default": 0,
+      "toggled": true
     },
     {
       "index": 17,

@@ -15,7 +15,14 @@ export const meta         = {
       "cv": false,
       "min": 0,
       "max": 1,
-      "default": 0
+      "default": 0,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "Left",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 1,
@@ -63,7 +70,13 @@ export const meta         = {
       "cv": false,
       "min": 14,
       "max": 10000,
-      "default": 1602.24
+      "default": 1602.24,
+      "scalePoints": [
+        {
+          "label": "FREEZE",
+          "value": 14
+        }
+      ]
     },
     {
       "index": 5,
@@ -99,7 +112,14 @@ export const meta         = {
       "cv": false,
       "min": 0,
       "max": 1,
-      "default": 1
+      "default": 1,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "8 BAND",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 8,

@@ -51,7 +51,13 @@ export const meta         = {
       "cv": false,
       "min": 0,
       "max": 47.62,
-      "default": 0
+      "default": 0,
+      "scalePoints": [
+        {
+          "label": "OFF",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 4,

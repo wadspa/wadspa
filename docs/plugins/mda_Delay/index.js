@@ -40,7 +40,14 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 0,
-      "integer": true
+      "integer": true,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "Free",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 3,
@@ -88,7 +95,13 @@ export const meta         = {
       "cv": false,
       "min": -12,
       "max": 6,
-      "default": 0
+      "default": 0,
+      "scalePoints": [
+        {
+          "label": "OFF",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 7,

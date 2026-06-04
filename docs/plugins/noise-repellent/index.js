@@ -16,7 +16,8 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 0,
-      "integer": true
+      "integer": true,
+      "toggled": true
     },
     {
       "index": 1,
@@ -41,7 +42,8 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 0,
-      "integer": true
+      "integer": true,
+      "toggled": true
     },
     {
       "index": 3,
@@ -54,7 +56,8 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 0,
-      "integer": true
+      "integer": true,
+      "toggled": true
     },
     {
       "index": 4,
@@ -64,9 +67,24 @@ export const meta         = {
       "type": "control",
       "legacy": false,
       "cv": false,
-      "min": null,
-      "max": null,
-      "default": null
+      "min": 0,
+      "max": 2,
+      "default": 2,
+      "integer": true,
+      "scalePoints": [
+        {
+          "label": "SPP-MMSE (Speech)",
+          "value": 0
+        },
+        {
+          "label": "Brandt (Music)",
+          "value": 1
+        },
+        {
+          "label": "Min. Statistics (General)",
+          "value": 2
+        }
+      ]
     },
     {
       "index": 5,
@@ -151,7 +169,8 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 0,
-      "integer": true
+      "integer": true,
+      "toggled": true
     },
     {
       "index": 12,
@@ -164,7 +183,8 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 0,
-      "integer": true
+      "integer": true,
+      "toggled": true
     },
     {
       "index": 13,

@@ -20,14 +20,14 @@ export const meta         = {
     {
       "index": 1,
       "symbol": "Rate",
-      "name": "Rate",
+      "name": "Rate Shift [%]",
       "dir": "input",
       "type": "control",
       "legacy": false,
       "cv": false,
-      "min": null,
-      "max": null,
-      "default": null
+      "min": -50,
+      "max": 100,
+      "default": 0
     },
     {
       "index": 2,

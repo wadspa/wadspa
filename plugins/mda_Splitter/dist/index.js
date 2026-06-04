@@ -15,7 +15,14 @@ export const meta         = {
       "cv": false,
       "min": 0,
       "max": 1,
-      "default": 0
+      "default": 0,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "Normal",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 1,
@@ -39,7 +46,14 @@ export const meta         = {
       "cv": false,
       "min": 0,
       "max": 1,
-      "default": 0
+      "default": 0,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "Low",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 3,
@@ -63,7 +77,14 @@ export const meta         = {
       "cv": false,
       "min": 0,
       "max": 1,
-      "default": 0.5
+      "default": 0.5,
+      "enumeration": true,
+      "scalePoints": [
+        {
+          "label": "Low",
+          "value": 0
+        }
+      ]
     },
     {
       "index": 5,

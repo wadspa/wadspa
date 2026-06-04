@@ -40,7 +40,8 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 1,
-      "integer": true
+      "integer": true,
+      "toggled": true
     },
     {
       "index": 3,
@@ -77,7 +78,8 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 1,
-      "integer": true
+      "integer": true,
+      "toggled": true
     },
     {
       "index": 6,
@@ -90,7 +92,8 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 0,
-      "integer": true
+      "integer": true,
+      "toggled": true
     },
     {
       "index": 7,
@@ -114,7 +117,21 @@ export const meta         = {
       "cv": false,
       "min": 0,
       "max": 1.4,
-      "default": 0.7
+      "default": 0.7,
+      "scalePoints": [
+        {
+          "label": "-6dB @freq, no resonance",
+          "value": 0
+        },
+        {
+          "label": "-3dB @freq, flat",
+          "value": 0.7
+        },
+        {
+          "label": "0dB @freq, resonant",
+          "value": 1
+        }
+      ]
     },
     {
       "index": 9,
@@ -127,7 +144,8 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 0,
-      "integer": true
+      "integer": true,
+      "toggled": true
     },
     {
       "index": 10,
@@ -151,7 +169,21 @@ export const meta         = {
       "cv": false,
       "min": 0,
       "max": 1.4,
-      "default": 1
+      "default": 1,
+      "scalePoints": [
+        {
+          "label": "-6dB @freq, no resonance",
+          "value": 0
+        },
+        {
+          "label": "-3dB @freq, flat",
+          "value": 0.7
+        },
+        {
+          "label": "0dB @freq, resonant",
+          "value": 1
+        }
+      ]
     },
     {
       "index": 12,
@@ -164,7 +196,8 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 1,
-      "integer": true
+      "integer": true,
+      "toggled": true
     },
     {
       "index": 13,
@@ -213,7 +246,8 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 1,
-      "integer": true
+      "integer": true,
+      "toggled": true
     },
     {
       "index": 17,
@@ -262,7 +296,8 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 1,
-      "integer": true
+      "integer": true,
+      "toggled": true
     },
     {
       "index": 21,
@@ -311,7 +346,8 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 1,
-      "integer": true
+      "integer": true,
+      "toggled": true
     },
     {
       "index": 25,
@@ -360,7 +396,8 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 1,
-      "integer": true
+      "integer": true,
+      "toggled": true
     },
     {
       "index": 29,
@@ -409,7 +446,8 @@ export const meta         = {
       "min": 0,
       "max": 1,
       "default": 1,
-      "integer": true
+      "integer": true,
+      "toggled": true
     },
     {
       "index": 33,
