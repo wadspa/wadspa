@@ -4,7 +4,7 @@
  *
  * For each effect:
  *   1. Instantiate the WASM module directly (no AudioWorklet needed)
- *   2. Dispatch catalog default values to all control ports (mirrors browser behaviour)
+ *   2. Dispatch browser-visible slider defaults through the same UI value path
  *   3. Fill all audio input buffers with a 440 Hz sine tone
  *   4. Run 64 blocks of 128 samples (~186 ms)
  *   5. Assert peak amplitude > 1e-6 (non-silent)
@@ -16,6 +16,7 @@
 import { readFileSync, readdirSync } from 'fs';
 import { join, dirname }             from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
+import { portUiRange, portValueForSet, visibleControlPorts } from '../docs/control-utils.js';
 
 const ROOT         = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DOCS_PLUGINS = join(ROOT, 'docs', 'plugins');
@@ -114,19 +115,18 @@ async function renderPeak(eff, factory, wasmBinary, SETTERS, overrides = new Map
     const mod = await factory({ wasmBinary });
     mod._shim_init(SAMPLE_RATE);
 
-    // Dispatch catalog defaults to all control ports — mirrors what renderChain()
-    // does in the browser so the test exercises the same initial state. Overrides
-    // are only used for a second activation render if the official defaults are
-    // silent in this short headless probe.
-    for (const p of eff.ports) {
-        if (p.type !== 'control' || p.dir !== 'input') continue;
+    // Dispatch values exactly like renderChain() does in the browser. This keeps
+    // sample-rate-relative display values and hidden CV ports covered by tests.
+    for (const p of visibleControlPorts(eff.ports)) {
         const key = setterKey(p);
-        const v = overrides.has(key)
-            ? overrides.get(key)
-            : resolveDefault(p.default, p.min, p.max);
-        if (v === null) continue;
+        const uiValue = overrides.has(key)
+            ? uiValueForPort(p, overrides.get(key))
+            : portUiRange(p, SAMPLE_RATE).value;
+        if (!Number.isFinite(uiValue)) continue;
         const fn = SETTERS[key];
-        if (fn && typeof mod[fn] === 'function') mod[fn](scaleValueForPort(p, v));
+        if (fn && typeof mod[fn] === 'function') {
+            mod[fn](portValueForSet(p, uiValue, null, SAMPLE_RATE));
+        }
     }
 
     const inBufFns  = Object.keys(mod).filter(k => k.startsWith('_shim_input_buf_'));
@@ -154,9 +154,7 @@ async function renderPeak(eff, factory, wasmBinary, SETTERS, overrides = new Map
 function activationOverrides(ports) {
     const overrides = new Map();
 
-    for (const port of ports) {
-        if (port.type !== 'control' || port.dir !== 'input') continue;
-
+    for (const port of visibleControlPorts(ports)) {
         const text = `${port.symbol ?? ''} ${port.name ?? ''}`;
         const def = resolveDefault(port.default, port.min, port.max);
         if (/bypass|program|preset|latency|meter|peakreset|reset|sync|channel/i.test(text)) continue;
@@ -186,7 +184,7 @@ function setterKey(port) {
     return port.symbol ? String(port.symbol) : String(port.index);
 }
 
-function scaleValueForPort(port, value) {
+function uiValueForPort(port, value) {
     return shouldScaleBySampleRate(port, value) ? value * SAMPLE_RATE : value;
 }
 

@@ -11,6 +11,7 @@
 import { existsSync, readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { portUiRange, portValueForSet, visibleControlPorts } from '../docs/control-utils.js';
 import { readLv2Registry } from './lib/lv2-registry.js';
 import { parseLv2Ttl } from '../toolchain/src/shim-lv2.js';
 
@@ -41,6 +42,7 @@ for (const entry of [
     ...readJson(join(DOCS, 'instruments.json')),
     ...readJson(join(DOCS_PLUGINS, 'catalog.json')),
 ]) {
+    validateVisibleControlSet(`${entry.id} catalog`, entry.ports ?? []);
     for (const port of entry.ports ?? []) {
         if (port.type !== 'control' || port.dir !== 'input') continue;
         const sourcePort = sourceScalePointPorts.get(`${entry.id}/${portKey(port)}`);
@@ -49,6 +51,7 @@ for (const entry of [
         }
         validateScalePointCoverage(`${entry.id} catalog`, port);
         validateSampleRateRange(`${entry.id} catalog`, port);
+        validateSampleRateUiDispatch(`${entry.id} catalog`, port);
     }
 }
 
@@ -103,6 +106,47 @@ function validateSampleRateRange(scope, port) {
     const tolerance = Math.max(1e-6, Math.abs(actualMax) * 1e-6);
     if (actualDefault < actualMin - tolerance || actualDefault > actualMax + tolerance) {
         issues.push(`${scope} ${port.name}: default ${actualDefault} Hz outside display range ${actualMin}..${actualMax} Hz`);
+    }
+}
+
+function validateVisibleControlSet(scope, ports) {
+    const visible = new Set(visibleControlPorts(ports));
+    for (const port of ports) {
+        if (port.cv && visible.has(port)) {
+            issues.push(`${scope} ${port.name}: CV/modulation port is exposed as a slider`);
+        }
+    }
+}
+
+function validateSampleRateUiDispatch(scope, port) {
+    if (!port.sampleRate) return;
+
+    const min = Number(port.min);
+    const max = Number(port.max);
+    if (!Number.isFinite(min) || !Number.isFinite(max)) return;
+
+    const uiRange = portUiRange(port, SAMPLE_RATE);
+    const hostValue = portValueForSet(port, uiRange.value, null, SAMPLE_RATE);
+    if (!Number.isFinite(hostValue)) {
+        issues.push(`${scope} ${port.name}: UI dispatch value is not finite`);
+        return;
+    }
+
+    const actualMin = Math.min(min, max) * SAMPLE_RATE;
+    const actualMax = Math.max(min, max) * SAMPLE_RATE;
+    const rangeTolerance = Math.max(1e-6, Math.abs(actualMax) * 1e-6);
+    if (hostValue < actualMin - rangeTolerance || hostValue > actualMax + rangeTolerance) {
+        issues.push(`${scope} ${port.name}: UI dispatch sends ${hostValue} outside ${actualMin}..${actualMax} Hz`);
+    }
+
+    const rawDefault = resolveDefault(port.default, min, max);
+    if (!Number.isFinite(rawDefault)) return;
+    const actualDefault = rawDefault >= Math.min(min, max) && rawDefault <= Math.max(min, max)
+        ? rawDefault * SAMPLE_RATE
+        : rawDefault;
+    const defaultTolerance = Math.max(1e-6, Math.abs(actualDefault) * 1e-6);
+    if (Math.abs(hostValue - actualDefault) > defaultTolerance) {
+        issues.push(`${scope} ${port.name}: UI dispatch default ${hostValue} differs from expected ${actualDefault} Hz`);
     }
 }
 
