@@ -261,6 +261,7 @@
     "targets": [
       {
         "id": "chowkick",
+        "setup": "setup-chowkick.js",
         "autoSetup": false,
         "description": "Chow Kick physically modeled kick drum synthesizer"
       }

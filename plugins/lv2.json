@@ -1537,5 +1537,19 @@
     "defines": [
       "NDEBUG"
     ]
+  },
+  {
+    "id": "chowkick",
+    "description": "Chow Kick - physically modeled kick drum synthesizer",
+    "category": "Instruments",
+    "sources": [
+      "chowkick_lv2.cpp"
+    ],
+    "includes": [
+      "plugins/chowkick"
+    ],
+    "defines": [
+      "NDEBUG"
+    ]
   }
 ]

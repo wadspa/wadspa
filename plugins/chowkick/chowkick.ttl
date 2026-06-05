@@ -1,0 +1,210 @@
+@prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix midi:  <http://lv2plug.in/ns/ext/midi#> .
+@prefix pprop: <http://lv2plug.in/ns/ext/port-props#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix urid:  <http://lv2plug.in/ns/ext/urid#> .
+
+<https://github.com/Chowdhury-DSP/ChowKick#instrument>
+    a lv2:InstrumentPlugin, lv2:Plugin ;
+    doap:name "Chow Kick" ;
+    doap:description "Physically modeled kick drum synthesizer" ;
+    lv2:requiredFeature urid:map ;
+    lv2:optionalFeature lv2:hardRTCapable ;
+
+    lv2:port [
+        a lv2:InputPort, atom:AtomPort ;
+        atom:bufferType atom:Sequence ;
+        atom:supports midi:MidiEvent ;
+        lv2:index 0 ;
+        lv2:symbol "midi_in" ;
+        lv2:name "MIDI In" ;
+    ] , [
+        a lv2:OutputPort, lv2:AudioPort ;
+        lv2:index 1 ;
+        lv2:symbol "out_l" ;
+        lv2:name "Audio Out L" ;
+    ] , [
+        a lv2:OutputPort, lv2:AudioPort ;
+        lv2:index 2 ;
+        lv2:symbol "out_r" ;
+        lv2:name "Audio Out R" ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 3 ;
+        lv2:symbol "pulse_width" ;
+        lv2:name "Pulse Width [ms]" ;
+        lv2:minimum 0.025 ;
+        lv2:maximum 2.5 ;
+        lv2:default 1 ;
+        lv2:portProperty pprop:logarithmic ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 4 ;
+        lv2:symbol "pulse_amp" ;
+        lv2:name "Pulse Amp" ;
+        lv2:minimum 0 ;
+        lv2:maximum 1 ;
+        lv2:default 1 ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 5 ;
+        lv2:symbol "voices" ;
+        lv2:name "Voices" ;
+        lv2:minimum 1 ;
+        lv2:maximum 4 ;
+        lv2:default 2 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 6 ;
+        lv2:symbol "velocity_sensitivity" ;
+        lv2:name "Velocity Sensitivity" ;
+        lv2:minimum 0 ;
+        lv2:maximum 1 ;
+        lv2:default 1 ;
+        lv2:portProperty pprop:integer , pprop:toggled ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 7 ;
+        lv2:symbol "sustain" ;
+        lv2:name "Pulse Sustain" ;
+        lv2:minimum 0 ;
+        lv2:maximum 1 ;
+        lv2:default 0.5 ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 8 ;
+        lv2:symbol "decay" ;
+        lv2:name "Pulse Decay" ;
+        lv2:minimum 0 ;
+        lv2:maximum 1 ;
+        lv2:default 0.5 ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 9 ;
+        lv2:symbol "frequency" ;
+        lv2:name "Frequency" ;
+        lv2:minimum 30 ;
+        lv2:maximum 500 ;
+        lv2:default 100 ;
+        lv2:portProperty pprop:logarithmic ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 10 ;
+        lv2:symbol "link_pitch" ;
+        lv2:name "Link Pitch" ;
+        lv2:minimum 0 ;
+        lv2:maximum 1 ;
+        lv2:default 1 ;
+        lv2:portProperty pprop:integer , pprop:toggled ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 11 ;
+        lv2:symbol "q" ;
+        lv2:name "Q" ;
+        lv2:minimum 0.1 ;
+        lv2:maximum 2 ;
+        lv2:default 0.5 ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 12 ;
+        lv2:symbol "damping" ;
+        lv2:name "Damping" ;
+        lv2:minimum 0 ;
+        lv2:maximum 1 ;
+        lv2:default 0.5 ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 13 ;
+        lv2:symbol "tight" ;
+        lv2:name "Tight" ;
+        lv2:minimum 0 ;
+        lv2:maximum 1 ;
+        lv2:default 0.5 ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 14 ;
+        lv2:symbol "bounce" ;
+        lv2:name "Bounce" ;
+        lv2:minimum 0 ;
+        lv2:maximum 1 ;
+        lv2:default 0.15 ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 15 ;
+        lv2:symbol "res_mode" ;
+        lv2:name "Resonator Mode" ;
+        lv2:minimum 0 ;
+        lv2:maximum 2 ;
+        lv2:default 1 ;
+        lv2:portProperty pprop:integer , pprop:enumeration ;
+        lv2:scalePoint [ rdfs:label "Linear" ; rdf:value 0 ] ;
+        lv2:scalePoint [ rdfs:label "Basic" ; rdf:value 1 ] ;
+        lv2:scalePoint [ rdfs:label "Bouncy" ; rdf:value 2 ] ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 16 ;
+        lv2:symbol "portamento" ;
+        lv2:name "Portamento [ms]" ;
+        lv2:minimum 0.1 ;
+        lv2:maximum 200 ;
+        lv2:default 50 ;
+        lv2:portProperty pprop:logarithmic ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 17 ;
+        lv2:symbol "noise_amount" ;
+        lv2:name "Noise Amount" ;
+        lv2:minimum 0 ;
+        lv2:maximum 1 ;
+        lv2:default 0.18 ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 18 ;
+        lv2:symbol "noise_decay" ;
+        lv2:name "Noise Decay" ;
+        lv2:minimum 0 ;
+        lv2:maximum 1 ;
+        lv2:default 0.5 ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 19 ;
+        lv2:symbol "noise_cutoff" ;
+        lv2:name "Noise Cutoff" ;
+        lv2:minimum 20 ;
+        lv2:maximum 20000 ;
+        lv2:default 2000 ;
+        lv2:portProperty pprop:logarithmic ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 20 ;
+        lv2:symbol "noise_type" ;
+        lv2:name "Noise Type" ;
+        lv2:minimum 0 ;
+        lv2:maximum 2 ;
+        lv2:default 0 ;
+        lv2:portProperty pprop:integer , pprop:enumeration ;
+        lv2:scalePoint [ rdfs:label "Uniform" ; rdf:value 0 ] ;
+        lv2:scalePoint [ rdfs:label "Driven" ; rdf:value 1 ] ;
+        lv2:scalePoint [ rdfs:label "Crackle" ; rdf:value 2 ] ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 21 ;
+        lv2:symbol "tone" ;
+        lv2:name "Tone" ;
+        lv2:minimum 300 ;
+        lv2:maximum 7000 ;
+        lv2:default 800 ;
+        lv2:portProperty pprop:logarithmic ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 22 ;
+        lv2:symbol "level" ;
+        lv2:name "Level dB" ;
+        lv2:minimum -30 ;
+        lv2:maximum 18 ;
+        lv2:default 0 ;
+    ] .

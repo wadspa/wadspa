@@ -139,9 +139,10 @@
     "id": "chowkick",
     "name": "Chow Kick",
     "family": "Generative, Percussive, and Physical Modeling",
-    "status": "candidate",
+    "status": "supported",
     "sourceIds": ["chowkick"],
-    "notes": "Tracked as an exact physically modeled kick target. It needs a JUCE/CMake-to-wadspa setup script."
+    "catalogIds": ["chowkick"],
+    "notes": "Built as a MIDI-triggered kick drum instrument using the Chow Kick trigger, resonator, noise, tone, and level control path, and covered by the LV2 smoke and slider tests."
   },
   {
     "id": "setbfree",
