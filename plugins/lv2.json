@@ -1365,6 +1365,133 @@
     "id": "geonkick",
     "description": "Geonkick - MIDI-triggered kick drum synthesizer using the Geonkick DSP core",
     "category": "Instruments",
+    "extraExports": [
+      "_shim_set_plugin_state",
+      "_malloc",
+      "_free"
+    ],
+    "canvasEditors": [
+      {
+        "key": "kick_amp_env",
+        "name": "Amp Envelope",
+        "defaultPoints": [
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 0.78,
+            "y": 0.28
+          },
+          {
+            "x": 1,
+            "y": 0
+          }
+        ],
+        "presets": {
+          "punch": [
+            {
+              "x": 0,
+              "y": 1
+            },
+            {
+              "x": 0.18,
+              "y": 0.82
+            },
+            {
+              "x": 1,
+              "y": 0
+            }
+          ],
+          "long": [
+            {
+              "x": 0,
+              "y": 1
+            },
+            {
+              "x": 0.72,
+              "y": 0.64
+            },
+            {
+              "x": 1,
+              "y": 0
+            }
+          ],
+          "gate": [
+            {
+              "x": 0,
+              "y": 1
+            },
+            {
+              "x": 0.92,
+              "y": 1
+            },
+            {
+              "x": 1,
+              "y": 0
+            }
+          ]
+        }
+      },
+      {
+        "key": "osc_pitch_env",
+        "name": "Pitch Envelope",
+        "defaultPoints": [
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 0.18,
+            "y": 0
+          },
+          {
+            "x": 1,
+            "y": 0
+          }
+        ],
+        "presets": {
+          "snap": [
+            {
+              "x": 0,
+              "y": 1
+            },
+            {
+              "x": 0.08,
+              "y": 0.08
+            },
+            {
+              "x": 1,
+              "y": 0
+            }
+          ],
+          "bend": [
+            {
+              "x": 0,
+              "y": 0.58
+            },
+            {
+              "x": 0.42,
+              "y": 0.2
+            },
+            {
+              "x": 1,
+              "y": 0
+            }
+          ],
+          "flat": [
+            {
+              "x": 0,
+              "y": 0
+            },
+            {
+              "x": 1,
+              "y": 0
+            }
+          ]
+        }
+      }
+    ],
     "sources": [
       "geonkick_lv2_wasm.c",
       "geonkick_wasm_compat.c",

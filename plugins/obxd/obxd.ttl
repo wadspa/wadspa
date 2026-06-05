@@ -168,6 +168,14 @@
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
         lv2:index 19 ;
+        lv2:symbol "brightness" ;
+        lv2:name "Brightness" ;
+        lv2:minimum 0 ;
+        lv2:maximum 1 ;
+        lv2:default 1 ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 20 ;
         lv2:symbol "resonance" ;
         lv2:name "Filter Resonance" ;
         lv2:minimum 0 ;
@@ -175,7 +183,7 @@
         lv2:default 0.22 ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
-        lv2:index 20 ;
+        lv2:index 21 ;
         lv2:symbol "filter_env_amount" ;
         lv2:name "Filter Envelope Amount" ;
         lv2:minimum 0 ;
@@ -183,7 +191,7 @@
         lv2:default 0.35 ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
-        lv2:index 21 ;
+        lv2:index 22 ;
         lv2:symbol "filter_mode" ;
         lv2:name "Filter Morph" ;
         lv2:minimum 0 ;
@@ -191,7 +199,7 @@
         lv2:default 0.5 ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
-        lv2:index 22 ;
+        lv2:index 23 ;
         lv2:symbol "bandpass_blend" ;
         lv2:name "Bandpass Blend" ;
         lv2:minimum 0 ;
@@ -200,7 +208,7 @@
         lv2:portProperty pprop:integer , pprop:toggled ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
-        lv2:index 23 ;
+        lv2:index 24 ;
         lv2:symbol "four_pole" ;
         lv2:name "Four Pole Slope" ;
         lv2:minimum 0 ;
@@ -209,7 +217,7 @@
         lv2:portProperty pprop:integer , pprop:toggled ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
-        lv2:index 24 ;
+        lv2:index 25 ;
         lv2:symbol "amp_attack" ;
         lv2:name "Amp Attack" ;
         lv2:minimum 0 ;
@@ -218,7 +226,7 @@
         lv2:portProperty pprop:logarithmic ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
-        lv2:index 25 ;
+        lv2:index 26 ;
         lv2:symbol "amp_decay" ;
         lv2:name "Amp Decay" ;
         lv2:minimum 0 ;
@@ -227,7 +235,7 @@
         lv2:portProperty pprop:logarithmic ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
-        lv2:index 26 ;
+        lv2:index 27 ;
         lv2:symbol "amp_sustain" ;
         lv2:name "Amp Sustain" ;
         lv2:minimum 0 ;
@@ -235,7 +243,7 @@
         lv2:default 0.75 ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
-        lv2:index 27 ;
+        lv2:index 28 ;
         lv2:symbol "amp_release" ;
         lv2:name "Amp Release" ;
         lv2:minimum 0 ;
@@ -244,7 +252,7 @@
         lv2:portProperty pprop:logarithmic ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
-        lv2:index 28 ;
+        lv2:index 29 ;
         lv2:symbol "filter_attack" ;
         lv2:name "Filter Attack" ;
         lv2:minimum 0 ;
@@ -253,7 +261,7 @@
         lv2:portProperty pprop:logarithmic ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
-        lv2:index 29 ;
+        lv2:index 30 ;
         lv2:symbol "filter_decay" ;
         lv2:name "Filter Decay" ;
         lv2:minimum 0 ;
@@ -262,7 +270,7 @@
         lv2:portProperty pprop:logarithmic ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
-        lv2:index 30 ;
+        lv2:index 31 ;
         lv2:symbol "filter_sustain" ;
         lv2:name "Filter Sustain" ;
         lv2:minimum 0 ;
@@ -270,7 +278,7 @@
         lv2:default 0.35 ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
-        lv2:index 31 ;
+        lv2:index 32 ;
         lv2:symbol "filter_release" ;
         lv2:name "Filter Release" ;
         lv2:minimum 0 ;
@@ -279,7 +287,7 @@
         lv2:portProperty pprop:logarithmic ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
-        lv2:index 32 ;
+        lv2:index 33 ;
         lv2:symbol "lfo_frequency" ;
         lv2:name "LFO Frequency" ;
         lv2:minimum 0 ;
@@ -287,7 +295,7 @@
         lv2:default 0.35 ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
-        lv2:index 33 ;
+        lv2:index 34 ;
         lv2:symbol "lfo_pitch_amount" ;
         lv2:name "LFO Pitch Amount" ;
         lv2:minimum 0 ;
@@ -295,7 +303,7 @@
         lv2:default 0.12 ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
-        lv2:index 34 ;
+        lv2:index 35 ;
         lv2:symbol "lfo_sine" ;
         lv2:name "LFO Sine Wave" ;
         lv2:minimum 0 ;
@@ -304,7 +312,7 @@
         lv2:portProperty pprop:integer , pprop:toggled ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
-        lv2:index 35 ;
+        lv2:index 36 ;
         lv2:symbol "lfo_square" ;
         lv2:name "LFO Square Wave" ;
         lv2:minimum 0 ;
@@ -313,7 +321,7 @@
         lv2:portProperty pprop:integer , pprop:toggled ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
-        lv2:index 36 ;
+        lv2:index 37 ;
         lv2:symbol "lfo_sample_hold" ;
         lv2:name "LFO Sample Hold Wave" ;
         lv2:minimum 0 ;
@@ -322,7 +330,7 @@
         lv2:portProperty pprop:integer , pprop:toggled ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
-        lv2:index 37 ;
+        lv2:index 38 ;
         lv2:symbol "lfo_osc1" ;
         lv2:name "LFO Oscillator 1" ;
         lv2:minimum 0 ;
@@ -331,7 +339,7 @@
         lv2:portProperty pprop:integer , pprop:toggled ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
-        lv2:index 38 ;
+        lv2:index 39 ;
         lv2:symbol "lfo_osc2" ;
         lv2:name "LFO Oscillator 2" ;
         lv2:minimum 0 ;
@@ -340,7 +348,7 @@
         lv2:portProperty pprop:integer , pprop:toggled ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
-        lv2:index 39 ;
+        lv2:index 40 ;
         lv2:symbol "lfo_filter" ;
         lv2:name "LFO Filter" ;
         lv2:minimum 0 ;
@@ -349,7 +357,7 @@
         lv2:portProperty pprop:integer , pprop:toggled ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
-        lv2:index 40 ;
+        lv2:index 41 ;
         lv2:symbol "xmod" ;
         lv2:name "Oscillator Cross Mod" ;
         lv2:minimum 0 ;
@@ -357,7 +365,7 @@
         lv2:default 0 ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
-        lv2:index 41 ;
+        lv2:index 42 ;
         lv2:symbol "osc2_hard_sync" ;
         lv2:name "Oscillator 2 Hard Sync" ;
         lv2:minimum 0 ;

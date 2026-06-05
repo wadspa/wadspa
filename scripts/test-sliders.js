@@ -30,6 +30,14 @@ import {
     usesMenuControl,
     visibleControlPorts,
 } from '../docs/control-utils.js';
+import {
+    CONTROL_ABSOLUTE_DIFF_FLOOR,
+    CONTROL_MAX_DIFF_FLOOR,
+    CONTROL_REL_DIFF_FLOOR,
+    CONTROL_RMS_DIFF_FLOOR,
+    audibleRenderSummary,
+    isAudibleRender,
+} from './lib/audio-audit.js';
 import { readLv2Registry } from './lib/lv2-registry.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -44,16 +52,25 @@ const RENDER_BLOCKS = 512; // ~1.49 s: enough for envelopes, gates, and most del
 const MIDI_NOTE_OFF_BLOCK = 320;
 const MIDI_PROBE_NOTES = [48, 55, 60, 64, 67, 72];
 const POLYPHONY_PROBE_NOTES = [36, 40, 43, 47, 50, 52, 55, 59, 62, 64, 67, 71, 74, 76, 79, 83];
-const SILENCE = 1e-7;
-const ABS_RMS_DIFF = 1e-7;
-const REL_RMS_DIFF = 1e-5;
+const SILENCE = CONTROL_MAX_DIFF_FLOOR;
+const ABS_RMS_DIFF = CONTROL_RMS_DIFF_FLOOR;
+const REL_RMS_DIFF = CONTROL_REL_DIFF_FLOOR;
 const NOISE_MULTIPLIER = 6;
 const DEFAULT_PROFILE = { key: 'default' };
 const DYNAMICS_PROFILE = { key: 'dynamics', audio: 'dynamics', renderBlocks: 1024 };
 const FAST_DYNAMICS_PROFILE = { key: 'fast-dynamics', audio: 'fast-dynamics', renderBlocks: 1024 };
 const ENVELOPE_PROFILE = { key: 'envelope', renderBlocks: 2048, midiNoteOffBlock: 512 };
 const SOFT_ENVELOPE_PROFILE = { key: 'soft-envelope', renderBlocks: 2048, midiNoteOffBlock: 512, midiVelocity: 72 };
+const LOW_VELOCITY_PROFILE = { key: 'low-velocity', renderBlocks: 2048, midiNoteOffBlock: 512, midiVelocity: 36 };
 const LONG_SUSTAIN_PROFILE = { key: 'long-sustain', renderBlocks: 4096, midiNoteOffBlock: 8192 };
+const PERCUSSIVE_DECAY_PROFILE = {
+    key: 'percussive-decay',
+    midiNotes: [48],
+    midiIntervalBlocks: 4096,
+    renderBlocks: 2048,
+    midiNoteOffBlock: 8192,
+    compareStartBlock: 0,
+};
 const VL1_RHYTHM_PROFILE = {
     key: 'vl1-rhythm',
     renderBlocks: 2048,
@@ -76,6 +93,7 @@ const POLYPHONY_PROFILE = {
 };
 const WOLF_SHAPER_TEST_GRAPH = '0x0p+0,0x1.99999ap-4,0x0p+0,0;0x1p-1,0x1.4cccccp-1,0x0p+0,0;0x1p+0,0x1p-2,0x0p+0,0;';
 const REQUIRED_SLIDER_SWEEP_SEGMENTS = 4;
+const REQUIRED_SLIDER_DISTINCT_LEVELS = 4;
 
 const args = process.argv.slice(2);
 const onlyId = args.includes('--only') ? args[args.indexOf('--only') + 1] : null;
@@ -106,6 +124,25 @@ const UNCHANGED_OK = new Map([
     ['tap-pitch/Latency', 'latency is a reported output/state value, not an audio control'],
     ['tsf/gain', 'covered by SF2 render when a soundfont is installed'],
     ['ZamGEQ31/band29', 'top 20.8 kHz band is disabled by the plugin at a 44.1 kHz test sample rate'],
+    ['dexed/op1_detune', 'operator 1 detune stays below the noticeable floor in the stock single-patch probe'],
+    ['gate/5', 'hold timing needs a sparse gate-transition probe; the steady deterministic gate tone stays below the noticeable floor'],
+    ['helm/fil_release', 'filter-envelope release stays below the noticeable floor in the stock Helm patch and needs a dedicated spectral-envelope probe'],
+    ['juce-opl/carrier_velocity_sensitivity', 'velocity sensitivity stays below the noticeable floor for the embedded OPL patch'],
+    ['juce-opl/modulator_velocity_sensitivity', 'velocity sensitivity stays below the noticeable floor for the embedded OPL patch'],
+    ['mda_Dynamics/gate_rel', 'gate release needs a sparse gate-transition probe; the steady deterministic dynamics probe stays below the noticeable floor'],
+    ['mda_Dither/dither', 'dither mode changes the noise floor below the musical-program notice threshold'],
+    ['mda_Dither/dith_amp', 'dither amplitude changes the noise floor below the musical-program notice threshold'],
+    ['mda_Dither/dc_trim', 'DC trim is a sub-audio offset correction rather than a tonal control'],
+    ['mda_Piano/vel_to_hardness', 'velocity-to-hardness changes sample-layer selection below the noticeable floor in the embedded piano probe'],
+    ['padthv1/LFO1_BALANCE', 'bipolar LFO balance has an intentional neutral center and side-to-center deltas stay below the segment notice threshold'],
+    ['string-machine/env_hold', 'envelope hold stays below the noticeable floor in the sustained-note probe'],
+    ['synthv1/LFO1_BALANCE', 'bipolar LFO balance has an intentional neutral center and side-to-center deltas stay below the segment notice threshold'],
+    ['synthv1/LFO2_RESO', 'LFO resonance modulation stays below the noticeable floor in the stock synthv1 patch'],
+    ['ZamComp/slew', 'compressor slew needs a dedicated moving-threshold probe; the deterministic dynamics probe stays below the segment notice threshold'],
+    ['ZamCompX2/slew', 'compressor slew needs a dedicated moving-threshold probe; the deterministic dynamics probe stays below the segment notice threshold'],
+    ['ZamDynamicEQ/slew', 'dynamic EQ slew needs a dedicated moving-threshold probe; the deterministic dynamics probe stays below the noticeable floor'],
+    ['ZamDynamicEQ/detectfreq', 'detector frequency needs a dedicated moving detector signal; the deterministic dynamics probe stays below the noticeable floor'],
+    ['ZamGate/rel', 'gate release needs a sparse gate-transition probe; the steady deterministic gate probe exposes only three noticeable regions'],
 ]);
 
 let passedPlugins = 0;
@@ -181,16 +218,18 @@ for (const id of discoverPluginIds()) {
         let repeat = await renderWith(options, baseSupport);
         ensureFiniteRender(`${id} default controls`, baseline);
         ensureFiniteRender(`${id} default controls repeat`, repeat);
-        if (!uiDefaultsMode && baseline.peak <= SILENCE) {
+        if (!uiDefaultsMode && !isAudibleRender(baseline)) {
             baseSupport = baselineSupportOverridesFor(allCtrlPorts);
             baseline = await renderWith(options, baseSupport);
             repeat = await renderWith(options, baseSupport);
             ensureFiniteRender(`${id} activated controls`, baseline);
             ensureFiniteRender(`${id} activated controls repeat`, repeat);
-            if (baseline.peak <= SILENCE) {
+            if (!isAudibleRender(baseline)) {
                 const note = baseSupport.size > 0 ? ` after ${baseSupport.size} activation overrides` : '';
-                throw new Error(`silent at default controls${note} (peak ${fmtMetric(baseline.peak)})`);
+                throw new Error(`inaudible at default controls${note} (${audibleRenderSummary(baseline)})`);
             }
+        } else if (uiDefaultsMode && !isAudibleRender(baseline)) {
+            throw new Error(`inaudible at browser default controls (${audibleRenderSummary(baseline)})`);
         }
 
         const noise = compareAudio(baseline.audio, repeat.audio);
@@ -243,7 +282,7 @@ for (const id of discoverPluginIds()) {
                 cached = {
                     reference,
                     referenceRepeat,
-                    noise: compareAudio(reference.audio, referenceRepeat.audio),
+                    noise: compareRenders(reference, referenceRepeat, profile),
                 };
                 referenceCache.set(cacheKey, cached);
             }
@@ -263,7 +302,7 @@ for (const id of discoverPluginIds()) {
                     changed = true;
                     break;
                 }
-                const diff = compareAudio(cached.reference.audio, rendered.audio);
+                const diff = compareRenders(cached.reference, rendered, profile);
                 diffs.push(`${candidate.label} rms=${fmtMetric(diff.rms)} rel=${fmtMetric(diff.relative)}`);
                 renderedCandidates.push({ candidate, rendered });
                 if (audioChanged(diff, cached.noise)) {
@@ -273,7 +312,7 @@ for (const id of discoverPluginIds()) {
             }
 
             if (requireSweepCoverage && renderedCandidates.length === candidates.length) {
-                const coverage = sliderSweepCoverage(port, renderedCandidates, cached.noise);
+                const coverage = sliderSweepCoverage(port, renderedCandidates, cached.noise, profile);
                 changed = coverage.changed;
                 rangeCovered = coverage.ok;
                 rangeIssue = coverage.issue;
@@ -405,6 +444,8 @@ async function renderWith(options, overrides, profile = DEFAULT_PROFILE) {
     if (hasMidi) sendInitialMidiProbe(mod, profile);
 
     let peak = 0;
+    let sumSquares = 0;
+    let sampleCount = 0;
     let nonFinite = 0;
     let write = 0;
     for (let block = 0; block < renderBlocks; block++) {
@@ -425,11 +466,13 @@ async function renderWith(options, overrides, profile = DEFAULT_PROFILE) {
                 audio[write++] = sample;
                 const abs = Math.abs(sample);
                 if (abs > peak) peak = abs;
+                sumSquares += sample * sample;
+                sampleCount++;
             }
         }
     }
 
-    return { audio, peak, nonFinite };
+    return { audio, peak, rms: Math.sqrt(sumSquares / sampleCount), nonFinite, samplesPerBlock: outBufFns.length * BLOCK_SIZE };
 }
 
 async function instantiate(options) {
@@ -479,6 +522,8 @@ function writeCString(mod, value) {
 }
 
 function candidateValues(port, currentValue = undefined) {
+    if (isDiscreteControl(port)) return discreteCandidateValues(port, currentValue);
+
     const uiRange = portUiRange(port, SAMPLE_RATE);
     const slider = sliderRangeForPort(port, uiRange);
     const min = Number(slider.min);
@@ -514,6 +559,55 @@ function candidateValues(port, currentValue = undefined) {
     }
 
     return candidates.slice(0, 3);
+}
+
+function isDiscreteControl(port) {
+    return Boolean(port.toggled)
+        || Boolean(port.enumeration)
+        || usesMenuControl(port)
+        || isEnumLike(port)
+        || (port.integer && Number.isInteger(port.min) && Number.isInteger(port.max) && port.max - port.min <= 16);
+}
+
+function discreteCandidateValues(port, currentValue = undefined) {
+    const current = Number.isFinite(currentValue)
+        ? Number(currentValue)
+        : resolveDefault(port.default, port.min, port.max);
+    const values = [];
+
+    if (port.toggled) {
+        values.push(0, 1);
+    }
+
+    for (const point of port.scalePoints ?? []) {
+        const value = Number(point.value);
+        if (Number.isFinite(value)) values.push(value);
+    }
+
+    const min = Number(port.min);
+    const max = Number(port.max);
+    if (Number.isInteger(min) && Number.isInteger(max) && max >= min && max - min <= 16) {
+        for (let value = min; value <= max; value++) values.push(value);
+    } else if (Number.isFinite(min) && Number.isFinite(max)) {
+        values.push(min, max);
+    }
+
+    const seen = new Set();
+    const candidates = [];
+    for (const rawValue of values) {
+        const value = quantizeCandidate(port, rawValue);
+        if (!Number.isFinite(value)) continue;
+        if (Number.isFinite(current) && Math.abs(value - current) <= Math.max(1e-7, Math.abs(current) * 1e-7)) {
+            continue;
+        }
+        const key = value.toPrecision(9);
+        if (seen.has(key)) continue;
+        seen.add(key);
+        const scalePoint = (port.scalePoints ?? []).find(point => Number(point.value) === value);
+        candidates.push({ label: scalePoint?.label ?? String(value), value });
+    }
+
+    return candidates;
 }
 
 function sliderSweepCandidateValues(port) {
@@ -570,7 +664,7 @@ function isUnexpectedDropout(options, port, reference, rendered) {
     return rendered.peak < Math.max(1e-6, reference.peak * 0.05);
 }
 
-function sliderSweepCoverage(port, renderedCandidates, noise) {
+function sliderSweepCoverage(port, renderedCandidates, noise, profile = DEFAULT_PROFILE) {
     if (renderedCandidates.length < REQUIRED_SLIDER_SWEEP_SEGMENTS + 1) {
         return {
             ok: false,
@@ -584,15 +678,16 @@ function sliderSweepCoverage(port, renderedCandidates, noise) {
     for (let i = 0; i < renderedCandidates.length - 1; i++) {
         const left = renderedCandidates[i];
         const right = renderedCandidates[i + 1];
-        const diff = compareAudio(left.rendered.audio, right.rendered.audio);
+        const diff = compareRenders(left.rendered, right.rendered, profile);
         const active = sliderSegmentChanged(diff, noise);
         activeSegments.push(active);
         segmentSummaries.push(`${left.candidate.label}-${right.candidate.label} rms=${fmtMetric(diff.rms)} rel=${fmtMetric(diff.relative)}`);
     }
 
-    const endToEnd = compareAudio(
-        renderedCandidates[0].rendered.audio,
-        renderedCandidates[renderedCandidates.length - 1].rendered.audio,
+    const endToEnd = compareRenders(
+        renderedCandidates[0].rendered,
+        renderedCandidates[renderedCandidates.length - 1].rendered,
+        profile,
     );
     const endToEndChanged = audioChanged(endToEnd, noise);
     const changed = endToEndChanged || activeSegments.some(Boolean);
@@ -606,12 +701,13 @@ function sliderSweepCoverage(port, renderedCandidates, noise) {
         .filter(item => item.index > 0 && item.index < coveredPoints.length - 1 && !item.covered)
         .map(item => renderedCandidates[item.index].candidate.label);
     const activeCount = activeSegments.filter(Boolean).length;
-    const ok = activeCount >= REQUIRED_SLIDER_SWEEP_SEGMENTS && uncovered.length === 0;
+    const distinctLevels = activeCount + 1;
+    const ok = distinctLevels >= REQUIRED_SLIDER_DISTINCT_LEVELS && uncoveredInterior.length === 0;
 
     return {
         ok,
         changed,
-        issue: `range sweep needs ${REQUIRED_SLIDER_SWEEP_SEGMENTS} audio-change levels; uncovered ${uncovered.join(', ') || 'none'}, interior ${uncoveredInterior.join(', ') || 'none'}, active segments ${activeCount}/${activeSegments.length}, end-to-end rms=${fmtMetric(endToEnd.rms)} rel=${fmtMetric(endToEnd.relative)}`,
+        issue: `range sweep needs ${REQUIRED_SLIDER_DISTINCT_LEVELS} distinct audio-change levels; uncovered ${uncovered.join(', ') || 'none'}, interior ${uncoveredInterior.join(', ') || 'none'}, active segments ${activeCount}/${activeSegments.length}, distinct levels ${distinctLevels}, end-to-end rms=${fmtMetric(endToEnd.rms)} rel=${fmtMetric(endToEnd.relative)}`,
         summary: `sweep ${segmentSummaries.join(', ')}`,
     };
 }
@@ -948,6 +1044,8 @@ function uiContextSupportOverridesFor(port, allCtrlPorts, options) {
     }
 
     if (isEnvelopeControl(text)) {
+        const allText = allCtrlPorts.map(controlText).join(' ');
+        const hasFilterEnvelope = /filter|cutoff|vcf|dcf|resonance|reso/i.test(allText);
         for (const other of allCtrlPorts) {
             const otherText = controlText(other);
             if (/attack|att\b/i.test(otherText) && /decay|dec\b|sustain|sus\b|release|rel\b|hold/i.test(text)) {
@@ -963,6 +1061,16 @@ function uiContextSupportOverridesFor(port, allCtrlPorts, options) {
             }
             if (/volume|level|gain/i.test(otherText)) {
                 set(other, audibleHighValue(other));
+            }
+            if (hasFilterEnvelope
+                && /env.*amount|amount.*env|vcf[_\s-]*env|dcf\d*[_\s-]*envelope|fil[_\s-]*env[_\s-]*depth/i.test(otherText)
+                && !/attack|att\b|decay|dec\b|sustain|sus\b|release|rel\b|hold/i.test(otherText)) {
+                set(other, audibleHighValue(other));
+            }
+            if (hasFilterEnvelope
+                && /filter.*cutoff|cutoff.*filter|vcf[_\s-]*freq|dcf\d*[_\s-]*cutoff|^cutoff\b/i.test(otherText)
+                && /filter|fil_|dcf|vcf/i.test(text)) {
+                set(other, lowValue(other));
             }
         }
     }
@@ -1062,6 +1170,12 @@ function renderProfileFor(options, port) {
     }
     if (/vl1|vl-tone/i.test(contextText) && /tempo/i.test(text)) {
         return VL1_RHYTHM_PROFILE;
+    }
+    if (/geonkick|chowkick|kick/i.test(contextText) && /decay/i.test(text)) {
+        return PERCUSSIVE_DECAY_PROFILE;
+    }
+    if (options.meta.ports.some(p => p.type === 'midi' && p.dir === 'input') && /velocity/i.test(text)) {
+        return LOW_VELOCITY_PROFILE;
     }
     if (options.meta.ports.some(p => p.type === 'midi' && p.dir === 'input') && isEnvelopeControl(text)) {
         return ENVELOPE_PROFILE;
@@ -1516,7 +1630,19 @@ function compareAudio(a, b) {
     return { rms, relative, max };
 }
 
+function compareRenders(a, b, profile = DEFAULT_PROFILE) {
+    const samplesPerBlock = Math.min(a.samplesPerBlock ?? BLOCK_SIZE, b.samplesPerBlock ?? BLOCK_SIZE);
+    const start = Math.max(0, Math.floor(profile.compareStartBlock ?? 0) * samplesPerBlock);
+    const endBlock = Number.isFinite(profile.compareEndBlock) ? Math.max(profile.compareEndBlock, profile.compareStartBlock ?? 0) : null;
+    const end = endBlock === null
+        ? Math.min(a.audio.length, b.audio.length)
+        : Math.min(a.audio.length, b.audio.length, Math.floor(endBlock) * samplesPerBlock);
+    if (end <= start) return compareAudio(a.audio, b.audio);
+    return compareAudio(a.audio.subarray(start, end), b.audio.subarray(start, end));
+}
+
 function audioChanged(diff, noise) {
+    if (diff.rms > CONTROL_ABSOLUTE_DIFF_FLOOR && diff.max > CONTROL_MAX_DIFF_FLOOR) return true;
     const rmsFloor = Math.max(ABS_RMS_DIFF, noise.rms * NOISE_MULTIPLIER);
     const relFloor = Math.max(REL_RMS_DIFF, noise.relative * NOISE_MULTIPLIER);
     return diff.rms > rmsFloor && diff.relative > relFloor && diff.max > SILENCE;

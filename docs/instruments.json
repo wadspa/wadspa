@@ -2684,157 +2684,6 @@
     "license": "GPL-2.0-or-later"
   },
   {
-    "id": "so-404",
-    "label": "SO404_Bass_Synthesizer",
-    "name": "SO-404 Bass Synthesizer",
-    "description": "SO-404 Bass Synthesizer — TB-303-style bass synth clone",
-    "category": "Instruments",
-    "wasmFile": "SO404_Bass_Synthesizer.wasm",
-    "processorFile": "processor.js",
-    "ports": [
-      {
-        "index": 0,
-        "symbol": "output",
-        "name": "Output",
-        "dir": "output",
-        "type": "audio",
-        "legacy": false,
-        "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
-      },
-      {
-        "index": 1,
-        "symbol": "midi",
-        "name": "MIDI Input",
-        "dir": "input",
-        "type": "midi",
-        "legacy": true,
-        "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
-      },
-      {
-        "index": 2,
-        "symbol": "controlmode",
-        "name": "Control Mode",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0,
-        "enumeration": true,
-        "toggled": true,
-        "scalePoints": [
-          {
-            "label": "Midi Commands",
-            "value": 0
-          },
-          {
-            "label": "Control Ports",
-            "value": 1
-          }
-        ]
-      },
-      {
-        "index": 3,
-        "symbol": "volume",
-        "name": "Volume",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 127,
-        "default": 100
-      },
-      {
-        "index": 4,
-        "symbol": "cutoff",
-        "name": "Filter Cutoff",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 127,
-        "default": 50
-      },
-      {
-        "index": 5,
-        "symbol": "resonance",
-        "name": "Filter Resonance",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 127,
-        "default": 100
-      },
-      {
-        "index": 6,
-        "symbol": "envelope",
-        "name": "Filter Envelope",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 127,
-        "default": 80
-      },
-      {
-        "index": 7,
-        "symbol": "portamento",
-        "name": "Portamento Time",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 127,
-        "default": 64
-      },
-      {
-        "index": 8,
-        "symbol": "release",
-        "name": "Release Time",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 127,
-        "default": 100
-      },
-      {
-        "index": 9,
-        "symbol": "channel",
-        "name": "Midi Channel",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 16,
-        "default": 0,
-        "integer": true,
-        "scalePoints": [
-          {
-            "label": "Off",
-            "value": 16
-          }
-        ]
-      }
-    ],
-    "license": "GPL-2.0-or-later"
-  },
-  {
     "id": "so-kl5",
     "label": "SOkl5_Piano_Synthesizer",
     "name": "SO-kl5 Piano Synthesizer",
@@ -2972,133 +2821,6 @@
       }
     ],
     "license": "GPL-3.0-only"
-  },
-  {
-    "id": "so-666",
-    "label": "SO666_Feedback_Synthesizer",
-    "name": "SO-666 Feedback Synthesizer",
-    "description": "SO-666 Feedback Synthesizer — feedback oscillator synth",
-    "category": "Instruments",
-    "wasmFile": "SO666_Feedback_Synthesizer.wasm",
-    "processorFile": "processor.js",
-    "ports": [
-      {
-        "index": 0,
-        "symbol": "output",
-        "name": "Output",
-        "dir": "output",
-        "type": "audio",
-        "legacy": false,
-        "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
-      },
-      {
-        "index": 1,
-        "symbol": "midi",
-        "name": "MIDI Input",
-        "dir": "input",
-        "type": "midi",
-        "legacy": true,
-        "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
-      },
-      {
-        "index": 2,
-        "symbol": "controlmode",
-        "name": "Control Mode",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0,
-        "enumeration": true,
-        "toggled": true,
-        "scalePoints": [
-          {
-            "label": "Midi Commands",
-            "value": 0
-          },
-          {
-            "label": "Control Ports",
-            "value": 1
-          }
-        ]
-      },
-      {
-        "index": 3,
-        "symbol": "feedback",
-        "name": "Feedback",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.25
-      },
-      {
-        "index": 4,
-        "symbol": "resonance",
-        "name": "Filter Resonance",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.5
-      },
-      {
-        "index": 5,
-        "symbol": "cutoff",
-        "name": "Filter Cutoff",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0.25,
-        "max": 0.885,
-        "default": 0.57
-      },
-      {
-        "index": 6,
-        "symbol": "volume",
-        "name": "Volume",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 127,
-        "default": 100
-      },
-      {
-        "index": 7,
-        "symbol": "channel",
-        "name": "Midi Channel",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 16,
-        "default": 0,
-        "integer": true,
-        "scalePoints": [
-          {
-            "label": "Off",
-            "value": 16
-          }
-        ]
-      }
-    ],
-    "license": "GPL-2.0-or-later"
   },
   {
     "id": "padthv1",
@@ -8509,165 +8231,6 @@
     "license": "BSL-1.0"
   },
   {
-    "id": "geonkick",
-    "label": "Geonkick",
-    "name": "Geonkick",
-    "description": "Geonkick - MIDI-triggered kick drum synthesizer using the Geonkick DSP core",
-    "category": "Instruments",
-    "wasmFile": "Geonkick.wasm",
-    "processorFile": "processor.js",
-    "ports": [
-      {
-        "index": 0,
-        "symbol": "midi_in",
-        "name": "MIDI In",
-        "dir": "input",
-        "type": "midi",
-        "legacy": false,
-        "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
-      },
-      {
-        "index": 1,
-        "symbol": "out_l",
-        "name": "Audio Out L",
-        "dir": "output",
-        "type": "audio",
-        "legacy": false,
-        "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
-      },
-      {
-        "index": 2,
-        "symbol": "out_r",
-        "name": "Audio Out R",
-        "dir": "output",
-        "type": "audio",
-        "legacy": false,
-        "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
-      },
-      {
-        "index": 3,
-        "symbol": "frequency",
-        "name": "Bass Frequency",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 30,
-        "max": 220,
-        "default": 62,
-        "logarithmic": true
-      },
-      {
-        "index": 4,
-        "symbol": "decay",
-        "name": "Decay",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0.08,
-        "max": 1.5,
-        "default": 0.45,
-        "logarithmic": true
-      },
-      {
-        "index": 5,
-        "symbol": "pitch_drop",
-        "name": "Pitch Drop",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 48,
-        "default": 28
-      },
-      {
-        "index": 6,
-        "symbol": "noise",
-        "name": "Noise Amount",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 0.85,
-        "default": 0.12
-      },
-      {
-        "index": 7,
-        "symbol": "click",
-        "name": "Click Amount",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.22
-      },
-      {
-        "index": 8,
-        "symbol": "tone",
-        "name": "Tone Cutoff",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 120,
-        "max": 8000,
-        "default": 2100,
-        "logarithmic": true
-      },
-      {
-        "index": 9,
-        "symbol": "resonance",
-        "name": "Resonance",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0.5,
-        "max": 4,
-        "default": 1.2
-      },
-      {
-        "index": 10,
-        "symbol": "drive",
-        "name": "Drive",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 1,
-        "max": 12,
-        "default": 1.8
-      },
-      {
-        "index": 11,
-        "symbol": "gain",
-        "name": "Gain",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0.1,
-        "max": 1,
-        "default": 0.75
-      }
-    ],
-    "license": "GPL-3.0-only"
-  },
-  {
     "id": "setbfree",
     "label": "setBfree_DSP_Tonewheel_Organ",
     "name": "setBfree DSP Tonewheel Organ",
@@ -10510,557 +10073,6 @@
       }
     ],
     "license": "GPL-2.0-or-later"
-  },
-  {
-    "id": "obxd",
-    "label": "Obxd",
-    "name": "Obxd",
-    "description": "Obxd - Oberheim OB-X style virtual analog synthesizer",
-    "category": "Instruments",
-    "wasmFile": "Obxd.wasm",
-    "processorFile": "processor.js",
-    "ports": [
-      {
-        "index": 0,
-        "symbol": "midi_in",
-        "name": "MIDI In",
-        "dir": "input",
-        "type": "midi",
-        "legacy": false,
-        "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
-      },
-      {
-        "index": 1,
-        "symbol": "out_l",
-        "name": "Audio Out L",
-        "dir": "output",
-        "type": "audio",
-        "legacy": false,
-        "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
-      },
-      {
-        "index": 2,
-        "symbol": "out_r",
-        "name": "Audio Out R",
-        "dir": "output",
-        "type": "audio",
-        "legacy": false,
-        "cv": false,
-        "min": null,
-        "max": null,
-        "default": null
-      },
-      {
-        "index": 3,
-        "symbol": "volume",
-        "name": "Volume",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.65
-      },
-      {
-        "index": 4,
-        "symbol": "voice_count",
-        "name": "Voice Count",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 1,
-        "max": 8,
-        "default": 8,
-        "integer": true
-      },
-      {
-        "index": 5,
-        "symbol": "tune",
-        "name": "Tune",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.5
-      },
-      {
-        "index": 6,
-        "symbol": "octave",
-        "name": "Octave",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.5
-      },
-      {
-        "index": 7,
-        "symbol": "unison",
-        "name": "Unison",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0,
-        "integer": true,
-        "toggled": true
-      },
-      {
-        "index": 8,
-        "symbol": "voice_detune",
-        "name": "Voice Detune",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.2
-      },
-      {
-        "index": 9,
-        "symbol": "osc2_detune",
-        "name": "Oscillator 2 Detune",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.4
-      },
-      {
-        "index": 10,
-        "symbol": "osc1_mix",
-        "name": "Oscillator 1 Mix",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 1
-      },
-      {
-        "index": 11,
-        "symbol": "osc2_mix",
-        "name": "Oscillator 2 Mix",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 1
-      },
-      {
-        "index": 12,
-        "symbol": "noise_mix",
-        "name": "Noise Mix",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0
-      },
-      {
-        "index": 13,
-        "symbol": "osc1_saw",
-        "name": "Oscillator 1 Saw",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 1,
-        "integer": true,
-        "toggled": true
-      },
-      {
-        "index": 14,
-        "symbol": "osc1_pulse",
-        "name": "Oscillator 1 Pulse",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 1,
-        "integer": true,
-        "toggled": true
-      },
-      {
-        "index": 15,
-        "symbol": "osc2_saw",
-        "name": "Oscillator 2 Saw",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 1,
-        "integer": true,
-        "toggled": true
-      },
-      {
-        "index": 16,
-        "symbol": "osc2_pulse",
-        "name": "Oscillator 2 Pulse",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 1,
-        "integer": true,
-        "toggled": true
-      },
-      {
-        "index": 17,
-        "symbol": "pulse_width",
-        "name": "Pulse Width",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.5
-      },
-      {
-        "index": 18,
-        "symbol": "cutoff",
-        "name": "Filter Cutoff",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.7
-      },
-      {
-        "index": 19,
-        "symbol": "resonance",
-        "name": "Filter Resonance",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.22
-      },
-      {
-        "index": 20,
-        "symbol": "filter_env_amount",
-        "name": "Filter Envelope Amount",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.35
-      },
-      {
-        "index": 21,
-        "symbol": "filter_mode",
-        "name": "Filter Morph",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.5
-      },
-      {
-        "index": 22,
-        "symbol": "bandpass_blend",
-        "name": "Bandpass Blend",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0,
-        "integer": true,
-        "toggled": true
-      },
-      {
-        "index": 23,
-        "symbol": "four_pole",
-        "name": "Four Pole Slope",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0,
-        "integer": true,
-        "toggled": true
-      },
-      {
-        "index": 24,
-        "symbol": "amp_attack",
-        "name": "Amp Attack",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 0.65,
-        "default": 0.05,
-        "logarithmic": true
-      },
-      {
-        "index": 25,
-        "symbol": "amp_decay",
-        "name": "Amp Decay",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 0.65,
-        "default": 0.18,
-        "logarithmic": true
-      },
-      {
-        "index": 26,
-        "symbol": "amp_sustain",
-        "name": "Amp Sustain",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.75
-      },
-      {
-        "index": 27,
-        "symbol": "amp_release",
-        "name": "Amp Release",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 0.65,
-        "default": 0.18,
-        "logarithmic": true
-      },
-      {
-        "index": 28,
-        "symbol": "filter_attack",
-        "name": "Filter Attack",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 0.65,
-        "default": 0.03,
-        "logarithmic": true
-      },
-      {
-        "index": 29,
-        "symbol": "filter_decay",
-        "name": "Filter Decay",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 0.65,
-        "default": 0.22,
-        "logarithmic": true
-      },
-      {
-        "index": 30,
-        "symbol": "filter_sustain",
-        "name": "Filter Sustain",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.35
-      },
-      {
-        "index": 31,
-        "symbol": "filter_release",
-        "name": "Filter Release",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 0.65,
-        "default": 0.18,
-        "logarithmic": true
-      },
-      {
-        "index": 32,
-        "symbol": "lfo_frequency",
-        "name": "LFO Frequency",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.35
-      },
-      {
-        "index": 33,
-        "symbol": "lfo_pitch_amount",
-        "name": "LFO Pitch Amount",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0.12
-      },
-      {
-        "index": 34,
-        "symbol": "lfo_sine",
-        "name": "LFO Sine Wave",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 1,
-        "integer": true,
-        "toggled": true
-      },
-      {
-        "index": 35,
-        "symbol": "lfo_square",
-        "name": "LFO Square Wave",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0,
-        "integer": true,
-        "toggled": true
-      },
-      {
-        "index": 36,
-        "symbol": "lfo_sample_hold",
-        "name": "LFO Sample Hold Wave",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0,
-        "integer": true,
-        "toggled": true
-      },
-      {
-        "index": 37,
-        "symbol": "lfo_osc1",
-        "name": "LFO Oscillator 1",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 1,
-        "integer": true,
-        "toggled": true
-      },
-      {
-        "index": 38,
-        "symbol": "lfo_osc2",
-        "name": "LFO Oscillator 2",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0,
-        "integer": true,
-        "toggled": true
-      },
-      {
-        "index": 39,
-        "symbol": "lfo_filter",
-        "name": "LFO Filter",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0,
-        "integer": true,
-        "toggled": true
-      },
-      {
-        "index": 40,
-        "symbol": "xmod",
-        "name": "Oscillator Cross Mod",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0
-      },
-      {
-        "index": 41,
-        "symbol": "osc2_hard_sync",
-        "name": "Oscillator 2 Hard Sync",
-        "dir": "input",
-        "type": "control",
-        "legacy": false,
-        "cv": false,
-        "min": 0,
-        "max": 1,
-        "default": 0,
-        "integer": true,
-        "toggled": true
-      }
-    ],
-    "license": "GPL-2.0-only"
   },
   {
     "id": "chowkick",
@@ -13167,6 +12179,1128 @@
         "min": 0,
         "max": 1,
         "default": 0.5
+      }
+    ],
+    "license": "GPL-3.0-only"
+  },
+  {
+    "id": "obxd",
+    "label": "Obxd",
+    "name": "Obxd",
+    "description": "Obxd - Oberheim OB-X style virtual analog synthesizer",
+    "category": "Instruments",
+    "wasmFile": "Obxd.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "midi_in",
+        "name": "MIDI In",
+        "dir": "input",
+        "type": "midi",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 1,
+        "symbol": "out_l",
+        "name": "Audio Out L",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 2,
+        "symbol": "out_r",
+        "name": "Audio Out R",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 3,
+        "symbol": "volume",
+        "name": "Volume",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.65
+      },
+      {
+        "index": 4,
+        "symbol": "voice_count",
+        "name": "Voice Count",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 1,
+        "max": 8,
+        "default": 8,
+        "integer": true
+      },
+      {
+        "index": 5,
+        "symbol": "tune",
+        "name": "Tune",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 6,
+        "symbol": "octave",
+        "name": "Octave",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 7,
+        "symbol": "unison",
+        "name": "Unison",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "integer": true,
+        "toggled": true
+      },
+      {
+        "index": 8,
+        "symbol": "voice_detune",
+        "name": "Voice Detune",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.2
+      },
+      {
+        "index": 9,
+        "symbol": "osc2_detune",
+        "name": "Oscillator 2 Detune",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.4
+      },
+      {
+        "index": 10,
+        "symbol": "osc1_mix",
+        "name": "Oscillator 1 Mix",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 1
+      },
+      {
+        "index": 11,
+        "symbol": "osc2_mix",
+        "name": "Oscillator 2 Mix",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 1
+      },
+      {
+        "index": 12,
+        "symbol": "noise_mix",
+        "name": "Noise Mix",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 13,
+        "symbol": "osc1_saw",
+        "name": "Oscillator 1 Saw",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 1,
+        "integer": true,
+        "toggled": true
+      },
+      {
+        "index": 14,
+        "symbol": "osc1_pulse",
+        "name": "Oscillator 1 Pulse",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 1,
+        "integer": true,
+        "toggled": true
+      },
+      {
+        "index": 15,
+        "symbol": "osc2_saw",
+        "name": "Oscillator 2 Saw",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 1,
+        "integer": true,
+        "toggled": true
+      },
+      {
+        "index": 16,
+        "symbol": "osc2_pulse",
+        "name": "Oscillator 2 Pulse",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 1,
+        "integer": true,
+        "toggled": true
+      },
+      {
+        "index": 17,
+        "symbol": "pulse_width",
+        "name": "Pulse Width",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 18,
+        "symbol": "cutoff",
+        "name": "Filter Cutoff",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.7
+      },
+      {
+        "index": 19,
+        "symbol": "brightness",
+        "name": "Brightness",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 1
+      },
+      {
+        "index": 20,
+        "symbol": "resonance",
+        "name": "Filter Resonance",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.22
+      },
+      {
+        "index": 21,
+        "symbol": "filter_env_amount",
+        "name": "Filter Envelope Amount",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.35
+      },
+      {
+        "index": 22,
+        "symbol": "filter_mode",
+        "name": "Filter Morph",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 23,
+        "symbol": "bandpass_blend",
+        "name": "Bandpass Blend",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "integer": true,
+        "toggled": true
+      },
+      {
+        "index": 24,
+        "symbol": "four_pole",
+        "name": "Four Pole Slope",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "integer": true,
+        "toggled": true
+      },
+      {
+        "index": 25,
+        "symbol": "amp_attack",
+        "name": "Amp Attack",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 0.65,
+        "default": 0.05,
+        "logarithmic": true
+      },
+      {
+        "index": 26,
+        "symbol": "amp_decay",
+        "name": "Amp Decay",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 0.65,
+        "default": 0.18,
+        "logarithmic": true
+      },
+      {
+        "index": 27,
+        "symbol": "amp_sustain",
+        "name": "Amp Sustain",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.75
+      },
+      {
+        "index": 28,
+        "symbol": "amp_release",
+        "name": "Amp Release",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 0.65,
+        "default": 0.18,
+        "logarithmic": true
+      },
+      {
+        "index": 29,
+        "symbol": "filter_attack",
+        "name": "Filter Attack",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 0.65,
+        "default": 0.03,
+        "logarithmic": true
+      },
+      {
+        "index": 30,
+        "symbol": "filter_decay",
+        "name": "Filter Decay",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 0.65,
+        "default": 0.22,
+        "logarithmic": true
+      },
+      {
+        "index": 31,
+        "symbol": "filter_sustain",
+        "name": "Filter Sustain",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.35
+      },
+      {
+        "index": 32,
+        "symbol": "filter_release",
+        "name": "Filter Release",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 0.65,
+        "default": 0.18,
+        "logarithmic": true
+      },
+      {
+        "index": 33,
+        "symbol": "lfo_frequency",
+        "name": "LFO Frequency",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.35
+      },
+      {
+        "index": 34,
+        "symbol": "lfo_pitch_amount",
+        "name": "LFO Pitch Amount",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.12
+      },
+      {
+        "index": 35,
+        "symbol": "lfo_sine",
+        "name": "LFO Sine Wave",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 1,
+        "integer": true,
+        "toggled": true
+      },
+      {
+        "index": 36,
+        "symbol": "lfo_square",
+        "name": "LFO Square Wave",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "integer": true,
+        "toggled": true
+      },
+      {
+        "index": 37,
+        "symbol": "lfo_sample_hold",
+        "name": "LFO Sample Hold Wave",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "integer": true,
+        "toggled": true
+      },
+      {
+        "index": 38,
+        "symbol": "lfo_osc1",
+        "name": "LFO Oscillator 1",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 1,
+        "integer": true,
+        "toggled": true
+      },
+      {
+        "index": 39,
+        "symbol": "lfo_osc2",
+        "name": "LFO Oscillator 2",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "integer": true,
+        "toggled": true
+      },
+      {
+        "index": 40,
+        "symbol": "lfo_filter",
+        "name": "LFO Filter",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "integer": true,
+        "toggled": true
+      },
+      {
+        "index": 41,
+        "symbol": "xmod",
+        "name": "Oscillator Cross Mod",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0
+      },
+      {
+        "index": 42,
+        "symbol": "osc2_hard_sync",
+        "name": "Oscillator 2 Hard Sync",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "integer": true,
+        "toggled": true
+      }
+    ],
+    "license": "GPL-2.0-only"
+  },
+  {
+    "id": "so-404",
+    "label": "SO404_Bass_Synthesizer",
+    "name": "SO-404 Bass Synthesizer",
+    "description": "SO-404 Bass Synthesizer — TB-303-style bass synth clone",
+    "category": "Instruments",
+    "wasmFile": "SO404_Bass_Synthesizer.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "output",
+        "name": "Output",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 1,
+        "symbol": "midi",
+        "name": "MIDI Input",
+        "dir": "input",
+        "type": "midi",
+        "legacy": true,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 2,
+        "symbol": "controlmode",
+        "name": "Control Mode",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 1,
+        "enumeration": true,
+        "toggled": true,
+        "scalePoints": [
+          {
+            "label": "Midi Commands",
+            "value": 0
+          },
+          {
+            "label": "Control Ports",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "symbol": "volume",
+        "name": "Volume",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 127,
+        "default": 100
+      },
+      {
+        "index": 4,
+        "symbol": "cutoff",
+        "name": "Filter Cutoff",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 127,
+        "default": 50
+      },
+      {
+        "index": 5,
+        "symbol": "resonance",
+        "name": "Filter Resonance",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 127,
+        "default": 100
+      },
+      {
+        "index": 6,
+        "symbol": "envelope",
+        "name": "Filter Envelope",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 127,
+        "default": 80
+      },
+      {
+        "index": 7,
+        "symbol": "portamento",
+        "name": "Portamento Time",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 127,
+        "default": 64
+      },
+      {
+        "index": 8,
+        "symbol": "release",
+        "name": "Release Time",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 127,
+        "default": 100
+      },
+      {
+        "index": 9,
+        "symbol": "channel",
+        "name": "Midi Channel",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 16,
+        "default": 0,
+        "integer": true,
+        "scalePoints": [
+          {
+            "label": "Off",
+            "value": 16
+          }
+        ]
+      }
+    ],
+    "license": "GPL-2.0-or-later"
+  },
+  {
+    "id": "so-666",
+    "label": "SO666_Feedback_Synthesizer",
+    "name": "SO-666 Feedback Synthesizer",
+    "description": "SO-666 Feedback Synthesizer — feedback oscillator synth",
+    "category": "Instruments",
+    "wasmFile": "SO666_Feedback_Synthesizer.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "output",
+        "name": "Output",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 1,
+        "symbol": "midi",
+        "name": "MIDI Input",
+        "dir": "input",
+        "type": "midi",
+        "legacy": true,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 2,
+        "symbol": "controlmode",
+        "name": "Control Mode",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 1,
+        "enumeration": true,
+        "toggled": true,
+        "scalePoints": [
+          {
+            "label": "Midi Commands",
+            "value": 0
+          },
+          {
+            "label": "Control Ports",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "symbol": "feedback",
+        "name": "Feedback",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.85
+      },
+      {
+        "index": 4,
+        "symbol": "resonance",
+        "name": "Filter Resonance",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 5,
+        "symbol": "cutoff",
+        "name": "Filter Cutoff",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0.25,
+        "max": 0.885,
+        "default": 0.57
+      },
+      {
+        "index": 6,
+        "symbol": "volume",
+        "name": "Volume",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 127,
+        "default": 127
+      },
+      {
+        "index": 7,
+        "symbol": "channel",
+        "name": "Midi Channel",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 16,
+        "default": 0,
+        "integer": true,
+        "scalePoints": [
+          {
+            "label": "Off",
+            "value": 16
+          }
+        ]
+      }
+    ],
+    "license": "GPL-2.0-or-later"
+  },
+  {
+    "id": "geonkick",
+    "label": "Geonkick",
+    "name": "Geonkick",
+    "description": "Geonkick - MIDI-triggered kick drum synthesizer using the Geonkick DSP core",
+    "category": "Instruments",
+    "wasmFile": "Geonkick.wasm",
+    "processorFile": "processor.js",
+    "canvasEditors": [
+      {
+        "key": "kick_amp_env",
+        "name": "Amp Envelope",
+        "defaultPoints": [
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 0.78,
+            "y": 0.28
+          },
+          {
+            "x": 1,
+            "y": 0
+          }
+        ],
+        "presets": {
+          "punch": [
+            {
+              "x": 0,
+              "y": 1
+            },
+            {
+              "x": 0.18,
+              "y": 0.82
+            },
+            {
+              "x": 1,
+              "y": 0
+            }
+          ],
+          "long": [
+            {
+              "x": 0,
+              "y": 1
+            },
+            {
+              "x": 0.72,
+              "y": 0.64
+            },
+            {
+              "x": 1,
+              "y": 0
+            }
+          ],
+          "gate": [
+            {
+              "x": 0,
+              "y": 1
+            },
+            {
+              "x": 0.92,
+              "y": 1
+            },
+            {
+              "x": 1,
+              "y": 0
+            }
+          ]
+        }
+      },
+      {
+        "key": "osc_pitch_env",
+        "name": "Pitch Envelope",
+        "defaultPoints": [
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 0.18,
+            "y": 0
+          },
+          {
+            "x": 1,
+            "y": 0
+          }
+        ],
+        "presets": {
+          "snap": [
+            {
+              "x": 0,
+              "y": 1
+            },
+            {
+              "x": 0.08,
+              "y": 0.08
+            },
+            {
+              "x": 1,
+              "y": 0
+            }
+          ],
+          "bend": [
+            {
+              "x": 0,
+              "y": 0.58
+            },
+            {
+              "x": 0.42,
+              "y": 0.2
+            },
+            {
+              "x": 1,
+              "y": 0
+            }
+          ],
+          "flat": [
+            {
+              "x": 0,
+              "y": 0
+            },
+            {
+              "x": 1,
+              "y": 0
+            }
+          ]
+        }
+      }
+    ],
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "midi_in",
+        "name": "MIDI In",
+        "dir": "input",
+        "type": "midi",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 1,
+        "symbol": "out_l",
+        "name": "Audio Out L",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 2,
+        "symbol": "out_r",
+        "name": "Audio Out R",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 3,
+        "symbol": "frequency",
+        "name": "Bass Frequency",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 30,
+        "max": 220,
+        "default": 62,
+        "logarithmic": true
+      },
+      {
+        "index": 4,
+        "symbol": "decay",
+        "name": "Decay",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0.08,
+        "max": 1.5,
+        "default": 0.45,
+        "logarithmic": true
+      },
+      {
+        "index": 5,
+        "symbol": "pitch_drop",
+        "name": "Pitch Drop",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 48,
+        "default": 28
+      },
+      {
+        "index": 6,
+        "symbol": "noise",
+        "name": "Noise Amount",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 0.85,
+        "default": 0.12
+      },
+      {
+        "index": 7,
+        "symbol": "click",
+        "name": "Click Amount",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.22
+      },
+      {
+        "index": 8,
+        "symbol": "tone",
+        "name": "Tone Cutoff",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 120,
+        "max": 8000,
+        "default": 2100,
+        "logarithmic": true
+      },
+      {
+        "index": 9,
+        "symbol": "resonance",
+        "name": "Resonance",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0.5,
+        "max": 4,
+        "default": 1.2
+      },
+      {
+        "index": 10,
+        "symbol": "drive",
+        "name": "Drive",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 1,
+        "max": 12,
+        "default": 1.8
+      },
+      {
+        "index": 11,
+        "symbol": "gain",
+        "name": "Gain",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0.1,
+        "max": 1,
+        "default": 0.75
       }
     ],
     "license": "GPL-3.0-only"

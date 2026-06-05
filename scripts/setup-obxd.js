@@ -35,6 +35,7 @@ const controls = [
     { symbol: 'osc2_pulse', name: 'Oscillator 2 Pulse', min: 0, max: 1, def: 1, integer: true, toggled: true },
     { symbol: 'pulse_width', name: 'Pulse Width', min: 0, max: 1, def: 0.5 },
     { symbol: 'cutoff', name: 'Filter Cutoff', min: 0, max: 1, def: 0.7 },
+    { symbol: 'brightness', name: 'Brightness', min: 0, max: 1, def: 1 },
     { symbol: 'resonance', name: 'Filter Resonance', min: 0, max: 1, def: 0.22 },
     { symbol: 'filter_env_amount', name: 'Filter Envelope Amount', min: 0, max: 1, def: 0.35 },
     { symbol: 'filter_mode', name: 'Filter Morph', min: 0, max: 1, def: 0.5 },
@@ -332,6 +333,7 @@ static void apply_controls(ObxdLv2* self)
     self->synth.processOsc2Pulse(control_unit(self, CTRL_OSC2_PULSE));
     self->synth.processPulseWidth(control_unit(self, CTRL_PULSE_WIDTH));
     self->synth.processCutoff(control_unit(self, CTRL_CUTOFF));
+    self->synth.processBrightness(control_unit(self, CTRL_BRIGHTNESS));
     self->synth.processResonance(control_unit(self, CTRL_RESONANCE));
     self->synth.processFilterEnvelopeAmt(control_unit(self, CTRL_FILTER_ENV_AMOUNT));
     self->synth.processMultimode(control_unit(self, CTRL_FILTER_MODE));

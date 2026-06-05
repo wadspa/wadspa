@@ -62,7 +62,7 @@ static LV2_Feature g_evt_feature = { "http://lv2plug.in/ns/ext/event", &g_evt_fe
 static const LV2_Feature *g_features[] = { &g_map_feature, &g_opt_feature, &g_uri_map_feature, &g_evt_feature, NULL };
 
 static float g_out_output[BLOCK_SIZE];
-static float g_ctrl_controlmode = 0.0f;
+static float g_ctrl_controlmode = 1.0f;
 static float g_ctrl_sustain = 0.0f;
 static float g_ctrl_resonance = 0.625f;
 static float g_ctrl_cutoff = 0.1725f;

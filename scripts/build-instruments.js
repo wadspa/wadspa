@@ -90,6 +90,7 @@ function buildCatalogueEntry(manifestEntry, distDir) {
         ...(manifestEntry.sampleType  && { sampleType:  manifestEntry.sampleType }),
         ...(manifestEntry.sampleSlots && { sampleSlots: manifestEntry.sampleSlots }),
         ...(manifestEntry.shaper      && { shaper:      true }),
+        ...(manifestEntry.canvasEditors && { canvasEditors: manifestEntry.canvasEditors }),
         ports: meta.ports.map(p => {
             if (p.type !== 'control') return p;
             return { ...p, default: resolveDefault(p.default, p.min, p.max) };

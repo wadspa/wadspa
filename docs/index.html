@@ -15,6 +15,7 @@
       --text:    #dddddd;
       --muted:   #666;
       --danger:  #cc4444;
+      --dropdown-width: 365px;
     }
     body { font-family: monospace; background: var(--bg); color: var(--text); min-height: 100vh; }
 
@@ -85,7 +86,8 @@
     #instrument-dropdown {
       display: none; position: absolute; top: calc(100% + 4px); left: 0; z-index: 20;
       background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
-      width: 300px; max-width: calc(100vw - 1rem); box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      width: var(--dropdown-width); max-width: calc(100vw - 1rem); box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      max-height: 60vh; overflow-y: auto;
     }
     #instrument-dropdown.open { display: block; }
     .inst-item {
@@ -118,7 +120,7 @@
     .dropdown {
       display: none; position: absolute; top: calc(100% + 4px); left: 0; z-index: 20;
       background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
-      min-width: 300px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      width: var(--dropdown-width); max-width: calc(100vw - 1rem); box-shadow: 0 4px 12px rgba(0,0,0,0.5);
       max-height: 60vh; overflow-y: auto;
     }
     .dropdown.open { display: block; }
@@ -127,6 +129,10 @@
       display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
     }
     .dropdown-item:hover { background: var(--border); color: #fff; }
+    .dropdown-count {
+      font-size: 0.62rem; color: var(--muted); padding: 0.45rem 0.8rem 0.25rem;
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
     .item-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
     .license-badge {
       flex-shrink: 0; padding: 0.05rem 0.28rem; border: 1px solid #555; border-radius: 2px;
@@ -194,6 +200,8 @@
       border-radius: 2px; cursor: pointer;
     }
     .shaper-btn:hover { color: var(--text); border-color: var(--accent); }
+    .canvas-editor-row { grid-column: 1 / -1; }
+    .canvas-editor-row .shaper-wrap { max-width: 220px; }
 
     /* ── Synth card (special) ─────────────────────────────────── */
     #synth-card {
@@ -597,6 +605,7 @@ function buildSynthControls(node, inst) {
     ctrls.appendChild(row);
     if (Number.isFinite(initialValue)) node.set(p.name, portValueForSet(p, initialValue, control));
   }
+  buildCanvasEditors(ctrls, node, inst);
 }
 
 // GM percussion note map (note → name) for drumkv1 pad grid
@@ -882,7 +891,7 @@ async function switchInstrument(inst) {
     activeInstrument = inst;
     buildSynthControls(synth, inst);
     rewire();
-    document.getElementById('instrument-btn').textContent = inst.name + ' ▾';
+    document.getElementById('instrument-btn').textContent = instrumentButtonLabel();
     document.querySelectorAll('.inst-item').forEach(el =>
       el.classList.toggle('active', el.dataset.inst === inst.id));
     setStatus('ready');
@@ -972,6 +981,185 @@ function setPluginMenuItemContent(item, plugin) {
 
 function shaperPointsToState(pts) {
   return pts.map(p => `${p.x},${p.y},0x0p+0,1`).join(';') + ';';
+}
+
+function normalizedPointNumber(value) {
+  return Number(value).toFixed(6).replace(/\.?0+$/, '');
+}
+
+function normalizedPointsToState(pts) {
+  return [...pts]
+    .sort((a, b) => a.x - b.x)
+    .map(p => `${normalizedPointNumber(p.x)},${normalizedPointNumber(p.y)}`)
+    .join(';') + ';';
+}
+
+function cloneCurvePoints(points) {
+  const cloned = (points ?? [])
+    .map(p => ({ x: Number(p.x), y: Number(p.y) }))
+    .filter(p => Number.isFinite(p.x) && Number.isFinite(p.y))
+    .map(p => ({
+      x: Math.max(0, Math.min(1, p.x)),
+      y: Math.max(0, Math.min(1, p.y)),
+    }));
+  return cloned.length >= 2 ? cloned.sort((a, b) => a.x - b.x) : [{ x: 0, y: 1 }, { x: 1, y: 0 }];
+}
+
+function buildCanvasEditors(container, node, plugin) {
+  for (const editor of plugin.canvasEditors ?? []) {
+    buildCurveCanvas(container, node, editor);
+  }
+}
+
+function buildCurveCanvas(container, node, editor) {
+  const SIZE = 160;
+  const minPoints = Math.max(2, Number(editor.minPoints) || 2);
+  const maxPoints = Math.max(minPoints, Number(editor.maxPoints) || 8);
+  let pts = cloneCurvePoints(editor.defaultPoints);
+
+  const row = document.createElement('div');
+  row.className = 'ctrl-row canvas-editor-row';
+
+  const label = document.createElement('label');
+  label.textContent = editor.name ?? editor.key;
+  row.appendChild(label);
+
+  const wrap = document.createElement('div');
+  wrap.className = 'shaper-wrap';
+
+  const canvas = document.createElement('canvas');
+  canvas.className = 'shaper-canvas';
+  canvas.width = SIZE;
+  canvas.height = SIZE;
+  wrap.appendChild(canvas);
+
+  const btns = document.createElement('div');
+  btns.className = 'shaper-btns';
+  const presets = { reset: editor.defaultPoints, ...(editor.presets ?? {}) };
+  for (const [presetName, presetPoints] of Object.entries(presets)) {
+    const btn = document.createElement('button');
+    btn.className = 'shaper-btn';
+    btn.textContent = presetName;
+    btn.addEventListener('click', () => {
+      pts = cloneCurvePoints(presetPoints);
+      commit();
+    });
+    btns.appendChild(btn);
+  }
+
+  const addBtn = document.createElement('button');
+  addBtn.className = 'shaper-btn';
+  addBtn.textContent = '+ point';
+  addBtn.addEventListener('click', () => {
+    if (pts.length >= maxPoints) return;
+    const mid = Math.floor((pts.length - 1) / 2);
+    const mx = (pts[mid].x + pts[mid + 1].x) / 2;
+    const my = (pts[mid].y + pts[mid + 1].y) / 2;
+    pts.splice(mid + 1, 0, { x: mx, y: my });
+    commit();
+  });
+  btns.appendChild(addBtn);
+
+  wrap.appendChild(btns);
+  row.appendChild(wrap);
+  container.appendChild(row);
+
+  const ctx = canvas.getContext('2d');
+  let dragging = null;
+
+  function ptToCanvas(p) {
+    return { cx: p.x * SIZE, cy: (1 - p.y) * SIZE };
+  }
+  function canvasToPt(cx, cy) {
+    return {
+      x: Math.max(0, Math.min(1, cx / SIZE)),
+      y: Math.max(0, Math.min(1, 1 - cy / SIZE)),
+    };
+  }
+  function drawCurve() {
+    ctx.clearRect(0, 0, SIZE, SIZE);
+    ctx.strokeStyle = '#222';
+    ctx.lineWidth = 0.5;
+    for (let i = 1; i < 4; i++) {
+      const g = i * SIZE / 4;
+      ctx.beginPath(); ctx.moveTo(g, 0); ctx.lineTo(g, SIZE); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, g); ctx.lineTo(SIZE, g); ctx.stroke();
+    }
+    const sorted = [...pts].sort((a, b) => a.x - b.x);
+    ctx.strokeStyle = '#33cc88';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    const first = ptToCanvas(sorted[0]);
+    ctx.moveTo(first.cx, first.cy);
+    for (const p of sorted.slice(1)) {
+      const { cx, cy } = ptToCanvas(p);
+      ctx.lineTo(cx, cy);
+    }
+    ctx.stroke();
+    for (let i = 0; i < pts.length; i++) {
+      const { cx, cy } = ptToCanvas(pts[i]);
+      ctx.fillStyle = i === dragging ? '#4477ee' : '#33cc88';
+      ctx.beginPath(); ctx.arc(cx, cy, 5, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+  function commit() {
+    pts.sort((a, b) => a.x - b.x);
+    drawCurve();
+    node.setPluginState(editor.key, normalizedPointsToState(pts));
+  }
+  function getRect() { return canvas.getBoundingClientRect(); }
+  function evCoords(e) {
+    const r = getRect();
+    return {
+      cx: (e.clientX - r.left) * SIZE / r.width,
+      cy: (e.clientY - r.top) * SIZE / r.height,
+    };
+  }
+  function hitTest(cx, cy) {
+    const R = 8 * SIZE / getRect().width;
+    for (let i = 0; i < pts.length; i++) {
+      const p = ptToCanvas(pts[i]);
+      if (Math.hypot(p.cx - cx, p.cy - cy) < R) return i;
+    }
+    return -1;
+  }
+
+  canvas.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    const { cx, cy } = evCoords(e);
+    const hit = hitTest(cx, cy);
+    if (hit >= 0) {
+      dragging = hit;
+      return;
+    }
+    if ((e.detail === 2 || e.button === 2) && pts.length < maxPoints) {
+      const np = canvasToPt(cx, cy);
+      pts.push(np);
+      pts.sort((a, b) => a.x - b.x);
+      dragging = pts.findIndex(p => p === np);
+      commit();
+    }
+  });
+  canvas.addEventListener('pointermove', e => {
+    if (dragging === null) return;
+    e.preventDefault();
+    const { cx, cy } = evCoords(e);
+    pts[dragging] = canvasToPt(cx, cy);
+    commit();
+  });
+  canvas.addEventListener('pointerup', () => { dragging = null; });
+  canvas.addEventListener('pointercancel', () => { dragging = null; });
+  canvas.addEventListener('contextmenu', e => {
+    e.preventDefault();
+    const { cx, cy } = evCoords(e);
+    const hit = hitTest(cx, cy);
+    if (hit >= 0 && pts.length > minPoints) {
+      pts.splice(hit, 1);
+      commit();
+    }
+  });
+
+  commit();
 }
 
 function buildShaperCanvas(card, node) {
@@ -1313,9 +1501,17 @@ document.addEventListener('click', e => {
 buildDropdown();
 
 // ── Instrument picker ─────────────────────────────────────────
+function instrumentButtonLabel() {
+  return `${activeInstrument?.name ?? 'instrument'} (${INSTRUMENTS.length}) ▾`;
+}
+
 function buildInstrumentDropdown() {
   const dd = document.getElementById('instrument-dropdown');
   dd.innerHTML = '';
+  const count = document.createElement('div');
+  count.className = 'dropdown-count';
+  count.textContent = `${INSTRUMENTS.length} supported instruments`;
+  dd.appendChild(count);
   for (const inst of INSTRUMENTS) {
     const item = document.createElement('div');
     item.className = 'inst-item' + (inst === activeInstrument ? ' active' : '');
@@ -1329,7 +1525,7 @@ function buildInstrumentDropdown() {
     dd.appendChild(item);
   }
   const btn = document.getElementById('instrument-btn');
-  btn.textContent = (activeInstrument?.name ?? 'instrument') + ' ▾';
+  btn.textContent = instrumentButtonLabel();
 }
 
 document.getElementById('instrument-btn').addEventListener('click', e => {

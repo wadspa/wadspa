@@ -13,7 +13,6 @@ class WadspProcessor extends AudioWorkletProcessor {
                 try {
                     mod = await createGeonkickPlugin({ wasmBinary: data.wasm, locateFile: (p, d) => d + p });
                     mod._shim_init(sampleRate);
-
                     outPtrs[0] = mod._shim_output_buf_out_l() >> 2;
                     outPtrs[1] = mod._shim_output_buf_out_r() >> 2;
                     this.port.postMessage({ type: 'ready' });
@@ -52,6 +51,14 @@ class WadspProcessor extends AudioWorkletProcessor {
                 this.port.postMessage({ type: 'padloaded', note: data.note });
             } else if (data.type === 'set') {
                 if (mod) { const fn = SETTERS[data.symbol]; if (fn) mod[fn](data.value); }
+            } else if (data.type === 'setState') {
+                if (!mod || typeof mod._shim_set_plugin_state !== 'function') return;
+                const enc = new TextEncoder();
+                const kb = enc.encode(data.key + '\0'), vb = enc.encode(data.value + '\0');
+                const kp = mod._malloc(kb.length), vp = mod._malloc(vb.length);
+                mod.HEAPU8.set(kb, kp); mod.HEAPU8.set(vb, vp);
+                mod._shim_set_plugin_state(kp, vp);
+                mod._free(kp); mod._free(vp);
             }
         };
     }

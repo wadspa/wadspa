@@ -41,6 +41,25 @@ function missingField(entries, field) {
   return entries.filter(entry => !entry[field]).map(entry => entry.id ?? entry.name ?? '<unknown>');
 }
 
+function malformedCanvasEditors(entries) {
+  const bad = [];
+  for (const entry of entries) {
+    for (const editor of entry.canvasEditors ?? []) {
+      if (!editor.key || !editor.name || !Array.isArray(editor.defaultPoints) || editor.defaultPoints.length < 2) {
+        bad.push(`${entry.id}/${editor.key ?? '<missing-key>'}`);
+        continue;
+      }
+      for (const point of editor.defaultPoints) {
+        if (!Number.isFinite(Number(point.x)) || !Number.isFinite(Number(point.y))) {
+          bad.push(`${entry.id}/${editor.key}`);
+          break;
+        }
+      }
+    }
+  }
+  return bad;
+}
+
 function functionBody(name) {
   const start = html.indexOf(`function ${name}(`);
   assert(start !== -1, `${name}() exists`);
@@ -69,6 +88,7 @@ assert(missingField(effects, 'id').length === 0, 'every effect has an id');
 assert(missingField(effects, 'name').length === 0, 'every effect has a name');
 assert(missingField(effects, 'category').length === 0, 'every effect has a category for dropdown grouping');
 assert(missingField(effects, 'license').length === 0, 'every effect has a license for the dropdown');
+assert(malformedCanvasEditors(instruments).length === 0, 'instrument canvas editors have key/name/default points');
 
 assertIncludes(html, '<button id="instrument-btn">', 'instrument dropdown button exists');
 assertIncludes(html, '<div id="instrument-dropdown">', 'instrument dropdown container exists');
@@ -76,8 +96,15 @@ assertIncludes(html, '<button id="add-btn">', 'effect dropdown button exists');
 assertMatches(/<div\b[^>]*\bid="dropdown"[^>]*>/, 'effect dropdown container exists');
 assertMatches(/#instrument-dropdown\.open\s*\{\s*display:\s*block;\s*\}/, 'instrument dropdown open class makes it visible');
 assertMatches(/\.dropdown\.open\s*\{\s*display:\s*block;\s*\}/, 'effect dropdown open class makes it visible');
+assertIncludes(html, '--dropdown-width: 365px;', 'shared dropdown width token exists');
+assertMatches(/#instrument-dropdown\s*\{[\s\S]*width:\s*var\(--dropdown-width\);[\s\S]*max-width:\s*calc\(100vw - 1rem\);[\s\S]*max-height:\s*60vh;[\s\S]*overflow-y:\s*auto;/, 'instrument dropdown uses the shared size and scroll behavior');
+assertMatches(/\.dropdown\s*\{[\s\S]*width:\s*var\(--dropdown-width\);[\s\S]*max-width:\s*calc\(100vw - 1rem\);[\s\S]*max-height:\s*60vh;[\s\S]*overflow-y:\s*auto;/, 'effect dropdown uses the shared size and scroll behavior');
 
 assertIncludes(html, 'function setPluginMenuItemContent(item, plugin)', 'shared dropdown item renderer exists');
+assertIncludes(html, 'function buildCanvasEditors(container, node, plugin)', 'instrument canvas editor renderer exists');
+assertIncludes(html, 'function buildCurveCanvas(container, node, editor)', 'generic editable curve canvas exists');
+assertIncludes(html, 'node.setPluginState(editor.key, normalizedPointsToState(pts));', 'canvas editors write state into the plugin');
+assertIncludes(html, 'buildCanvasEditors(ctrls, node, inst);', 'instrument controls render canvas editors');
 assertIncludes(html, "name.className = 'item-name';", 'dropdown item renderer keeps a selectable name span');
 assertIncludes(html, "badge.className = 'license-badge';", 'dropdown item renderer keeps a license badge');
 assertIncludes(html, 'item.appendChild(name);', 'dropdown item name remains inside the clickable row');
@@ -94,6 +121,7 @@ assertIncludes(effectDropdown, 'dd.appendChild(item);', 'effect rows are appende
 
 const instrumentDropdown = functionBody('buildInstrumentDropdown');
 assertIncludes(instrumentDropdown, "const dd = document.getElementById('instrument-dropdown');", 'instrument dropdown targets #instrument-dropdown');
+assertIncludes(instrumentDropdown, 'count.textContent = `${INSTRUMENTS.length} supported instruments`;', 'instrument dropdown shows the supported instrument count');
 assertIncludes(instrumentDropdown, 'for (const inst of INSTRUMENTS)', 'instrument dropdown is generated from the instrument catalog');
 assertIncludes(instrumentDropdown, "item.className = 'inst-item' + (inst === activeInstrument ? ' active' : '');", 'instrument rows use the selectable inst-item class');
 assertIncludes(instrumentDropdown, 'item.dataset.inst = inst.id;', 'instrument rows expose stable data-inst ids');
@@ -103,6 +131,15 @@ assertIncludes(instrumentDropdown, 'e.stopPropagation();', 'instrument row click
 assertIncludes(instrumentDropdown, "document.getElementById('instrument-dropdown').classList.remove('open');", 'instrument selection closes the menu');
 assertIncludes(instrumentDropdown, 'switchInstrument(inst);', 'instrument selection switches the synth');
 assertIncludes(instrumentDropdown, 'dd.appendChild(item);', 'instrument rows are appended to the menu');
+assertIncludes(html, 'function instrumentButtonLabel()', 'instrument button label helper exists');
+assertIncludes(instrumentDropdown, 'btn.textContent = instrumentButtonLabel();', 'instrument dropdown uses the counted button label');
+
+const switchInstrument = functionBody('switchInstrument');
+assertIncludes(switchInstrument, "document.getElementById('instrument-btn').textContent = instrumentButtonLabel();", 'instrument selection preserves the supported count in the button');
+
+const geonkick = instruments.find(entry => entry.id === 'geonkick');
+assert(Boolean(geonkick?.canvasEditors?.some(editor => editor.key === 'kick_amp_env')), 'geonkick exposes an amp envelope canvas editor');
+assert(Boolean(geonkick?.canvasEditors?.some(editor => editor.key === 'osc_pitch_env')), 'geonkick exposes a pitch envelope canvas editor');
 
 assertIncludes(html, "document.getElementById('add-btn').addEventListener('click', e => {", 'effect dropdown button has a click handler');
 assertIncludes(html, "document.getElementById('dropdown').classList.toggle('open');", 'effect dropdown button toggles the open state');

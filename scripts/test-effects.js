@@ -7,7 +7,7 @@
  *   2. Dispatch browser-visible slider defaults through the same UI value path
  *   3. Fill all audio input buffers with a 440 Hz sine tone
  *   4. Run 64 blocks of 128 samples (~186 ms)
- *   5. Assert peak amplitude > 1e-6 (non-silent)
+ *   5. Assert peak and RMS exceed audible floors
  *
  * Usage:
  *   node scripts/test-effects.js [--only <id>]
@@ -17,6 +17,7 @@ import { readFileSync, readdirSync } from 'fs';
 import { join, dirname }             from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { defaultPortValuesForUi, portValueForSet, visibleControlPorts } from '../docs/control-utils.js';
+import { audibleRenderSummary, isAudibleRender } from './lib/audio-audit.js';
 
 const ROOT         = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DOCS_PLUGINS = join(ROOT, 'docs', 'plugins');
@@ -70,12 +71,12 @@ for (const eff of catalog) {
         const SETTERS = settersMatch ? JSON.parse(settersMatch[1]) : {};
 
         const { default: factory } = await import(indexUrl);
-        let peak = await renderPeak(eff, factory, wasmBinary, SETTERS);
+        let metrics = await renderMetrics(eff, factory, wasmBinary, SETTERS);
         let activated = 0;
-        if (peak <= 1e-6) {
+        if (!isAudibleRender(metrics)) {
             const overrides = activationOverrides(eff.ports);
             if (overrides.size > 0) {
-                peak = await renderPeak(eff, factory, wasmBinary, SETTERS, overrides);
+                metrics = await renderMetrics(eff, factory, wasmBinary, SETTERS, overrides);
                 activated = overrides.size;
             }
         }
@@ -84,12 +85,12 @@ for (const eff of catalog) {
             ? await beatBoxCoverageNote(eff, factory, wasmBinary, SETTERS)
             : '';
 
-        if (peak > 1e-6) {
+        if (isAudibleRender(metrics)) {
             const note = activated > 0 ? ` after ${activated} activation overrides` : '';
-            console.log(`✓  peak ${peak.toFixed(5)}${note}${coverageNote}`);
+            console.log(`✓  ${audibleRenderSummary(metrics)}${note}${coverageNote}`);
             passed++;
         } else {
-            console.log(`✗  SILENT (peak ${peak})`);
+            console.log(`✗  INAUDIBLE (${audibleRenderSummary(metrics)})`);
             failed++;
         }
     } catch (e) {
@@ -124,7 +125,7 @@ async function beatBoxCoverageNote(eff, factory, wasmBinary, SETTERS) {
     ];
     const peaks = [];
     for (const [label, freq] of probes) {
-        const peak = await renderPeak(eff, factory, wasmBinary, SETTERS, new Map(), {
+        const { peak } = await renderMetrics(eff, factory, wasmBinary, SETTERS, new Map(), {
             audio: 'beatbox-transient',
             freq,
         });
@@ -139,7 +140,7 @@ async function beatBoxCoverageNote(eff, factory, wasmBinary, SETTERS) {
     return `; BeatBox low/mid/high ${peaks.map(([label, peak]) => `${label}=${peak.toFixed(3)}`).join(' ')}`;
 }
 
-async function renderPeak(eff, factory, wasmBinary, SETTERS, overrides = new Map(), profile = {}) {
+async function renderMetrics(eff, factory, wasmBinary, SETTERS, overrides = new Map(), profile = {}) {
     const mod = await factory({ wasmBinary });
     mod._shim_init(SAMPLE_RATE);
 
@@ -165,6 +166,8 @@ async function renderPeak(eff, factory, wasmBinary, SETTERS, overrides = new Map
     if (outBufFns.length === 0) throw new Error('no _shim_output_buf_* functions exported');
 
     let peak = 0;
+    let sumSquares = 0;
+    let sampleCount = 0;
     for (let b = 0; b < BLOCKS; b++) {
         fillAudioInputs(mod, inBufFns, b, profile);
         mod._shim_run(BLOCK_SIZE);
@@ -172,13 +175,16 @@ async function renderPeak(eff, factory, wasmBinary, SETTERS, overrides = new Map
             const ptr = mod[fn]() >> 2;
             const buf = mod.HEAPF32.subarray(ptr, ptr + BLOCK_SIZE);
             for (let i = 0; i < BLOCK_SIZE; i++) {
-                const abs = Math.abs(buf[i]);
+                const sample = buf[i];
+                const abs = Math.abs(sample);
                 if (abs > peak) peak = abs;
+                sumSquares += sample * sample;
+                sampleCount++;
             }
         }
     }
 
-    return peak;
+    return { peak, rms: Math.sqrt(sumSquares / sampleCount) };
 }
 
 function activationOverrides(ports) {

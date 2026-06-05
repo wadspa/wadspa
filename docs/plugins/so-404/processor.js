@@ -13,7 +13,6 @@ class WadspProcessor extends AudioWorkletProcessor {
                 try {
                     mod = await createSO404_Bass_SynthesizerPlugin({ wasmBinary: data.wasm, locateFile: (p, d) => d + p });
                     mod._shim_init(sampleRate);
-
                     outPtrs[0] = mod._shim_output_buf_output() >> 2;
                     this.port.postMessage({ type: 'ready' });
                 } catch (e) {

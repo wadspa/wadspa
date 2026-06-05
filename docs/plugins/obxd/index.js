@@ -246,6 +246,18 @@ export const meta         = {
     },
     {
       "index": 19,
+      "symbol": "brightness",
+      "name": "Brightness",
+      "dir": "input",
+      "type": "control",
+      "legacy": false,
+      "cv": false,
+      "min": 0,
+      "max": 1,
+      "default": 1
+    },
+    {
+      "index": 20,
       "symbol": "resonance",
       "name": "Filter Resonance",
       "dir": "input",
@@ -257,7 +269,7 @@ export const meta         = {
       "default": 0.22
     },
     {
-      "index": 20,
+      "index": 21,
       "symbol": "filter_env_amount",
       "name": "Filter Envelope Amount",
       "dir": "input",
@@ -269,7 +281,7 @@ export const meta         = {
       "default": 0.35
     },
     {
-      "index": 21,
+      "index": 22,
       "symbol": "filter_mode",
       "name": "Filter Morph",
       "dir": "input",
@@ -281,7 +293,7 @@ export const meta         = {
       "default": 0.5
     },
     {
-      "index": 22,
+      "index": 23,
       "symbol": "bandpass_blend",
       "name": "Bandpass Blend",
       "dir": "input",
@@ -295,7 +307,7 @@ export const meta         = {
       "toggled": true
     },
     {
-      "index": 23,
+      "index": 24,
       "symbol": "four_pole",
       "name": "Four Pole Slope",
       "dir": "input",
@@ -309,7 +321,7 @@ export const meta         = {
       "toggled": true
     },
     {
-      "index": 24,
+      "index": 25,
       "symbol": "amp_attack",
       "name": "Amp Attack",
       "dir": "input",
@@ -322,7 +334,7 @@ export const meta         = {
       "logarithmic": true
     },
     {
-      "index": 25,
+      "index": 26,
       "symbol": "amp_decay",
       "name": "Amp Decay",
       "dir": "input",
@@ -335,7 +347,7 @@ export const meta         = {
       "logarithmic": true
     },
     {
-      "index": 26,
+      "index": 27,
       "symbol": "amp_sustain",
       "name": "Amp Sustain",
       "dir": "input",
@@ -347,7 +359,7 @@ export const meta         = {
       "default": 0.75
     },
     {
-      "index": 27,
+      "index": 28,
       "symbol": "amp_release",
       "name": "Amp Release",
       "dir": "input",
@@ -360,7 +372,7 @@ export const meta         = {
       "logarithmic": true
     },
     {
-      "index": 28,
+      "index": 29,
       "symbol": "filter_attack",
       "name": "Filter Attack",
       "dir": "input",
@@ -373,7 +385,7 @@ export const meta         = {
       "logarithmic": true
     },
     {
-      "index": 29,
+      "index": 30,
       "symbol": "filter_decay",
       "name": "Filter Decay",
       "dir": "input",
@@ -386,7 +398,7 @@ export const meta         = {
       "logarithmic": true
     },
     {
-      "index": 30,
+      "index": 31,
       "symbol": "filter_sustain",
       "name": "Filter Sustain",
       "dir": "input",
@@ -398,7 +410,7 @@ export const meta         = {
       "default": 0.35
     },
     {
-      "index": 31,
+      "index": 32,
       "symbol": "filter_release",
       "name": "Filter Release",
       "dir": "input",
@@ -411,7 +423,7 @@ export const meta         = {
       "logarithmic": true
     },
     {
-      "index": 32,
+      "index": 33,
       "symbol": "lfo_frequency",
       "name": "LFO Frequency",
       "dir": "input",
@@ -423,7 +435,7 @@ export const meta         = {
       "default": 0.35
     },
     {
-      "index": 33,
+      "index": 34,
       "symbol": "lfo_pitch_amount",
       "name": "LFO Pitch Amount",
       "dir": "input",
@@ -435,7 +447,7 @@ export const meta         = {
       "default": 0.12
     },
     {
-      "index": 34,
+      "index": 35,
       "symbol": "lfo_sine",
       "name": "LFO Sine Wave",
       "dir": "input",
@@ -449,7 +461,7 @@ export const meta         = {
       "toggled": true
     },
     {
-      "index": 35,
+      "index": 36,
       "symbol": "lfo_square",
       "name": "LFO Square Wave",
       "dir": "input",
@@ -463,7 +475,7 @@ export const meta         = {
       "toggled": true
     },
     {
-      "index": 36,
+      "index": 37,
       "symbol": "lfo_sample_hold",
       "name": "LFO Sample Hold Wave",
       "dir": "input",
@@ -477,7 +489,7 @@ export const meta         = {
       "toggled": true
     },
     {
-      "index": 37,
+      "index": 38,
       "symbol": "lfo_osc1",
       "name": "LFO Oscillator 1",
       "dir": "input",
@@ -491,7 +503,7 @@ export const meta         = {
       "toggled": true
     },
     {
-      "index": 38,
+      "index": 39,
       "symbol": "lfo_osc2",
       "name": "LFO Oscillator 2",
       "dir": "input",
@@ -505,7 +517,7 @@ export const meta         = {
       "toggled": true
     },
     {
-      "index": 39,
+      "index": 40,
       "symbol": "lfo_filter",
       "name": "LFO Filter",
       "dir": "input",
@@ -519,7 +531,7 @@ export const meta         = {
       "toggled": true
     },
     {
-      "index": 40,
+      "index": 41,
       "symbol": "xmod",
       "name": "Oscillator Cross Mod",
       "dir": "input",
@@ -531,7 +543,7 @@ export const meta         = {
       "default": 0
     },
     {
-      "index": 41,
+      "index": 42,
       "symbol": "osc2_hard_sync",
       "name": "Oscillator 2 Hard Sync",
       "dir": "input",

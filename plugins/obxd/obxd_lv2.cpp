@@ -37,32 +37,33 @@ enum ControlIndex {
     CTRL_OSC2_PULSE = 13,
     CTRL_PULSE_WIDTH = 14,
     CTRL_CUTOFF = 15,
-    CTRL_RESONANCE = 16,
-    CTRL_FILTER_ENV_AMOUNT = 17,
-    CTRL_FILTER_MODE = 18,
-    CTRL_BANDPASS_BLEND = 19,
-    CTRL_FOUR_POLE = 20,
-    CTRL_AMP_ATTACK = 21,
-    CTRL_AMP_DECAY = 22,
-    CTRL_AMP_SUSTAIN = 23,
-    CTRL_AMP_RELEASE = 24,
-    CTRL_FILTER_ATTACK = 25,
-    CTRL_FILTER_DECAY = 26,
-    CTRL_FILTER_SUSTAIN = 27,
-    CTRL_FILTER_RELEASE = 28,
-    CTRL_LFO_FREQUENCY = 29,
-    CTRL_LFO_PITCH_AMOUNT = 30,
-    CTRL_LFO_SINE = 31,
-    CTRL_LFO_SQUARE = 32,
-    CTRL_LFO_SAMPLE_HOLD = 33,
-    CTRL_LFO_OSC1 = 34,
-    CTRL_LFO_OSC2 = 35,
-    CTRL_LFO_FILTER = 36,
-    CTRL_XMOD = 37,
-    CTRL_OSC2_HARD_SYNC = 38,
+    CTRL_BRIGHTNESS = 16,
+    CTRL_RESONANCE = 17,
+    CTRL_FILTER_ENV_AMOUNT = 18,
+    CTRL_FILTER_MODE = 19,
+    CTRL_BANDPASS_BLEND = 20,
+    CTRL_FOUR_POLE = 21,
+    CTRL_AMP_ATTACK = 22,
+    CTRL_AMP_DECAY = 23,
+    CTRL_AMP_SUSTAIN = 24,
+    CTRL_AMP_RELEASE = 25,
+    CTRL_FILTER_ATTACK = 26,
+    CTRL_FILTER_DECAY = 27,
+    CTRL_FILTER_SUSTAIN = 28,
+    CTRL_FILTER_RELEASE = 29,
+    CTRL_LFO_FREQUENCY = 30,
+    CTRL_LFO_PITCH_AMOUNT = 31,
+    CTRL_LFO_SINE = 32,
+    CTRL_LFO_SQUARE = 33,
+    CTRL_LFO_SAMPLE_HOLD = 34,
+    CTRL_LFO_OSC1 = 35,
+    CTRL_LFO_OSC2 = 36,
+    CTRL_LFO_FILTER = 37,
+    CTRL_XMOD = 38,
+    CTRL_OSC2_HARD_SYNC = 39,
 };
 
-constexpr int kControlCount = 39;
+constexpr int kControlCount = 40;
 static const float kDefaults[kControlCount] = {
     0.65f,
     8.0f,
@@ -80,6 +81,7 @@ static const float kDefaults[kControlCount] = {
     1.0f,
     0.5f,
     0.7f,
+    1.0f,
     0.22f,
     0.35f,
     0.5f,
@@ -153,6 +155,7 @@ static void apply_controls(ObxdLv2* self)
     self->synth.processOsc2Pulse(control_unit(self, CTRL_OSC2_PULSE));
     self->synth.processPulseWidth(control_unit(self, CTRL_PULSE_WIDTH));
     self->synth.processCutoff(control_unit(self, CTRL_CUTOFF));
+    self->synth.processBrightness(control_unit(self, CTRL_BRIGHTNESS));
     self->synth.processResonance(control_unit(self, CTRL_RESONANCE));
     self->synth.processFilterEnvelopeAmt(control_unit(self, CTRL_FILTER_ENV_AMOUNT));
     self->synth.processMultimode(control_unit(self, CTRL_FILTER_MODE));

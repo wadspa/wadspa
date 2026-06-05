@@ -14,7 +14,7 @@
  * generator handles this via the legacy MIDI path in shim-lv2.js.
  */
 
-import { copyFileSync, mkdirSync, writeFileSync } from 'fs';
+import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { join, dirname }                           from 'path';
 import { fileURLToPath }                           from 'url';
 
@@ -60,7 +60,7 @@ for (const p of PLUGINS_DEF) {
     // Copy source and header
     copyFileSync(join(SRC, p.c), join(outDir, p.c));
     copyFileSync(join(SRC, p.h), join(outDir, p.h));
-    copyFileSync(join(SRC, p.ttl), join(outDir, p.ttl));
+    writeFileSync(join(outDir, p.ttl), patchedTtlFor(p, readFileSync(join(SRC, p.ttl), 'utf8')));
 
     // Generate manifest.ttl for this plugin only
     writeFileSync(join(outDir, 'manifest.ttl'), `\
@@ -88,3 +88,24 @@ LV2_SYMBOL_EXPORT const LV2_Descriptor *lv2_descriptor(uint32_t index) {
 }
 
 console.log('\nSo-synth-LV2 setup complete.');
+
+function patchedTtlFor(plugin, ttl) {
+    let patched = ttl.replace(
+        /(lv2:symbol\s+"controlmode";\s*lv2:name\s+"Control Mode";[\s\S]*?lv2:default\s+)0(\s*;)/,
+        (_, prefix, suffix) => `${prefix}1${suffix}`,
+    );
+
+    if (plugin.id === 'so-666') {
+        patched = patched
+            .replace(
+                /(lv2:symbol\s+"feedback";\s*lv2:name\s+"Feedback";\s*lv2:default\s+)0\.25(\s*;)/,
+                (_, prefix, suffix) => `${prefix}0.85${suffix}`,
+            )
+            .replace(
+                /(lv2:symbol\s+"volume";\s*lv2:name\s+"Volume";\s*lv2:default\s+)100(\s*;)/,
+                (_, prefix, suffix) => `${prefix}127${suffix}`,
+            );
+    }
+
+    return patched;
+}

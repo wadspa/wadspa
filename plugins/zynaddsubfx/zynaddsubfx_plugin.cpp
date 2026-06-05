@@ -193,6 +193,7 @@ static void apply_control(int index)
         break;
     case CTRL_PART_VOLUME:
         p->setVolumedB(clampf(value, -40.0f, 13.333f));
+        ad->GlobalPar.Volume = clampf(value, -60.0f, 20.0f);
         break;
     case CTRL_PART_PAN:
         p->setPpanning(static_cast<char>(std::lrint(clampf(value, 0.0f, 1.0f) * 127.0f)));

@@ -642,12 +642,15 @@ export function lv2ExportedFunctions(descriptor, extraExports = []) {
 }
 
 // Processor.js for LV2 instruments — adds MIDI message handling
-export function generateLv2Processor(descriptor, label, extraFeatures = []) {
+export function generateLv2Processor(descriptor, label, extraFeatures = [], extraExports = []) {
     const { ports } = descriptor;
     const audioIn   = ports.filter(p => p.type === 'audio' && p.dir === 'input');
     const audioOut  = ports.filter(p => p.type === 'audio' && p.dir === 'output');
     const ctrlIn    = ports.filter(p => p.type === 'control' && p.dir === 'input');
     const hasMidi   = ports.some(p => p.type === 'midi' && p.dir === 'input');
+    const supportsState = extraFeatures.includes('worker')
+        || extraExports.includes('_shim_set_plugin_state')
+        || extraExports.includes('shim_set_plugin_state');
 
     const exportName = 'create' + label.replace(/[^a-zA-Z0-9]/g, '_') + 'Plugin';
 
@@ -757,7 +760,7 @@ ${pointerInitBlock}                    this.port.postMessage({ type: 'ready' });
                 mod._free(ptr);
                 this.port.postMessage({ type: 'padloaded', note: data.note });
             } else if (data.type === 'set') {
-                if (mod) { const fn = SETTERS[data.symbol]; if (fn) mod[fn](data.value); }${extraFeatures.includes('worker') ? `
+                if (mod) { const fn = SETTERS[data.symbol]; if (fn) mod[fn](data.value); }${supportsState ? `
             } else if (data.type === 'setState') {
                 if (!mod || typeof mod._shim_set_plugin_state !== 'function') return;
                 const enc = new TextEncoder();

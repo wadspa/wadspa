@@ -5,8 +5,8 @@
  * For each LV2 plugin in plugins/lv2.json:
  *   1. Instantiate the WASM module directly (no AudioWorklet needed)
  *   2. Send a MIDI note-on or feed a short audio test tone
- *   3. Run 64 blocks of 128 samples
- *   4. Assert peak amplitude > 1e-6 (non-silent)
+ *   3. Run 128 blocks of 128 samples
+ *   4. Assert peak and RMS exceed audible floors
  *
  * Usage:
  *   node scripts/test-instruments.js [--only <id>]
@@ -15,6 +15,7 @@
 import { readFileSync, readdirSync, existsSync } from 'fs';
 import { join, dirname }            from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
+import { audibleRenderSummary, isAudibleRender } from './lib/audio-audit.js';
 import { readLv2Registry }          from './lib/lv2-registry.js';
 
 const ROOT        = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -38,7 +39,7 @@ function loadSF2IntoWasm(mod, sf2Path) {
 }
 const SAMPLE_RATE = 44100;
 const BLOCK_SIZE  = 128;
-const BLOCKS      = 64;   // ~186 ms — enough for ADSR attack and time-windowed effects
+const BLOCKS      = 128;  // ~371 ms — enough for ADSR attack and audible level checks
 
 const args   = process.argv.slice(2);
 const onlyId = args.includes('--only') ? args[args.indexOf('--only') + 1] : null;
@@ -107,6 +108,8 @@ for (const inst of lv2Plugins) {
         }
 
         let peak = 0;
+        let sumSquares = 0;
+        let sampleCount = 0;
         for (let b = 0; b < BLOCKS; b++) {
             if (audioDriven) fillAudioInputs(mod, inBufFns, b);
             mod._shim_run(BLOCK_SIZE);
@@ -116,15 +119,18 @@ for (const inst of lv2Plugins) {
                 for (let i = 0; i < BLOCK_SIZE; i++) {
                     const abs = Math.abs(buf[i]);
                     if (abs > peak) peak = abs;
+                    sumSquares += buf[i] * buf[i];
+                    sampleCount++;
                 }
             }
         }
 
-        if (peak > 1e-6) {
-            console.log(`✓  peak ${peak.toFixed(5)}`);
+        const metrics = { peak, rms: Math.sqrt(sumSquares / sampleCount) };
+        if (isAudibleRender(metrics)) {
+            console.log(`✓  ${audibleRenderSummary(metrics)}`);
             passed++;
         } else {
-            console.log(`✗  SILENT (peak ${peak})`);
+            console.log(`✗  INAUDIBLE (${audibleRenderSummary(metrics)})`);
             failed++;
         }
     } catch (e) {

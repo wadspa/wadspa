@@ -88,12 +88,14 @@ writeFileSync(join(OUT, 'geonkick_lv2_wasm.c'), String.raw`#include <math.h>
 #include "lv2/atom/util.h"
 #include "lv2/midi/midi.h"
 #include "lv2/urid/urid.h"
+#include <emscripten.h>
 
 #include "audio_output.h"
 #include "envelope.h"
 #include "synthesizer.h"
 
 #define PLUGIN_URI "https://wadspa.org/plugins/geonkick"
+#define MAX_ENV_POINTS 8
 
 enum {
     PORT_MIDI_IN = 0,
@@ -140,8 +142,16 @@ typedef struct {
     float last_resonance;
     float last_drive;
     float last_gain;
+    float kick_amp_x[MAX_ENV_POINTS];
+    float kick_amp_y[MAX_ENV_POINTS];
+    size_t kick_amp_count;
+    float osc_pitch_x[MAX_ENV_POINTS];
+    float osc_pitch_y[MAX_ENV_POINTS];
+    size_t osc_pitch_count;
     int dirty;
 } GeonkickLV2;
+
+static GeonkickLV2 *g_latest_instance = NULL;
 
 static float clampf_local(float v, float lo, float hi)
 {
@@ -186,6 +196,74 @@ static void set_osc_env(struct gkick_synth *synth, size_t osc, enum geonkick_env
     gkick_synth_osc_envelope_set_points(synth, (int)osc, (int)type, points, 3);
 }
 
+static size_t parse_env_points(const char *value, float *xs, float *ys)
+{
+    if (!value) return 0;
+    size_t count = 0;
+    const char *p = value;
+    while (*p && count < MAX_ENV_POINTS) {
+        char *end = NULL;
+        float x = strtof(p, &end);
+        if (end == p) {
+            p++;
+            continue;
+        }
+        p = end;
+        while (*p == ',' || *p == ':' || *p == ' ' || *p == '\t') p++;
+        float y = strtof(p, &end);
+        if (end == p) break;
+        p = end;
+
+        x = clampf_local(x, 0.0f, 1.0f);
+        y = clampf_local(y, 0.0f, 1.0f);
+        size_t insert = count++;
+        while (insert > 0 && xs[insert - 1] > x) {
+            xs[insert] = xs[insert - 1];
+            ys[insert] = ys[insert - 1];
+            insert--;
+        }
+        xs[insert] = x;
+        ys[insert] = y;
+
+        while (*p && *p != ';' && *p != '|' && *p != '\n') p++;
+        while (*p == ';' || *p == '|' || *p == '\n' || *p == ' ' || *p == '\t') p++;
+    }
+    return count;
+}
+
+static void set_kick_amp_env_from_state(GeonkickLV2 *g)
+{
+    struct gkick_envelope_point_info points[MAX_ENV_POINTS];
+    for (size_t i = 0; i < g->kick_amp_count; i++) {
+        points[i].x = g->kick_amp_x[i];
+        points[i].y = g->kick_amp_y[i];
+        points[i].control_point = false;
+    }
+    gkick_synth_kick_envelope_set_points(
+        g->synth,
+        GEONKICK_AMPLITUDE_ENVELOPE,
+        points,
+        g->kick_amp_count
+    );
+}
+
+static void set_osc_pitch_env_from_state(GeonkickLV2 *g, float pitch_mult)
+{
+    struct gkick_envelope_point_info points[MAX_ENV_POINTS];
+    for (size_t i = 0; i < g->osc_pitch_count; i++) {
+        points[i].x = g->osc_pitch_x[i];
+        points[i].y = 1.0f + g->osc_pitch_y[i] * (pitch_mult - 1.0f);
+        points[i].control_point = false;
+    }
+    gkick_synth_osc_envelope_set_points(
+        g->synth,
+        0,
+        GEONKICK_FREQUENCY_ENVELOPE,
+        points,
+        g->osc_pitch_count
+    );
+}
+
 static void configure_synth(GeonkickLV2 *g)
 {
     const float frequency = clampf_local(port_or_default(g->frequency, 62.0f), 30.0f, 220.0f);
@@ -197,6 +275,7 @@ static void configure_synth(GeonkickLV2 *g)
     const float resonance = clampf_local(port_or_default(g->resonance, 1.2f), 0.5f, 4.0f);
     const float drive = clampf_local(port_or_default(g->drive, 1.8f), 1.0f, 12.0f);
     const float gain = clampf_local(port_or_default(g->gain, 0.75f), 0.1f, 1.0f);
+    const float decay_norm = clampf_local((decay - 0.08f) / (1.5f - 0.08f), 0.0f, 1.0f);
 
     if (!g->dirty
         && fabsf(frequency - g->last_frequency) < 1e-5f
@@ -231,14 +310,23 @@ static void configure_synth(GeonkickLV2 *g)
 
     gkick_synth_enable_oscillator(g->synth, 0, 1);
     gkick_synth_set_osc_function(g->synth, 0, GEONKICK_OSC_FUNC_SINE);
-    gkick_synth_set_osc_frequency(g->synth, 0, frequency);
+    gkick_synth_set_osc_frequency(g->synth, 0, frequency * powf(2.0f, (0.5f - decay_norm) * 1.0f));
     gkick_synth_set_osc_amplitude(g->synth, 0, 1.0f);
-    {
+    if (g->osc_pitch_count >= 2) {
+        set_osc_pitch_env_from_state(g, pitch_mult);
+    } else {
         struct gkick_envelope_point_info points[3];
         set_points(points, 3, 0.0f, pitch_mult, 0.18f, 1.0f, 1.0f, 1.0f);
         gkick_synth_osc_envelope_set_points(g->synth, 0, GEONKICK_FREQUENCY_ENVELOPE, points, 3);
     }
-    set_osc_env(g->synth, 0, GEONKICK_AMPLITUDE_ENVELOPE, 0.82f, 1.0f, 0.35f);
+    set_osc_env(
+        g->synth,
+        0,
+        GEONKICK_AMPLITUDE_ENVELOPE,
+        0.015f + 0.88f * decay_norm,
+        1.0f,
+        0.01f + 0.86f * decay_norm
+    );
 
     gkick_synth_enable_oscillator(g->synth, 1, 1);
     gkick_synth_set_osc_function(g->synth, 1, GEONKICK_OSC_FUNC_NOISE_WHITE);
@@ -262,7 +350,22 @@ static void configure_synth(GeonkickLV2 *g)
     gkick_synth_distortion_set_drive(g->synth, drive);
     gkick_synth_distortion_set_out_limiter(g->synth, 0.92f);
 
-    set_kick_env(g->synth, GEONKICK_AMPLITUDE_ENVELOPE, 1.0f, 0.28f, 0.0f);
+    if (g->kick_amp_count >= 2) {
+        set_kick_amp_env_from_state(g);
+    } else {
+        struct gkick_envelope_point_info points[3];
+        set_points(
+            points,
+            3,
+            0.0f,
+            1.0f,
+            0.015f + 0.88f * decay_norm,
+            0.02f + 0.82f * decay_norm,
+            1.0f,
+            0.0f
+        );
+        gkick_synth_kick_envelope_set_points(g->synth, GEONKICK_AMPLITUDE_ENVELOPE, points, 3);
+    }
     gkick_synth_process(g->synth);
 }
 
@@ -309,6 +412,7 @@ static LV2_Handle instantiate(const LV2_Descriptor *descriptor,
     g->output->limiter = 1000000;
     gkick_audio_output_tune_output(g->output, false);
     gkick_synth_set_output(g->synth, g->output);
+    g_latest_instance = g;
     return (LV2_Handle)g;
 }
 
@@ -373,9 +477,26 @@ static void cleanup(LV2_Handle handle)
 {
     GeonkickLV2 *g = (GeonkickLV2 *)handle;
     if (!g) return;
+    if (g_latest_instance == g) g_latest_instance = NULL;
     gkick_synth_free(&g->synth);
     gkick_audio_output_free(&g->output);
     free(g);
+}
+
+EMSCRIPTEN_KEEPALIVE void shim_set_plugin_state(const char *key, const char *value)
+{
+    GeonkickLV2 *g = g_latest_instance;
+    if (!g || !key || !value) return;
+
+    if (strcmp(key, "kick_amp_env") == 0) {
+        g->kick_amp_count = parse_env_points(value, g->kick_amp_x, g->kick_amp_y);
+    } else if (strcmp(key, "osc_pitch_env") == 0) {
+        g->osc_pitch_count = parse_env_points(value, g->osc_pitch_x, g->osc_pitch_y);
+    } else {
+        return;
+    }
+    g->dirty = 1;
+    configure_synth(g);
 }
 
 static const LV2_Descriptor descriptor = {
@@ -523,6 +644,60 @@ const entry = {
     id: 'geonkick',
     description: 'Geonkick - MIDI-triggered kick drum synthesizer using the Geonkick DSP core',
     category: 'Instruments',
+    extraExports: ['_shim_set_plugin_state', '_malloc', '_free'],
+    canvasEditors: [
+        {
+            key: 'kick_amp_env',
+            name: 'Amp Envelope',
+            defaultPoints: [
+                { x: 0, y: 1 },
+                { x: 0.78, y: 0.28 },
+                { x: 1, y: 0 },
+            ],
+            presets: {
+                punch: [
+                    { x: 0, y: 1 },
+                    { x: 0.18, y: 0.82 },
+                    { x: 1, y: 0 },
+                ],
+                long: [
+                    { x: 0, y: 1 },
+                    { x: 0.72, y: 0.64 },
+                    { x: 1, y: 0 },
+                ],
+                gate: [
+                    { x: 0, y: 1 },
+                    { x: 0.92, y: 1 },
+                    { x: 1, y: 0 },
+                ],
+            },
+        },
+        {
+            key: 'osc_pitch_env',
+            name: 'Pitch Envelope',
+            defaultPoints: [
+                { x: 0, y: 1 },
+                { x: 0.18, y: 0 },
+                { x: 1, y: 0 },
+            ],
+            presets: {
+                snap: [
+                    { x: 0, y: 1 },
+                    { x: 0.08, y: 0.08 },
+                    { x: 1, y: 0 },
+                ],
+                bend: [
+                    { x: 0, y: 0.58 },
+                    { x: 0.42, y: 0.2 },
+                    { x: 1, y: 0 },
+                ],
+                flat: [
+                    { x: 0, y: 0 },
+                    { x: 1, y: 0 },
+                ],
+            },
+        },
+    ],
     sources: [
         'geonkick_lv2_wasm.c',
         'geonkick_wasm_compat.c',

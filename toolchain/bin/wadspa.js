@@ -213,7 +213,7 @@ async function buildLv2(args) {
     const lv2PkgName = lv2Opts.name ?? `@wadspa/${lv2Label.toLowerCase()}`;
     const lv2Meta = { uri: lv2Desc.uri, label: lv2Label, name: lv2Desc.label, exportName: lv2ExportName, ports: lv2Desc.ports };
 
-    writeFileSync(join(lv2OutDir, 'processor.js'), generateLv2Processor(lv2Desc, lv2Label, lv2Opts.extraFeatures));
+    writeFileSync(join(lv2OutDir, 'processor.js'), generateLv2Processor(lv2Desc, lv2Label, lv2Opts.extraFeatures, lv2Opts.extraExports));
 
     const lv2IndexJs = `\
 export { default } from './${lv2Label}.js';
