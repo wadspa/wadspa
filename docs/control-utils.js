@@ -61,6 +61,13 @@ export function portUiRange(p, sampleRate = 44100) {
     value = clamp(value, Math.min(min, max), Math.max(min, max));
   }
 
+  const active = activeUiRangeForPort(p, min, max);
+  if (active) {
+    min = active.min;
+    max = active.max;
+    value = clamp(value, Math.min(min, max), Math.max(min, max));
+  }
+
   const span = Math.abs(max - min);
   const step = p.integer || p.enumeration || p.toggled
     ? 1
@@ -140,10 +147,22 @@ export function sliderValueFromPortValue(p, value, uiRange) {
 }
 
 export function usesLogSlider(p, uiRange = portUiRange(p)) {
-  if (!p?.logarithmic || usesMenuControl(p)) return false;
+  if (usesMenuControl(p)) return false;
   const min = Math.min(uiRange.min, uiRange.max);
   const max = Math.max(uiRange.min, uiRange.max);
-  return min > 0 && max > min;
+  return min > 0 && max > min && (p?.logarithmic || shouldInferLogSlider(p, min, max));
+}
+
+function shouldInferLogSlider(p, min, max) {
+  if (!(min > 0) || !(max > min)) return false;
+  const text = controlText(p);
+  if (/threshold|gain|level|volume|mix|wet|dry|depth|amount|ratio|\bq\b|bandwidth|\bbw\b|shape|mode|select|channel|sustain|resonance|reso/i.test(text)) {
+    return false;
+  }
+  const frequencyLike = /frequency|freq|cutoff|xover|crossover|damping/i.test(text);
+  const minimumRatio = frequencyLike ? 8 : 20;
+  if (max / min < minimumRatio) return false;
+  return /frequency|freq|cutoff|xover|crossover|damping|attack|decay|release|hold|delay|time|slew|rate|bpm|speed/i.test(text);
 }
 
 export function scalePointOptions(p) {
@@ -237,6 +256,21 @@ function clampRange(min, max, clampMin, clampMax) {
   const hi = Math.min(Math.max(min, max), clampMax);
   if (lo > hi) return { min, max };
   return min <= max ? { min: lo, max: hi } : { min: hi, max: lo };
+}
+
+function activeUiRangeForPort(p, min, max) {
+  const text = controlText(p);
+  if (/tap\s*\d+\s+distance\s*\(inches\)/i.test(text) && min === 0 && max === 4) {
+    return { min, max: 2 };
+  }
+  if (String(p?.symbol ?? '') === 'feedback'
+      && /^Feedback$/i.test(String(p?.name ?? ''))
+      && finitePortNumber(p.default) === 0.25
+      && min === 0
+      && max === 1) {
+    return { min: 0.5, max };
+  }
+  return null;
 }
 
 function controlText(p) {

@@ -8,6 +8,8 @@
  *   3. Render deterministic audio at default controls.
  *   4. Render again with only that control changed.
  *   5. Fail if every candidate value produces effectively unchanged audio.
+ *   6. In --ui-defaults mode, sweep continuous browser sliders across their
+ *      full travel and fail if any sampled section is acoustically dead.
  *
  * This catches sliders/arguments that are present in metadata but not wired into
  * the Web Audio processor or WASM shim.
@@ -25,6 +27,7 @@ import {
     portUiRange,
     portValueFromSlider,
     sliderRangeForPort,
+    usesMenuControl,
     visibleControlPorts,
 } from '../docs/control-utils.js';
 import { readLv2Registry } from './lib/lv2-registry.js';
@@ -47,6 +50,7 @@ const REL_RMS_DIFF = 1e-5;
 const NOISE_MULTIPLIER = 6;
 const DEFAULT_PROFILE = { key: 'default' };
 const DYNAMICS_PROFILE = { key: 'dynamics', audio: 'dynamics', renderBlocks: 1024 };
+const ENVELOPE_PROFILE = { key: 'envelope', renderBlocks: 2048, midiNoteOffBlock: 512 };
 const LFO_PROFILE = { key: 'lfo', renderBlocks: 2048 };
 const SWEEP_PROFILE = { key: 'sweep', renderBlocks: 1024 };
 const POLYPHONY_PROFILE = {
@@ -200,9 +204,15 @@ for (const id of discoverPluginIds()) {
             }
 
             const currentValue = baseSupport.has(key) ? baseSupport.get(key) : undefined;
-            const candidates = candidateValues(port, currentValue);
+            const requireSweepCoverage = uiDefaultsMode && requiresSliderSweepCoverage(port, options);
+            const candidates = requireSweepCoverage
+                ? sliderSweepCandidateValues(port)
+                : candidateValues(port, currentValue);
             const diffs = [];
             let changed = false;
+            let rangeCovered = true;
+            let rangeIssue = null;
+            const renderedCandidates = [];
             const support = uiDefaultsMode
                 ? mergeOverrides(baseSupport, uiContextSupportOverridesFor(port, allCtrlPorts, options))
                 : mergeOverrides(baseSupport, supportOverridesFor(port, allCtrlPorts, options));
@@ -233,19 +243,31 @@ for (const id of discoverPluginIds()) {
                 }
                 const diff = compareAudio(cached.reference.audio, rendered.audio);
                 diffs.push(`${candidate.label} rms=${fmtMetric(diff.rms)} rel=${fmtMetric(diff.relative)}`);
+                renderedCandidates.push({ candidate, rendered });
                 if (audioChanged(diff, cached.noise)) {
                     changed = true;
-                    break;
+                    if (!requireSweepCoverage) break;
                 }
             }
 
-            if (!changed) {
+            if (requireSweepCoverage && renderedCandidates.length === candidates.length) {
+                const coverage = sliderSweepCoverage(port, renderedCandidates, cached.noise);
+                changed = coverage.changed;
+                rangeCovered = coverage.ok;
+                rangeIssue = coverage.issue;
+                if (verbose && coverage.summary) diffs.push(coverage.summary);
+            }
+
+            if (!changed || !rangeCovered) {
                 const allowedReason = UNCHANGED_OK.get(`${id}/${key}`);
                 if (allowedReason) {
                     allowed.push(`${portLabel}: ${allowedReason}`);
                     allowedUnchanged++;
                 } else {
-                    issues.push(`${portLabel}: no audible change (${diffs.join(', ')})`);
+                    const message = !changed
+                        ? `no audible change (${diffs.join(', ')})`
+                        : `${rangeIssue} (${diffs.join(', ')})`;
+                    issues.push(`${portLabel}: ${message}`);
                 }
             }
         }
@@ -470,6 +492,96 @@ function candidateValues(port, currentValue = undefined) {
     }
 
     return candidates.slice(0, 3);
+}
+
+function sliderSweepCandidateValues(port) {
+    const uiRange = portUiRange(port, SAMPLE_RATE);
+    const slider = sliderRangeForPort(port, uiRange);
+    const min = Number(slider.min);
+    const max = Number(slider.max);
+    const raw = [
+        ['0%', min],
+        ['25%', min + (max - min) * 0.25],
+        ['50%', min + (max - min) * 0.5],
+        ['75%', min + (max - min) * 0.75],
+        ['100%', max],
+    ];
+
+    const seen = new Set();
+    const candidates = [];
+    for (const [label, sliderValue] of raw) {
+        const value = portValueFromSlider(port, sliderValue, uiRange);
+        if (!Number.isFinite(value)) continue;
+        const rounded = quantizeCandidate(port, value);
+        const key = rounded.toPrecision(9);
+        if (seen.has(key)) continue;
+        seen.add(key);
+        candidates.push({ label, value: rounded });
+    }
+
+    return candidates;
+}
+
+function requiresSliderSweepCoverage(port, options) {
+    if (!uiDefaultsMode) return false;
+    if (port.toggled || port.integer || port.enumeration || usesMenuControl(port) || isEnumLike(port)) return false;
+    const text = controlText(port);
+    const context = `${options.id} ${options.meta.name ?? ''} ${text}`;
+    if (/channel|program|preset|mode|select|output select|bypass|sync|latency|meter|reset|peakreset|threshold|thresh|(?:^|[_\s-])thr(?:$|[_\s-])|trigger|limiter|\blink\b|zero[_\s-]*db|0\s*dB|maximum|minimum|\bmax\b|\bmin\b/i.test(context)) {
+        return false;
+    }
+    if (/gate/i.test(context) && /\bhold\b/i.test(text)) return false;
+    if (/polyphony|voices|sections/i.test(text)) return false;
+    return true;
+}
+
+function sliderSweepCoverage(port, renderedCandidates, noise) {
+    if (renderedCandidates.length < 2) {
+        return { ok: false, changed: false, issue: 'range sweep had fewer than two distinct slider values' };
+    }
+
+    const segmentSummaries = [];
+    const activeSegments = [];
+    for (let i = 0; i < renderedCandidates.length - 1; i++) {
+        const left = renderedCandidates[i];
+        const right = renderedCandidates[i + 1];
+        const diff = compareAudio(left.rendered.audio, right.rendered.audio);
+        const active = sliderSegmentChanged(diff, noise);
+        activeSegments.push(active);
+        segmentSummaries.push(`${left.candidate.label}-${right.candidate.label} rms=${fmtMetric(diff.rms)} rel=${fmtMetric(diff.relative)}`);
+    }
+
+    const endToEnd = compareAudio(
+        renderedCandidates[0].rendered.audio,
+        renderedCandidates[renderedCandidates.length - 1].rendered.audio,
+    );
+    const endToEndChanged = audioChanged(endToEnd, noise);
+    const changed = endToEndChanged || activeSegments.some(Boolean);
+    const coveredPoints = renderedCandidates.map((_, index) =>
+        (index > 0 && activeSegments[index - 1]) || (index < activeSegments.length && activeSegments[index]));
+    const uncovered = coveredPoints
+        .map((covered, index) => covered ? null : renderedCandidates[index].candidate.label)
+        .filter(Boolean);
+    const uncoveredInterior = coveredPoints
+        .map((covered, index) => ({ covered, index }))
+        .filter(item => item.index > 0 && item.index < coveredPoints.length - 1 && !item.covered)
+        .map(item => renderedCandidates[item.index].candidate.label);
+    const requiredActiveSegments = Math.max(1, Math.min(3, activeSegments.length));
+    const activeCount = activeSegments.filter(Boolean).length;
+    const ok = activeCount >= requiredActiveSegments && uncoveredInterior.length === 0;
+
+    return {
+        ok,
+        changed,
+        issue: `range sweep has dead zones; uncovered ${uncovered.join(', ') || 'none'}, interior ${uncoveredInterior.join(', ') || 'none'}, active segments ${activeCount}/${activeSegments.length}, end-to-end rms=${fmtMetric(endToEnd.rms)} rel=${fmtMetric(endToEnd.relative)}`,
+        summary: `sweep ${segmentSummaries.join(', ')}`,
+    };
+}
+
+function sliderSegmentChanged(diff, noise) {
+    const rmsFloor = Math.max(ABS_RMS_DIFF * 0.5, noise.rms * NOISE_MULTIPLIER);
+    const relFloor = Math.max(REL_RMS_DIFF * 0.5, noise.relative * NOISE_MULTIPLIER);
+    return diff.rms > rmsFloor && diff.relative > relFloor && diff.max > SILENCE;
 }
 
 function browserDefaultOverridesFor(allCtrlPorts) {
@@ -818,6 +930,9 @@ function renderProfileFor(options, port) {
     const contextText = `${options.id} ${options.meta.name ?? ''} ${text}`;
     if (/mda[_-]?TestTone/i.test(`${options.id} ${options.meta.name ?? ''}`) && /sweep/i.test(text)) {
         return SWEEP_PROFILE;
+    }
+    if (options.meta.ports.some(p => p.type === 'midi' && p.dir === 'input') && isEnvelopeControl(text)) {
+        return ENVELOPE_PROFILE;
     }
     if (options.meta.ports.some(p => p.type === 'midi' && p.dir === 'input') && /polyphony/i.test(text)) {
         return POLYPHONY_PROFILE;
