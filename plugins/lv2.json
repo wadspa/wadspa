@@ -1578,5 +1578,12 @@
     "description": "Helm polyphonic synthesizer",
     "category": "LV2 Instruments",
     "buildScript": "scripts/build-helm.js"
+  },
+  {
+    "id": "zynaddsubfx",
+    "description": "ZynAddSubFX additive/subtractive/FM synthesizer",
+    "category": "LV2 Instruments",
+    "buildScript": "scripts/build-zynaddsubfx.js",
+    "memoryGrowth": true
   }
 ]

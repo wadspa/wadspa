@@ -1890,6 +1890,18 @@
           {
             "label": "Distort",
             "value": 0
+          },
+          {
+            "label": "Divide",
+            "value": 0.25
+          },
+          {
+            "label": "Invert",
+            "value": 0.5
+          },
+          {
+            "label": "Key Osc.",
+            "value": 0.75
           }
         ]
       },
@@ -1915,7 +1927,8 @@
         "cv": false,
         "min": 10,
         "max": 320,
-        "default": 198
+        "default": 198,
+        "logarithmic": true
       },
       {
         "index": 3,
@@ -2034,7 +2047,8 @@
         "cv": false,
         "min": 40,
         "max": 240,
-        "default": 130
+        "default": 130,
+        "logarithmic": true
       },
       {
         "index": 2,
@@ -2070,7 +2084,8 @@
         "cv": false,
         "min": 22,
         "max": 3494,
-        "default": 300
+        "default": 300,
+        "logarithmic": true
       },
       {
         "index": 5,
@@ -2106,7 +2121,8 @@
         "cv": false,
         "min": 22,
         "max": 3494,
-        "default": 527.4
+        "default": 527.4,
+        "logarithmic": true
       },
       {
         "index": 8,
@@ -2369,6 +2385,18 @@
           {
             "label": "Low",
             "value": 0
+          },
+          {
+            "label": "Mid",
+            "value": 1
+          },
+          {
+            "label": "High",
+            "value": 2
+          },
+          {
+            "label": "Out",
+            "value": 3
           }
         ]
       },
@@ -2382,7 +2410,8 @@
         "cv": false,
         "min": 88,
         "max": 1020,
-        "default": 550
+        "default": 550,
+        "logarithmic": true
       },
       {
         "index": 2,
@@ -2394,7 +2423,8 @@
         "cv": false,
         "min": 112,
         "max": 19606,
-        "default": 9859
+        "default": 9859,
+        "logarithmic": true
       },
       {
         "index": 3,
@@ -2485,6 +2515,10 @@
           {
             "label": "Bipolar",
             "value": 0
+          },
+          {
+            "label": "Unipolar",
+            "value": 1
           }
         ]
       },
@@ -2564,6 +2598,30 @@
           {
             "label": "D.I. (flat frequency response)",
             "value": 0
+          },
+          {
+            "label": "Tradtional speaker simulator",
+            "value": 1
+          },
+          {
+            "label": "Small radio speaker",
+            "value": 2
+          },
+          {
+            "label": "Small combo (close mic)",
+            "value": 3
+          },
+          {
+            "label": "Small combo (far mic)",
+            "value": 4
+          },
+          {
+            "label": "Large stack (front mic)",
+            "value": 5
+          },
+          {
+            "label": "Large stack (side mic, scooped mids)",
+            "value": 6
           }
         ]
       },
@@ -2722,7 +2780,8 @@
         "cv": false,
         "min": 1000,
         "max": 12000,
-        "default": 7600
+        "default": 7600,
+        "logarithmic": true
       },
       {
         "index": 2,
@@ -2831,7 +2890,8 @@
         "min": 4800,
         "max": 48000,
         "default": 48000,
-        "integer": true
+        "integer": true,
+        "logarithmic": true
       },
       {
         "index": 3,
@@ -2850,6 +2910,10 @@
           {
             "label": "Integrator Off",
             "value": 0
+          },
+          {
+            "label": "Integrator On",
+            "value": 1
           }
         ]
       },
@@ -2864,7 +2928,8 @@
         "min": 200,
         "max": 20000,
         "default": 15000,
-        "integer": true
+        "integer": true,
+        "logarithmic": true
       },
       {
         "index": 5,
@@ -2895,6 +2960,10 @@
           {
             "label": "Even",
             "value": 0
+          },
+          {
+            "label": "Odd",
+            "value": 1
           }
         ]
       },
@@ -3010,6 +3079,10 @@
           {
             "label": "Free",
             "value": 0
+          },
+          {
+            "label": "Fixed",
+            "value": 1
           }
         ]
       },
@@ -3178,6 +3251,22 @@
           {
             "label": "5.3 ms",
             "value": 0
+          },
+          {
+            "label": "10.6 ms",
+            "value": 0.25
+          },
+          {
+            "label": "21.3 ms",
+            "value": 0.5
+          },
+          {
+            "label": "42.6 ms",
+            "value": 0.75
+          },
+          {
+            "label": "85.3 ms",
+            "value": 1
           }
         ]
       },
@@ -3269,6 +3358,18 @@
           {
             "label": "Truncation",
             "value": 0
+          },
+          {
+            "label": "Triangular PDF dither",
+            "value": 1
+          },
+          {
+            "label": "High-pass Triangular PDF dither",
+            "value": 2
+          },
+          {
+            "label": "Second-order noise-shaped dither",
+            "value": 3
           }
         ]
       },
@@ -3383,7 +3484,8 @@
         "cv": false,
         "min": 1,
         "max": 7500,
-        "default": 460
+        "default": 460,
+        "logarithmic": true
       },
       {
         "index": 1,
@@ -3562,7 +3664,8 @@
         "cv": false,
         "min": 2,
         "max": 1571,
-        "default": 283.14
+        "default": 283.14,
+        "logarithmic": true
       },
       {
         "index": 4,
@@ -3574,7 +3677,8 @@
         "cv": false,
         "min": 1,
         "max": 1571,
-        "default": 864.6
+        "default": 864.6,
+        "logarithmic": true
       },
       {
         "index": 5,
@@ -3622,7 +3726,8 @@
         "cv": false,
         "min": 5,
         "max": 15782,
-        "default": 5
+        "default": 5,
+        "logarithmic": true
       },
       {
         "index": 8,
@@ -3634,7 +3739,8 @@
         "cv": false,
         "min": 9,
         "max": 17384,
-        "default": 173.93
+        "default": 173.93,
+        "logarithmic": true
       },
       {
         "index": 9,
@@ -3723,6 +3829,18 @@
           {
             "label": "Stereo image adjustment",
             "value": 0
+          },
+          {
+            "label": "Encode to MS",
+            "value": 0.25
+          },
+          {
+            "label": "Decode from MS",
+            "value": 0.5
+          },
+          {
+            "label": "Decode from MS (input channels reversed)",
+            "value": 0.75
           }
         ]
       },
@@ -3861,6 +3979,14 @@
           {
             "label": "Stop",
             "value": 0
+          },
+          {
+            "label": "Slow",
+            "value": 0.5
+          },
+          {
+            "label": "Fast",
+            "value": 1
           }
         ]
       },
@@ -4083,6 +4209,10 @@
           {
             "label": "Hard",
             "value": 0
+          },
+          {
+            "label": "Soft",
+            "value": 1
           }
         ]
       },
@@ -4256,6 +4386,18 @@
           {
             "label": "Low",
             "value": 0
+          },
+          {
+            "label": "Mid",
+            "value": 0.33333333
+          },
+          {
+            "label": "High",
+            "value": 0.66666666
+          },
+          {
+            "label": "Output",
+            "value": 1
           }
         ]
       },
@@ -4269,7 +4411,8 @@
         "cv": false,
         "min": 87,
         "max": 1020,
-        "default": 110.7
+        "default": 110.7,
+        "logarithmic": true
       },
       {
         "index": 2,
@@ -4281,7 +4424,8 @@
         "cv": false,
         "min": 111,
         "max": 19606,
-        "default": 17153.79
+        "default": 17153.79,
+        "logarithmic": true
       },
       {
         "index": 3,
@@ -4648,6 +4792,10 @@
           {
             "label": "Low",
             "value": 0
+          },
+          {
+            "label": "High",
+            "value": 1
           }
         ]
       },
@@ -4905,7 +5053,8 @@
         "cv": false,
         "min": 0,
         "max": 16000,
-        "default": 1000
+        "default": 1000,
+        "logarithmic": true
       },
       {
         "index": 1,
@@ -5089,6 +5238,14 @@
           {
             "label": "Tones only",
             "value": 0
+          },
+          {
+            "label": "Input ring modulated by tones",
+            "value": 0.5
+          },
+          {
+            "label": "Tones mixed with input",
+            "value": 1
           }
         ]
       },
@@ -5191,6 +5348,18 @@
           {
             "label": "Normal",
             "value": 0
+          },
+          {
+            "label": "Inverse",
+            "value": 0.33333333
+          },
+          {
+            "label": "Normal Inverse",
+            "value": 0.66666666
+          },
+          {
+            "label": "Inverse Normal",
+            "value": 1
           }
         ]
       },
@@ -5204,7 +5373,8 @@
         "cv": false,
         "min": 100,
         "max": 10000,
-        "default": 5050
+        "default": 5050,
+        "logarithmic": true
       },
       {
         "index": 2,
@@ -5222,6 +5392,14 @@
           {
             "label": "Low",
             "value": 0
+          },
+          {
+            "label": "All",
+            "value": 0.5
+          },
+          {
+            "label": "High",
+            "value": 1
           }
         ]
       },
@@ -5253,6 +5431,14 @@
           {
             "label": "Low",
             "value": 0
+          },
+          {
+            "label": "All",
+            "value": 0.5
+          },
+          {
+            "label": "High",
+            "value": 1
           }
         ]
       },
@@ -5504,6 +5690,10 @@
           {
             "label": "Right",
             "value": 0
+          },
+          {
+            "label": "Left",
+            "value": 1
           }
         ]
       },
@@ -5594,6 +5784,34 @@
           {
             "label": "MIDI #",
             "value": 0
+          },
+          {
+            "label": "Impulse",
+            "value": 0.14
+          },
+          {
+            "label": "White",
+            "value": 0.28
+          },
+          {
+            "label": "Pink",
+            "value": 0.42
+          },
+          {
+            "label": "Sine",
+            "value": 0.57
+          },
+          {
+            "label": "Log Sweep",
+            "value": 0.71
+          },
+          {
+            "label": "Log Step",
+            "value": 0.85
+          },
+          {
+            "label": "Lin Sweep",
+            "value": 1
           }
         ]
       },
@@ -5751,6 +5969,7 @@
         "min": 0.01,
         "max": 10,
         "default": 0.08,
+        "logarithmic": true,
         "scalePoints": [
           {
             "label": "-",
@@ -5881,6 +6100,22 @@
           {
             "label": "Sine oscillator",
             "value": 0
+          },
+          {
+            "label": "Square oscillator",
+            "value": 0.25
+          },
+          {
+            "label": "Sawtooth oscillator",
+            "value": 0.5
+          },
+          {
+            "label": "Ring modulator",
+            "value": 0.75
+          },
+          {
+            "label": "Peaking EQ",
+            "value": 1
           }
         ]
       },
@@ -5942,7 +6177,8 @@
         "cv": false,
         "min": 39,
         "max": 7350,
-        "default": 6500
+        "default": 6500,
+        "logarithmic": true
       },
       {
         "index": 6,
@@ -6174,6 +6410,14 @@
           {
             "label": "Constant pitch",
             "value": 0
+          },
+          {
+            "label": "Track input pitch",
+            "value": 0.5
+          },
+          {
+            "label": "Track quantized input pitch",
+            "value": 1
           }
         ]
       },
@@ -6300,6 +6544,10 @@
           {
             "label": "Left",
             "value": 0
+          },
+          {
+            "label": "Right",
+            "value": 1
           }
         ]
       },
@@ -6350,6 +6598,7 @@
         "min": 14,
         "max": 10000,
         "default": 1602.24,
+        "logarithmic": true,
         "scalePoints": [
           {
             "label": "FREEZE",
@@ -6379,7 +6628,8 @@
         "cv": false,
         "min": 200,
         "max": 1600,
-        "default": 1000
+        "default": 1000,
+        "logarithmic": true
       },
       {
         "index": 7,
@@ -6397,6 +6647,10 @@
           {
             "label": "8 BAND",
             "value": 0
+          },
+          {
+            "label": "16 BAND",
+            "value": 1
           }
         ]
       },
@@ -6559,7 +6813,8 @@
         "cv": false,
         "min": 5,
         "max": 1250,
-        "default": 20
+        "default": 20,
+        "logarithmic": true
       },
       {
         "index": 8,
@@ -6611,7 +6866,8 @@
         "cv": false,
         "min": 500,
         "max": 20000,
-        "default": 20000
+        "default": 20000,
+        "logarithmic": true
       },
       {
         "index": 11,
@@ -6663,7 +6919,8 @@
         "cv": false,
         "min": 25,
         "max": 400,
-        "default": 80
+        "default": 80,
+        "logarithmic": true
       },
       {
         "index": 14,
@@ -6713,7 +6970,8 @@
         "cv": false,
         "min": 20,
         "max": 2000,
-        "default": 160
+        "default": 160,
+        "logarithmic": true
       },
       {
         "index": 18,
@@ -6763,7 +7021,8 @@
         "cv": false,
         "min": 40,
         "max": 4000,
-        "default": 397
+        "default": 397,
+        "logarithmic": true
       },
       {
         "index": 22,
@@ -6813,7 +7072,8 @@
         "cv": false,
         "min": 100,
         "max": 10000,
-        "default": 1250
+        "default": 1250,
+        "logarithmic": true
       },
       {
         "index": 26,
@@ -6863,7 +7123,8 @@
         "cv": false,
         "min": 200,
         "max": 20000,
-        "default": 2500
+        "default": 2500,
+        "logarithmic": true
       },
       {
         "index": 30,
@@ -6913,7 +7174,8 @@
         "cv": false,
         "min": 1000,
         "max": 16000,
-        "default": 8000
+        "default": 8000,
+        "logarithmic": true
       },
       {
         "index": 34,
@@ -8729,7 +8991,8 @@
         "cv": false,
         "min": 20,
         "max": 20000,
-        "default": 100
+        "default": 100,
+        "logarithmic": true
       },
       {
         "index": 5,
@@ -9177,6 +9440,62 @@
           {
             "label": "2:1 comp at -6 dB",
             "value": 0
+          },
+          {
+            "label": "2:1 comp at -9 dB",
+            "value": 1
+          },
+          {
+            "label": "2:1 comp at -12 dB",
+            "value": 2
+          },
+          {
+            "label": "2:1 comp at -18 dB",
+            "value": 3
+          },
+          {
+            "label": "2.5:1 comp at -12 dB",
+            "value": 4
+          },
+          {
+            "label": "3:1 comp at -12 dB",
+            "value": 5
+          },
+          {
+            "label": "3:1 comp at -15 dB",
+            "value": 6
+          },
+          {
+            "label": "Compressor/Gate",
+            "value": 7
+          },
+          {
+            "label": "Expander",
+            "value": 8
+          },
+          {
+            "label": "Hard limiter at -6 dB",
+            "value": 9
+          },
+          {
+            "label": "Hard limiter at -12 dB",
+            "value": 10
+          },
+          {
+            "label": "Hard gate at -35 dB",
+            "value": 11
+          },
+          {
+            "label": "Soft limiter",
+            "value": 12
+          },
+          {
+            "label": "Soft knee comp/gate",
+            "value": 13
+          },
+          {
+            "label": "Soft gate below -36 dB",
+            "value": 14
           }
         ]
       },
@@ -9328,6 +9647,14 @@
           {
             "label": "Independent",
             "value": 0
+          },
+          {
+            "label": "Average",
+            "value": 1
+          },
+          {
+            "label": "Peak",
+            "value": 2
           }
         ]
       },
@@ -9348,6 +9675,62 @@
           {
             "label": "2:1 comp at -6 dB",
             "value": 0
+          },
+          {
+            "label": "2:1 comp at -9 dB",
+            "value": 1
+          },
+          {
+            "label": "2:1 comp at -12 dB",
+            "value": 2
+          },
+          {
+            "label": "2:1 comp at -18 dB",
+            "value": 3
+          },
+          {
+            "label": "2.5:1 comp at -12 dB",
+            "value": 4
+          },
+          {
+            "label": "3:1 comp at -12 dB",
+            "value": 5
+          },
+          {
+            "label": "3:1 comp at -15 dB",
+            "value": 6
+          },
+          {
+            "label": "Compressor/Gate",
+            "value": 7
+          },
+          {
+            "label": "Expander",
+            "value": 8
+          },
+          {
+            "label": "Hard limiter at -6 dB",
+            "value": 9
+          },
+          {
+            "label": "Hard limiter at -12 dB",
+            "value": 10
+          },
+          {
+            "label": "Hard gate at -35 dB",
+            "value": 11
+          },
+          {
+            "label": "Soft limiter",
+            "value": 12
+          },
+          {
+            "label": "Soft knee comp/gate",
+            "value": 13
+          },
+          {
+            "label": "Soft gate below -36 dB",
+            "value": 14
           }
         ]
       },
@@ -10503,6 +10886,10 @@
           {
             "label": "Off",
             "value": 0
+          },
+          {
+            "label": "On",
+            "value": 1
           }
         ]
       },
@@ -10523,6 +10910,10 @@
           {
             "label": "Off",
             "value": 0
+          },
+          {
+            "label": "On",
+            "value": 1
           }
         ]
       },
@@ -10543,6 +10934,10 @@
           {
             "label": "Off",
             "value": 0
+          },
+          {
+            "label": "On",
+            "value": 1
           }
         ]
       },
@@ -10563,6 +10958,10 @@
           {
             "label": "Off",
             "value": 0
+          },
+          {
+            "label": "On",
+            "value": 1
           }
         ]
       },
@@ -10583,6 +10982,174 @@
           {
             "label": "AfterBurn",
             "value": 0
+          },
+          {
+            "label": "AfterBurn (Long)",
+            "value": 1
+          },
+          {
+            "label": "Ambience",
+            "value": 2
+          },
+          {
+            "label": "Ambience (Thick)",
+            "value": 3
+          },
+          {
+            "label": "Ambience (Thick) - HD",
+            "value": 4
+          },
+          {
+            "label": "Cathedral",
+            "value": 5
+          },
+          {
+            "label": "Cathedral - HD",
+            "value": 6
+          },
+          {
+            "label": "Drum Chamber",
+            "value": 7
+          },
+          {
+            "label": "Garage",
+            "value": 8
+          },
+          {
+            "label": "Garage (Bright)",
+            "value": 9
+          },
+          {
+            "label": "Gymnasium",
+            "value": 10
+          },
+          {
+            "label": "Gymnasium (Bright)",
+            "value": 11
+          },
+          {
+            "label": "Gymnasium (Bright) - HD",
+            "value": 12
+          },
+          {
+            "label": "Hall (Small)",
+            "value": 13
+          },
+          {
+            "label": "Hall (Medium)",
+            "value": 14
+          },
+          {
+            "label": "Hall (Large)",
+            "value": 15
+          },
+          {
+            "label": "Hall (Large) - HD",
+            "value": 16
+          },
+          {
+            "label": "Plate (Small)",
+            "value": 17
+          },
+          {
+            "label": "Plate (Medium)",
+            "value": 18
+          },
+          {
+            "label": "Plate (Large)",
+            "value": 19
+          },
+          {
+            "label": "Plate (Large) - HD",
+            "value": 20
+          },
+          {
+            "label": "Pulse Chamber",
+            "value": 21
+          },
+          {
+            "label": "Pulse Chamber (Reverse)",
+            "value": 22
+          },
+          {
+            "label": "Resonator (96 ms)",
+            "value": 23
+          },
+          {
+            "label": "Resonator (152 ms)",
+            "value": 24
+          },
+          {
+            "label": "Resonator (208 ms)",
+            "value": 25
+          },
+          {
+            "label": "Room (Small)",
+            "value": 26
+          },
+          {
+            "label": "Room (Medium)",
+            "value": 27
+          },
+          {
+            "label": "Room (Large)",
+            "value": 28
+          },
+          {
+            "label": "Room (Large) - HD",
+            "value": 29
+          },
+          {
+            "label": "Slap Chamber",
+            "value": 30
+          },
+          {
+            "label": "Slap Chamber - HD",
+            "value": 31
+          },
+          {
+            "label": "Slap Chamber (Bright)",
+            "value": 32
+          },
+          {
+            "label": "Slap Chamber (Bright) - HD",
+            "value": 33
+          },
+          {
+            "label": "Smooth Hall (Small)",
+            "value": 34
+          },
+          {
+            "label": "Smooth Hall (Medium)",
+            "value": 35
+          },
+          {
+            "label": "Smooth Hall (Large)",
+            "value": 36
+          },
+          {
+            "label": "Smooth Hall (Large) - HD",
+            "value": 37
+          },
+          {
+            "label": "Vocal Plate",
+            "value": 38
+          },
+          {
+            "label": "Vocal Plate - HD",
+            "value": 39
+          },
+          {
+            "label": "Warble Chamber",
+            "value": 40
+          },
+          {
+            "label": "Warehouse",
+            "value": 41
+          },
+          {
+            "label": "Warehouse - HD",
+            "value": 42
           }
         ]
       },
@@ -12469,6 +13036,102 @@
           {
             "label": "1959 Bassman 5F6-A",
             "value": 0
+          },
+          {
+            "label": "Mesa Boogie Mark",
+            "value": 1
+          },
+          {
+            "label": "1969 Twin Reverb AA270",
+            "value": 2
+          },
+          {
+            "label": "1964 Princeton AA1164",
+            "value": 3
+          },
+          {
+            "label": "1959/81 JCM-800 Lead 100",
+            "value": 4
+          },
+          {
+            "label": "1981 JCM-2000 Lead",
+            "value": 5
+          },
+          {
+            "label": "JTM 45",
+            "value": 6
+          },
+          {
+            "label": "1967 Major Lead 200",
+            "value": 7
+          },
+          {
+            "label": "M2199 30W",
+            "value": 8
+          },
+          {
+            "label": "1959/86 AC-30",
+            "value": 9
+          },
+          {
+            "label": "VOX AC-15",
+            "value": 10
+          },
+          {
+            "label": "Soldano SLO 100",
+            "value": 11
+          },
+          {
+            "label": "Sovtek MIG 100 H",
+            "value": 12
+          },
+          {
+            "label": "Peavey C20",
+            "value": 13
+          },
+          {
+            "label": "Ibanez GX20",
+            "value": 14
+          },
+          {
+            "label": "Roland Cube 60",
+            "value": 15
+          },
+          {
+            "label": "Ampeg VL 501",
+            "value": 16
+          },
+          {
+            "label": "Ampeg Reverb Rocket",
+            "value": 17
+          },
+          {
+            "label": "Bogner Triple Giant Preamp",
+            "value": 18
+          },
+          {
+            "label": "Groove Trio Preamp",
+            "value": 19
+          },
+          {
+            "label": "Hughes&Kettner",
+            "value": 20
+          },
+          {
+            "label": "Fender Blues Junior",
+            "value": 21
+          },
+          {
+            "label": "Fender",
+            "value": 22
+          },
+          {
+            "label": "Fender Hot Rod",
+            "value": 23
+          },
+          {
+            "label": "Gibsen GS12 Reverb Rocket",
+            "value": 24
           }
         ]
       },
@@ -14406,6 +15069,22 @@
           {
             "label": "None",
             "value": 0
+          },
+          {
+            "label": "2x",
+            "value": 1
+          },
+          {
+            "label": "4x",
+            "value": 2
+          },
+          {
+            "label": "8x",
+            "value": 3
+          },
+          {
+            "label": "16x",
+            "value": 4
           }
         ]
       },
@@ -14427,6 +15106,10 @@
           {
             "label": "Unipolar",
             "value": 0
+          },
+          {
+            "label": "Bipolar",
+            "value": 1
           }
         ]
       },
@@ -14447,6 +15130,30 @@
           {
             "label": "None",
             "value": 0
+          },
+          {
+            "label": "Bend +",
+            "value": 1
+          },
+          {
+            "label": "Bend -",
+            "value": 2
+          },
+          {
+            "label": "Bend +/-",
+            "value": 3
+          },
+          {
+            "label": "Skew +",
+            "value": 4
+          },
+          {
+            "label": "Skew -",
+            "value": 5
+          },
+          {
+            "label": "Skew +/-",
+            "value": 6
           }
         ]
       },
@@ -14479,6 +15186,30 @@
           {
             "label": "None",
             "value": 0
+          },
+          {
+            "label": "Bend +",
+            "value": 1
+          },
+          {
+            "label": "Bend -",
+            "value": 2
+          },
+          {
+            "label": "Bend +/-",
+            "value": 3
+          },
+          {
+            "label": "Skew +",
+            "value": 4
+          },
+          {
+            "label": "Skew -",
+            "value": 5
+          },
+          {
+            "label": "Skew +/-",
+            "value": 6
           }
         ]
       },

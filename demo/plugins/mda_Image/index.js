@@ -21,6 +21,18 @@ export const meta         = {
         {
           "label": "Stereo image adjustment",
           "value": 0
+        },
+        {
+          "label": "Encode to MS",
+          "value": 0.25
+        },
+        {
+          "label": "Decode from MS",
+          "value": 0.5
+        },
+        {
+          "label": "Decode from MS (input channels reversed)",
+          "value": 0.75
         }
       ]
     },

@@ -22,6 +22,18 @@ export const meta         = {
         {
           "label": "Low",
           "value": 0
+        },
+        {
+          "label": "Mid",
+          "value": 1
+        },
+        {
+          "label": "High",
+          "value": 2
+        },
+        {
+          "label": "Out",
+          "value": 3
         }
       ]
     },
@@ -35,7 +47,8 @@ export const meta         = {
       "cv": false,
       "min": 88,
       "max": 1020,
-      "default": 550
+      "default": 550,
+      "logarithmic": true
     },
     {
       "index": 2,
@@ -47,7 +60,8 @@ export const meta         = {
       "cv": false,
       "min": 112,
       "max": 19606,
-      "default": 9859
+      "default": 9859,
+      "logarithmic": true
     },
     {
       "index": 3,
@@ -138,6 +152,10 @@ export const meta         = {
         {
           "label": "Bipolar",
           "value": 0
+        },
+        {
+          "label": "Unipolar",
+          "value": 1
         }
       ]
     },

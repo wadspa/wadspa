@@ -22,6 +22,30 @@ export const meta         = {
         {
           "label": "D.I. (flat frequency response)",
           "value": 0
+        },
+        {
+          "label": "Tradtional speaker simulator",
+          "value": 1
+        },
+        {
+          "label": "Small radio speaker",
+          "value": 2
+        },
+        {
+          "label": "Small combo (close mic)",
+          "value": 3
+        },
+        {
+          "label": "Small combo (far mic)",
+          "value": 4
+        },
+        {
+          "label": "Large stack (front mic)",
+          "value": 5
+        },
+        {
+          "label": "Large stack (side mic, scooped mids)",
+          "value": 6
         }
       ]
     },

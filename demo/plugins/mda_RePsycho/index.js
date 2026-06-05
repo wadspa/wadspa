@@ -94,6 +94,10 @@ export const meta         = {
         {
           "label": "Low",
           "value": 0
+        },
+        {
+          "label": "High",
+          "value": 1
         }
       ]
     },

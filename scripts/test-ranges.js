@@ -33,6 +33,7 @@ const SAMPLE_RATE = 44100;
 
 const issues = [];
 const sourceScalePointPorts = new Map();
+const sourceLogarithmicPorts = new Map();
 
 for (const entry of readLv2Registry(ROOT)) {
     if (entry.buildScript) continue;
@@ -45,6 +46,9 @@ for (const entry of readLv2Registry(ROOT)) {
         validateScalePointCoverage(`${entry.id} source`, port);
         if ((port.scalePoints ?? []).length > 0) {
             sourceScalePointPorts.set(`${entry.id}/${portKey(port)}`, port);
+        }
+        if (port.logarithmic) {
+            sourceLogarithmicPorts.set(`${entry.id}/${portKey(port)}`, port);
         }
     }
 }
@@ -60,11 +64,17 @@ for (const entry of [
         if (sourcePort && (port.scalePoints ?? []).length === 0) {
             issues.push(`${entry.id} catalog ${port.name}: missing ${sourcePort.scalePoints.length} source scale points`);
         }
+        const sourceLogPort = sourceLogarithmicPorts.get(`${entry.id}/${portKey(port)}`);
+        if (sourceLogPort && !port.logarithmic) {
+            issues.push(`${entry.id} catalog ${port.name}: missing source logarithmic slider metadata`);
+        }
         validateScalePointCoverage(`${entry.id} catalog`, port);
         validateSampleRateRange(`${entry.id} catalog`, port);
         validateSampleRateUiDispatch(`${entry.id} catalog`, port);
     }
 }
+
+validateKnownAdapterRangeMappings();
 
 if (issues.length > 0) {
     console.log(`range metadata FAILED (${issues.length} issues)`);
@@ -216,6 +226,31 @@ function validateLogSliderMapping(scope, port, range) {
         if (!monotonic) {
             issues.push(`${scope} ${port.name}: logarithmic slider is not monotonic`);
             return;
+        }
+    }
+}
+
+function validateKnownAdapterRangeMappings() {
+    const beatboxWrapperPath = join(ROOT, 'plugins', 'mda_BeatBox', '_wrapper.cpp');
+    if (existsSync(beatboxWrapperPath)) {
+        const wrapper = readFileSync(beatboxWrapperPath, 'utf8');
+        if (!wrapper.includes('beatboxTriggerValue') || !wrapper.includes('beatboxTriggerHz')) {
+            issues.push('mda_BeatBox adapter: trigger Hz controls must use the DSP logarithmic detector mapping');
+        }
+        if (/value\s*\*\s*3472\s*\+\s*22/.test(wrapper) || /\(value\s*-\s*22\)\s*\/\s*\(?3472\)?/.test(wrapper)) {
+            issues.push('mda_BeatBox adapter: trigger Hz controls still contain the old linear 22..3494 mapping');
+        }
+    }
+
+    const beatboxSourcePath = join(ROOT, 'plugins', 'mda_BeatBox', 'mdaBeatBox.cpp');
+    if (existsSync(beatboxSourcePath)) {
+        const source = readFileSync(beatboxSourcePath, 'utf8');
+        const sourceWithoutLineComments = source.replace(/\/\/.*$/gm, '');
+        if (/case\s+5:\s*fParam6\s*=\s*value\s*\*\s*0\.88/.test(sourceWithoutLineComments)) {
+            issues.push('mda_BeatBox source: kick mix still uses the old 0.88 range trim');
+        }
+        if (/fParam[369]\s*\*\s*fParam[369]\s*\*\s*4\.f/.test(sourceWithoutLineComments)) {
+            issues.push('mda_BeatBox source: mix controls still use the old squared gain curve');
         }
     }
 }

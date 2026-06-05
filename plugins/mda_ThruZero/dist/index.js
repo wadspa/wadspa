@@ -16,6 +16,7 @@ export const meta         = {
       "min": 0.01,
       "max": 10,
       "default": 0.08,
+      "logarithmic": true,
       "scalePoints": [
         {
           "label": "-",

@@ -227,12 +227,13 @@
   {
     "id": "zynaddsubfx",
     "git": "https://github.com/zynaddsubfx/zynaddsubfx.git",
-    "setup": null,
+    "setup": "setup-zynaddsubfx.js",
     "autoSetup": false,
     "description": "ZynAddSubFX — complex additive/subtractive/FM synthesizer LV2",
     "targets": [
       {
         "id": "zynaddsubfx",
+        "setup": "setup-zynaddsubfx.js",
         "autoSetup": false,
         "description": "ZynAddSubFX additive/subtractive/FM synthesizer"
       }

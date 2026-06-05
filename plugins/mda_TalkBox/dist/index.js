@@ -45,6 +45,10 @@ export const meta         = {
         {
           "label": "Right",
           "value": 0
+        },
+        {
+          "label": "Left",
+          "value": 1
         }
       ]
     },

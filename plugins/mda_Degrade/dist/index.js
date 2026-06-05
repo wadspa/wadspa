@@ -41,7 +41,8 @@ export const meta         = {
       "min": 4800,
       "max": 48000,
       "default": 48000,
-      "integer": true
+      "integer": true,
+      "logarithmic": true
     },
     {
       "index": 3,
@@ -60,6 +61,10 @@ export const meta         = {
         {
           "label": "Integrator Off",
           "value": 0
+        },
+        {
+          "label": "Integrator On",
+          "value": 1
         }
       ]
     },
@@ -74,7 +79,8 @@ export const meta         = {
       "min": 200,
       "max": 20000,
       "default": 15000,
-      "integer": true
+      "integer": true,
+      "logarithmic": true
     },
     {
       "index": 5,
@@ -105,6 +111,10 @@ export const meta         = {
         {
           "label": "Even",
           "value": 0
+        },
+        {
+          "label": "Odd",
+          "value": 1
         }
       ]
     },

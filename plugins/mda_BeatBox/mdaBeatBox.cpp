@@ -144,7 +144,7 @@ void mdaBeatBox::setParameter(int32_t index, float value)
     case 2: fParam3 = value; break;
     case 3: fParam4 = value; break;
     case 4: fParam5 = value; break;
-    case 5: fParam6 = value*0.88; break; // *0.88 to compensate for the previously hacked together ranges in the turtle file so the range can be the same as the snare and hat ranges
+    case 5: fParam6 = value; break;
     case 6: fParam7 = value; break;
     case 7: fParam8 = value; break;
     case 8: fParam9 = value; break;
@@ -158,9 +158,21 @@ void mdaBeatBox::setParameter(int32_t index, float value)
   sthr = (float)(40.0 * pow(10.f, 2.f * fParam7 - 2.f));
   kthr = (float)(220.0 * pow(10.f, 2.f * fParam4 - 2.f));
 
-  hlev = (float)(0.0001f + fParam3 * fParam3 * 4.f);
-  klev = (float)(0.0001f + fParam6 * fParam6 * 4.f);
-  slev = (float)(0.0001f + fParam9 * fParam9 * 4.f);
+  if(fParam3 <= 0.0f) {
+    hlev = 0.f;
+  }else{
+    hlev = (float)(0.0001f + pow(10.f, fParam3*1.8f-1.2f));
+  }
+  if(fParam6 <= 0.0f) {
+    klev = 0.f;
+  }else{
+    klev = (float)(0.0001f + pow(10.f, fParam6*1.8f-1.2f));
+  }
+  if(fParam9 <= 0.0f) {
+    slev = 0.f;
+  }else{
+    slev = (float)(0.0001f + pow(10.f, fParam9*1.8f-1.2f));
+  }
 
   wwx=ww;
   ww = (float)pow(10.0,-3.0 + 2.2 * fParam8);

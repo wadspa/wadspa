@@ -34,6 +34,18 @@ export const meta         = {
         {
           "label": "Truncation",
           "value": 0
+        },
+        {
+          "label": "Triangular PDF dither",
+          "value": 1
+        },
+        {
+          "label": "High-pass Triangular PDF dither",
+          "value": 2
+        },
+        {
+          "label": "Second-order noise-shaped dither",
+          "value": 3
         }
       ]
     },

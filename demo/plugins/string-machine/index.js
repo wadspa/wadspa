@@ -377,6 +377,10 @@ export const meta         = {
         {
           "label": "Digital delay",
           "value": 0
+        },
+        {
+          "label": "Analog bucket-brigade delay",
+          "value": 1
         }
       ]
     },

@@ -21,6 +21,18 @@ export const meta         = {
         {
           "label": "Distort",
           "value": 0
+        },
+        {
+          "label": "Divide",
+          "value": 0.25
+        },
+        {
+          "label": "Invert",
+          "value": 0.5
+        },
+        {
+          "label": "Key Osc.",
+          "value": 0.75
         }
       ]
     },
@@ -46,7 +58,8 @@ export const meta         = {
       "cv": false,
       "min": 10,
       "max": 320,
-      "default": 198
+      "default": 198,
+      "logarithmic": true
     },
     {
       "index": 3,

@@ -21,6 +21,14 @@ export const meta         = {
         {
           "label": "Constant pitch",
           "value": 0
+        },
+        {
+          "label": "Track input pitch",
+          "value": 0.5
+        },
+        {
+          "label": "Track quantized input pitch",
+          "value": 1
         }
       ]
     },

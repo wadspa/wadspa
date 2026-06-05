@@ -80,9 +80,10 @@
     "id": "zynaddsubfx",
     "name": "ZynAddSubFX",
     "family": "Virtual Analog and Subtractive Workstations",
-    "status": "candidate",
+    "status": "supported",
     "sourceIds": ["zynaddsubfx"],
-    "notes": "Source is already tracked locally. The full synth has a large engine/DPF path and still needs a dedicated setup script."
+    "catalogIds": ["zynaddsubfx"],
+    "notes": "Built as a MIDI-controlled browser instrument using ZynAddSubFX's real Master/Part/ADnote engine, with a tested default subtractive/additive control surface for volume, key shift, part controls, envelopes, filter, voice level, and detune."
   },
   {
     "id": "amsynth",

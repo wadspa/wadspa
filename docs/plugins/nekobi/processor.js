@@ -13,7 +13,7 @@ class WadspProcessor extends AudioWorkletProcessor {
                 try {
                     mod = await createDISTRHO_NekobiPlugin({ wasmBinary: data.wasm, locateFile: (p, d) => d + p });
                     mod._shim_init(sampleRate);
-                    
+
                     outPtrs[0] = mod._shim_output_buf_out_l() >> 2;
                     outPtrs[1] = mod._shim_output_buf_out_r() >> 2;
                     this.port.postMessage({ type: 'ready' });

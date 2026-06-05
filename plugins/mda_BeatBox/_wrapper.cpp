@@ -48,6 +48,33 @@
 // (que encontram-se determinados no ttl)
 // para valores de 0 a 1, pois o código do mda foi projetado para trabalhar com esses valores
 
+static float
+clamp01(float value)
+{
+    if (value < 0.0f) return 0.0f;
+    if (value > 1.0f) return 1.0f;
+    return value;
+}
+
+static float
+beatboxTriggerHz(PLUGIN_CLASS* effect, float value)
+{
+    const float sampleRate = effect ? effect->getSampleRate() : 44100.0f;
+    return 0.5f * sampleRate * powf(10.0f, -3.0f + 2.2f * clamp01(value));
+}
+
+static float
+beatboxTriggerValue(PLUGIN_CLASS* effect, float hz)
+{
+    const float sampleRate = effect ? effect->getSampleRate() : 44100.0f;
+    const float nyquist = 0.5f * sampleRate;
+    const float minHz = nyquist * powf(10.0f, -3.0f);
+    const float maxHz = nyquist * powf(10.0f, -0.8f);
+    if (hz < minHz) hz = minHz;
+    if (hz > maxHz) hz = maxHz;
+    return clamp01((log10f(hz / nyquist) + 3.0f) / 2.2f);
+}
+
 
 float translateParameter(PLUGIN_CLASS* effect,int port,float value,bool inverted) {    
     if(strcmp(effect->getUniqueID(), "mdaAmb") == 0) {
@@ -97,13 +124,13 @@ float translateParameter(PLUGIN_CLASS* effect,int port,float value,bool inverted
             case(3):
             return inverted ? value*40 - 40 : (value + 40)/(40);
             case(4):
-            return inverted ? value*3472 + 22 : (value - 22)/(3472);
+            return inverted ? beatboxTriggerHz(effect, value) : beatboxTriggerValue(effect, value);
             case(5):
             return inverted ? value*36 - 24 : (value + 24)/(36);
             case(6):
             return inverted ? value*40 - 40 : (value + 40)/(40);
             case(7):
-            return inverted ? value*3472 + 22 : (value - 22)/(3472);
+            return inverted ? beatboxTriggerHz(effect, value) : beatboxTriggerValue(effect, value);
             case(8):
             return inverted ? value*36 - 24 : (value + 24)/(36);
             case(9):

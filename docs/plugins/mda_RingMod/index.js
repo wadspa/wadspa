@@ -15,7 +15,8 @@ export const meta         = {
       "cv": false,
       "min": 0,
       "max": 16000,
-      "default": 1000
+      "default": 1000,
+      "logarithmic": true
     },
     {
       "index": 1,

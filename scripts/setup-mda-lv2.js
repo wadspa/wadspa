@@ -193,7 +193,7 @@ function scaffoldCandidate(candidate) {
     }
 
     for (const { src, dst } of LVZ_SHARED) {
-        copy(src, join(candidate.pluginDir, dst));
+        write(candidate.pluginDir, dst, sharedSourceForCandidate(candidate, src, dst));
     }
     console.log('  lvz shared files');
 
@@ -262,8 +262,31 @@ function sourceForCandidate(candidate) {
     if (candidate.pluginId === 'mda_BeatBox') {
         source = source
             .replace(
+                '    case 5: fParam6 = value*0.88; break; // *0.88 to compensate for the previously hacked together ranges in the turtle file so the range can be the same as the snare and hat ranges',
+                '    case 5: fParam6 = value; break;')
+            .replace(
+                '  hlev = (float)(0.0001f + fParam3 * fParam3 * 4.f);\n  klev = (float)(0.0001f + fParam6 * fParam6 * 4.f);\n  slev = (float)(0.0001f + fParam9 * fParam9 * 4.f);',
+                '  if(fParam3 <= 0.0f) {\n    hlev = 0.f;\n  }else{\n    hlev = (float)(0.0001f + pow(10.f, fParam3*1.8f-1.2f));\n  }\n  if(fParam6 <= 0.0f) {\n    klev = 0.f;\n  }else{\n    klev = (float)(0.0001f + pow(10.f, fParam6*1.8f-1.2f));\n  }\n  if(fParam9 <= 0.0f) {\n    slev = 0.f;\n  }else{\n    slev = (float)(0.0001f + pow(10.f, fParam9*1.8f-1.2f));\n  }')
+            .replace(
                 '  if(wwx != ww) sfx = (int32_t)(2 * getSampleRate()); \n  if(kwwx != kww) ksfx = (int32_t)(2 * getSampleRate());',
                 '  // Browser controls should retune the trigger filters without entering the\n  // original two-second key-listen mode, which mutes drum replacement while dragging.\n  if(wwx != ww) sfx = 0;\n  if(kwwx != kww) ksfx = 0;');
+    }
+    return source;
+}
+
+function sharedSourceForCandidate(candidate, src, dst) {
+    let source = readFileSync(src, 'utf8');
+    if (candidate.pluginId === 'mda_BeatBox' && dst === '_wrapper.cpp') {
+        source = source
+            .replace(
+                '// Essa função trabalha como uma regra de 3 para adaptar os valores recebidos na instância do plugin\n// (que encontram-se determinados no ttl)\n// para valores de 0 a 1, pois o código do mda foi projetado para trabalhar com esses valores\n',
+                '// Essa função trabalha como uma regra de 3 para adaptar os valores recebidos na instância do plugin\n// (que encontram-se determinados no ttl)\n// para valores de 0 a 1, pois o código do mda foi projetado para trabalhar com esses valores\n\nstatic float\nclamp01(float value)\n{\n    if (value < 0.0f) return 0.0f;\n    if (value > 1.0f) return 1.0f;\n    return value;\n}\n\nstatic float\nbeatboxTriggerHz(PLUGIN_CLASS* effect, float value)\n{\n    const float sampleRate = effect ? effect->getSampleRate() : 44100.0f;\n    return 0.5f * sampleRate * powf(10.0f, -3.0f + 2.2f * clamp01(value));\n}\n\nstatic float\nbeatboxTriggerValue(PLUGIN_CLASS* effect, float hz)\n{\n    const float sampleRate = effect ? effect->getSampleRate() : 44100.0f;\n    const float nyquist = 0.5f * sampleRate;\n    const float minHz = nyquist * powf(10.0f, -3.0f);\n    const float maxHz = nyquist * powf(10.0f, -0.8f);\n    if (hz < minHz) hz = minHz;\n    if (hz > maxHz) hz = maxHz;\n    return clamp01((log10f(hz / nyquist) + 3.0f) / 2.2f);\n}\n')
+            .replace(
+                '            case(4):\n            return inverted ? value*3472 + 22 : (value - 22)/(3472);',
+                '            case(4):\n            return inverted ? beatboxTriggerHz(effect, value) : beatboxTriggerValue(effect, value);')
+            .replace(
+                '            case(7):\n            return inverted ? value*3472 + 22 : (value - 22)/(3472);',
+                '            case(7):\n            return inverted ? beatboxTriggerHz(effect, value) : beatboxTriggerValue(effect, value);');
     }
     return source;
 }

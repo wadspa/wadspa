@@ -69,6 +69,10 @@ export const meta         = {
         {
           "label": "Hard",
           "value": 0
+        },
+        {
+          "label": "Soft",
+          "value": 1
         }
       ]
     },

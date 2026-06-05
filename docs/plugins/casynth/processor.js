@@ -13,7 +13,7 @@ class WadspProcessor extends AudioWorkletProcessor {
                 try {
                     mod = await createthe_infamous_cellular_automaton_synthPlugin({ wasmBinary: data.wasm, locateFile: (p, d) => d + p });
                     mod._shim_init(sampleRate);
-                    
+
                     outPtrs[0] = mod._shim_output_buf_OUTPUT() >> 2;
                     this.port.postMessage({ type: 'ready' });
                 } catch (e) {

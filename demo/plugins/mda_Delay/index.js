@@ -46,6 +46,10 @@ export const meta         = {
         {
           "label": "Free",
           "value": 0
+        },
+        {
+          "label": "Fixed",
+          "value": 1
         }
       ]
     },

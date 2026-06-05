@@ -13,7 +13,7 @@ class WadspProcessor extends AudioWorkletProcessor {
                 try {
                     mod = await createMDA_ePianoPlugin({ wasmBinary: data.wasm, locateFile: (p, d) => d + p });
                     mod._shim_init(sampleRate);
-                    
+
                     outPtrs[0] = mod._shim_output_buf_left_out() >> 2;
                     outPtrs[1] = mod._shim_output_buf_right_out() >> 2;
                     this.port.postMessage({ type: 'ready' });

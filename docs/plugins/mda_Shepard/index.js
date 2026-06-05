@@ -21,6 +21,14 @@ export const meta         = {
         {
           "label": "Tones only",
           "value": 0
+        },
+        {
+          "label": "Input ring modulated by tones",
+          "value": 0.5
+        },
+        {
+          "label": "Tones mixed with input",
+          "value": 1
         }
       ]
     },

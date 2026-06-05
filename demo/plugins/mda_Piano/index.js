@@ -118,6 +118,10 @@ export const meta         = {
         {
           "label": "8 voices",
           "value": 0
+        },
+        {
+          "label": "32 voices",
+          "value": 1
         }
       ]
     },

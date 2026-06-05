@@ -21,6 +21,14 @@ export const meta         = {
         {
           "label": "Stop",
           "value": 0
+        },
+        {
+          "label": "Slow",
+          "value": 0.5
+        },
+        {
+          "label": "Fast",
+          "value": 1
         }
       ]
     },

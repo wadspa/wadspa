@@ -144,6 +144,22 @@ export const meta         = {
         {
           "label": "None",
           "value": 0
+        },
+        {
+          "label": "2x",
+          "value": 1
+        },
+        {
+          "label": "4x",
+          "value": 2
+        },
+        {
+          "label": "8x",
+          "value": 3
+        },
+        {
+          "label": "16x",
+          "value": 4
         }
       ]
     },
@@ -165,6 +181,10 @@ export const meta         = {
         {
           "label": "Unipolar",
           "value": 0
+        },
+        {
+          "label": "Bipolar",
+          "value": 1
         }
       ]
     },
@@ -185,6 +205,30 @@ export const meta         = {
         {
           "label": "None",
           "value": 0
+        },
+        {
+          "label": "Bend +",
+          "value": 1
+        },
+        {
+          "label": "Bend -",
+          "value": 2
+        },
+        {
+          "label": "Bend +/-",
+          "value": 3
+        },
+        {
+          "label": "Skew +",
+          "value": 4
+        },
+        {
+          "label": "Skew -",
+          "value": 5
+        },
+        {
+          "label": "Skew +/-",
+          "value": 6
         }
       ]
     },
@@ -217,6 +261,30 @@ export const meta         = {
         {
           "label": "None",
           "value": 0
+        },
+        {
+          "label": "Bend +",
+          "value": 1
+        },
+        {
+          "label": "Bend -",
+          "value": 2
+        },
+        {
+          "label": "Bend +/-",
+          "value": 3
+        },
+        {
+          "label": "Skew +",
+          "value": 4
+        },
+        {
+          "label": "Skew -",
+          "value": 5
+        },
+        {
+          "label": "Skew +/-",
+          "value": 6
         }
       ]
     },

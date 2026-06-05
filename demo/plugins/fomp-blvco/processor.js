@@ -13,7 +13,7 @@ class WadspProcessor extends AudioWorkletProcessor {
                 try {
                     mod = await createPulse_VCOPlugin({ wasmBinary: data.wasm, locateFile: (p, d) => d + p });
                     mod._shim_init(sampleRate);
-                    
+
                     outPtrs[0] = mod._shim_output_buf_out() >> 2;
                     this.port.postMessage({ type: 'ready' });
                 } catch (e) {

@@ -118,6 +118,14 @@ export const meta         = {
         {
           "label": "Independent",
           "value": 0
+        },
+        {
+          "label": "Average",
+          "value": 1
+        },
+        {
+          "label": "Peak",
+          "value": 2
         }
       ]
     },
@@ -138,6 +146,62 @@ export const meta         = {
         {
           "label": "2:1 comp at -6 dB",
           "value": 0
+        },
+        {
+          "label": "2:1 comp at -9 dB",
+          "value": 1
+        },
+        {
+          "label": "2:1 comp at -12 dB",
+          "value": 2
+        },
+        {
+          "label": "2:1 comp at -18 dB",
+          "value": 3
+        },
+        {
+          "label": "2.5:1 comp at -12 dB",
+          "value": 4
+        },
+        {
+          "label": "3:1 comp at -12 dB",
+          "value": 5
+        },
+        {
+          "label": "3:1 comp at -15 dB",
+          "value": 6
+        },
+        {
+          "label": "Compressor/Gate",
+          "value": 7
+        },
+        {
+          "label": "Expander",
+          "value": 8
+        },
+        {
+          "label": "Hard limiter at -6 dB",
+          "value": 9
+        },
+        {
+          "label": "Hard limiter at -12 dB",
+          "value": 10
+        },
+        {
+          "label": "Hard gate at -35 dB",
+          "value": 11
+        },
+        {
+          "label": "Soft limiter",
+          "value": 12
+        },
+        {
+          "label": "Soft knee comp/gate",
+          "value": 13
+        },
+        {
+          "label": "Soft gate below -36 dB",
+          "value": 14
         }
       ]
     },

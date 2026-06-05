@@ -21,6 +21,18 @@ export const meta         = {
         {
           "label": "Low",
           "value": 0
+        },
+        {
+          "label": "Mid",
+          "value": 0.33333333
+        },
+        {
+          "label": "High",
+          "value": 0.66666666
+        },
+        {
+          "label": "Output",
+          "value": 1
         }
       ]
     },
@@ -34,7 +46,8 @@ export const meta         = {
       "cv": false,
       "min": 87,
       "max": 1020,
-      "default": 110.7
+      "default": 110.7,
+      "logarithmic": true
     },
     {
       "index": 2,
@@ -46,7 +59,8 @@ export const meta         = {
       "cv": false,
       "min": 111,
       "max": 19606,
-      "default": 17153.79
+      "default": 17153.79,
+      "logarithmic": true
     },
     {
       "index": 3,

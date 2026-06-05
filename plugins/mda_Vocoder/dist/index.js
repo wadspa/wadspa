@@ -21,6 +21,10 @@ export const meta         = {
         {
           "label": "Left",
           "value": 0
+        },
+        {
+          "label": "Right",
+          "value": 1
         }
       ]
     },
@@ -71,6 +75,7 @@ export const meta         = {
       "min": 14,
       "max": 10000,
       "default": 1602.24,
+      "logarithmic": true,
       "scalePoints": [
         {
           "label": "FREEZE",
@@ -100,7 +105,8 @@ export const meta         = {
       "cv": false,
       "min": 200,
       "max": 1600,
-      "default": 1000
+      "default": 1000,
+      "logarithmic": true
     },
     {
       "index": 7,
@@ -118,6 +124,10 @@ export const meta         = {
         {
           "label": "8 BAND",
           "value": 0
+        },
+        {
+          "label": "16 BAND",
+          "value": 1
         }
       ]
     },

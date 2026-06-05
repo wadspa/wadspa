@@ -21,6 +21,34 @@ export const meta         = {
         {
           "label": "MIDI #",
           "value": 0
+        },
+        {
+          "label": "Impulse",
+          "value": 0.14
+        },
+        {
+          "label": "White",
+          "value": 0.28
+        },
+        {
+          "label": "Pink",
+          "value": 0.42
+        },
+        {
+          "label": "Sine",
+          "value": 0.57
+        },
+        {
+          "label": "Log Sweep",
+          "value": 0.71
+        },
+        {
+          "label": "Log Step",
+          "value": 0.85
+        },
+        {
+          "label": "Lin Sweep",
+          "value": 1
         }
       ]
     },

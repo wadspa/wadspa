@@ -21,6 +21,18 @@ export const meta         = {
         {
           "label": "Normal",
           "value": 0
+        },
+        {
+          "label": "Inverse",
+          "value": 0.33333333
+        },
+        {
+          "label": "Normal Inverse",
+          "value": 0.66666666
+        },
+        {
+          "label": "Inverse Normal",
+          "value": 1
         }
       ]
     },
@@ -34,7 +46,8 @@ export const meta         = {
       "cv": false,
       "min": 100,
       "max": 10000,
-      "default": 5050
+      "default": 5050,
+      "logarithmic": true
     },
     {
       "index": 2,
@@ -52,6 +65,14 @@ export const meta         = {
         {
           "label": "Low",
           "value": 0
+        },
+        {
+          "label": "All",
+          "value": 0.5
+        },
+        {
+          "label": "High",
+          "value": 1
         }
       ]
     },
@@ -83,6 +104,14 @@ export const meta         = {
         {
           "label": "Low",
           "value": 0
+        },
+        {
+          "label": "All",
+          "value": 0.5
+        },
+        {
+          "label": "High",
+          "value": 1
         }
       ]
     },

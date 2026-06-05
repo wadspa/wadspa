@@ -57,6 +57,22 @@ export const meta         = {
         {
           "label": "5.3 ms",
           "value": 0
+        },
+        {
+          "label": "10.6 ms",
+          "value": 0.25
+        },
+        {
+          "label": "21.3 ms",
+          "value": 0.5
+        },
+        {
+          "label": "42.6 ms",
+          "value": 0.75
+        },
+        {
+          "label": "85.3 ms",
+          "value": 1
         }
       ]
     },

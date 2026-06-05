@@ -256,7 +256,7 @@ function parsePortBlock(block) {
 }
 
 function hasPortProperty(block, name) {
-    return new RegExp(`(?:pprop:|pprops:|port-props#)${name}\\b`).test(block);
+    return new RegExp(`(?:epp:|pprop:|pprops:|port-props#)${name}\\b`).test(block);
 }
 
 function parseScalePoints(block) {
@@ -712,6 +712,11 @@ export function generateLv2Processor(descriptor, label, extraFeatures = []) {
                 else if (type === 0xB0) mod._shim_midi_cc(ch, data1, data2);
                 else if (type === 0xD0 && mod._shim_midi_channel_pressure) mod._shim_midi_channel_pressure(ch, data1);
                 else if (type === 0xE0) mod._shim_midi_pitch_bend(ch, ((data2 << 7) | data1) - 8192);` : '';
+    const pointerInit = [
+        ...inBufs.map((fn, i)  => `inPtrs[${i}]  = mod.${fn}() >> 2;`),
+        ...outBufs.map((fn, i) => `outPtrs[${i}] = mod.${fn}() >> 2;`),
+    ].map(line => `                    ${line}`).join('\n');
+    const pointerInitBlock = pointerInit ? `${pointerInit}\n` : '';
 
     return `import ${exportName} from './${label}.js';
 
@@ -728,9 +733,7 @@ class WadspProcessor extends AudioWorkletProcessor {
                 try {
                     mod = await ${exportName}({ wasmBinary: data.wasm, locateFile: (p, d) => d + p });
                     mod._shim_init(sampleRate);
-                    ${inBufs.map((fn, i)  => `inPtrs[${i}]  = mod.${fn}() >> 2;`).join('\n                    ')}
-                    ${outBufs.map((fn, i) => `outPtrs[${i}] = mod.${fn}() >> 2;`).join('\n                    ')}
-                    this.port.postMessage({ type: 'ready' });
+${pointerInitBlock}                    this.port.postMessage({ type: 'ready' });
                 } catch (e) {
                     this.port.postMessage({ type: 'error', message: e.message });
                 }${midiHandler}

@@ -1,0 +1,144 @@
+[
+  {
+    "symbol": "master_volume",
+    "name": "Master Volume",
+    "min": -18,
+    "max": 6,
+    "def": 0,
+    "unit": "dB"
+  },
+  {
+    "symbol": "key_shift",
+    "name": "Key Shift",
+    "min": -12,
+    "max": 12,
+    "def": 0,
+    "integer": true
+  },
+  {
+    "symbol": "part_volume",
+    "name": "Part Volume",
+    "min": -18,
+    "max": 6,
+    "def": 0,
+    "unit": "dB"
+  },
+  {
+    "symbol": "part_pan",
+    "name": "Part Pan",
+    "min": 0,
+    "max": 1,
+    "def": 0.5
+  },
+  {
+    "symbol": "velocity_sense",
+    "name": "Velocity Sense",
+    "min": 0,
+    "max": 127,
+    "def": 64,
+    "integer": true
+  },
+  {
+    "symbol": "voice_limit",
+    "name": "Voice Limit",
+    "min": 1,
+    "max": 16,
+    "def": 8,
+    "integer": true
+  },
+  {
+    "symbol": "amp_attack",
+    "name": "Amp Attack",
+    "min": 0,
+    "max": 2,
+    "def": 0
+  },
+  {
+    "symbol": "amp_decay",
+    "name": "Amp Decay",
+    "min": 0.02,
+    "max": 4,
+    "def": 0.127
+  },
+  {
+    "symbol": "amp_sustain",
+    "name": "Amp Sustain",
+    "min": 0,
+    "max": 1,
+    "def": 1
+  },
+  {
+    "symbol": "amp_release",
+    "name": "Amp Release",
+    "min": 0.02,
+    "max": 4,
+    "def": 0.041
+  },
+  {
+    "symbol": "filter_cutoff",
+    "name": "Filter Cutoff",
+    "min": 120,
+    "max": 12000,
+    "def": 5000,
+    "unit": "Hz"
+  },
+  {
+    "symbol": "filter_resonance",
+    "name": "Filter Resonance",
+    "min": 0.2,
+    "max": 12,
+    "def": 1.25
+  },
+  {
+    "symbol": "filter_type",
+    "name": "Filter Type",
+    "min": 0,
+    "max": 4,
+    "def": 2,
+    "integer": true,
+    "scalePoints": [
+      [
+        "LP1",
+        0
+      ],
+      [
+        "HP1",
+        1
+      ],
+      [
+        "LP2",
+        2
+      ],
+      [
+        "HP2",
+        3
+      ],
+      [
+        "BP",
+        4
+      ]
+    ]
+  },
+  {
+    "symbol": "filter_stages",
+    "name": "Filter Stages",
+    "min": 0,
+    "max": 4,
+    "def": 1,
+    "integer": true
+  },
+  {
+    "symbol": "voice_volume",
+    "name": "Voice Volume",
+    "min": 0,
+    "max": 1,
+    "def": 1
+  },
+  {
+    "symbol": "voice_detune",
+    "name": "Voice Detune",
+    "min": -1,
+    "max": 1,
+    "def": 0
+  }
+]

@@ -13,7 +13,7 @@ class WadspProcessor extends AudioWorkletProcessor {
                 try {
                     mod = await createsetBfree_DSP_Tonewheel_OrganPlugin({ wasmBinary: data.wasm, locateFile: (p, d) => d + p });
                     mod._shim_init(sampleRate);
-                    
+
                     outPtrs[0] = mod._shim_output_buf_outL() >> 2;
                     outPtrs[1] = mod._shim_output_buf_outR() >> 2;
                     this.port.postMessage({ type: 'ready' });

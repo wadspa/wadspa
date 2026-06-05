@@ -21,6 +21,22 @@ export const meta         = {
         {
           "label": "Sine oscillator",
           "value": 0
+        },
+        {
+          "label": "Square oscillator",
+          "value": 0.25
+        },
+        {
+          "label": "Sawtooth oscillator",
+          "value": 0.5
+        },
+        {
+          "label": "Ring modulator",
+          "value": 0.75
+        },
+        {
+          "label": "Peaking EQ",
+          "value": 1
         }
       ]
     },
@@ -82,7 +98,8 @@ export const meta         = {
       "cv": false,
       "min": 39,
       "max": 7350,
-      "default": 6500
+      "default": 6500,
+      "logarithmic": true
     },
     {
       "index": 6,
