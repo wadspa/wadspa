@@ -1,0 +1,560 @@
+[
+  {
+    "symbol": "volume",
+    "name": "Volume",
+    "min": 0,
+    "max": 1.4143,
+    "def": 0.7071068
+  },
+  {
+    "symbol": "polyphony",
+    "name": "Polyphony",
+    "min": 1,
+    "max": 32,
+    "def": 4,
+    "integer": true
+  },
+  {
+    "symbol": "legato",
+    "name": "Legato",
+    "min": 0,
+    "max": 1,
+    "def": 0,
+    "integer": true,
+    "toggled": true
+  },
+  {
+    "symbol": "pitch_bend_range",
+    "name": "Pitch Bend Range",
+    "min": 0,
+    "max": 48,
+    "def": 2,
+    "integer": true
+  },
+  {
+    "symbol": "amp_attack",
+    "name": "Amp Attack",
+    "min": 0,
+    "max": 4,
+    "def": 0.109545
+  },
+  {
+    "symbol": "amp_decay",
+    "name": "Amp Decay",
+    "min": 0,
+    "max": 4,
+    "def": 1.5
+  },
+  {
+    "symbol": "amp_sustain",
+    "name": "Amp Sustain",
+    "min": 0,
+    "max": 1,
+    "def": 1
+  },
+  {
+    "symbol": "amp_release",
+    "name": "Amp Release",
+    "min": 0,
+    "max": 4,
+    "def": 0.3
+  },
+  {
+    "symbol": "osc_1_waveform",
+    "name": "Osc 1 Waveform",
+    "min": 0,
+    "max": 10,
+    "def": 4,
+    "integer": true,
+    "scalePoints": [
+      [
+        "Sine",
+        0
+      ],
+      [
+        "Triangle",
+        1
+      ],
+      [
+        "Square",
+        2
+      ],
+      [
+        "Saw Up",
+        3
+      ],
+      [
+        "Saw Down",
+        4
+      ],
+      [
+        "3 Step",
+        5
+      ],
+      [
+        "4 Step",
+        6
+      ],
+      [
+        "8 Step",
+        7
+      ],
+      [
+        "3 Pyramid",
+        8
+      ],
+      [
+        "5 Pyramid",
+        9
+      ],
+      [
+        "9 Pyramid",
+        10
+      ]
+    ]
+  },
+  {
+    "symbol": "osc_1_transpose",
+    "name": "Osc 1 Transpose",
+    "min": -48,
+    "max": 48,
+    "def": 0,
+    "integer": true
+  },
+  {
+    "symbol": "osc_1_tune",
+    "name": "Osc 1 Tune",
+    "min": -1,
+    "max": 1,
+    "def": 0
+  },
+  {
+    "symbol": "osc_1_unison_detune",
+    "name": "Osc 1 Unison Detune",
+    "min": 0,
+    "max": 100,
+    "def": 10
+  },
+  {
+    "symbol": "osc_1_unison_voices",
+    "name": "Osc 1 Unison Voices",
+    "min": 1,
+    "max": 15,
+    "def": 1,
+    "integer": true
+  },
+  {
+    "symbol": "osc_1_volume",
+    "name": "Osc 1 Volume",
+    "min": 0,
+    "max": 1,
+    "def": 0.5477225575
+  },
+  {
+    "symbol": "osc_2_waveform",
+    "name": "Osc 2 Waveform",
+    "min": 0,
+    "max": 10,
+    "def": 4,
+    "integer": true,
+    "scalePoints": [
+      [
+        "Sine",
+        0
+      ],
+      [
+        "Triangle",
+        1
+      ],
+      [
+        "Square",
+        2
+      ],
+      [
+        "Saw Up",
+        3
+      ],
+      [
+        "Saw Down",
+        4
+      ],
+      [
+        "3 Step",
+        5
+      ],
+      [
+        "4 Step",
+        6
+      ],
+      [
+        "8 Step",
+        7
+      ],
+      [
+        "3 Pyramid",
+        8
+      ],
+      [
+        "5 Pyramid",
+        9
+      ],
+      [
+        "9 Pyramid",
+        10
+      ]
+    ]
+  },
+  {
+    "symbol": "osc_2_transpose",
+    "name": "Osc 2 Transpose",
+    "min": -48,
+    "max": 48,
+    "def": 0,
+    "integer": true
+  },
+  {
+    "symbol": "osc_2_tune",
+    "name": "Osc 2 Tune",
+    "min": -1,
+    "max": 1,
+    "def": 0
+  },
+  {
+    "symbol": "osc_2_unison_detune",
+    "name": "Osc 2 Unison Detune",
+    "min": 0,
+    "max": 100,
+    "def": 10
+  },
+  {
+    "symbol": "osc_2_unison_voices",
+    "name": "Osc 2 Unison Voices",
+    "min": 1,
+    "max": 15,
+    "def": 1,
+    "integer": true
+  },
+  {
+    "symbol": "osc_2_volume",
+    "name": "Osc 2 Volume",
+    "min": 0,
+    "max": 1,
+    "def": 0.5477225575
+  },
+  {
+    "symbol": "cross_modulation",
+    "name": "Cross Mod",
+    "min": 0,
+    "max": 0.5,
+    "def": 0
+  },
+  {
+    "symbol": "osc_feedback_amount",
+    "name": "Osc Feedback Amount",
+    "min": -1,
+    "max": 1,
+    "def": 0
+  },
+  {
+    "symbol": "osc_feedback_transpose",
+    "name": "Osc Feedback Transpose",
+    "min": -24,
+    "max": 24,
+    "def": 0,
+    "integer": true
+  },
+  {
+    "symbol": "osc_feedback_tune",
+    "name": "Osc Feedback Tune",
+    "min": -1,
+    "max": 1,
+    "def": 0
+  },
+  {
+    "symbol": "noise_volume",
+    "name": "Noise Volume",
+    "min": 0,
+    "max": 1,
+    "def": 0
+  },
+  {
+    "symbol": "sub_volume",
+    "name": "Sub Osc Volume",
+    "min": 0,
+    "max": 1,
+    "def": 0.35
+  },
+  {
+    "symbol": "sub_octave",
+    "name": "Sub Octave Down",
+    "min": 0,
+    "max": 1,
+    "def": 0,
+    "integer": true,
+    "toggled": true
+  },
+  {
+    "symbol": "sub_waveform",
+    "name": "Sub Osc Waveform",
+    "min": 0,
+    "max": 10,
+    "def": 2,
+    "integer": true,
+    "scalePoints": [
+      [
+        "Sine",
+        0
+      ],
+      [
+        "Triangle",
+        1
+      ],
+      [
+        "Square",
+        2
+      ],
+      [
+        "Saw Up",
+        3
+      ],
+      [
+        "Saw Down",
+        4
+      ],
+      [
+        "3 Step",
+        5
+      ],
+      [
+        "4 Step",
+        6
+      ],
+      [
+        "8 Step",
+        7
+      ],
+      [
+        "3 Pyramid",
+        8
+      ],
+      [
+        "5 Pyramid",
+        9
+      ],
+      [
+        "9 Pyramid",
+        10
+      ]
+    ]
+  },
+  {
+    "symbol": "sub_shuffle",
+    "name": "Sub Osc Shuffle",
+    "min": 0,
+    "max": 1,
+    "def": 0
+  },
+  {
+    "symbol": "filter_on",
+    "name": "Filter On",
+    "min": 0,
+    "max": 1,
+    "def": 0,
+    "integer": true,
+    "toggled": true
+  },
+  {
+    "symbol": "cutoff",
+    "name": "Filter Cutoff",
+    "min": 28,
+    "max": 84,
+    "def": 68
+  },
+  {
+    "symbol": "resonance",
+    "name": "Filter Resonance",
+    "min": 0,
+    "max": 1,
+    "def": 0.5
+  },
+  {
+    "symbol": "filter_drive",
+    "name": "Filter Drive",
+    "min": -12,
+    "max": 20,
+    "def": 0
+  },
+  {
+    "symbol": "filter_blend",
+    "name": "Filter Blend",
+    "min": 0,
+    "max": 2,
+    "def": 0
+  },
+  {
+    "symbol": "filter_style",
+    "name": "Filter Style",
+    "min": 0,
+    "max": 2,
+    "def": 0,
+    "integer": true,
+    "scalePoints": [
+      [
+        "12dB",
+        0
+      ],
+      [
+        "24dB",
+        1
+      ],
+      [
+        "Shelf",
+        2
+      ]
+    ]
+  },
+  {
+    "symbol": "fil_env_depth",
+    "name": "Filter Env Depth",
+    "min": -128,
+    "max": 128,
+    "def": 48
+  },
+  {
+    "symbol": "fil_attack",
+    "name": "Filter Attack",
+    "min": 0,
+    "max": 4,
+    "def": 0
+  },
+  {
+    "symbol": "fil_decay",
+    "name": "Filter Decay",
+    "min": 0,
+    "max": 4,
+    "def": 1.5
+  },
+  {
+    "symbol": "fil_sustain",
+    "name": "Filter Sustain",
+    "min": 0,
+    "max": 1,
+    "def": 0.5
+  },
+  {
+    "symbol": "fil_release",
+    "name": "Filter Release",
+    "min": 0,
+    "max": 1.5,
+    "def": 0.8
+  },
+  {
+    "symbol": "distortion_on",
+    "name": "Distortion On",
+    "min": 0,
+    "max": 1,
+    "def": 0,
+    "integer": true,
+    "toggled": true
+  },
+  {
+    "symbol": "distortion_type",
+    "name": "Distortion Type",
+    "min": 0,
+    "max": 3,
+    "def": 0,
+    "integer": true,
+    "scalePoints": [
+      [
+        "Soft Clip",
+        0
+      ],
+      [
+        "Hard Clip",
+        1
+      ],
+      [
+        "Linear Fold",
+        2
+      ],
+      [
+        "Sine Fold",
+        3
+      ]
+    ]
+  },
+  {
+    "symbol": "distortion_drive",
+    "name": "Distortion Drive",
+    "min": -30,
+    "max": 30,
+    "def": 0
+  },
+  {
+    "symbol": "distortion_mix",
+    "name": "Distortion Mix",
+    "min": 0,
+    "max": 1,
+    "def": 1
+  },
+  {
+    "symbol": "delay_on",
+    "name": "Delay On",
+    "min": 0,
+    "max": 1,
+    "def": 0,
+    "integer": true,
+    "toggled": true
+  },
+  {
+    "symbol": "delay_dry_wet",
+    "name": "Delay Mix",
+    "min": 0,
+    "max": 1,
+    "def": 0.5
+  },
+  {
+    "symbol": "delay_feedback",
+    "name": "Delay Feedback",
+    "min": -1,
+    "max": 1,
+    "def": 0.4
+  },
+  {
+    "symbol": "delay_frequency",
+    "name": "Delay Frequency",
+    "min": -2,
+    "max": 5,
+    "def": 2
+  },
+  {
+    "symbol": "reverb_on",
+    "name": "Reverb On",
+    "min": 0,
+    "max": 1,
+    "def": 0,
+    "integer": true,
+    "toggled": true
+  },
+  {
+    "symbol": "reverb_dry_wet",
+    "name": "Reverb Mix",
+    "min": 0,
+    "max": 1,
+    "def": 0.5
+  },
+  {
+    "symbol": "reverb_feedback",
+    "name": "Reverb Feedback",
+    "min": 0.8,
+    "max": 1,
+    "def": 0.9
+  },
+  {
+    "symbol": "reverb_damping",
+    "name": "Reverb Damping",
+    "min": 0,
+    "max": 1,
+    "def": 0.5
+  }
+]

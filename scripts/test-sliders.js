@@ -817,7 +817,7 @@ function supportOverridesFor(port, allCtrlPorts, options) {
             if (/delay|time/i.test(otherText)) set(other, shortTimeValue(other));
             if (/voices|number of voices/i.test(otherText)) set(other, highValue(other));
             if (/detune|separation|mod|lfo|rate/i.test(otherText)) set(other, audibleHighValue(other));
-            if (/speed|rate/i.test(otherText) && /tap|delay/i.test(text)) set(other, highValue(other));
+            if (/frequency|freq|speed|rate/i.test(otherText) && /tap|delay/i.test(text)) set(other, highValue(other));
             if (sibling && /tap/i.test(text) && /level|gain/i.test(otherText)) set(other, audibleHighValue(other));
             if (sibling && /tap/i.test(text) && /distance|delay|time/i.test(otherText)) set(other, shortTimeValue(other));
         }
@@ -882,8 +882,12 @@ function supportOverridesFor(port, allCtrlPorts, options) {
         }
 
         if (/polyphony/i.test(text) && /mono/i.test(otherText)) set(other, lowValue(other));
-        if (/portamento|glide/i.test(text) && /keyboard|mono|legato|glide|portamento/i.test(otherText)) {
-            set(other, /keyboard|mode/i.test(otherText) ? midValue(other) : onValue(other));
+        if (/portamento|glide/i.test(text) && /polyphony|voices|keyboard|mono|legato|glide|portamento/i.test(otherText)) {
+            set(other, /polyphony|voices/i.test(otherText)
+                ? lowValue(other)
+                : /keyboard|mode/i.test(otherText)
+                    ? midValue(other)
+                    : onValue(other));
         }
         if (/pitchbend|modwheel|pressure|velocity/i.test(text) && /pitchbend|modwheel|pressure|velocity/i.test(otherText)) {
             set(other, audibleHighValue(other));
@@ -933,6 +937,17 @@ function uiContextSupportOverridesFor(port, allCtrlPorts, options) {
             }
             if (/volume|level|gain/i.test(otherText)) {
                 set(other, audibleHighValue(other));
+            }
+        }
+    }
+
+    if (/portamento|glide/i.test(text)) {
+        for (const other of allCtrlPorts) {
+            const otherText = controlText(other);
+            if (/polyphony|voices/i.test(otherText)) {
+                set(other, lowValue(other));
+            } else if (/keyboard|mono|legato|glide|portamento/i.test(otherText)) {
+                set(other, /keyboard|mode/i.test(otherText) ? midValue(other) : onValue(other));
             }
         }
     }

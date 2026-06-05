@@ -27,9 +27,10 @@
     "id": "helm",
     "name": "Helm",
     "family": "Hybrid, Wavetable, and Modern Synths",
-    "status": "candidate",
+    "status": "supported",
     "sourceIds": ["helm"],
-    "notes": "Upstream is a full synth with visual modulation UI. It needs a dedicated setup script before it can be tested in the browser catalog."
+    "catalogIds": ["helm"],
+    "notes": "Built as a MIDI-controlled browser instrument using Helm's real mopo/HelmEngine DSP path, with a tested oscillator, filter, envelope, voice, distortion, delay, and reverb control surface."
   },
   {
     "id": "cardinal",

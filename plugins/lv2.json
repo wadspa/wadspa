@@ -1572,5 +1572,11 @@
     "category": "Instruments",
     "buildScript": "scripts/build-adlplug.js",
     "memoryGrowth": true
+  },
+  {
+    "id": "helm",
+    "description": "Helm polyphonic synthesizer",
+    "category": "LV2 Instruments",
+    "buildScript": "scripts/build-helm.js"
   }
 ]

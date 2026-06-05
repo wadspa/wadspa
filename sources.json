@@ -152,12 +152,13 @@
   {
     "id": "helm",
     "git": "https://github.com/mtytel/helm.git",
-    "setup": null,
+    "setup": "setup-helm.js",
     "autoSetup": false,
     "description": "Helm - polyphonic synthesizer LV2",
     "targets": [
       {
         "id": "helm",
+        "setup": "setup-helm.js",
         "autoSetup": false,
         "description": "Helm polyphonic synthesizer"
       }
