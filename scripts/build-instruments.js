@@ -21,6 +21,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync
 import { join, dirname }                                               from 'path';
 import { fileURLToPath }                                               from 'url';
 import { readLv2Registry }                                             from './lib/lv2-registry.js';
+import { withInferredPluginLicense }                                   from './lib/plugin-licenses.js';
 
 const ROOT         = join(dirname(fileURLToPath(import.meta.url)), '..');
 const PLUGINS      = join(ROOT, 'plugins');
@@ -77,7 +78,7 @@ function buildCatalogueEntry(manifestEntry, distDir) {
 
     const hasMidiInput = meta.ports.some(p => p.type === 'midi' && p.dir === 'input');
 
-    return {
+    return withInferredPluginLicense({
         id:            manifestEntry.id,
         label:         meta.label,
         name:          meta.name,
@@ -93,7 +94,7 @@ function buildCatalogueEntry(manifestEntry, distDir) {
             if (p.type !== 'control') return p;
             return { ...p, default: resolveDefault(p.default, p.min, p.max) };
         }),
-    };
+    });
 }
 
 function hasMidiInput(entry) {

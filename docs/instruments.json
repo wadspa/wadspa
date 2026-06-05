@@ -116,7 +116,8 @@
         "max": 1,
         "default": 0.7
       }
-    ]
+    ],
+    "license": "MIT"
   },
   {
     "id": "fm_synth",
@@ -259,7 +260,8 @@
         "max": 1,
         "default": 0.7
       }
-    ]
+    ],
+    "license": "MIT"
   },
   {
     "id": "mda_DX10",
@@ -518,7 +520,8 @@
         "max": null,
         "default": null
       }
-    ]
+    ],
+    "license": "GPL-3.0-or-later"
   },
   {
     "id": "mda_JX10",
@@ -853,7 +856,8 @@
         "max": null,
         "default": null
       }
-    ]
+    ],
+    "license": "GPL-3.0-or-later"
   },
   {
     "id": "mda_EPiano",
@@ -1049,7 +1053,8 @@
         "max": null,
         "default": null
       }
-    ]
+    ],
+    "license": "GPL-3.0-or-later"
   },
   {
     "id": "mda_Piano",
@@ -1252,7 +1257,8 @@
         "max": null,
         "default": null
       }
-    ]
+    ],
+    "license": "GPL-3.0-or-later"
   },
   {
     "id": "amsynth",
@@ -1970,7 +1976,8 @@
           }
         ]
       }
-    ]
+    ],
+    "license": "GPL-2.0-or-later"
   },
   {
     "id": "drumkv1",
@@ -2673,7 +2680,8 @@
         "default": 1,
         "toggled": true
       }
-    ]
+    ],
+    "license": "GPL-2.0-or-later"
   },
   {
     "id": "so-404",
@@ -2823,7 +2831,8 @@
           }
         ]
       }
-    ]
+    ],
+    "license": "GPL-2.0-or-later"
   },
   {
     "id": "so-kl5",
@@ -2961,7 +2970,8 @@
           }
         ]
       }
-    ]
+    ],
+    "license": "GPL-3.0-only"
   },
   {
     "id": "so-666",
@@ -3087,7 +3097,8 @@
           }
         ]
       }
-    ]
+    ],
+    "license": "GPL-2.0-or-later"
   },
   {
     "id": "padthv1",
@@ -4390,7 +4401,8 @@
         "default": 127,
         "integer": true
       }
-    ]
+    ],
+    "license": "GPL-2.0-or-later"
   },
   {
     "id": "synthv1",
@@ -6489,7 +6501,8 @@
         "default": 127,
         "integer": true
       }
-    ]
+    ],
+    "license": "GPL-2.0-or-later"
   },
   {
     "id": "tsf",
@@ -6532,7 +6545,8 @@
         "max": 2,
         "default": 0.5
       }
-    ]
+    ],
+    "license": "MIT"
   },
   {
     "id": "samplv1",
@@ -7689,7 +7703,8 @@
         "default": 127,
         "integer": true
       }
-    ]
+    ],
+    "license": "GPL-2.0-or-later"
   },
   {
     "id": "sorcer",
@@ -8002,7 +8017,8 @@
         "default": 8,
         "integer": true
       }
-    ]
+    ],
+    "license": "GPL-3.0-only"
   },
   {
     "id": "string-machine",
@@ -8489,7 +8505,8 @@
         "max": 100,
         "default": -100
       }
-    ]
+    ],
+    "license": "BSL-1.0"
   },
   {
     "id": "geonkick",
@@ -8647,7 +8664,8 @@
         "max": 1,
         "default": 0.75
       }
-    ]
+    ],
+    "license": "GPL-3.0-only"
   },
   {
     "id": "setbfree",
@@ -8897,7 +8915,8 @@
         "max": 1,
         "default": 0.53
       }
-    ]
+    ],
+    "license": "GPL-2.0-or-later"
   },
   {
     "id": "nekobi",
@@ -9052,7 +9071,8 @@
         "max": 100,
         "default": 75
       }
-    ]
+    ],
+    "license": "GPL-2.0-or-later"
   },
   {
     "id": "vl1-emulator",
@@ -9355,7 +9375,8 @@
         "default": 4,
         "integer": true
       }
-    ]
+    ],
+    "license": "CC0-1.0 OR MIT"
   },
   {
     "id": "casynth",
@@ -9755,7 +9776,8 @@
         "max": 4,
         "default": 0.1
       }
-    ]
+    ],
+    "license": "GPL-2.0-or-later"
   },
   {
     "id": "dexed",
@@ -10204,7 +10226,8 @@
         "default": 0,
         "integer": true
       }
-    ]
+    ],
+    "license": "GPL-3.0-or-later"
   },
   {
     "id": "juce-opl",
@@ -10485,7 +10508,8 @@
         "default": 0,
         "integer": true
       }
-    ]
+    ],
+    "license": "GPL-2.0-or-later"
   },
   {
     "id": "obxd",
@@ -11035,7 +11059,8 @@
         "integer": true,
         "toggled": true
       }
-    ]
+    ],
+    "license": "GPL-2.0-only"
   },
   {
     "id": "chowkick",
@@ -11364,7 +11389,8 @@
         "max": 18,
         "default": 0
       }
-    ]
+    ],
+    "license": "BSD-3-Clause"
   },
   {
     "id": "calf-monosynth",
@@ -12144,7 +12170,8 @@
         "default": 0,
         "integer": true
       }
-    ]
+    ],
+    "license": "LGPL-2.1-or-later/GPL-2.0-or-later"
   },
   {
     "id": "adlplug",
@@ -12389,7 +12416,8 @@
         "max": 1,
         "default": 0.75
       }
-    ]
+    ],
+    "license": "BSL-1.0"
   },
   {
     "id": "helm",
@@ -13140,7 +13168,8 @@
         "max": 1,
         "default": 0.5
       }
-    ]
+    ],
+    "license": "GPL-3.0-only"
   },
   {
     "id": "zynaddsubfx",
@@ -13363,6 +13392,7 @@
         "max": 1,
         "default": 0
       }
-    ]
+    ],
+    "license": "GPL-2.0-or-later"
   }
 ]

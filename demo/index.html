@@ -85,11 +85,12 @@
     #instrument-dropdown {
       display: none; position: absolute; top: calc(100% + 4px); left: 0; z-index: 20;
       background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
-      min-width: 180px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      width: 300px; max-width: calc(100vw - 1rem); box-shadow: 0 4px 12px rgba(0,0,0,0.5);
     }
     #instrument-dropdown.open { display: block; }
     .inst-item {
       padding: 0.45rem 0.8rem; font-size: 0.8rem; cursor: pointer; white-space: nowrap;
+      display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
     }
     .inst-item:hover { background: var(--border); color: #fff; }
     .inst-item.active { color: var(--accent2); }
@@ -117,14 +118,27 @@
     .dropdown {
       display: none; position: absolute; top: calc(100% + 4px); left: 0; z-index: 20;
       background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
-      min-width: 200px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      min-width: 300px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
       max-height: 60vh; overflow-y: auto;
     }
     .dropdown.open { display: block; }
     .dropdown-item {
       padding: 0.45rem 0.8rem; font-size: 0.8rem; cursor: pointer; white-space: nowrap;
+      display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
     }
     .dropdown-item:hover { background: var(--border); color: #fff; }
+    .item-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+    .license-badge {
+      flex-shrink: 0; padding: 0.05rem 0.28rem; border: 1px solid #555; border-radius: 2px;
+      font-size: 0.58rem; line-height: 1.25; color: #bbb; background: #101010;
+    }
+    .dropdown-item:hover .license-badge,
+    .inst-item:hover .license-badge {
+      border-color: #555; color: #ddd;
+    }
+    .inst-item.active .license-badge {
+      border-color: rgba(51,204,136,0.45); color: var(--accent2);
+    }
     .dropdown-sep { border-top: 1px solid var(--border); margin: 0.2rem 0; }
 
     /* ── Plugin cards ─────────────────────────────────────────── */
@@ -924,6 +938,33 @@ function escapeAttr(value) {
   return escapeHtml(value);
 }
 
+function licenseBadgeText(license) {
+  return String(license)
+    .replace(/GPL-([0-9.]+)-or-later/g, 'GPL-$1+')
+    .replace(/GPL-([0-9.]+)-only/g, 'GPL-$1')
+    .replace(/LGPL-([0-9.]+)-or-later/g, 'LGPL-$1+')
+    .replace(/LGPL-([0-9.]+)-only/g, 'LGPL-$1')
+    .replace('BSD-3-Clause', 'BSD-3')
+    .replace('CC0-1.0 OR MIT', 'CC0/MIT')
+    .replace('LGPL-2.1+/GPL-2.0+', 'LGPL/GPL')
+    .replace('BSL-1.0', 'Boost');
+}
+
+function setPluginMenuItemContent(item, plugin) {
+  const name = document.createElement('span');
+  name.className = 'item-name';
+  name.textContent = plugin.name;
+  item.appendChild(name);
+
+  const license = plugin.license ?? 'unknown';
+  const badge = document.createElement('span');
+  badge.className = 'license-badge';
+  badge.textContent = licenseBadgeText(license);
+  badge.title = `License: ${license}`;
+  item.title = `${plugin.name} - ${license}`;
+  item.appendChild(badge);
+}
+
 // ── Canvas waveshaper editor ──────────────────────────────────────────────
 // Points are stored in wolf-shaper's state format: "x,y,tension,curveType;"
 // x,y ∈ [0,1] where 0 = signal minimum, 1 = signal maximum.
@@ -1252,7 +1293,8 @@ function buildDropdown() {
     for (const eff of EFFECTS.filter(e => e.category === cat)) {
       const item = document.createElement('div');
       item.className = 'dropdown-item';
-      item.textContent = eff.name;
+      item.dataset.effect = eff.id;
+      setPluginMenuItemContent(item, eff);
       item.addEventListener('click', () => addEffect(eff));
       dd.appendChild(item);
     }
@@ -1278,7 +1320,7 @@ function buildInstrumentDropdown() {
     const item = document.createElement('div');
     item.className = 'inst-item' + (inst === activeInstrument ? ' active' : '');
     item.dataset.inst = inst.id;
-    item.textContent = inst.name;
+    setPluginMenuItemContent(item, inst);
     item.addEventListener('click', e => {
       e.stopPropagation();
       document.getElementById('instrument-dropdown').classList.remove('open');

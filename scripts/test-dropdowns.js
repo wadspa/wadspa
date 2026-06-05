@@ -1,0 +1,119 @@
+#!/usr/bin/env node
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+const html = readFileSync(join(ROOT, 'docs/index.html'), 'utf8');
+const instruments = JSON.parse(readFileSync(join(ROOT, 'docs/instruments.json'), 'utf8'));
+const effects = JSON.parse(readFileSync(join(ROOT, 'docs/plugins/catalog.json'), 'utf8'));
+
+let failures = 0;
+
+function fail(message) {
+  failures += 1;
+  console.error(`FAIL ${message}`);
+}
+
+function assert(condition, message) {
+  if (!condition) fail(message);
+}
+
+function assertIncludes(haystack, needle, message) {
+  assert(haystack.includes(needle), message);
+}
+
+function assertMatches(pattern, message) {
+  assert(pattern.test(html), message);
+}
+
+function duplicateIds(entries) {
+  const seen = new Set();
+  const duplicates = new Set();
+  for (const entry of entries) {
+    if (seen.has(entry.id)) duplicates.add(entry.id);
+    seen.add(entry.id);
+  }
+  return [...duplicates];
+}
+
+function missingField(entries, field) {
+  return entries.filter(entry => !entry[field]).map(entry => entry.id ?? entry.name ?? '<unknown>');
+}
+
+function functionBody(name) {
+  const start = html.indexOf(`function ${name}(`);
+  assert(start !== -1, `${name}() exists`);
+  if (start === -1) return '';
+
+  const firstBrace = html.indexOf('{', start);
+  let depth = 0;
+  for (let i = firstBrace; i < html.length; i += 1) {
+    const ch = html[i];
+    if (ch === '{') depth += 1;
+    if (ch === '}') depth -= 1;
+    if (depth === 0) return html.slice(firstBrace + 1, i);
+  }
+  fail(`${name}() has a balanced body`);
+  return '';
+}
+
+assert(Array.isArray(instruments) && instruments.length > 0, 'instrument catalog is not empty');
+assert(Array.isArray(effects) && effects.length > 0, 'effect catalog is not empty');
+assert(duplicateIds(instruments).length === 0, 'instrument ids are unique');
+assert(duplicateIds(effects).length === 0, 'effect ids are unique');
+assert(missingField(instruments, 'id').length === 0, 'every instrument has an id');
+assert(missingField(instruments, 'name').length === 0, 'every instrument has a name');
+assert(missingField(instruments, 'license').length === 0, 'every instrument has a license for the dropdown');
+assert(missingField(effects, 'id').length === 0, 'every effect has an id');
+assert(missingField(effects, 'name').length === 0, 'every effect has a name');
+assert(missingField(effects, 'category').length === 0, 'every effect has a category for dropdown grouping');
+assert(missingField(effects, 'license').length === 0, 'every effect has a license for the dropdown');
+
+assertIncludes(html, '<button id="instrument-btn">', 'instrument dropdown button exists');
+assertIncludes(html, '<div id="instrument-dropdown">', 'instrument dropdown container exists');
+assertIncludes(html, '<button id="add-btn">', 'effect dropdown button exists');
+assertMatches(/<div\b[^>]*\bid="dropdown"[^>]*>/, 'effect dropdown container exists');
+assertMatches(/#instrument-dropdown\.open\s*\{\s*display:\s*block;\s*\}/, 'instrument dropdown open class makes it visible');
+assertMatches(/\.dropdown\.open\s*\{\s*display:\s*block;\s*\}/, 'effect dropdown open class makes it visible');
+
+assertIncludes(html, 'function setPluginMenuItemContent(item, plugin)', 'shared dropdown item renderer exists');
+assertIncludes(html, "name.className = 'item-name';", 'dropdown item renderer keeps a selectable name span');
+assertIncludes(html, "badge.className = 'license-badge';", 'dropdown item renderer keeps a license badge');
+assertIncludes(html, 'item.appendChild(name);', 'dropdown item name remains inside the clickable row');
+assertIncludes(html, 'item.appendChild(badge);', 'dropdown item badge remains inside the clickable row');
+
+const effectDropdown = functionBody('buildDropdown');
+assertIncludes(effectDropdown, "const dd = document.getElementById('dropdown');", 'effect dropdown targets #dropdown');
+assertIncludes(effectDropdown, 'const categories = [...new Set(EFFECTS.map(e => e.category))]', 'effect dropdown is generated from the effect catalog');
+assertIncludes(effectDropdown, "item.className = 'dropdown-item';", 'effect rows use the selectable dropdown-item class');
+assertIncludes(effectDropdown, 'item.dataset.effect = eff.id;', 'effect rows expose stable data-effect ids');
+assertIncludes(effectDropdown, 'setPluginMenuItemContent(item, eff);', 'effect rows render name and license badge');
+assertIncludes(effectDropdown, "item.addEventListener('click', () => addEffect(eff));", 'effect rows call addEffect when selected');
+assertIncludes(effectDropdown, 'dd.appendChild(item);', 'effect rows are appended to the menu');
+
+const instrumentDropdown = functionBody('buildInstrumentDropdown');
+assertIncludes(instrumentDropdown, "const dd = document.getElementById('instrument-dropdown');", 'instrument dropdown targets #instrument-dropdown');
+assertIncludes(instrumentDropdown, 'for (const inst of INSTRUMENTS)', 'instrument dropdown is generated from the instrument catalog');
+assertIncludes(instrumentDropdown, "item.className = 'inst-item' + (inst === activeInstrument ? ' active' : '');", 'instrument rows use the selectable inst-item class');
+assertIncludes(instrumentDropdown, 'item.dataset.inst = inst.id;', 'instrument rows expose stable data-inst ids');
+assertIncludes(instrumentDropdown, 'setPluginMenuItemContent(item, inst);', 'instrument rows render name and license badge');
+assertIncludes(instrumentDropdown, "item.addEventListener('click', e => {", 'instrument rows register a click handler');
+assertIncludes(instrumentDropdown, 'e.stopPropagation();', 'instrument row clicks do not immediately close through the document handler');
+assertIncludes(instrumentDropdown, "document.getElementById('instrument-dropdown').classList.remove('open');", 'instrument selection closes the menu');
+assertIncludes(instrumentDropdown, 'switchInstrument(inst);', 'instrument selection switches the synth');
+assertIncludes(instrumentDropdown, 'dd.appendChild(item);', 'instrument rows are appended to the menu');
+
+assertIncludes(html, "document.getElementById('add-btn').addEventListener('click', e => {", 'effect dropdown button has a click handler');
+assertIncludes(html, "document.getElementById('dropdown').classList.toggle('open');", 'effect dropdown button toggles the open state');
+assertIncludes(html, "function closeDropdown() { document.getElementById('dropdown').classList.remove('open'); }", 'effect dropdown can close');
+assertIncludes(html, "document.getElementById('instrument-btn').addEventListener('click', e => {", 'instrument dropdown button has a click handler');
+assertIncludes(html, "document.getElementById('instrument-dropdown').classList.toggle('open');", 'instrument dropdown button toggles the open state');
+assertIncludes(html, "document.getElementById('instrument-dropdown').classList.remove('open');", 'instrument dropdown can close');
+
+if (failures > 0) {
+  console.error(`dropdown UI wiring failed: ${failures} problem${failures === 1 ? '' : 's'}`);
+  process.exit(1);
+}
+
+console.log(`dropdown UI wiring ok (${instruments.length} instruments, ${effects.length} effects)`);
