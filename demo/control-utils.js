@@ -267,13 +267,6 @@ function activeUiRangeForPort(p, min, max) {
   if (/tap\s*\d+\s+distance\s*\(inches\)/i.test(text) && min === 0 && max === 4) {
     return { min, max: 2 };
   }
-  if (String(p?.symbol ?? '') === 'feedback'
-      && /^Feedback$/i.test(String(p?.name ?? ''))
-      && finitePortNumber(p.default) === 0.25
-      && min === 0
-      && max === 1) {
-    return { min: 0.5, max };
-  }
   if (String(p?.symbol ?? '') === 'attack'
       && /^Attack$/i.test(String(p?.name ?? ''))
       && finitePortNumber(p.default) === 128
@@ -281,7 +274,60 @@ function activeUiRangeForPort(p, min, max) {
       && max === 500) {
     return { min: 376, max };
   }
+  const trim = activeRangeTrimForPort(p, min, max);
+  if (trim) {
+    return {
+      min: Number.isFinite(trim.low) ? activeRangeValueAt(p, min, max, trim.low) : min,
+      max: Number.isFinite(trim.high) ? activeRangeValueAt(p, min, max, trim.high) : max,
+    };
+  }
   return null;
+}
+
+const ACTIVE_RANGE_TRIMS = [
+  { name: 'Delay base (ms)', min: 0.1, max: 25, low: 0.25 },
+  { name: 'Attack (ms)', min: 0.01, max: 1000, low: 0.5 },
+  { symbol: 'gate_rel', name: 'Gate Rel', min: 9, max: 17384, low: 0.25 },
+  { symbol: 'freq', name: 'Freq', min: 1000, max: 12000, high: 0.75 },
+  { symbol: 'glide', name: 'Glide', min: 0, max: 1, default: 0.3, low: 0.25 },
+  { symbol: 'envelope', name: 'Envelope', min: 10, max: 1000, low: 0.25 },
+  { symbol: 'feedback', name: 'Feedback', min: 0, max: 1, default: 0.25, low: 0.75 },
+  { symbol: 'amp_decay', name: 'Amp Decay', min: 0, max: 0.65, low: 0.25 },
+  { symbol: 'filter_release', name: 'Filter Release', min: 0, max: 0.65, high: 0.75 },
+  { symbol: 'fil_release', name: 'Filter Release', min: 0, max: 1.5, high: 0.75 },
+  { symbol: 'flt_lp_cutoff_upper', name: "Filters LP Cutoff 4'", min: -20, max: 120, high: 0.75 },
+  { symbol: 'flt_hp_cutoff_upper', name: "Filters HP Cutoff 4'", min: -20, max: 120, high: 0.75 },
+  { symbol: 'flt_hp_cutoff_lower', name: "Filters HP Cutoff 8'", min: -20, max: 120, high: 0.75 },
+  { symbol: 'flt_hs_cutoff_eq', name: "Filters HS Cutoff 4'", min: -20, max: 120, high: 0.75 },
+  { symbol: 'env_hold', name: 'Envelope hold', min: 0.00999999977648, max: 10, high: 0.75 },
+  { symbol: 'offset', name: 'Offset Gain', min: -20, max: 20, low: 0.25 },
+  { symbol: 'gain', name: 'Input Gain', min: -20, max: 20, high: 0.75 },
+  { symbol: 'rel', name: 'Release', min: 0.10000000149, max: 500, low: 0.25 },
+];
+
+function activeRangeTrimForPort(port, min, max) {
+  return ACTIVE_RANGE_TRIMS.find(trim =>
+    (!trim.symbol || String(port?.symbol ?? '') === trim.symbol)
+      && (!trim.name || String(port?.name ?? '') === trim.name)
+      && nearlyEqual(min, trim.min)
+      && nearlyEqual(max, trim.max)
+      && (trim.default === undefined || nearlyEqual(finitePortNumber(port.default), trim.default)));
+}
+
+function activeRangeValueAt(port, min, max, fraction) {
+  if (!Number.isFinite(fraction)) return min;
+  const bounded = clamp(fraction, 0, 1);
+  const lo = Math.min(min, max);
+  const hi = Math.max(min, max);
+  const value = lo > 0 && hi > lo && (port?.logarithmic || shouldInferLogSlider(port, lo, hi))
+    ? Math.exp(Math.log(lo) + (Math.log(hi) - Math.log(lo)) * bounded)
+    : lo + (hi - lo) * bounded;
+  return min <= max ? value : lo + hi - value;
+}
+
+function nearlyEqual(a, b) {
+  if (!Number.isFinite(a) || !Number.isFinite(b)) return false;
+  return Math.abs(a - b) <= Math.max(1e-9, Math.max(Math.abs(a), Math.abs(b)) * 1e-8);
 }
 
 function controlText(p) {

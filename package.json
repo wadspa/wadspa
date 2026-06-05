@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "link-toolchain": "npm link --workspace=toolchain",
-    "test": "node scripts/test-ranges.js && node scripts/test-top-lv2-synths.js && node scripts/test-instruments.js && node scripts/test-effects.js && node scripts/test-sliders.js",
+    "test": "node scripts/test-ranges.js && node scripts/test-top-lv2-synths.js && node scripts/test-instruments.js && node scripts/test-effects.js && node scripts/test-sliders.js && node scripts/test-sliders.js --ui-defaults",
     "test:lv2": "node scripts/test-instruments.js",
     "test:effects": "node scripts/test-effects.js",
     "test:ranges": "node scripts/test-ranges.js",

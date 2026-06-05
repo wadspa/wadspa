@@ -64,7 +64,7 @@ const VL1_RHYTHM_PROFILE = {
     ],
 };
 const LFO_PROFILE = { key: 'lfo', renderBlocks: 2048 };
-const SWEEP_PROFILE = { key: 'sweep', renderBlocks: 1024 };
+const SWEEP_PROFILE = { key: 'sweep', renderBlocks: 12288 };
 const BEATBOX_PROFILE = { key: 'beatbox', audio: 'beatbox-sequence', renderBlocks: 1024 };
 const BEATBOX_FAST_RATE_PROFILE = { key: 'beatbox-fast-rate', audio: 'beatbox-fast-rate', renderBlocks: 1024 };
 const BEATBOX_THRESHOLD_PROFILE = { key: 'beatbox-threshold', audio: 'beatbox-threshold', renderBlocks: 1024 };
@@ -75,6 +75,7 @@ const POLYPHONY_PROFILE = {
     midiNoteOffBlock: 180,
 };
 const WOLF_SHAPER_TEST_GRAPH = '0x0p+0,0x1.99999ap-4,0x0p+0,0;0x1p-1,0x1.4cccccp-1,0x0p+0,0;0x1p+0,0x1p-2,0x0p+0,0;';
+const REQUIRED_SLIDER_SWEEP_SEGMENTS = 4;
 
 const args = process.argv.slice(2);
 const onlyId = args.includes('--only') ? args[args.indexOf('--only') + 1] : null;
@@ -570,8 +571,12 @@ function isUnexpectedDropout(options, port, reference, rendered) {
 }
 
 function sliderSweepCoverage(port, renderedCandidates, noise) {
-    if (renderedCandidates.length < 2) {
-        return { ok: false, changed: false, issue: 'range sweep had fewer than two distinct slider values' };
+    if (renderedCandidates.length < REQUIRED_SLIDER_SWEEP_SEGMENTS + 1) {
+        return {
+            ok: false,
+            changed: false,
+            issue: `range sweep had ${renderedCandidates.length} distinct slider values; expected ${REQUIRED_SLIDER_SWEEP_SEGMENTS + 1} values for ${REQUIRED_SLIDER_SWEEP_SEGMENTS} audio-change levels`,
+        };
     }
 
     const segmentSummaries = [];
@@ -600,14 +605,13 @@ function sliderSweepCoverage(port, renderedCandidates, noise) {
         .map((covered, index) => ({ covered, index }))
         .filter(item => item.index > 0 && item.index < coveredPoints.length - 1 && !item.covered)
         .map(item => renderedCandidates[item.index].candidate.label);
-    const requiredActiveSegments = Math.max(1, Math.min(3, activeSegments.length));
     const activeCount = activeSegments.filter(Boolean).length;
-    const ok = activeCount >= requiredActiveSegments && uncoveredInterior.length === 0;
+    const ok = activeCount >= REQUIRED_SLIDER_SWEEP_SEGMENTS && uncovered.length === 0;
 
     return {
         ok,
         changed,
-        issue: `range sweep has dead zones; uncovered ${uncovered.join(', ') || 'none'}, interior ${uncoveredInterior.join(', ') || 'none'}, active segments ${activeCount}/${activeSegments.length}, end-to-end rms=${fmtMetric(endToEnd.rms)} rel=${fmtMetric(endToEnd.relative)}`,
+        issue: `range sweep needs ${REQUIRED_SLIDER_SWEEP_SEGMENTS} audio-change levels; uncovered ${uncovered.join(', ') || 'none'}, interior ${uncoveredInterior.join(', ') || 'none'}, active segments ${activeCount}/${activeSegments.length}, end-to-end rms=${fmtMetric(endToEnd.rms)} rel=${fmtMetric(endToEnd.relative)}`,
         summary: `sweep ${segmentSummaries.join(', ')}`,
     };
 }
@@ -721,7 +725,19 @@ function supportOverridesFor(port, allCtrlPorts, options) {
         if (/mda[_-]?TestTone/i.test(`${options.id} ${options.meta.name ?? ''}`)
             && /sweep/i.test(text)
             && /mode/i.test(otherText)) {
-            set(other, 0.7);
+            set(other, 1);
+            continue;
+        }
+        if (/mda[_-]?TestTone/i.test(`${options.id} ${options.meta.name ?? ''}`)
+            && /sweep/i.test(text)
+            && /\bf1\b/i.test(otherText)) {
+            set(other, 0.05);
+            continue;
+        }
+        if (/mda[_-]?TestTone/i.test(`${options.id} ${options.meta.name ?? ''}`)
+            && /sweep/i.test(text)
+            && /\bf2\b/i.test(otherText)) {
+            set(other, 0.8);
             continue;
         }
         if (/mda[_-]?VocInput/i.test(`${options.id} ${options.meta.name ?? ''}`)
@@ -919,7 +935,11 @@ function uiContextSupportOverridesFor(port, allCtrlPorts, options) {
 
     if (/mda[_-]?TestTone/i.test(context) && /sweep/i.test(text)) {
         const mode = allCtrlPorts.find(other => /\bmode\b/i.test(controlText(other)));
-        set(mode, highValue(mode));
+        const f1 = allCtrlPorts.find(other => /\bf1\b/i.test(controlText(other)));
+        const f2 = allCtrlPorts.find(other => /\bf2\b/i.test(controlText(other)));
+        set(mode, 1);
+        set(f1, 0.05);
+        set(f2, 0.8);
     }
 
     if (/so-666/i.test(context) && /midi channel|\bchannel\b/i.test(text)) {
