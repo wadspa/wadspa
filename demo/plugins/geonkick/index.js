@@ -137,8 +137,8 @@ export const meta         = {
       "legacy": false,
       "cv": false,
       "min": 1,
-      "max": 12,
-      "default": 1.8
+      "max": 6,
+      "default": 1
     },
     {
       "index": 11,
@@ -148,9 +148,9 @@ export const meta         = {
       "type": "control",
       "legacy": false,
       "cv": false,
-      "min": 0.1,
-      "max": 1,
-      "default": 0.75
+      "min": 0.08,
+      "max": 0.9,
+      "default": 0.52
     }
   ]
 };

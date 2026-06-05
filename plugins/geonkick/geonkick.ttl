@@ -100,14 +100,14 @@
         lv2:symbol "drive" ;
         lv2:name "Drive" ;
         lv2:minimum 1.0 ;
-        lv2:maximum 12.0 ;
-        lv2:default 1.8 ;
+        lv2:maximum 6.0 ;
+        lv2:default 1.0 ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
         lv2:index 11 ;
         lv2:symbol "gain" ;
         lv2:name "Gain" ;
-        lv2:minimum 0.1 ;
-        lv2:maximum 1.0 ;
-        lv2:default 0.75 ;
+        lv2:minimum 0.08 ;
+        lv2:maximum 0.9 ;
+        lv2:default 0.52 ;
     ] .

@@ -145,6 +145,11 @@ typedef struct {
     float kick_amp_x[MAX_ENV_POINTS];
     float kick_amp_y[MAX_ENV_POINTS];
     size_t kick_amp_count;
+    float active_amp_x[MAX_ENV_POINTS];
+    float active_amp_y[MAX_ENV_POINTS];
+    size_t active_amp_count;
+    uint32_t playback_sample;
+    uint32_t playback_length_samples;
     float osc_pitch_x[MAX_ENV_POINTS];
     float osc_pitch_y[MAX_ENV_POINTS];
     size_t osc_pitch_count;
@@ -245,6 +250,13 @@ static void set_kick_amp_env_from_state(GeonkickLV2 *g)
         points,
         g->kick_amp_count
     );
+    gkick_synth_osc_envelope_set_points(
+        g->synth,
+        0,
+        GEONKICK_AMPLITUDE_ENVELOPE,
+        points,
+        g->kick_amp_count
+    );
 }
 
 static void set_osc_pitch_env_from_state(GeonkickLV2 *g, float pitch_mult)
@@ -264,6 +276,47 @@ static void set_osc_pitch_env_from_state(GeonkickLV2 *g, float pitch_mult)
     );
 }
 
+static float sample_state_env(const float *xs, const float *ys, size_t count, float x)
+{
+    if (count < 2) return 1.0f;
+    if (x <= xs[0]) return ys[0];
+    for (size_t i = 1; i < count; i++) {
+        if (x <= xs[i]) {
+            const float span = xs[i] - xs[i - 1];
+            if (span <= 1e-6f) return ys[i];
+            const float t = (x - xs[i - 1]) / span;
+            return ys[i - 1] + (ys[i] - ys[i - 1]) * t;
+        }
+    }
+    return ys[count - 1];
+}
+
+static void latch_amp_env_for_trigger(GeonkickLV2 *g)
+{
+    g->active_amp_count = g->kick_amp_count;
+    for (size_t i = 0; i < g->kick_amp_count && i < MAX_ENV_POINTS; i++) {
+        g->active_amp_x[i] = g->kick_amp_x[i];
+        g->active_amp_y[i] = g->kick_amp_y[i];
+    }
+    g->playback_sample = 0;
+    g->playback_length_samples = (uint32_t)fmaxf(1.0f, g->last_decay * (float)g->sample_rate);
+}
+
+static void apply_active_amp_env(GeonkickLV2 *g, uint32_t n_samples)
+{
+    if (g->active_amp_count < 2 || g->playback_length_samples == 0 || !g->out_l || !g->out_r) {
+        return;
+    }
+    const float denom = (float)g->playback_length_samples;
+    for (uint32_t i = 0; i < n_samples; i++) {
+        const float x = clampf_local((float)(g->playback_sample + i) / denom, 0.0f, 1.0f);
+        const float amp = clampf_local(sample_state_env(g->active_amp_x, g->active_amp_y, g->active_amp_count, x), 0.0f, 1.0f);
+        g->out_l[i] *= amp;
+        g->out_r[i] *= amp;
+    }
+    g->playback_sample += n_samples;
+}
+
 static void configure_synth(GeonkickLV2 *g)
 {
     const float frequency = clampf_local(port_or_default(g->frequency, 62.0f), 30.0f, 220.0f);
@@ -273,8 +326,8 @@ static void configure_synth(GeonkickLV2 *g)
     const float click = clampf_local(port_or_default(g->click, 0.22f), 0.0f, 1.0f);
     const float tone = clampf_local(port_or_default(g->tone, 2100.0f), 120.0f, 8000.0f);
     const float resonance = clampf_local(port_or_default(g->resonance, 1.2f), 0.5f, 4.0f);
-    const float drive = clampf_local(port_or_default(g->drive, 1.8f), 1.0f, 12.0f);
-    const float gain = clampf_local(port_or_default(g->gain, 0.75f), 0.1f, 1.0f);
+    const float drive = clampf_local(port_or_default(g->drive, 1.0f), 1.0f, 6.0f);
+    const float gain = clampf_local(port_or_default(g->gain, 0.52f), 0.08f, 0.9f);
     const float decay_norm = clampf_local((decay - 0.08f) / (1.5f - 0.08f), 0.0f, 1.0f);
 
     if (!g->dirty
@@ -311,7 +364,7 @@ static void configure_synth(GeonkickLV2 *g)
     gkick_synth_enable_oscillator(g->synth, 0, 1);
     gkick_synth_set_osc_function(g->synth, 0, GEONKICK_OSC_FUNC_SINE);
     gkick_synth_set_osc_frequency(g->synth, 0, frequency * powf(2.0f, (0.5f - decay_norm) * 1.0f));
-    gkick_synth_set_osc_amplitude(g->synth, 0, 1.0f);
+    gkick_synth_set_osc_amplitude(g->synth, 0, 0.72f);
     if (g->osc_pitch_count >= 2) {
         set_osc_pitch_env_from_state(g, pitch_mult);
     } else {
@@ -330,14 +383,14 @@ static void configure_synth(GeonkickLV2 *g)
 
     gkick_synth_enable_oscillator(g->synth, 1, 1);
     gkick_synth_set_osc_function(g->synth, 1, GEONKICK_OSC_FUNC_NOISE_WHITE);
-    gkick_synth_set_osc_amplitude(g->synth, 1, noise * 0.55f);
+    gkick_synth_set_osc_amplitude(g->synth, 1, noise * 0.24f);
     gkick_synth_set_osc_noise_density(g->synth, 1, 1.0f);
     set_osc_env(g->synth, 1, GEONKICK_AMPLITUDE_ENVELOPE, 0.08f, 1.0f, 0.0f);
 
     gkick_synth_enable_oscillator(g->synth, 2, 1);
     gkick_synth_set_osc_function(g->synth, 2, GEONKICK_OSC_FUNC_TRIANGLE);
     gkick_synth_set_osc_frequency(g->synth, 2, 1800.0f + tone * 0.45f);
-    gkick_synth_set_osc_amplitude(g->synth, 2, click * 0.35f);
+    gkick_synth_set_osc_amplitude(g->synth, 2, click * 0.16f);
     set_osc_env(g->synth, 2, GEONKICK_AMPLITUDE_ENVELOPE, 0.035f, 1.0f, 0.0f);
 
     geonkick_synth_kick_filter_enable(g->synth, 1);
@@ -345,7 +398,7 @@ static void configure_synth(GeonkickLV2 *g)
     gkick_synth_kick_set_filter_frequency(g->synth, tone);
     gkick_synth_kick_set_filter_factor(g->synth, resonance);
 
-    gkick_synth_distortion_enable(g->synth, drive > 1.001f);
+    gkick_synth_distortion_enable(g->synth, drive > 1.05f);
     gkick_synth_distortion_set_type(g->synth, GEONKICK_DISTORTION_SOFT_CLIPPING_TANH);
     gkick_synth_distortion_set_drive(g->synth, drive);
     gkick_synth_distortion_set_out_limiter(g->synth, 0.92f);
@@ -372,6 +425,7 @@ static void configure_synth(GeonkickLV2 *g)
 static void trigger(GeonkickLV2 *g, uint8_t note, uint8_t velocity)
 {
     configure_synth(g);
+    latch_amp_env_for_trigger(g);
     struct gkick_note_info key;
     key.state = GKICK_KEY_STATE_PRESSED;
     key.channel = 0;
@@ -409,7 +463,7 @@ static LV2_Handle instantiate(const LV2_Descriptor *descriptor,
         return NULL;
     }
 
-    g->output->limiter = 1000000;
+    g->output->limiter = 850000;
     gkick_audio_output_tune_output(g->output, false);
     gkick_synth_set_output(g->synth, g->output);
     g_latest_instance = g;
@@ -445,7 +499,6 @@ static void activate(LV2_Handle handle)
 static void run(LV2_Handle handle, uint32_t n_samples)
 {
     GeonkickLV2 *g = (GeonkickLV2 *)handle;
-    configure_synth(g);
 
     if (g->midi_in && g->midi_event_urid) {
         LV2_ATOM_SEQUENCE_FOREACH(g->midi_in, ev) {
@@ -470,6 +523,7 @@ static void run(LV2_Handle handle, uint32_t n_samples)
     gkick_real *data[2] = { g->out_l, g->out_r };
     gkick_real leveler = 0.0f;
     gkick_audio_output_get_data(g->output, data, &leveler, n_samples);
+    apply_active_amp_env(g, n_samples);
     (void)leveler;
 }
 
@@ -495,8 +549,10 @@ EMSCRIPTEN_KEEPALIVE void shim_set_plugin_state(const char *key, const char *val
     } else {
         return;
     }
+    // Canvas edits can arrive at pointer-move rate. Defer the expensive
+    // full-kick render until the next MIDI trigger so dragging cannot stall
+    // the realtime audio callback or crackle the current hit.
     g->dirty = 1;
-    configure_synth(g);
 }
 
 static const LV2_Descriptor descriptor = {
@@ -627,16 +683,16 @@ writeFileSync(join(OUT, 'geonkick.ttl'), String.raw`@prefix atom:  <http://lv2pl
         lv2:symbol "drive" ;
         lv2:name "Drive" ;
         lv2:minimum 1.0 ;
-        lv2:maximum 12.0 ;
-        lv2:default 1.8 ;
+        lv2:maximum 6.0 ;
+        lv2:default 1.0 ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
         lv2:index 11 ;
         lv2:symbol "gain" ;
         lv2:name "Gain" ;
-        lv2:minimum 0.1 ;
-        lv2:maximum 1.0 ;
-        lv2:default 0.75 ;
+        lv2:minimum 0.08 ;
+        lv2:maximum 0.9 ;
+        lv2:default 0.52 ;
     ] .
 `);
 
