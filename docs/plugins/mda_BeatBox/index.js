@@ -142,6 +142,22 @@ export const meta         = {
         {
           "label": "None",
           "value": 0
+        },
+        {
+          "label": "Monitor Input",
+          "value": 1
+        },
+        {
+          "label": "Record Hat",
+          "value": 2
+        },
+        {
+          "label": "Record Kick",
+          "value": 3
+        },
+        {
+          "label": "Record Snare",
+          "value": 4
         }
       ]
     },

@@ -261,10 +261,14 @@ function hasPortProperty(block, name) {
 
 function parseScalePoints(block) {
     const points = [];
+    const nestedPointBlocks = bracketBlocks(block).filter(point =>
+        /rdf:value\s+[\d.eE+\-]+/.test(point) && /rdfs:label\b/.test(point));
+    const fallbackPoints = [];
     const scalePointRe = /lv2:scalePoint\s+\[([\s\S]*?)\]\s*;?/g;
     let match;
-    while ((match = scalePointRe.exec(block)) !== null) {
-        const point = match[1];
+    while ((match = scalePointRe.exec(block)) !== null) fallbackPoints.push(match[1]);
+
+    for (const point of nestedPointBlocks.length > 0 ? nestedPointBlocks : fallbackPoints) {
         const valueMatch = point.match(/rdf:value\s+([\d.eE+\-]+)/);
         if (!valueMatch) continue;
         const value = parseFloat(valueMatch[1]);

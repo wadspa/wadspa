@@ -2,7 +2,10 @@ export const AUDIBLE_FREQUENCY_MIN_HZ = 20;
 export const AUDIBLE_FREQUENCY_MAX_HZ = 20000;
 
 export function isVisibleControlPort(port) {
-  return port?.type === 'control' && port?.dir === 'input' && !port?.cv;
+  return port?.type === 'control'
+    && port?.dir === 'input'
+    && !port?.cv
+    && !isOperationalStatePort(port);
 }
 
 export function visibleControlPorts(ports = []) {
@@ -103,6 +106,7 @@ export function defaultPortValuesForUi(ports = [], sampleRate = 44100, options =
   applyAudibleTapDelayDefaults(ports, values, sampleRate);
   applyAudibleReverbDefaults(ports, values, sampleRate);
   applyAudibleDependentControlDefaults(ports, values, sampleRate);
+  applyPlayableBeatBoxDefaults(ports, values, sampleRate);
   return values;
 }
 
@@ -282,6 +286,12 @@ function activeUiRangeForPort(p, min, max) {
 
 function controlText(p) {
   return `${p.name ?? ''} ${p.symbol ?? ''}`;
+}
+
+export function isOperationalStatePort(port) {
+  const symbol = String(port?.symbol ?? '').trim();
+  const name = String(port?.name ?? '').trim();
+  return /^record$/i.test(symbol) || /^record$/i.test(name);
 }
 
 function hasHiddenModulationSource(port, ports = []) {
@@ -653,6 +663,21 @@ function applyAudibleDependentControlDefaults(ports, values, sampleRate) {
       setValue(values, port, midValue(port), sampleRate);
     }
   }
+}
+
+function applyPlayableBeatBoxDefaults(ports, values, sampleRate) {
+  const bySymbol = new Map(ports.map(port => [String(port?.symbol ?? '').toLowerCase(), port]));
+  if (!bySymbol.has('kik_trig') || !bySymbol.has('snr_trig') || !bySymbol.has('thru_mix')) return;
+
+  setValue(values, bySymbol.get('hat_thr'), -40, sampleRate);
+  setValue(values, bySymbol.get('kik_thr'), -40, sampleRate);
+  setValue(values, bySymbol.get('snr_thr'), -40, sampleRate);
+  setValue(values, bySymbol.get('kik_trig'), 110, sampleRate);
+  setValue(values, bySymbol.get('snr_trig'), 880, sampleRate);
+  setValue(values, bySymbol.get('hat_mix'), -9, sampleRate);
+  setValue(values, bySymbol.get('kik_mix'), -9, sampleRate);
+  setValue(values, bySymbol.get('snr_mix'), -9, sampleRate);
+  setValue(values, bySymbol.get('thru_mix'), -45, sampleRate);
 }
 
 function tapGroupKey(port) {

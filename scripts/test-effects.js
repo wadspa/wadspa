@@ -16,7 +16,7 @@
 import { readFileSync, readdirSync } from 'fs';
 import { join, dirname }             from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
-import { defaultPortValueForUi, portValueForSet, visibleControlPorts } from '../docs/control-utils.js';
+import { defaultPortValuesForUi, portValueForSet, visibleControlPorts } from '../docs/control-utils.js';
 
 const ROOT         = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DOCS_PLUGINS = join(ROOT, 'docs', 'plugins');
@@ -80,9 +80,13 @@ for (const eff of catalog) {
             }
         }
 
+        const coverageNote = eff.id === 'mda_BeatBox'
+            ? await beatBoxCoverageNote(eff, factory, wasmBinary, SETTERS)
+            : '';
+
         if (peak > 1e-6) {
             const note = activated > 0 ? ` after ${activated} activation overrides` : '';
-            console.log(`✓  peak ${peak.toFixed(5)}${note}`);
+            console.log(`✓  peak ${peak.toFixed(5)}${note}${coverageNote}`);
             passed++;
         } else {
             console.log(`✗  SILENT (peak ${peak})`);
@@ -111,17 +115,42 @@ function resolveDefault(d, min, max) {
     return isNaN(n) ? null : n;
 }
 
-async function renderPeak(eff, factory, wasmBinary, SETTERS, overrides = new Map()) {
+async function beatBoxCoverageNote(eff, factory, wasmBinary, SETTERS) {
+    const probes = [
+        ['low', 110],
+        ['mid', 440],
+        ['high', 1760],
+    ];
+    const peaks = [];
+    for (const [label, freq] of probes) {
+        const peak = await renderPeak(eff, factory, wasmBinary, SETTERS, new Map(), {
+            audio: 'beatbox-transient',
+            freq,
+        });
+        peaks.push([label, peak]);
+    }
+
+    const weak = peaks.filter(([, peak]) => peak <= 0.005);
+    if (weak.length > 0) {
+        throw new Error(`BeatBox weak octave coverage: ${weak.map(([label, peak]) => `${label}=${peak.toFixed(5)}`).join(', ')}`);
+    }
+
+    return `; BeatBox low/mid/high ${peaks.map(([label, peak]) => `${label}=${peak.toFixed(3)}`).join(' ')}`;
+}
+
+async function renderPeak(eff, factory, wasmBinary, SETTERS, overrides = new Map(), profile = {}) {
     const mod = await factory({ wasmBinary });
     mod._shim_init(SAMPLE_RATE);
 
     // Dispatch values exactly like renderChain() does in the browser. This keeps
     // sample-rate-relative display values and hidden CV ports covered by tests.
-    for (const p of visibleControlPorts(eff.ports)) {
+    const visiblePorts = visibleControlPorts(eff.ports);
+    const defaults = defaultPortValuesForUi(visiblePorts, SAMPLE_RATE, { activateEffectToggles: true });
+    for (const p of visiblePorts) {
         const key = setterKey(p);
         const uiValue = overrides.has(key)
             ? uiValueForPort(p, overrides.get(key))
-            : defaultPortValueForUi(p, SAMPLE_RATE, { activateEffectToggles: true });
+            : defaults.get(p);
         if (!Number.isFinite(uiValue)) continue;
         const fn = SETTERS[key];
         if (fn && typeof mod[fn] === 'function') {
@@ -136,7 +165,7 @@ async function renderPeak(eff, factory, wasmBinary, SETTERS, overrides = new Map
 
     let peak = 0;
     for (let b = 0; b < BLOCKS; b++) {
-        fillAudioInputs(mod, inBufFns, b);
+        fillAudioInputs(mod, inBufFns, b, profile);
         mod._shim_run(BLOCK_SIZE);
         for (const fn of outBufFns) {
             const ptr = mod[fn]() >> 2;
@@ -223,7 +252,7 @@ function audibleHighValue(port) {
     return min + (max - min) * 0.9;
 }
 
-function fillAudioInputs(mod, inBufFns, blockIndex) {
+function fillAudioInputs(mod, inBufFns, blockIndex, profile = {}) {
     const baseSample = blockIndex * BLOCK_SIZE;
     for (let i = 0; i < inBufFns.length; i++) {
         const ptr = mod[inBufFns[i]]() >> 2;
@@ -232,6 +261,18 @@ function fillAudioInputs(mod, inBufFns, blockIndex) {
         const freq = i % 2 === 0 ? 440 : 554.37;
         for (let s = 0; s < BLOCK_SIZE; s++) {
             const t = (baseSample + s) / SAMPLE_RATE;
+            if (profile.audio === 'beatbox-transient') {
+                const period = Math.round(SAMPLE_RATE * 0.18);
+                const phase = ((baseSample + s) % period) / period;
+                const env = phase < 0.22 ? Math.exp(-phase * 9) : 0.0001;
+                const edge = phase < 0.01 ? 0.75 * (1 - phase / 0.01) : 0;
+                const probeFreq = Number(profile.freq) || freq;
+                mod.HEAPF32[ptr + s] = env * (
+                    0.85 * Math.sin(2 * Math.PI * probeFreq * t)
+                  + 0.12 * Math.sin(2 * Math.PI * probeFreq * 2 * t)
+                ) + edge;
+                continue;
+            }
             mod.HEAPF32[ptr + s] = 0.5 * Math.sin(2 * Math.PI * freq * t);
         }
     }

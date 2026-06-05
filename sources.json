@@ -201,6 +201,7 @@
     "targets": [
       {
         "id": "adlplug",
+        "setup": "setup-adlplug.js",
         "autoSetup": false,
         "description": "ADLplug OPL and OPN FM chip synthesizer"
       }

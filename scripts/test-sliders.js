@@ -253,6 +253,12 @@ for (const id of discoverPluginIds()) {
                     changed = true;
                     break;
                 }
+                if (uiDefaultsMode && isUnexpectedDropout(options, port, cached.reference, rendered)) {
+                    diffs.push(`${candidate.label} peak=${fmtMetric(rendered.peak)}`);
+                    issues.push(`${portLabel}: ${candidate.label} caused output dropout (reference peak=${fmtMetric(cached.reference.peak)}, rendered peak=${fmtMetric(rendered.peak)})`);
+                    changed = true;
+                    break;
+                }
                 const diff = compareAudio(cached.reference.audio, rendered.audio);
                 diffs.push(`${candidate.label} rms=${fmtMetric(diff.rms)} rel=${fmtMetric(diff.relative)}`);
                 renderedCandidates.push({ candidate, rendered });
@@ -545,6 +551,16 @@ function requiresSliderSweepCoverage(port, options) {
     if (/gate/i.test(context) && /\bhold\b/i.test(text)) return false;
     if (/polyphony|voices|sections/i.test(text)) return false;
     return true;
+}
+
+function isUnexpectedDropout(options, port, reference, rendered) {
+    const context = `${options.id} ${options.meta.name ?? ''}`;
+    const key = setterKey(port);
+    if (!/mda[_-]?BeatBox/i.test(context) || !/^(kik_trig|snr_trig)$/.test(key)) {
+        return false;
+    }
+    if (reference.peak <= 1e-5) return false;
+    return rendered.peak < Math.max(1e-6, reference.peak * 0.05);
 }
 
 function sliderSweepCoverage(port, renderedCandidates, noise) {

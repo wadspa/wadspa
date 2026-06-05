@@ -15,6 +15,7 @@ import {
     AUDIBLE_FREQUENCY_MAX_HZ,
     AUDIBLE_FREQUENCY_MIN_HZ,
     isAudibleFrequencyPort,
+    isOperationalStatePort,
     portUiRange,
     portValueFromSlider,
     portValueForSet,
@@ -124,6 +125,9 @@ function validateVisibleControlSet(scope, ports) {
     for (const port of ports) {
         if (port.cv && visible.has(port)) {
             issues.push(`${scope} ${port.name}: CV/modulation port is exposed as a slider`);
+        }
+        if (isOperationalStatePort(port) && visible.has(port)) {
+            issues.push(`${scope} ${port.name}: operational state port is exposed as a slider`);
         }
     }
 

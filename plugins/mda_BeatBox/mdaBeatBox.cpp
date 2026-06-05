@@ -173,8 +173,10 @@ void mdaBeatBox::setParameter(int32_t index, float value)
   ksf1 = (float)cos(3.1415927 * kww);     //p
   ksf2 = (float)sin(3.1415927 * kww);     //q
 
-  if(wwx != ww) sfx = (int32_t)(2 * getSampleRate()); 
-  if(kwwx != kww) ksfx = (int32_t)(2 * getSampleRate());
+  // Browser controls should retune the trigger filters without entering the
+  // original two-second key-listen mode, which mutes drum replacement while dragging.
+  if(wwx != ww) sfx = 0;
+  if(kwwx != kww) ksfx = 0;
 
   rec = (int32_t)(4.9 * fParam11); 
   if ((rec!=recx) && (recpos>0)) //finish sample

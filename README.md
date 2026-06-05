@@ -22,7 +22,7 @@ Existing browser plugin formats (CLAP, WAM, Web Audio Modules) repeatedly break 
 
 ---
 
-## Instruments (18)
+## Instruments (28)
 
 | Plugin | Description |
 |--------|-------------|
@@ -44,6 +44,16 @@ Existing browser plugin formats (CLAP, WAM, Web Audio Modules) repeatedly break 
 | `sorcer` | Polyphonic wavetable synthesizer LV2 |
 | `string-machine` | Polyphonic string ensemble synthesizer LV2 |
 | `geonkick` | MIDI-triggered kick drum synthesizer using the Geonkick DSP core |
+| `setbfree` | MIDI-controlled Hammond B3 tonewheel organ instrument |
+| `nekobi` | TB-303-style acid bass synthesizer |
+| `vl1-emulator` | Casio VL-Tone VL1 instrument |
+| `casynth` | Additive synth controlled by an elementary cellular automaton |
+| `dexed` | DX7-compatible six-operator FM synthesizer |
+| `juce-opl` | AdLib/Sound Blaster OPL2 chip synthesizer |
+| `obxd` | Oberheim OB-X style virtual analog synthesizer |
+| `chowkick` | Physically modeled kick drum synthesizer |
+| `calf-monosynth` | Virtual analog monophonic synthesizer |
+| `adlplug` | OPL3 FM chip synthesizer |
 
 Plus 32+ LADSPA effects (reverb, chorus, EQ, dynamics, …) all available on the browser test page.
 
@@ -379,7 +389,7 @@ wadspa/
       fftw3.h               FFTW3 float API header (takes priority over qt-stub/fftw3.h)
   plugins/
     manifest.json           LADSPA effect registry (32+ plugins)
-    lv2.json                LV2 plugin registry (27 instruments + effects)
+    lv2.json                LV2 plugin registry (28 instruments + effects)
     synthv1/                Dual-oscillator polyphonic analog synthesizer
     drumkv1/                Per-pad drum synthesizer
     padthv1/                PADsynth additive synthesizer

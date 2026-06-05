@@ -181,7 +181,7 @@ function scaffoldCandidate(candidate) {
         }
     }
 
-    copy(candidate.sourcePath, join(candidate.pluginDir, candidate.sourceFile));
+    write(candidate.pluginDir, candidate.sourceFile, sourceForCandidate(candidate));
     copy(candidate.headerPath, join(candidate.pluginDir, candidate.headerFile));
     console.log(`  ${candidate.sourceFile}`);
     console.log(`  ${candidate.headerFile}`);
@@ -255,6 +255,17 @@ function ttlDescription(candidate) {
     return firstParagraph.length > 160
         ? `${firstParagraph.slice(0, 157).trim()}...`
         : firstParagraph;
+}
+
+function sourceForCandidate(candidate) {
+    let source = readFileSync(candidate.sourcePath, 'utf8');
+    if (candidate.pluginId === 'mda_BeatBox') {
+        source = source
+            .replace(
+                '  if(wwx != ww) sfx = (int32_t)(2 * getSampleRate()); \n  if(kwwx != kww) ksfx = (int32_t)(2 * getSampleRate());',
+                '  // Browser controls should retune the trigger filters without entering the\n  // original two-second key-listen mode, which mutes drum replacement while dragging.\n  if(wwx != ww) sfx = 0;\n  if(kwwx != kww) ksfx = 0;');
+    }
+    return source;
 }
 
 function copy(src, dest) {

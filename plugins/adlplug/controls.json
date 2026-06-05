@@ -1,0 +1,168 @@
+[
+  {
+    "symbol": "mastervol",
+    "name": "Master Volume",
+    "min": 0,
+    "max": 2,
+    "def": 0.8
+  },
+  {
+    "symbol": "bank",
+    "name": "Embedded Bank",
+    "min": 0,
+    "max": 15,
+    "def": 0,
+    "integer": true
+  },
+  {
+    "symbol": "program",
+    "name": "Program",
+    "min": 0,
+    "max": 127,
+    "def": 0,
+    "integer": true
+  },
+  {
+    "symbol": "emulator",
+    "name": "OPL3 Emulator",
+    "min": 0,
+    "max": 3,
+    "def": 2,
+    "integer": true,
+    "scalePoints": [
+      [
+        "Nuked OPL3 1.8",
+        0
+      ],
+      [
+        "Nuked OPL3 1.7",
+        1
+      ],
+      [
+        "DOSBox OPL3",
+        2
+      ],
+      [
+        "Opal OPL3",
+        3
+      ]
+    ]
+  },
+  {
+    "symbol": "chip_count",
+    "name": "Chip Count Voices",
+    "min": 1,
+    "max": 8,
+    "def": 2,
+    "integer": true
+  },
+  {
+    "symbol": "four_op_channels",
+    "name": "4op Channel Count",
+    "min": 0,
+    "max": 6,
+    "def": 0,
+    "integer": true
+  },
+  {
+    "symbol": "deep_vibrato",
+    "name": "Deep Vibrato",
+    "min": 0,
+    "max": 1,
+    "def": 0,
+    "integer": true,
+    "toggled": true
+  },
+  {
+    "symbol": "deep_tremolo",
+    "name": "Deep Tremolo",
+    "min": 0,
+    "max": 1,
+    "def": 0,
+    "integer": true,
+    "toggled": true
+  },
+  {
+    "symbol": "soft_pan",
+    "name": "Soft Pan",
+    "min": 0,
+    "max": 1,
+    "def": 1,
+    "integer": true,
+    "toggled": true
+  },
+  {
+    "symbol": "full_range_brightness",
+    "name": "Full Range Brightness",
+    "min": 0,
+    "max": 1,
+    "def": 1,
+    "integer": true,
+    "toggled": true
+  },
+  {
+    "symbol": "scale_modulators",
+    "name": "Scale Modulators",
+    "min": 0,
+    "max": 1,
+    "def": 1,
+    "integer": true,
+    "toggled": true
+  },
+  {
+    "symbol": "volume_model",
+    "name": "Volume Model",
+    "min": 0,
+    "max": 5,
+    "def": 0,
+    "integer": true,
+    "scalePoints": [
+      [
+        "Auto",
+        0
+      ],
+      [
+        "Generic",
+        1
+      ],
+      [
+        "Native OPL3",
+        2
+      ],
+      [
+        "DMX",
+        3
+      ],
+      [
+        "Apogee",
+        4
+      ],
+      [
+        "9X",
+        5
+      ]
+    ]
+  },
+  {
+    "symbol": "tone",
+    "name": "Output Tone Hz",
+    "min": 300,
+    "max": 7000,
+    "def": 2600,
+    "logarithmic": true
+  },
+  {
+    "symbol": "drive",
+    "name": "Output Drive",
+    "min": 0,
+    "max": 1,
+    "def": 0.08
+  },
+  {
+    "symbol": "stereo_width",
+    "name": "Stereo Width",
+    "min": 0,
+    "max": 1,
+    "def": 0.75
+  }
+]

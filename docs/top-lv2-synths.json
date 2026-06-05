@@ -52,9 +52,10 @@
     "id": "adlplug",
     "name": "ADLplug",
     "family": "FM and Retro Chiptune Engines",
-    "status": "candidate",
+    "status": "supported",
     "sourceIds": ["adlplug"],
-    "notes": "Tracked as an exact OPL/OPN chip target. It needs a dedicated setup for its recursive dependencies and LV2 metadata."
+    "catalogIds": ["adlplug"],
+    "notes": "Built as a MIDI-controlled OPL3 FM chip synthesizer using libADLMIDI's real-time ADLplug sound path, and covered by the LV2 smoke and slider tests."
   },
   {
     "id": "juce-opl",

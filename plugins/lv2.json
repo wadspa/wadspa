@@ -1565,5 +1565,12 @@
     "defines": [
       "NDEBUG"
     ]
+  },
+  {
+    "id": "adlplug",
+    "description": "ADLplug - OPL3 FM chip synthesizer",
+    "category": "Instruments",
+    "buildScript": "scripts/build-adlplug.js",
+    "memoryGrowth": true
   }
 ]
