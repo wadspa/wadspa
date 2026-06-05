@@ -204,7 +204,7 @@ for (const id of discoverPluginIds()) {
             const diffs = [];
             let changed = false;
             const support = uiDefaultsMode
-                ? baseSupport
+                ? mergeOverrides(baseSupport, uiContextSupportOverridesFor(port, allCtrlPorts, options))
                 : mergeOverrides(baseSupport, supportOverridesFor(port, allCtrlPorts, options));
             const profile = renderProfileFor(options, port);
             const cacheKey = `${profile.key}:${overrideKey(support)}`;
@@ -734,6 +734,33 @@ function supportOverridesFor(port, allCtrlPorts, options) {
         if (/pitchbend|modwheel|pressure|velocity/i.test(text) && /pitchbend|modwheel|pressure|velocity/i.test(otherText)) {
             set(other, audibleHighValue(other));
         }
+    }
+
+    return support;
+}
+
+function uiContextSupportOverridesFor(port, allCtrlPorts, options) {
+    const text = controlText(port);
+    const context = `${options.id} ${options.meta.name ?? ''}`;
+    const support = new Map();
+    const set = (other, value) => {
+        if (!other || setterKey(other) === setterKey(port) || !Number.isFinite(value)) return;
+        support.set(setterKey(other), value);
+    };
+
+    if (/key filter|lf key|hf key/i.test(text)) {
+        const outputSelect = allCtrlPorts.find(other => /output select/i.test(controlText(other)));
+        set(outputSelect, lowValue(outputSelect));
+    }
+
+    if (/mda[_-]?TestTone/i.test(context) && /sweep/i.test(text)) {
+        const mode = allCtrlPorts.find(other => /\bmode\b/i.test(controlText(other)));
+        set(mode, highValue(mode));
+    }
+
+    if (/so-666/i.test(context) && /midi channel|\bchannel\b/i.test(text)) {
+        const controlMode = allCtrlPorts.find(other => /control\s*mode|controlmode/i.test(controlText(other)));
+        set(controlMode, minValue(controlMode));
     }
 
     return support;

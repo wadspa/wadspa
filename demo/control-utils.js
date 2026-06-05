@@ -88,9 +88,14 @@ export function defaultPortValuesForUi(ports = [], sampleRate = 44100, options =
   }
 
   applyZamDynamicEqUiDefaults(ports, values, sampleRate);
+  applyControlPortModeDefaults(ports, values, sampleRate);
+  applyAudibleEnvelopeDefaults(ports, values, sampleRate);
+  applyAudibleDynamicsDefaults(ports, values, sampleRate);
   applyAudibleEqBandDefaults(ports, values, sampleRate);
   applyAudibleModulationDefaults(ports, values, sampleRate);
   applyAudibleTapDelayDefaults(ports, values, sampleRate);
+  applyAudibleReverbDefaults(ports, values, sampleRate);
+  applyAudibleDependentControlDefaults(ports, values, sampleRate);
   return values;
 }
 
@@ -104,10 +109,10 @@ export function exclusiveToggleGroupForPort(port, ports = []) {
 export function shouldActivateToggleByDefault(p) {
   if (!p?.toggled) return false;
   const text = controlText(p);
-  if (/\b(bypass|reset|learn|listen|residual|sidechain|sync|invert|swap|stereo|haas|detection|reverse|loop|freeze|insane|mode|control\s*mode)\b/i.test(text)) {
+  if (/\b(bypass|reset|learn|listen|residual|sidechain|sync|invert|swap|stereo|haas|detection|reverse|loop|freeze|insane|mode)\b|control\s*mode|controlmode/i.test(text)) {
     return false;
   }
-  return /\b(enable|enabled|active|process|on|filter|section|shelf|peak|band|highpass|lowpass|compressor)\b/i.test(text);
+  return /enable|enabled|\bactive\b|\bprocess\b|\bon\b|filter|section|shelf|peak|band|highpass|lowpass|compressor/i.test(text);
 }
 
 export function sliderRangeForPort(p, uiRange, value = uiRange.value) {
@@ -270,10 +275,113 @@ function applyZamDynamicEqUiDefaults(ports, values, sampleRate) {
   setValue(values, bySymbol.get('rat'), 5, sampleRate);
 }
 
+function applyControlPortModeDefaults(ports, values, sampleRate) {
+  for (const port of ports) {
+    const text = controlText(port);
+    if (!/control\s*mode|controlmode/i.test(text)) continue;
+    if (!scalePointOptions(port).some(point => /control\s+ports/i.test(point.label))) continue;
+    setValue(values, port, finitePortNumber(port.max) ?? 1, sampleRate);
+  }
+}
+
 function setValue(values, port, value, sampleRate = 44100) {
   if (!port || !Number.isFinite(value)) return;
   const range = portUiRange(port, sampleRate);
   values.set(port, clamp(value, Math.min(range.min, range.max), Math.max(range.min, range.max)));
+}
+
+function applyAudibleEnvelopeDefaults(ports, values, sampleRate) {
+  const allText = ports.map(controlText).join(' ');
+  const hasEnvelope = /attack|att\b|decay|dec\b|sustain|sus\b|release|rel\b|hold|env|envelope/i.test(allText);
+  if (!hasEnvelope) return;
+
+  const hasFilterEnvelope = /filter|cutoff|vcf|dcf|resonance|reso/i.test(allText)
+    && /env|envelope|attack|decay|sustain|release/i.test(allText);
+
+  for (const port of ports) {
+    const text = controlText(port);
+    const current = values.get(port);
+
+    if (/sustain|sus\b/i.test(text)
+        && /decay|dec\b/i.test(allText)
+        && isHighEnvelopeValue(port, current)) {
+      setValue(values, port, envelopeSustainValue(port), sampleRate);
+      continue;
+    }
+
+    if (/attack|att\b/i.test(text)
+        && /decay|dec\b/i.test(allText)
+        && isHighEnvelopeValue(port, current)) {
+      setValue(values, port, lowValue(port), sampleRate);
+      continue;
+    }
+
+    if (hasFilterEnvelope
+        && /env.*amount|amount.*env|vcf[_\s-]*env|dcf\d*[_\s-]*envelope/i.test(text)
+        && !/attack|att\b|decay|dec\b|sustain|sus\b|release|rel\b|hold/i.test(text)) {
+      if (!Number.isFinite(current) || Math.abs(current) < 0.25) {
+        setValue(values, port, audibleHighValue(port), sampleRate);
+      }
+      continue;
+    }
+
+    if (hasFilterEnvelope
+        && /filter.*cutoff|cutoff.*filter|vcf[_\s-]*freq|dcf\d*[_\s-]*cutoff/i.test(text)
+        && isHighEnvelopeValue(port, current)) {
+      setValue(values, port, midValue(port), sampleRate);
+    }
+  }
+}
+
+function applyAudibleDynamicsDefaults(ports, values, sampleRate) {
+  const allText = ports.map(controlText).join(' ');
+  if (!/\bcomp|compress|threshold|thresh|knee|ratio|gate|limiter|rms|peak|de[-_ ]?ess|makeup/i.test(allText)) {
+    return;
+  }
+  const gateContext = /\bgate\b|gate[_\s-]*thr|key filter/i.test(allText);
+
+  for (const port of ports) {
+    const text = controlText(port);
+    const current = values.get(port);
+
+    if (port.toggled && /compress|comp.*enable|enable.*comp/i.test(text)) {
+      setValue(values, port, finitePortNumber(port.max) ?? 1, sampleRate);
+      continue;
+    }
+
+    if (/gate.*thr|thr.*gate/i.test(text) && isOffThresholdValue(port, current)) {
+      setValue(values, port, activeThresholdValue(port, 0.67), sampleRate);
+      continue;
+    }
+
+    if (/threshold|thresh/i.test(text) && !/gate/i.test(text) && isInactiveThresholdValue(port, current)) {
+      const fraction = /de[-_ ]?ess/i.test(allText) ? 0.08 : gateContext || /knee|rms|peak/i.test(allText) ? 0.67 : 0.25;
+      setValue(values, port, activeThresholdValue(port, fraction), sampleRate);
+      continue;
+    }
+
+    if (gateContext && /attack|att\b/i.test(text) && !isMuteLikeValue(port, current)) {
+      setValue(values, port, lowValue(port), sampleRate);
+      continue;
+    }
+
+    if (/ratio/i.test(text) && !/fixed/i.test(text) && isNearNeutralRatio(port, current)) {
+      setValue(values, port, highValue(port), sampleRate);
+      continue;
+    }
+
+    if (/comp(?:Attack|Release|Threshold|Makeup)|comp[_\s-]*(?:attack|release|threshold|makeup)/i.test(text)
+        && isMuteLikeValue(port, current)) {
+      setValue(values, port, midValue(port), sampleRate);
+      continue;
+    }
+
+    if (/\bcomp|compress/i.test(allText)
+        && /^(?:vol|volume|osc\d+vol)\b/i.test(String(port?.symbol ?? port?.name ?? ''))
+        && !isNearMaxValue(port, current)) {
+      setValue(values, port, audibleHighValue(port), sampleRate);
+    }
+  }
 }
 
 function applyAudibleEqBandDefaults(ports, values, sampleRate) {
@@ -319,6 +427,9 @@ function eqBoostValue(port) {
 function eqGroupKeys(port) {
   const raw = `${port?.symbol ?? ''} ${port?.name ?? ''}`.toLowerCase();
   const keys = new Set();
+  for (const match of raw.matchAll(/\bf(\d+)[_\s-]*(?:freq|gain|q|bw|bandwidth)\b|(?:freq|gain|q|bw|bandwidth)[_\s-]*f(\d+)\b/g)) {
+    keys.add(`band:f${match[1] ?? match[2]}`);
+  }
   for (const match of raw.matchAll(/band\s*[_-]?(\d+)|band(\d+)/g)) {
     keys.add(`band:${match[1] ?? match[2]}`);
   }
@@ -349,7 +460,9 @@ function isEqGainPort(port) {
 }
 
 function applyAudibleModulationDefaults(ports, values, sampleRate) {
-  const hasModulation = ports.some(port => /lfo|mod|vibrato|chorus|flanger|slowdown|detune|voice/i.test(controlText(port)));
+  const allText = ports.map(controlText).join(' ');
+  const hasModulation = /lfo|mod|vibrato|chorus|flanger|phaser|slowdown|detune|voice/i.test(allText)
+    || (/frequency|rate/i.test(allText) && /depth|wet|mix|feedback/i.test(allText));
   if (!hasModulation) return;
 
   for (const port of ports) {
@@ -362,7 +475,7 @@ function applyAudibleModulationDefaults(ports, values, sampleRate) {
       continue;
     }
 
-    if (/depth|amount|mod.*amp|amp.*mod|slowdown|detune|feedback|mix/i.test(text)
+    if (/depth|amount|\bmod\b|mod.*amp|amp.*mod|slowdown|detune|feedback|mix|range/i.test(text)
         && (!Number.isFinite(current) || Math.abs(current) <= 1e-6)) {
       setValue(values, port, audibleHighValue(port), sampleRate);
       continue;
@@ -376,6 +489,28 @@ function applyAudibleModulationDefaults(ports, values, sampleRate) {
     if (/lfo.*freq|freq.*lfo|mod.*freq|freq.*mod|frequency|rate/i.test(text)
         && (!Number.isFinite(current) || Math.abs(current) <= 1e-6)) {
       setValue(values, port, midValue(port), sampleRate);
+    }
+  }
+
+  if (/lfo\d*.*ring\s*mod|ring\s*mod.*lfo\d*/i.test(allText)) {
+    for (const port of ports) {
+      const text = controlText(port);
+      const current = values.get(port);
+      if (/lfo/i.test(text)) continue;
+      if (/ring\s*mod|ringmod/i.test(text) && (!Number.isFinite(current) || Math.abs(current) <= 1e-6)) {
+        setValue(values, port, audibleHighValue(port), sampleRate);
+      }
+    }
+  }
+
+  if (/lfo\d*.*reso|reso.*lfo\d*/i.test(allText)) {
+    for (const port of ports) {
+      const text = controlText(port);
+      const current = values.get(port);
+      if (/lfo/i.test(text)) continue;
+      if (/resonance|reso/i.test(text) && (!Number.isFinite(current) || Math.abs(current) <= 1e-6)) {
+        setValue(values, port, midValue(port), sampleRate);
+      }
     }
   }
 }
@@ -394,13 +529,87 @@ function applyAudibleTapDelayDefaults(ports, values, sampleRate) {
     const level = group.find(port => /level|gain|volume/i.test(controlText(port)));
     if (distance) {
       const current = values.get(distance);
-      if (!Number.isFinite(current) || Math.abs(current) <= 1e-6) {
+      const shortValue = shortTimeValue(distance);
+      if (!Number.isFinite(current) || Math.abs(current) <= 1e-6 || current > shortValue) {
         setValue(values, distance, shortTimeValue(distance), sampleRate);
       }
     }
     if (level) {
       const current = values.get(level);
       if (isMuteLikeValue(level, current)) setValue(values, level, audibleHighValue(level), sampleRate);
+    }
+  }
+}
+
+function applyAudibleReverbDefaults(ports, values, sampleRate) {
+  const bySymbol = new Map(ports.map(port => [String(port?.symbol ?? '').toLowerCase(), port]));
+  const rtLow = bySymbol.get('rt_low');
+  const rtMid = bySymbol.get('rt_mid');
+  if (rtLow && rtMid) {
+    setValue(values, rtLow, highValue(rtLow), sampleRate);
+    setValue(values, rtMid, lowValue(rtMid), sampleRate);
+  }
+}
+
+function applyAudibleDependentControlDefaults(ports, values, sampleRate) {
+  const allText = ports.map(controlText).join(' ');
+
+  for (const port of ports) {
+    const text = controlText(port);
+    const current = values.get(port);
+
+    if (/crossover.*amplitude|amplitude.*crossover/i.test(text) && /smoothing/i.test(allText) && isMuteLikeValue(port, current)) {
+      setValue(values, port, audibleHighValue(port), sampleRate);
+      continue;
+    }
+
+    if (/\brate\b/i.test(text) && /integrator/i.test(allText) && isNearMaxValue(port, current)) {
+      setValue(values, port, lowValue(port), sampleRate);
+      continue;
+    }
+
+    if (/\bdither\b/i.test(text) && /dith.*amp|amp.*dith/i.test(allText) && isMuteLikeValue(port, current)) {
+      setValue(values, port, highValue(port), sampleRate);
+      continue;
+    }
+
+    if (/r\/l delay|rl_delay/i.test(text) && /fixed.*ratio/i.test(allText)) {
+      setValue(values, port, lowValue(port), sampleRate);
+      continue;
+    }
+
+    if (/level[_\s-]*sw|level switch/i.test(text) && /\blevel\b/i.test(allText)) {
+      setValue(values, port, lowValue(port), sampleRate);
+      continue;
+    }
+
+    if (/\btype\b/i.test(text) && /dry.*mix|thresh|release/i.test(allText) && /tune|sub/i.test(allText)) {
+      setValue(values, port, finitePortNumber(port.max) ?? highValue(port), sampleRate);
+      continue;
+    }
+
+    if (/tracking/i.test(text) && /max.*freq|freq.*max/i.test(allText)) {
+      setValue(values, port, finitePortNumber(port.max) ?? 1, sampleRate);
+      continue;
+    }
+
+    if (/\bnoise\b/i.test(text) && /hurst|fractal/i.test(allText) && isMuteLikeValue(port, current)) {
+      setValue(values, port, audibleHighValue(port), sampleRate);
+      continue;
+    }
+
+    if (/warp.*type/i.test(text) && /warp.*amount/i.test(allText) && isMuteLikeValue(port, current)) {
+      setValue(values, port, highValue(port), sampleRate);
+      continue;
+    }
+
+    if (/portamento|glide/i.test(text) && /portamento.*mode|keyboard.*mode/i.test(allText) && isMuteLikeValue(port, current)) {
+      setValue(values, port, midValue(port), sampleRate);
+      continue;
+    }
+
+    if (/keyboard.*mode|mono|legato/i.test(text) && /portamento/i.test(allText)) {
+      setValue(values, port, midValue(port), sampleRate);
     }
   }
 }
@@ -416,6 +625,13 @@ function midValue(port) {
   const max = finitePortNumber(port.max);
   if (!Number.isFinite(min) || !Number.isFinite(max)) return finitePortNumber(port.default) ?? 0;
   return min + (max - min) * 0.5;
+}
+
+function lowValue(port) {
+  const min = finitePortNumber(port.min);
+  const max = finitePortNumber(port.max);
+  if (!Number.isFinite(min) || !Number.isFinite(max)) return finitePortNumber(port.default) ?? 0;
+  return min + (max - min) * 0.1;
 }
 
 function highValue(port) {
@@ -438,6 +654,56 @@ function audibleHighValue(port) {
   if (!Number.isFinite(min) || !Number.isFinite(max)) return finitePortNumber(port.default) ?? 1;
   if (min < 0 && max >= 0) return max;
   return highValue(port);
+}
+
+function envelopeSustainValue(port) {
+  const min = finitePortNumber(port.min);
+  const max = finitePortNumber(port.max);
+  if (!Number.isFinite(min) || !Number.isFinite(max)) return finitePortNumber(port.default) ?? 0.35;
+  if (min < 0 && max <= 0) return min + (max - min) * 0.7;
+  return min + (max - min) * 0.35;
+}
+
+function activeThresholdValue(port, fraction) {
+  const min = finitePortNumber(port.min);
+  const max = finitePortNumber(port.max);
+  if (!Number.isFinite(min) || !Number.isFinite(max)) return finitePortNumber(port.default) ?? 0;
+  return min + (max - min) * fraction;
+}
+
+function isNearMaxValue(port, value) {
+  const min = finitePortNumber(port.min);
+  const max = finitePortNumber(port.max);
+  if (!Number.isFinite(value) || !Number.isFinite(min) || !Number.isFinite(max)) return false;
+  const span = Math.abs(max - min);
+  return Math.abs(value - max) <= Math.max(1e-7, span * 0.05);
+}
+
+function isHighEnvelopeValue(port, value) {
+  const min = finitePortNumber(port.min);
+  const max = finitePortNumber(port.max);
+  if (!Number.isFinite(value) || !Number.isFinite(min) || !Number.isFinite(max)) return false;
+  return value >= min + (max - min) * 0.75;
+}
+
+function isOffThresholdValue(port, value) {
+  const min = finitePortNumber(port.min);
+  if (!Number.isFinite(value) || !Number.isFinite(min)) return false;
+  return Math.abs(value - min) <= Math.max(1e-7, Math.abs(min) * 1e-4);
+}
+
+function isInactiveThresholdValue(port, value) {
+  const min = finitePortNumber(port.min);
+  const max = finitePortNumber(port.max);
+  if (!Number.isFinite(value) || !Number.isFinite(min) || !Number.isFinite(max)) return false;
+  return isOffThresholdValue(port, value) || isNearMaxValue(port, value) || Math.abs(value) <= 1e-7;
+}
+
+function isNearNeutralRatio(port, value) {
+  if (!Number.isFinite(value)) return false;
+  const min = finitePortNumber(port.min);
+  if (Number.isFinite(min) && Math.abs(value - min) <= Math.max(1e-7, Math.abs(min) * 1e-4)) return true;
+  return Math.abs(value - 1) <= 1e-7;
 }
 
 function isMuteLikeValue(port, value) {
