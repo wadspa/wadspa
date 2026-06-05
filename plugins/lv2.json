@@ -1522,5 +1522,20 @@
     "defines": [
       "NDEBUG"
     ]
+  },
+  {
+    "id": "obxd",
+    "description": "Obxd - Oberheim OB-X style virtual analog synthesizer",
+    "category": "Instruments",
+    "sources": [
+      "obxd_lv2.cpp"
+    ],
+    "includes": [
+      "plugins/obxd",
+      "plugins/obxd/Engine"
+    ],
+    "defines": [
+      "NDEBUG"
+    ]
   }
 ]

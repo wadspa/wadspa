@@ -129,6 +129,7 @@
       {
         "id": "obxd",
         "bundle": "ports-juce5/obxd",
+        "setup": "setup-obxd.js",
         "autoSetup": false,
         "description": "Obxd Oberheim-style synthesizer"
       }

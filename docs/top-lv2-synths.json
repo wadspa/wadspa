@@ -95,9 +95,10 @@
     "id": "obxd",
     "name": "Obxd",
     "family": "Virtual Analog and Subtractive Workstations",
-    "status": "candidate",
+    "status": "supported",
     "sourceIds": ["distrho-ports"],
-    "notes": "Tracked through DISTRHO-Ports. It is not equivalent to the current mda_JX10 virtual analog instrument."
+    "catalogIds": ["obxd"],
+    "notes": "Exact target is built as a MIDI instrument and covered by the LV2 smoke and slider tests."
   },
   {
     "id": "synthv1",
