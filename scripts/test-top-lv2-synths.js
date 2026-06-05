@@ -28,6 +28,7 @@ const instruments = readJson(join(ROOT, 'docs', 'instruments.json'));
 const effects = readJson(join(ROOT, 'docs', 'plugins', 'catalog.json'));
 
 const sourceIds = new Set(sources.map(entry => entry.id));
+const sourcesById = new Map(sources.map(entry => [entry.id, entry]));
 const setupTargetsById = new Map(sources.flatMap(source =>
     (source.targets ?? []).map(target => [target.id, { source, target }])
 ));
@@ -124,7 +125,10 @@ function validateSupportedTarget(target) {
         if (!existsSync(join(ROOT, 'docs', 'plugins', catalogId, 'index.js'))) {
             issues.push(`${target.name}: ${catalogId} is missing built browser artifact docs/plugins/${catalogId}/index.js`);
         }
+        validateRegistryBuildPath(target, catalogId, registryEntry);
     }
+
+    validateSetupPath(target);
 
     for (const partialId of target.partialCatalogIds ?? []) {
         if (effectsById.has(partialId)) {
@@ -137,6 +141,9 @@ function validateCandidateTarget(target) {
     if (!target.notes || typeof target.notes !== 'string') {
         issues.push(`${target.name}: candidate target must describe the remaining porting work in notes`);
     }
+    validateStringList(target, 'blockers', 'candidate target must list current build blockers');
+    validateStringList(target, 'nextSteps', 'candidate target must list next porting steps');
+
     const setupTarget = setupTargetsById.get(target.id);
     if (!setupTarget) {
         issues.push(`${target.name}: candidate target is missing from sources.json targets`);
@@ -170,6 +177,78 @@ function validateCandidateTarget(target) {
 
     if (strict) {
         issues.push(`${target.name}: tracked candidate, not yet built as a browser instrument`);
+    }
+}
+
+function validateRegistryBuildPath(target, catalogId, registryEntry) {
+    const pluginDir = join(ROOT, 'plugins', catalogId);
+    if (!existsSync(pluginDir)) {
+        issues.push(`${target.name}: ${catalogId} is missing plugin source directory plugins/${catalogId}`);
+        return;
+    }
+
+    if (registryEntry.buildScript) {
+        const scriptPath = join(ROOT, registryEntry.buildScript);
+        if (!existsSync(scriptPath)) {
+            issues.push(`${target.name}: ${catalogId} buildScript ${registryEntry.buildScript} does not exist`);
+        }
+        return;
+    }
+
+    const pluginSources = registryEntry.sources ?? [];
+    if (!Array.isArray(pluginSources) || pluginSources.length === 0) {
+        issues.push(`${target.name}: ${catalogId} must list sources or buildScript in plugins/lv2.json`);
+        return;
+    }
+
+    for (const sourceFile of pluginSources) {
+        if (!existsSync(join(pluginDir, sourceFile))) {
+            issues.push(`${target.name}: ${catalogId} source ${sourceFile} is missing from plugins/${catalogId}`);
+        }
+    }
+}
+
+function validateSetupPath(target) {
+    const catalogIds = new Set(target.catalogIds ?? []);
+    const setupPaths = [];
+
+    for (const sourceId of target.sourceIds ?? []) {
+        const source = sourcesById.get(sourceId);
+        if (!source) continue;
+
+        if (source.setup) {
+            setupPaths.push({ id: source.id, setup: source.setup });
+        }
+
+        for (const setupTarget of source.targets ?? []) {
+            const matchesTarget = setupTarget.id === target.id || catalogIds.has(setupTarget.id);
+            if (!matchesTarget) continue;
+
+            if (setupTarget.setup) {
+                setupPaths.push({ id: setupTarget.id, setup: setupTarget.setup });
+            } else if (setupTarget.autoSetup !== false) {
+                setupPaths.push({ id: setupTarget.id, setup: 'auto-setup.js' });
+            }
+        }
+    }
+
+    if (setupPaths.length === 0) {
+        issues.push(`${target.name}: supported target is missing setup automation in sources.json`);
+        return;
+    }
+
+    for (const setupPath of setupPaths) {
+        const scriptName = setupPath.setup.endsWith('.js') ? setupPath.setup : `${setupPath.setup}.js`;
+        if (!existsSync(join(ROOT, 'scripts', scriptName))) {
+            issues.push(`${target.name}: setup script ${scriptName} for ${setupPath.id} does not exist`);
+        }
+    }
+}
+
+function validateStringList(target, field, message) {
+    const value = target[field];
+    if (!Array.isArray(value) || value.length === 0 || value.some(item => typeof item !== 'string' || item.trim() === '')) {
+        issues.push(`${target.name}: ${message}`);
     }
 }
 

@@ -5,7 +5,15 @@
     "family": "Hybrid, Wavetable, and Modern Synths",
     "status": "candidate",
     "sourceIds": ["surge-xt"],
-    "notes": "Upstream is a large JUCE synth. It needs a dedicated DSP-only setup before wadspa can expose it as a browser instrument."
+    "notes": "Upstream is a large JUCE synth. It needs a dedicated DSP-only setup before wadspa can expose it as a browser instrument.",
+    "blockers": [
+      "The upstream build is a full JUCE application/plugin tree rather than a small LV2 DSP bundle.",
+      "A browser port needs a reduced audio-engine target plus generated LV2-style metadata/control wiring."
+    ],
+    "nextSteps": [
+      "Identify the smallest Surge XT engine target that can render MIDI notes without the editor or host shell.",
+      "Generate a WADSPA wrapper that exposes a verified control subset before widening to the full parameter set."
+    ]
   },
   {
     "id": "vitalium",
@@ -13,7 +21,15 @@
     "family": "Hybrid, Wavetable, and Modern Synths",
     "status": "candidate",
     "sourceIds": ["distrho-ports"],
-    "notes": "Tracked through DISTRHO-Ports. It needs dedicated preset/wavetable asset handling and a DSP-only LV2 setup."
+    "notes": "Tracked through DISTRHO-Ports. It needs dedicated preset/wavetable asset handling and a DSP-only LV2 setup.",
+    "blockers": [
+      "Vitalium depends on a large JUCE/Vital-derived wavetable engine and visual wavetable/preset asset model.",
+      "The browser build needs deterministic wavetable asset loading before the sliders can be meaningfully validated."
+    ],
+    "nextSteps": [
+      "Build a DSP-only Vitalium probe with one stock wavetable and MIDI note rendering.",
+      "Add wavetable/preset asset packaging after the first audio path passes the generic slider tests."
+    ]
   },
   {
     "id": "odin2",
@@ -21,7 +37,16 @@
     "family": "Hybrid, Wavetable, and Modern Synths",
     "status": "candidate",
     "sourceIds": ["odin2"],
-    "notes": "Upstream supports LV2, but the JUCE/CMake build must be reduced to the DSP and metadata path for WASM."
+    "notes": "Upstream supports LV2, but the JUCE/CMake build must be reduced to the DSP and metadata path for WASM.",
+    "blockers": [
+      "Odin2 CMake only enables LV2 on Linux; the macOS path generates AU, VST3, and Standalone targets.",
+      "The vendored JUCE juceaide helper fails on the current macOS 15 SDK because it references CGWindowListCreateImage.",
+      "The processor is tightly coupled to JUCE ValueTree/plugin/editor scaffolding, so a real browser port needs either a JUCE-compatible audio target or a DSP-only wrapper around the Odin engine."
+    ],
+    "nextSteps": [
+      "Create an Odin2 audio-only build probe that bypasses the editor and JUCE plugin formats.",
+      "Extract the generated Odin parameter list into WADSPA metadata, then validate the rendered controls with the generic slider tests."
+    ]
   },
   {
     "id": "helm",
@@ -38,7 +63,15 @@
     "family": "Hybrid, Wavetable, and Modern Synths",
     "status": "candidate",
     "sourceIds": ["cardinal"],
-    "notes": "Cardinal is a modular host-style instrument with many bundled modules. It needs a custom reduced WASM build plan."
+    "notes": "Cardinal is a modular host-style instrument with many bundled modules. It needs a custom reduced WASM build plan.",
+    "blockers": [
+      "Cardinal is a modular host-style instrument with many modules rather than one fixed LV2 DSP surface.",
+      "A useful WADSPA port needs a constrained patch/module set and a stable browser control contract."
+    ],
+    "nextSteps": [
+      "Choose a small built-in patch and module subset that can render MIDI notes headlessly.",
+      "Package that subset as the first supported Cardinal instrument before expanding module coverage."
+    ]
   },
   {
     "id": "dexed",

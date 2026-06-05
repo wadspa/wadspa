@@ -59,7 +59,7 @@ Plus 32+ LADSPA effects (reverb, chorus, EQ, dynamics, …) all available on the
 
 ## Top LV2 Synth Targets
 
-The requested top-20 LV2 synth list is tracked in [`docs/top-lv2-synths.json`](./docs/top-lv2-synths.json). Exact targets that are already browser-built are marked `supported`; the rest are `candidate` entries with source repos in `sources.json` and notes for the remaining porting work.
+The requested top-20 LV2 synth list is tracked in [`docs/top-lv2-synths.json`](./docs/top-lv2-synths.json). Exact targets that are already browser-built are marked `supported`; the rest are `candidate` entries with source repos, explicit build blockers, and next porting steps. The normal test also verifies that every supported target has rebuildable plugin sources or a build script plus setup automation in `sources.json`.
 
 ```sh
 npm run test:top-lv2-synths
