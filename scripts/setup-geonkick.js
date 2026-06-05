@@ -617,14 +617,24 @@ EMSCRIPTEN_KEEPALIVE void shim_set_plugin_state(const char *key, const char *val
 
     if (strcmp(key, "kick_amp_env") == 0) {
         g->kick_amp_count = parse_env_points(value, g->kick_amp_x, g->kick_amp_y);
+        g->active_amp_count = g->kick_amp_count;
+        for (size_t i = 0; i < g->kick_amp_count && i < MAX_ENV_POINTS; i++) {
+            g->active_amp_x[i] = g->kick_amp_x[i];
+            g->active_amp_y[i] = g->kick_amp_y[i];
+        }
     } else if (strcmp(key, "osc_pitch_env") == 0) {
         g->osc_pitch_count = parse_env_points(value, g->osc_pitch_x, g->osc_pitch_y);
+        g->active_pitch_count = g->osc_pitch_count;
+        for (size_t i = 0; i < g->osc_pitch_count && i < MAX_ENV_POINTS; i++) {
+            g->active_pitch_x[i] = g->osc_pitch_x[i];
+            g->active_pitch_y[i] = g->osc_pitch_y[i];
+        }
     } else {
         return;
     }
-    // Canvas edits can arrive at pointer-move rate. Defer the expensive
-    // full-kick render until the next MIDI trigger so dragging cannot stall
-    // the realtime audio callback or crackle the current hit.
+    // Canvas edits can arrive at pointer-move rate. Update the lightweight
+    // active voice immediately, and defer any full parameter rebuild to the
+    // next MIDI trigger.
     g->dirty = 1;
 }
 

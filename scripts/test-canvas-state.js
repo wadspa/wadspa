@@ -51,6 +51,7 @@ for (const entry of candidates) {
         const pluginDir = join(DOCS_PLUGINS, entry.id);
         const meta = readMeta(pluginDir);
         const processorSrc = readFileSync(join(pluginDir, 'processor.js'), 'utf8');
+        verifyProcessorStateWriter(entry, processorSrc);
         const setters = parseSetters(processorSrc);
         const wasmFile = readdirSync(pluginDir).find(file => file.endsWith('.wasm'));
         if (!wasmFile) throw new Error('no .wasm file in docs plugin directory');
@@ -135,6 +136,15 @@ function parseSetters(processorSrc) {
     const match = processorSrc.match(/const SETTERS\s*=\s*(\{[^\n]*\})/);
     if (!match) return {};
     return JSON.parse(match[1]);
+}
+
+function verifyProcessorStateWriter(entry, processorSrc) {
+    if (!processorSrc.includes("data.type === 'setState'")) {
+        throw new Error(`${entry.id} has canvas editors but processor does not handle setState messages`);
+    }
+    if (!processorSrc.includes('new Uint8Array(mod.HEAPF32.buffer)')) {
+        throw new Error(`${entry.id} processor state writer lacks HEAPU8 fallback for generated Emscripten modules`);
+    }
 }
 
 function defaultCanvasStates(entry) {

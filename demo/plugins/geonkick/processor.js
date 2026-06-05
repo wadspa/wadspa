@@ -56,7 +56,8 @@ class WadspProcessor extends AudioWorkletProcessor {
                 const enc = new TextEncoder();
                 const kb = enc.encode(data.key + '\0'), vb = enc.encode(data.value + '\0');
                 const kp = mod._malloc(kb.length), vp = mod._malloc(vb.length);
-                mod.HEAPU8.set(kb, kp); mod.HEAPU8.set(vb, vp);
+                const heapU8 = mod.HEAPU8 ?? new Uint8Array(mod.HEAPF32.buffer);
+                heapU8.set(kb, kp); heapU8.set(vb, vp);
                 mod._shim_set_plugin_state(kp, vp);
                 mod._free(kp); mod._free(vp);
             }
