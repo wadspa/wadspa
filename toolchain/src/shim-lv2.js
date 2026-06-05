@@ -227,11 +227,11 @@ function parsePortBlock(block) {
     const min = parseFloat((block.match(/lv2:minimum\s+([\d.eE+\-]+)/) || [])[1]);
     const max = parseFloat((block.match(/lv2:maximum\s+([\d.eE+\-]+)/) || [])[1]);
     const def = parseFloat((block.match(/lv2:default\s+([\d.eE+\-]+)/)  || [])[1]);
-    const sampleRate = /lv2:sampleRate\b|port-props#sampleRate/.test(block);
-    const integer = /lv2:integer\b|port-props#integer/.test(block);
-    const enumeration = /lv2:enumeration\b|port-props#enumeration/.test(block);
-    const toggled = /lv2:toggled\b|port-props#toggled/.test(block);
-    const logarithmic = /port-props#logarithmic/.test(block);
+    const sampleRate = hasPortProperty(block, 'sampleRate') || /\blv2:sampleRate\b/.test(block);
+    const integer = hasPortProperty(block, 'integer') || /\blv2:integer\b/.test(block);
+    const enumeration = hasPortProperty(block, 'enumeration') || /\blv2:enumeration\b/.test(block);
+    const toggled = hasPortProperty(block, 'toggled') || /\blv2:toggled\b/.test(block);
+    const logarithmic = hasPortProperty(block, 'logarithmic');
     const scalePoints = parseScalePoints(block);
     const scaleValues = scalePoints
         .map(point => point.value)
@@ -253,6 +253,10 @@ function parsePortBlock(block) {
         ...(logarithmic && { logarithmic: true }),
         ...(scalePoints.length > 0 && { scalePoints }),
     };
+}
+
+function hasPortProperty(block, name) {
+    return new RegExp(`(?:pprop:|pprops:|port-props#)${name}\\b`).test(block);
 }
 
 function parseScalePoints(block) {

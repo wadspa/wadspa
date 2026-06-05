@@ -68,7 +68,8 @@
       {
         "id": "setbfree",
         "bundle": "b_synth",
-        "autoSetup": false,
+        "setup": "setup-setbfree-synth",
+        "autoSetup": true,
         "description": "setBfree tonewheel organ instrument"
       }
     ]
@@ -283,7 +284,9 @@
     "targets": [
       {
         "id": "nekobi",
-        "autoSetup": false,
+        "bundle": "plugins/Nekobi",
+        "setup": "setup-nekobi",
+        "autoSetup": true,
         "description": "DISTRHO Nekobi acid bass synthesizer"
       }
     ]
@@ -297,7 +300,9 @@
     "targets": [
       {
         "id": "infamous-cellular-automaton-synth",
-        "autoSetup": false,
+        "bundle": "src/casynth",
+        "setup": "setup-infamous-casynth",
+        "autoSetup": true,
         "description": "Infamous Cellular Automaton Synth"
       }
     ]

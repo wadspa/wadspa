@@ -1,0 +1,67 @@
+import createthe_infamous_cellular_automaton_synthPlugin from './the_infamous_cellular_automaton_synth.js';
+
+let mod = null;
+const inPtrs  = [];
+const outPtrs = [0];
+const SETTERS = {"CHANNEL":"_shim_set_CHANNEL","MASTER_GAIN":"_shim_set_MASTER_GAIN","RULE":"_shim_set_RULE","CELL_LIFE":"_shim_set_CELL_LIFE","INIT_CELLS":"_shim_set_INIT_CELLS","NHARMONICS":"_shim_set_NHARMONICS","HARM_MODE":"_shim_set_HARM_MODE","HARM_WIDTH":"_shim_set_HARM_WIDTH","WAVE":"_shim_set_WAVE","ENV_A":"_shim_set_ENV_A","ENV_D":"_shim_set_ENV_D","ENV_B":"_shim_set_ENV_B","ENV_SWL":"_shim_set_ENV_SWL","ENV_SUS":"_shim_set_ENV_SUS","ENV_R":"_shim_set_ENV_R","AMOD_WAV":"_shim_set_AMOD_WAV","AMOD_FREQ":"_shim_set_AMOD_FREQ","AMOD_GAIN":"_shim_set_AMOD_GAIN","FMOD_WAV":"_shim_set_FMOD_WAV","FMOD_FREQ":"_shim_set_FMOD_FREQ","FMOD_GAIN":"_shim_set_FMOD_GAIN"};
+
+class WadspProcessor extends AudioWorkletProcessor {
+    constructor() {
+        super();
+        this.port.onmessage = async ({ data }) => {
+            if (data.type === 'setup') {
+                try {
+                    mod = await createthe_infamous_cellular_automaton_synthPlugin({ wasmBinary: data.wasm, locateFile: (p, d) => d + p });
+                    mod._shim_init(sampleRate);
+                    
+                    outPtrs[0] = mod._shim_output_buf_OUTPUT() >> 2;
+                    this.port.postMessage({ type: 'ready' });
+                } catch (e) {
+                    this.port.postMessage({ type: 'error', message: e.message });
+                }
+            } else if (data.type === 'midi') {
+                if (!mod) return;
+                const { status, data1, data2 } = data;
+                const type = status & 0xF0;
+                const ch   = status & 0x0F;
+                if      (type === 0x90 && data2 > 0) mod._shim_midi_note_on(ch, data1, data2);
+                else if (type === 0x80 || (type === 0x90 && data2 === 0)) mod._shim_midi_note_off(ch, data1);
+                else if (type === 0xA0 && mod._shim_midi_poly_pressure) mod._shim_midi_poly_pressure(ch, data1, data2);
+                else if (type === 0xB0) mod._shim_midi_cc(ch, data1, data2);
+                else if (type === 0xD0 && mod._shim_midi_channel_pressure) mod._shim_midi_channel_pressure(ch, data1);
+                else if (type === 0xE0) mod._shim_midi_pitch_bend(ch, ((data2 << 7) | data1) - 8192);
+            } else if (data.type === 'loadSample') {
+                if (!mod) return;
+                const pcm = new Float32Array(data.buffer);
+                const ptr = mod._malloc(pcm.byteLength);
+                mod.HEAPF32.set(pcm, ptr >> 2);
+                if (typeof mod._shim_sample_set_pcm === 'function')
+                    mod._shim_sample_set_pcm(ptr, pcm.length, data.srate);
+                if (typeof mod._shim_load_sample === 'function')
+                    mod._shim_load_sample();
+                mod._free(ptr);
+                this.port.postMessage({ type: 'sampleloaded' });
+            } else if (data.type === 'loadPad') {
+                if (!mod || typeof mod._shim_load_pad !== 'function') return;
+                const pcm = new Float32Array(data.buffer);
+                const ptr = mod._malloc(pcm.byteLength);
+                mod.HEAPF32.set(pcm, ptr >> 2);
+                mod._shim_load_pad(data.note, ptr, pcm.length, data.srate);
+                mod._free(ptr);
+                this.port.postMessage({ type: 'padloaded', note: data.note });
+            } else if (data.type === 'set') {
+                if (mod) { const fn = SETTERS[data.symbol]; if (fn) mod[fn](data.value); }
+            }
+        };
+    }
+
+    process(inputs, outputs) {
+        if (!mod) return true;
+
+        mod._shim_run(128);
+        outputs[0][0].set(mod.HEAPF32.subarray(outPtrs[0], outPtrs[0] + 128));
+        return true;
+    }
+}
+
+registerProcessor('wadspa-the_infamous_cellular_automaton_synth', WadspProcessor);

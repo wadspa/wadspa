@@ -1,0 +1,224 @@
+@prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix mod:   <http://moddevices.com/ns/mod#> .
+@prefix pg:    <http://lv2plug.in/ns/ext/port-groups#> .
+@prefix pprop: <http://lv2plug.in/ns/ext/port-props#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix urid:  <http://lv2plug.in/ns/ext/urid#> .
+@prefix state: <http://lv2plug.in/ns/ext/state#> .
+@prefix work:  <http://lv2plug.in/ns/ext/worker#> .
+@prefix sb3:   <http://gareus.org/oss/lv2/b_synth#> .
+@prefix rsz:   <http://lv2plug.in/ns/ext/resize-port#> .
+
+<http://gareus.org/rgareus#me>
+	a foaf:Person ;
+	foaf:name "Robin Gareus" ;
+	foaf:mbox <mailto:robin@gareus.org> ;
+	foaf:homepage <http://gareus.org/> .
+
+<http://ardour.org/lv2/midnam#interface> a lv2:ExtensionData .
+<http://ardour.org/lv2/midnam#update> a lv2:Feature .
+
+<http://gareus.org/oss/lv2/b_synth>
+	a lv2:Plugin, lv2:InstrumentPlugin, doap:Project;
+	doap:maintainer <http://gareus.org/rgareus#me> ;
+	doap:name "setBfree DSP Tonewheel Organ";
+	doap:license <http://usefulinc.com/doap/licenses/gpl> ;
+	
+	lv2:optionalFeature lv2:hardRTCapable ;
+	lv2:optionalFeature <http://ardour.org/lv2/midnam#update>;
+	lv2:requiredFeature urid:map , work:schedule ;
+	lv2:extensionData state:interface , work:interface ;
+	lv2:extensionData <http://ardour.org/lv2/midnam#interface>;
+	lv2:port
+	[
+		a atom:AtomPort ,
+			lv2:InputPort ;
+		atom:bufferType atom:Sequence ;
+		lv2:designation lv2:control ;
+		atom:supports <http://lv2plug.in/ns/ext/midi#MidiEvent> ;
+		lv2:index 0 ;
+		lv2:symbol "control" ;
+		lv2:name "MIDI In"
+	] , [
+		a atom:AtomPort ,
+			lv2:OutputPort ;
+		atom:bufferType atom:Sequence ;
+		atom:supports <http://lv2plug.in/ns/ext/midi#MidiEvent> ;
+		lv2:designation lv2:control ;
+		lv2:index 1 ;
+		lv2:symbol "notify" ;
+		rsz:minimumSize 262144;
+		lv2:name "MIDI Out";
+	],
+	[
+		a lv2:AudioPort ,
+			lv2:OutputPort ;
+		lv2:index 2 ;
+		lv2:symbol "outL" ;
+		lv2:name "Left Output" ;
+		pg:group pg:StereoGroup;
+		lv2:designation pg:left ;
+	],	
+	[
+		a lv2:AudioPort ,
+			lv2:OutputPort ;
+		lv2:index 3 ;
+		lv2:symbol "outR" ;
+		lv2:name "Right Output" ;
+		pg:group pg:StereoGroup;
+		lv2:designation pg:right
+	] ,
+	[
+		a lv2:InputPort, lv2:ControlPort ;
+		lv2:index 4 ;
+		lv2:symbol "upper_drawbar_16" ;
+		lv2:name "Upper Drawbar 16" ;
+		lv2:minimum 0 ;
+		lv2:maximum 8 ;
+		lv2:default 8 ;
+		lv2:portProperty pprop:integer ;
+	] ,
+	[
+		a lv2:InputPort, lv2:ControlPort ;
+		lv2:index 5 ;
+		lv2:symbol "upper_drawbar_513" ;
+		lv2:name "Upper Drawbar 5 1/3" ;
+		lv2:minimum 0 ;
+		lv2:maximum 8 ;
+		lv2:default 8 ;
+		lv2:portProperty pprop:integer ;
+	] ,
+	[
+		a lv2:InputPort, lv2:ControlPort ;
+		lv2:index 6 ;
+		lv2:symbol "upper_drawbar_8" ;
+		lv2:name "Upper Drawbar 8" ;
+		lv2:minimum 0 ;
+		lv2:maximum 8 ;
+		lv2:default 6 ;
+		lv2:portProperty pprop:integer ;
+	] ,
+	[
+		a lv2:InputPort, lv2:ControlPort ;
+		lv2:index 7 ;
+		lv2:symbol "upper_drawbar_4" ;
+		lv2:name "Upper Drawbar 4" ;
+		lv2:minimum 0 ;
+		lv2:maximum 8 ;
+		lv2:default 0 ;
+		lv2:portProperty pprop:integer ;
+	] ,
+	[
+		a lv2:InputPort, lv2:ControlPort ;
+		lv2:index 8 ;
+		lv2:symbol "upper_drawbar_223" ;
+		lv2:name "Upper Drawbar 2 2/3" ;
+		lv2:minimum 0 ;
+		lv2:maximum 8 ;
+		lv2:default 0 ;
+		lv2:portProperty pprop:integer ;
+	] ,
+	[
+		a lv2:InputPort, lv2:ControlPort ;
+		lv2:index 9 ;
+		lv2:symbol "upper_drawbar_2" ;
+		lv2:name "Upper Drawbar 2" ;
+		lv2:minimum 0 ;
+		lv2:maximum 8 ;
+		lv2:default 0 ;
+		lv2:portProperty pprop:integer ;
+	] ,
+	[
+		a lv2:InputPort, lv2:ControlPort ;
+		lv2:index 10 ;
+		lv2:symbol "upper_drawbar_135" ;
+		lv2:name "Upper Drawbar 1 3/5" ;
+		lv2:minimum 0 ;
+		lv2:maximum 8 ;
+		lv2:default 0 ;
+		lv2:portProperty pprop:integer ;
+	] ,
+	[
+		a lv2:InputPort, lv2:ControlPort ;
+		lv2:index 11 ;
+		lv2:symbol "upper_drawbar_113" ;
+		lv2:name "Upper Drawbar 1 1/3" ;
+		lv2:minimum 0 ;
+		lv2:maximum 8 ;
+		lv2:default 0 ;
+		lv2:portProperty pprop:integer ;
+	] ,
+	[
+		a lv2:InputPort, lv2:ControlPort ;
+		lv2:index 12 ;
+		lv2:symbol "upper_drawbar_1" ;
+		lv2:name "Upper Drawbar 1" ;
+		lv2:minimum 0 ;
+		lv2:maximum 8 ;
+		lv2:default 0 ;
+		lv2:portProperty pprop:integer ;
+	] ,
+	[
+		a lv2:InputPort, lv2:ControlPort ;
+		lv2:index 13 ;
+		lv2:symbol "swell" ;
+		lv2:name "Swell Pedal" ;
+		lv2:minimum 0 ;
+		lv2:maximum 1 ;
+		lv2:default 1 ;
+	] ,
+	[
+		a lv2:InputPort, lv2:ControlPort ;
+		lv2:index 14 ;
+		lv2:symbol "reverb_mix" ;
+		lv2:name "Reverb Mix" ;
+		lv2:minimum 0 ;
+		lv2:maximum 1 ;
+		lv2:default 0.1 ;
+	] ,
+	[
+		a lv2:InputPort, lv2:ControlPort ;
+		lv2:index 15 ;
+		lv2:symbol "overdrive_enable" ;
+		lv2:name "Overdrive Enable" ;
+		lv2:minimum 0 ;
+		lv2:maximum 1 ;
+		lv2:default 1 ;
+		lv2:portProperty pprop:integer , pprop:toggled ;
+	] ,
+	[
+		a lv2:InputPort, lv2:ControlPort ;
+		lv2:index 16 ;
+		lv2:symbol "overdrive_drive" ;
+		lv2:name "Overdrive Drive" ;
+		lv2:minimum 0 ;
+		lv2:maximum 1 ;
+		lv2:default 0.36 ;
+	] ,
+	[
+		a lv2:InputPort, lv2:ControlPort ;
+		lv2:index 17 ;
+		lv2:symbol "overdrive_output" ;
+		lv2:name "Overdrive Output" ;
+		lv2:minimum 0 ;
+		lv2:maximum 1 ;
+		lv2:default 0.08 ;
+	] ,
+	[
+		a lv2:InputPort, lv2:ControlPort ;
+		lv2:index 18 ;
+		lv2:symbol "overdrive_tone" ;
+		lv2:name "Overdrive Tone" ;
+		lv2:minimum 0 ;
+		lv2:maximum 1 ;
+		lv2:default 0.53 ;
+	]
+	;
+	
+	
+	rdfs:comment "setBfree is a MIDI-controlled, software synthesizer designed to imitate the sound and properties of the electromechanical organs and sound modification devices that brought world-wide fame to the names and products of Laurens Hammond and Don Leslie."
+	.

@@ -1383,5 +1383,65 @@
       "plugins/geonkick",
       "plugins/geonkick/quamplex_dsp_tools"
     ]
+  },
+  {
+    "id": "setbfree",
+    "description": "setBfree - MIDI-controlled Hammond B3 tonewheel organ instrument",
+    "category": "Instruments",
+    "sources": [
+      "b_synth/lv2.c",
+      "src/midi.c",
+      "src/cfgParser.c",
+      "src/program.c",
+      "src/vibrato.c",
+      "src/state.c",
+      "src/tonegen.c",
+      "src/pgmParser.c",
+      "src/midnam.c",
+      "b_whirl/eqcomp.c",
+      "b_whirl/whirl.c",
+      "b_overdrive/overdrive.c",
+      "b_reverb/reverb.c",
+      "wadspa_worker_compat.c"
+    ],
+    "includes": [
+      "plugins/setbfree/b_synth",
+      "plugins/setbfree/src",
+      "plugins/setbfree/b_whirl",
+      "plugins/setbfree/b_overdrive",
+      "plugins/setbfree/b_reverb"
+    ],
+    "defines": [
+      "HAVE_LV2_1_18_6",
+      "LV2SYNTH"
+    ],
+    "extraFeatures": [
+      "worker"
+    ]
+  },
+  {
+    "id": "nekobi",
+    "description": "DISTRHO Nekobi - TB-303-style acid bass synthesizer",
+    "category": "Instruments",
+    "sources": [
+      "nekobi_lv2.cpp"
+    ],
+    "includes": [
+      "plugins/nekobi",
+      "plugins/nekobi/nekobee-src"
+    ]
+  },
+  {
+    "id": "casynth",
+    "description": "Infamous Cellular Automaton Synth - additive synth controlled by an elementary cellular automaton",
+    "category": "Instruments",
+    "sources": [
+      "casynth.c",
+      "note.c",
+      "waves.c"
+    ],
+    "includes": [
+      "plugins/casynth"
+    ]
   }
 ]

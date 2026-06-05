@@ -8628,5 +8628,810 @@
         "default": 0.75
       }
     ]
+  },
+  {
+    "id": "setbfree",
+    "label": "setBfree_DSP_Tonewheel_Organ",
+    "name": "setBfree DSP Tonewheel Organ",
+    "description": "setBfree - MIDI-controlled Hammond B3 tonewheel organ instrument",
+    "category": "Instruments",
+    "wasmFile": "setBfree_DSP_Tonewheel_Organ.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "control",
+        "name": "MIDI In",
+        "dir": "input",
+        "type": "midi",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 1,
+        "symbol": "notify",
+        "name": "MIDI Out",
+        "dir": "output",
+        "type": "atom",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 2,
+        "symbol": "outL",
+        "name": "Left Output",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 3,
+        "symbol": "outR",
+        "name": "Right Output",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 4,
+        "symbol": "upper_drawbar_16",
+        "name": "Upper Drawbar 16",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 8,
+        "default": 8,
+        "integer": true
+      },
+      {
+        "index": 5,
+        "symbol": "upper_drawbar_513",
+        "name": "Upper Drawbar 5 1/3",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 8,
+        "default": 8,
+        "integer": true
+      },
+      {
+        "index": 6,
+        "symbol": "upper_drawbar_8",
+        "name": "Upper Drawbar 8",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 8,
+        "default": 6,
+        "integer": true
+      },
+      {
+        "index": 7,
+        "symbol": "upper_drawbar_4",
+        "name": "Upper Drawbar 4",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 8,
+        "default": 0,
+        "integer": true
+      },
+      {
+        "index": 8,
+        "symbol": "upper_drawbar_223",
+        "name": "Upper Drawbar 2 2/3",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 8,
+        "default": 0,
+        "integer": true
+      },
+      {
+        "index": 9,
+        "symbol": "upper_drawbar_2",
+        "name": "Upper Drawbar 2",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 8,
+        "default": 0,
+        "integer": true
+      },
+      {
+        "index": 10,
+        "symbol": "upper_drawbar_135",
+        "name": "Upper Drawbar 1 3/5",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 8,
+        "default": 0,
+        "integer": true
+      },
+      {
+        "index": 11,
+        "symbol": "upper_drawbar_113",
+        "name": "Upper Drawbar 1 1/3",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 8,
+        "default": 0,
+        "integer": true
+      },
+      {
+        "index": 12,
+        "symbol": "upper_drawbar_1",
+        "name": "Upper Drawbar 1",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 8,
+        "default": 0,
+        "integer": true
+      },
+      {
+        "index": 13,
+        "symbol": "swell",
+        "name": "Swell Pedal",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 1
+      },
+      {
+        "index": 14,
+        "symbol": "reverb_mix",
+        "name": "Reverb Mix",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.1
+      },
+      {
+        "index": 15,
+        "symbol": "overdrive_enable",
+        "name": "Overdrive Enable",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 1,
+        "integer": true,
+        "toggled": true
+      },
+      {
+        "index": 16,
+        "symbol": "overdrive_drive",
+        "name": "Overdrive Drive",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.36
+      },
+      {
+        "index": 17,
+        "symbol": "overdrive_output",
+        "name": "Overdrive Output",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.08
+      },
+      {
+        "index": 18,
+        "symbol": "overdrive_tone",
+        "name": "Overdrive Tone",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.53
+      }
+    ]
+  },
+  {
+    "id": "nekobi",
+    "label": "DISTRHO_Nekobi",
+    "name": "DISTRHO Nekobi",
+    "description": "DISTRHO Nekobi - TB-303-style acid bass synthesizer",
+    "category": "Instruments",
+    "wasmFile": "DISTRHO_Nekobi.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "midi_in",
+        "name": "MIDI In",
+        "dir": "input",
+        "type": "midi",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 1,
+        "symbol": "out_l",
+        "name": "Audio Out L",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 2,
+        "symbol": "out_r",
+        "name": "Audio Out R",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 3,
+        "symbol": "waveform",
+        "name": "Waveform",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Square",
+            "value": 0
+          },
+          {
+            "label": "Triangle",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "index": 4,
+        "symbol": "tuning",
+        "name": "Tuning",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": -12,
+        "max": 12,
+        "default": 0
+      },
+      {
+        "index": 5,
+        "symbol": "cutoff",
+        "name": "Cutoff",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 100,
+        "default": 25
+      },
+      {
+        "index": 6,
+        "symbol": "resonance",
+        "name": "VCF Resonance",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 95,
+        "default": 25
+      },
+      {
+        "index": 7,
+        "symbol": "env_mod",
+        "name": "Env Mod",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 100,
+        "default": 50
+      },
+      {
+        "index": 8,
+        "symbol": "decay",
+        "name": "Decay",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 100,
+        "default": 75
+      },
+      {
+        "index": 9,
+        "symbol": "accent",
+        "name": "Accent",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 100,
+        "default": 25
+      },
+      {
+        "index": 10,
+        "symbol": "volume",
+        "name": "Volume",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 100,
+        "default": 75
+      }
+    ]
+  },
+  {
+    "id": "casynth",
+    "label": "the_infamous_cellular_automaton_synth",
+    "name": "the infamous cellular automaton synth",
+    "description": "Infamous Cellular Automaton Synth - additive synth controlled by an elementary cellular automaton",
+    "category": "Instruments",
+    "wasmFile": "the_infamous_cellular_automaton_synth.wasm",
+    "processorFile": "processor.js",
+    "ports": [
+      {
+        "index": 0,
+        "symbol": "MIDI_IN",
+        "name": "MIDI In",
+        "dir": "input",
+        "type": "midi",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 1,
+        "symbol": "OUTPUT",
+        "name": "Audio Out",
+        "dir": "output",
+        "type": "audio",
+        "legacy": false,
+        "cv": false,
+        "min": null,
+        "max": null,
+        "default": null
+      },
+      {
+        "index": 2,
+        "symbol": "CHANNEL",
+        "name": "MIDI Channel",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 16,
+        "default": 0,
+        "integer": true
+      },
+      {
+        "index": 3,
+        "symbol": "MASTER_GAIN",
+        "name": "Master Gain",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0.001,
+        "max": 2,
+        "default": 1
+      },
+      {
+        "index": 4,
+        "symbol": "RULE",
+        "name": "Cell Automaton Rule",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 255,
+        "default": 30,
+        "integer": true
+      },
+      {
+        "index": 5,
+        "symbol": "CELL_LIFE",
+        "name": "Cell Lifetime",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0.001,
+        "max": 10,
+        "default": 0.25,
+        "logarithmic": true
+      },
+      {
+        "index": 6,
+        "symbol": "INIT_CELLS",
+        "name": "Initial Condition",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 65535,
+        "default": 1,
+        "integer": true
+      },
+      {
+        "index": 7,
+        "symbol": "NHARMONICS",
+        "name": "Harmonics",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 16,
+        "default": 12,
+        "integer": true
+      },
+      {
+        "index": 8,
+        "symbol": "HARM_MODE",
+        "name": "Harmonic Gain Mode",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 3,
+        "default": 1,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Sinc",
+            "value": 0
+          },
+          {
+            "label": "Saw",
+            "value": 1
+          },
+          {
+            "label": "Square",
+            "value": 2
+          },
+          {
+            "label": "Triangle",
+            "value": 3
+          }
+        ]
+      },
+      {
+        "index": 9,
+        "symbol": "HARM_WIDTH",
+        "name": "Harmonic Width",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 50,
+        "default": 0
+      },
+      {
+        "index": 10,
+        "symbol": "WAVE",
+        "name": "Waveform",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 5,
+        "default": 0,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Sine",
+            "value": 0
+          },
+          {
+            "label": "Saw",
+            "value": 1
+          },
+          {
+            "label": "Square",
+            "value": 2
+          },
+          {
+            "label": "Triangle",
+            "value": 3
+          },
+          {
+            "label": "White Noise",
+            "value": 4
+          },
+          {
+            "label": "Random",
+            "value": 5
+          }
+        ]
+      },
+      {
+        "index": 11,
+        "symbol": "ENV_A",
+        "name": "Attack",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0.001,
+        "max": 15,
+        "default": 0.1,
+        "logarithmic": true
+      },
+      {
+        "index": 12,
+        "symbol": "ENV_D",
+        "name": "Decay",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0.001,
+        "max": 15,
+        "default": 0.1,
+        "logarithmic": true
+      },
+      {
+        "index": 13,
+        "symbol": "ENV_B",
+        "name": "Break Point",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      {
+        "index": 14,
+        "symbol": "ENV_SWL",
+        "name": "Swell",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0.001,
+        "max": 15,
+        "default": 3,
+        "logarithmic": true
+      },
+      {
+        "index": 15,
+        "symbol": "ENV_SUS",
+        "name": "Sustain",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 1,
+        "default": 0.75
+      },
+      {
+        "index": 16,
+        "symbol": "ENV_R",
+        "name": "Release",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0.001,
+        "max": 15,
+        "default": 0.1,
+        "logarithmic": true
+      },
+      {
+        "index": 17,
+        "symbol": "AMOD_WAV",
+        "name": "AM Waveform",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 5,
+        "default": 0,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Sine",
+            "value": 0
+          },
+          {
+            "label": "Saw",
+            "value": 1
+          },
+          {
+            "label": "Square",
+            "value": 2
+          },
+          {
+            "label": "Triangle",
+            "value": 3
+          },
+          {
+            "label": "White Noise",
+            "value": 4
+          },
+          {
+            "label": "Random",
+            "value": 5
+          }
+        ]
+      },
+      {
+        "index": 18,
+        "symbol": "AMOD_FREQ",
+        "name": "AM Frequency",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 110,
+        "default": 0
+      },
+      {
+        "index": 19,
+        "symbol": "AMOD_GAIN",
+        "name": "AM Gain",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": -1,
+        "max": 1,
+        "default": 0.1
+      },
+      {
+        "index": 20,
+        "symbol": "FMOD_WAV",
+        "name": "FM Waveform",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 5,
+        "default": 0,
+        "integer": true,
+        "enumeration": true,
+        "scalePoints": [
+          {
+            "label": "Sine",
+            "value": 0
+          },
+          {
+            "label": "Saw",
+            "value": 1
+          },
+          {
+            "label": "Square",
+            "value": 2
+          },
+          {
+            "label": "Triangle",
+            "value": 3
+          },
+          {
+            "label": "White Noise",
+            "value": 4
+          },
+          {
+            "label": "Random",
+            "value": 5
+          }
+        ]
+      },
+      {
+        "index": 21,
+        "symbol": "FMOD_FREQ",
+        "name": "FM Frequency",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": 0,
+        "max": 110,
+        "default": 0
+      },
+      {
+        "index": 22,
+        "symbol": "FMOD_GAIN",
+        "name": "FM Gain",
+        "dir": "input",
+        "type": "control",
+        "legacy": false,
+        "cv": false,
+        "min": -4,
+        "max": 4,
+        "default": 0.1
+      }
+    ]
   }
 ]

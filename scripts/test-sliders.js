@@ -51,6 +51,7 @@ const NOISE_MULTIPLIER = 6;
 const DEFAULT_PROFILE = { key: 'default' };
 const DYNAMICS_PROFILE = { key: 'dynamics', audio: 'dynamics', renderBlocks: 1024 };
 const ENVELOPE_PROFILE = { key: 'envelope', renderBlocks: 2048, midiNoteOffBlock: 512 };
+const SOFT_ENVELOPE_PROFILE = { key: 'soft-envelope', renderBlocks: 2048, midiNoteOffBlock: 512, midiVelocity: 72 };
 const LFO_PROFILE = { key: 'lfo', renderBlocks: 2048 };
 const SWEEP_PROFILE = { key: 'sweep', renderBlocks: 1024 };
 const POLYPHONY_PROFILE = {
@@ -631,6 +632,7 @@ function supportOverridesFor(port, allCtrlPorts, options) {
     const currentIsDistortion = isDistortionControl(text);
     const currentIsOscillator = isOscillatorControl(text) && !/lfo/i.test(text);
     const currentIsPitchControl = /sample|detune|tuning|fine|pitch|octave|range/i.test(text);
+    const currentModFamily = modulationFamily(text);
 
     for (const other of allCtrlPorts) {
         const otherText = controlText(other);
@@ -732,6 +734,18 @@ function supportOverridesFor(port, allCtrlPorts, options) {
             if (/^max\b|max boost/i.test(otherText)) set(other, highValue(other));
             if (/boostcut|boost.*cut/i.test(otherText)) set(other, onValue(other));
             if (/togglepeak|peak/i.test(otherText) && !/toggle|shelf|peak/i.test(text)) set(other, onValue(other));
+        }
+
+        if (currentModFamily && modulationFamily(otherText) === currentModFamily) {
+            if (/freq|frequency|rate|speed|bpm/i.test(otherText) && !/freq|frequency|rate|speed|bpm/i.test(text)) {
+                set(other, modulationRateValue(other));
+                continue;
+            }
+            if (/gain|depth|amount|level|amp|mix|wet|index/i.test(otherText)
+                && !/gain|depth|amount|level|amp|mix|wet|index/i.test(text)) {
+                set(other, audibleHighValue(other));
+                continue;
+            }
         }
 
         if ((interesting && allowGlobalActivator && globalActivator)
@@ -875,6 +889,21 @@ function uiContextSupportOverridesFor(port, allCtrlPorts, options) {
         set(controlMode, minValue(controlMode));
     }
 
+    const currentModFamily = modulationFamily(text);
+    if (currentModFamily) {
+        for (const other of allCtrlPorts) {
+            const otherText = controlText(other);
+            if (modulationFamily(otherText) !== currentModFamily) continue;
+            if (/freq|frequency|rate|speed|bpm/i.test(otherText) && !/freq|frequency|rate|speed|bpm/i.test(text)) {
+                set(other, modulationRateValue(other));
+            }
+            if (/gain|depth|amount|level|amp|mix|wet|index/i.test(otherText)
+                && !/gain|depth|amount|level|amp|mix|wet|index/i.test(text)) {
+                set(other, audibleHighValue(other));
+            }
+        }
+    }
+
     return support;
 }
 
@@ -930,6 +959,9 @@ function renderProfileFor(options, port) {
     const contextText = `${options.id} ${options.meta.name ?? ''} ${text}`;
     if (/mda[_-]?TestTone/i.test(`${options.id} ${options.meta.name ?? ''}`) && /sweep/i.test(text)) {
         return SWEEP_PROFILE;
+    }
+    if (/nekobi|tb-303|acid/i.test(contextText) && /decay/i.test(text)) {
+        return SOFT_ENVELOPE_PROFILE;
     }
     if (options.meta.ports.some(p => p.type === 'midi' && p.dir === 'input') && isEnvelopeControl(text)) {
         return ENVELOPE_PROFILE;
@@ -987,6 +1019,15 @@ function isDistortionControl(text) {
 
 function isOscillatorControl(text) {
     return /osc|dco|gen\d|wave|pulse|sync|ringmod|ring mod|detune|octave|tuning/i.test(text);
+}
+
+function modulationFamily(text) {
+    const raw = String(text).toLowerCase();
+    const compact = raw.replace(/[^a-z0-9]+/g, '');
+    if (/\bam\b|amod|amplitude\s*mod/.test(raw) || compact.includes('amod')) return 'am';
+    if (/\bfm\b|fmod|frequency\s*mod/.test(raw) || compact.includes('fmod')) return 'fm';
+    if (/\blfo\b/.test(raw) || compact.includes('lfo')) return 'lfo';
+    return '';
 }
 
 function shareControlGroup(a, b) {
@@ -1096,6 +1137,16 @@ function modulationValue(port) {
     return 1;
 }
 
+function modulationRateValue(port) {
+    if (!Number.isFinite(port.min) || !Number.isFinite(port.max)) return Number(port.default) || 1;
+    const min = Number(port.min);
+    const max = Number(port.max);
+    const span = max - min;
+    if (max > 20) return quantizeCandidate(port, Math.min(max, Math.max(min, 5)));
+    if (max > 2) return quantizeCandidate(port, Math.min(max, Math.max(min, 2)));
+    return quantizeCandidate(port, min + span * 0.50);
+}
+
 function isMuteLikeValue(port, value) {
     if (!Number.isFinite(value)) return false;
     const text = controlText(port);
@@ -1179,7 +1230,7 @@ function sendInitialMidiProbe(mod, profile = DEFAULT_PROFILE) {
     }
     if (typeof mod._shim_midi_channel_pressure === 'function') mod._shim_midi_channel_pressure(0, 0);
     if (typeof mod._shim_midi_pitch_bend === 'function') mod._shim_midi_pitch_bend(0, 0);
-    mod._shim_midi_note_on(0, notes[0], 110);
+    mod._shim_midi_note_on(0, notes[0], midiVelocity(profile, 110));
 }
 
 function sendMidiProbeBlock(mod, block, profile = DEFAULT_PROFILE) {
@@ -1187,7 +1238,7 @@ function sendMidiProbeBlock(mod, block, profile = DEFAULT_PROFILE) {
     const interval = profile.midiIntervalBlocks ?? 12;
     if (block > 0 && block < notes.length * interval && block % interval === 0) {
         const index = block / interval;
-        mod._shim_midi_note_on(0, notes[index], Math.max(56, 118 - index * 3));
+        mod._shim_midi_note_on(0, notes[index], midiVelocity(profile, Math.max(56, 118 - index * 3)));
     }
 
     if (typeof mod._shim_midi_cc === 'function') {
@@ -1215,6 +1266,10 @@ function sendMidiProbeBlock(mod, block, profile = DEFAULT_PROFILE) {
 
 function midiProbeNotes(profile = DEFAULT_PROFILE) {
     return profile.midiNotes ?? MIDI_PROBE_NOTES;
+}
+
+function midiVelocity(profile, fallback) {
+    return Number.isFinite(profile.midiVelocity) ? profile.midiVelocity : fallback;
 }
 
 function fillAudioInputs(mod, inBufFns, blockIndex, profile = DEFAULT_PROFILE) {

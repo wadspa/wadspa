@@ -1,0 +1,102 @@
+@prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix midi:  <http://lv2plug.in/ns/ext/midi#> .
+@prefix pprop: <http://lv2plug.in/ns/ext/port-props#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix urid:  <http://lv2plug.in/ns/ext/urid#> .
+
+<http://distrho.sf.net/plugins/Nekobi>
+    a lv2:InstrumentPlugin, lv2:Plugin ;
+    doap:name "DISTRHO Nekobi" ;
+    doap:description "Single-oscillator TB-303-style acid bass synthesizer" ;
+
+    lv2:requiredFeature urid:map ;
+    lv2:optionalFeature lv2:hardRTCapable ;
+
+    lv2:port [
+        a lv2:InputPort, atom:AtomPort ;
+        atom:bufferType atom:Sequence ;
+        atom:supports midi:MidiEvent ;
+        lv2:index 0 ;
+        lv2:symbol "midi_in" ;
+        lv2:name "MIDI In" ;
+    ] , [
+        a lv2:OutputPort, lv2:AudioPort ;
+        lv2:index 1 ;
+        lv2:symbol "out_l" ;
+        lv2:name "Audio Out L" ;
+    ] , [
+        a lv2:OutputPort, lv2:AudioPort ;
+        lv2:index 2 ;
+        lv2:symbol "out_r" ;
+        lv2:name "Audio Out R" ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 3 ;
+        lv2:symbol "waveform" ;
+        lv2:name "Waveform" ;
+        lv2:minimum 0 ;
+        lv2:maximum 1 ;
+        lv2:default 0 ;
+        lv2:portProperty pprop:integer , pprop:enumeration ;
+        lv2:scalePoint [ rdfs:label "Square" ; rdf:value 0 ] ;
+        lv2:scalePoint [ rdfs:label "Triangle" ; rdf:value 1 ] ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 4 ;
+        lv2:symbol "tuning" ;
+        lv2:name "Tuning" ;
+        lv2:minimum -12 ;
+        lv2:maximum 12 ;
+        lv2:default 0 ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 5 ;
+        lv2:symbol "cutoff" ;
+        lv2:name "Cutoff" ;
+        lv2:minimum 0 ;
+        lv2:maximum 100 ;
+        lv2:default 25 ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 6 ;
+        lv2:symbol "resonance" ;
+        lv2:name "VCF Resonance" ;
+        lv2:minimum 0 ;
+        lv2:maximum 95 ;
+        lv2:default 25 ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 7 ;
+        lv2:symbol "env_mod" ;
+        lv2:name "Env Mod" ;
+        lv2:minimum 0 ;
+        lv2:maximum 100 ;
+        lv2:default 50 ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 8 ;
+        lv2:symbol "decay" ;
+        lv2:name "Decay" ;
+        lv2:minimum 0 ;
+        lv2:maximum 100 ;
+        lv2:default 75 ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 9 ;
+        lv2:symbol "accent" ;
+        lv2:name "Accent" ;
+        lv2:minimum 0 ;
+        lv2:maximum 100 ;
+        lv2:default 25 ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 10 ;
+        lv2:symbol "volume" ;
+        lv2:name "Volume" ;
+        lv2:minimum 0 ;
+        lv2:maximum 100 ;
+        lv2:default 75 ;
+    ] .
