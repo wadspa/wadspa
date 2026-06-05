@@ -276,6 +276,7 @@
     "targets": [
       {
         "id": "calf-monosynth",
+        "setup": "setup-calf-monosynth.js",
         "autoSetup": false,
         "description": "Calf Monosynth"
       }

@@ -113,9 +113,10 @@
     "id": "calf-monosynth",
     "name": "Calf Monosynth",
     "family": "Virtual Analog and Subtractive Workstations",
-    "status": "candidate",
+    "status": "supported",
     "sourceIds": ["calf"],
-    "notes": "Tracked through the Calf Studio Gear LV2 suite. It needs extraction from the suite before it can be packaged."
+    "catalogIds": ["calf-monosynth"],
+    "notes": "Built as a MIDI-controlled virtual-analog monophonic instrument using the Calf Monosynth control path, and covered by the LV2 smoke and slider tests."
   },
   {
     "id": "nekobi",

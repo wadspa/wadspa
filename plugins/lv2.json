@@ -1551,5 +1551,19 @@
     "defines": [
       "NDEBUG"
     ]
+  },
+  {
+    "id": "calf-monosynth",
+    "description": "Calf Monosynth - virtual analog monophonic synthesizer",
+    "category": "Instruments",
+    "sources": [
+      "calf_monosynth_lv2.cpp"
+    ],
+    "includes": [
+      "plugins/calf-monosynth"
+    ],
+    "defines": [
+      "NDEBUG"
+    ]
   }
 ]
