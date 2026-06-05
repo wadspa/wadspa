@@ -13,13 +13,20 @@
  * the Web Audio processor or WASM shim.
  *
  * Usage:
- *   node scripts/test-sliders.js [--only <id>] [--verbose]
+ *   node scripts/test-sliders.js [--only <id>] [--verbose] [--ui-defaults] [--effects-only]
  */
 
 import { existsSync, readFileSync, readdirSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
-import { portUiRange, portValueFromSlider, sliderRangeForPort } from '../docs/control-utils.js';
+import {
+    defaultPortValuesForUi,
+    exclusiveToggleGroupForPort,
+    portUiRange,
+    portValueFromSlider,
+    sliderRangeForPort,
+    visibleControlPorts,
+} from '../docs/control-utils.js';
 import { readLv2Registry } from './lib/lv2-registry.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -53,6 +60,8 @@ const WOLF_SHAPER_TEST_GRAPH = '0x0p+0,0x1.99999ap-4,0x0p+0,0;0x1p-1,0x1.4cccccp
 const args = process.argv.slice(2);
 const onlyId = args.includes('--only') ? args[args.indexOf('--only') + 1] : null;
 const verbose = args.includes('--verbose');
+const uiDefaultsMode = args.includes('--ui-defaults');
+const effectsOnly = args.includes('--effects-only');
 
 const lv2Registry = new Map(readLv2Registry(ROOT).map(entry => [entry.id, entry]));
 const docsCatalog = readJsonIfExists(join(DOCS_PLUGINS, 'catalog.json'), []);
@@ -105,7 +114,8 @@ for (const id of discoverPluginIds()) {
         const meta = readMeta(pluginDir);
         const audioOut = meta.ports.filter(p => p.type === 'audio' && p.dir === 'output');
         const allCtrlPorts = meta.ports.filter(p => p.type === 'control' && p.dir === 'input');
-        const ctrlPorts = allCtrlPorts.filter(isTestableControl);
+        const testSurfacePorts = uiDefaultsMode ? visibleControlPorts(meta.ports) : allCtrlPorts;
+        const ctrlPorts = testSurfacePorts.filter(isTestableControl);
 
         if (audioOut.length === 0) {
             console.log('skipped (no audio outputs)');
@@ -146,12 +156,12 @@ for (const id of discoverPluginIds()) {
             continue;
         }
 
-        let baseSupport = new Map();
+        let baseSupport = uiDefaultsMode ? browserDefaultOverridesFor(allCtrlPorts) : new Map();
         let baseline = await renderWith(options, baseSupport);
         let repeat = await renderWith(options, baseSupport);
         ensureFiniteRender(`${id} default controls`, baseline);
         ensureFiniteRender(`${id} default controls repeat`, repeat);
-        if (baseline.peak <= SILENCE) {
+        if (!uiDefaultsMode && baseline.peak <= SILENCE) {
             baseSupport = baselineSupportOverridesFor(allCtrlPorts);
             baseline = await renderWith(options, baseSupport);
             repeat = await renderWith(options, baseSupport);
@@ -189,10 +199,13 @@ for (const id of discoverPluginIds()) {
                 continue;
             }
 
-            const candidates = candidateValues(port);
+            const currentValue = baseSupport.has(key) ? baseSupport.get(key) : undefined;
+            const candidates = candidateValues(port, currentValue);
             const diffs = [];
             let changed = false;
-            const support = mergeOverrides(baseSupport, supportOverridesFor(port, allCtrlPorts, options));
+            const support = uiDefaultsMode
+                ? baseSupport
+                : mergeOverrides(baseSupport, supportOverridesFor(port, allCtrlPorts, options));
             const profile = renderProfileFor(options, port);
             const cacheKey = `${profile.key}:${overrideKey(support)}`;
             let cached = referenceCache.get(cacheKey);
@@ -210,8 +223,7 @@ for (const id of discoverPluginIds()) {
             }
 
             for (const candidate of candidates) {
-                const overrides = new Map(support);
-                overrides.set(key, candidate.value);
+                const overrides = candidateOverridesFor(port, candidate.value, support, allCtrlPorts);
                 const rendered = await renderWith(options, overrides, profile);
                 if (rendered.nonFinite > 0) {
                     diffs.push(`${candidate.label} nonfinite=${rendered.nonFinite}`);
@@ -266,10 +278,12 @@ console.log(`controls: ${testedControls} tested, ${failedControls} failed, ${all
 if (failedPlugins > 0) process.exit(1);
 
 function discoverPluginIds() {
+    const effectIds = new Set(docsCatalog.map(entry => entry.id));
     return readdirSync(DOCS_PLUGINS, { withFileTypes: true })
         .filter(entry => entry.isDirectory())
         .map(entry => entry.name)
         .filter(id => existsSync(join(DOCS_PLUGINS, id, 'index.js')))
+        .filter(id => !effectsOnly || effectIds.has(id))
         .sort((a, b) => a.localeCompare(b));
 }
 
@@ -420,12 +434,12 @@ function writeCString(mod, value) {
     return ptr;
 }
 
-function candidateValues(port) {
+function candidateValues(port, currentValue = undefined) {
     const uiRange = portUiRange(port, SAMPLE_RATE);
     const slider = sliderRangeForPort(port, uiRange);
     const min = Number(slider.min);
     const max = Number(slider.max);
-    const def = Number(uiRange.value);
+    const current = Number.isFinite(currentValue) ? Number(currentValue) : Number(uiRange.value);
     const mid = min + (max - min) * 0.5;
     const quarter = min + (max - min) * 0.25;
     const threeQuarter = min + (max - min) * 0.75;
@@ -445,7 +459,7 @@ function candidateValues(port) {
     for (const [label, sliderValue] of raw) {
         const value = portValueFromSlider(port, sliderValue, uiRange);
         if (!Number.isFinite(value)) continue;
-        if (Number.isFinite(def) && Math.abs(value - def) <= Math.max(1e-7, Math.abs(def) * 1e-7)) {
+        if (Number.isFinite(current) && Math.abs(value - current) <= Math.max(1e-7, Math.abs(current) * 1e-7)) {
             continue;
         }
         const rounded = quantizeCandidate(port, value);
@@ -456,6 +470,27 @@ function candidateValues(port) {
     }
 
     return candidates.slice(0, 3);
+}
+
+function browserDefaultOverridesFor(allCtrlPorts) {
+    const support = new Map();
+    const defaults = defaultPortValuesForUi(allCtrlPorts, SAMPLE_RATE, { activateEffectToggles: true });
+    for (const port of allCtrlPorts) {
+        const value = defaults.get(port);
+        if (Number.isFinite(value)) support.set(setterKey(port), value);
+    }
+    return support;
+}
+
+function candidateOverridesFor(port, value, support, allCtrlPorts) {
+    const overrides = new Map(support);
+    if (uiDefaultsMode && value >= 0.5) {
+        for (const peer of exclusiveToggleGroupForPort(port, allCtrlPorts)) {
+            if (setterKey(peer) !== setterKey(port)) overrides.set(setterKey(peer), 0);
+        }
+    }
+    overrides.set(setterKey(port), value);
+    return overrides;
 }
 
 function supportOverridesFor(port, allCtrlPorts, options) {
@@ -951,7 +986,7 @@ function overrideKey(overrides) {
 }
 
 function quantizeCandidate(port, value) {
-    if (port.integer || isEnumLike(port)) return Math.round(value);
+    if (port.toggled || port.integer || isEnumLike(port)) return Math.round(value);
     return value;
 }
 

@@ -13,6 +13,7 @@
     "test:effects": "node scripts/test-effects.js",
     "test:ranges": "node scripts/test-ranges.js",
     "test:sliders": "node scripts/test-sliders.js",
+    "test:ui-defaults": "node scripts/test-sliders.js --ui-defaults --effects-only",
     "test:controls": "node scripts/test-controls.js",
     "build": "node scripts/build-archive.js",
     "build:skip": "node scripts/build-archive.js --skip-existing",

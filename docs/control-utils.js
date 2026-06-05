@@ -6,7 +6,7 @@ export function isVisibleControlPort(port) {
 }
 
 export function visibleControlPorts(ports = []) {
-  return (ports ?? []).filter(isVisibleControlPort);
+  return (ports ?? []).filter(port => isVisibleControlPort(port) && !hasHiddenModulationSource(port, ports));
 }
 
 export function resolvePortDefault(p) {
@@ -81,6 +81,26 @@ export function defaultPortValueForUi(p, sampleRate = 44100, options = {}) {
   return range.value;
 }
 
+export function defaultPortValuesForUi(ports = [], sampleRate = 44100, options = {}) {
+  const values = new Map();
+  for (const port of ports) {
+    values.set(port, defaultPortValueForUi(port, sampleRate, options));
+  }
+
+  applyZamDynamicEqUiDefaults(ports, values, sampleRate);
+  applyAudibleEqBandDefaults(ports, values, sampleRate);
+  applyAudibleModulationDefaults(ports, values, sampleRate);
+  applyAudibleTapDelayDefaults(ports, values, sampleRate);
+  return values;
+}
+
+export function exclusiveToggleGroupForPort(port, ports = []) {
+  const symbol = String(port?.symbol ?? '');
+  if (!['togglelow', 'togglepeak', 'togglehigh'].includes(symbol)) return [];
+  const group = ports.filter(item => ['togglelow', 'togglepeak', 'togglehigh'].includes(String(item?.symbol ?? '')));
+  return group.length >= 2 ? group : [];
+}
+
 export function shouldActivateToggleByDefault(p) {
   if (!p?.toggled) return false;
   const text = controlText(p);
@@ -91,7 +111,7 @@ export function shouldActivateToggleByDefault(p) {
 }
 
 export function sliderRangeForPort(p, uiRange, value = uiRange.value) {
-  if (!usesLogSlider(p, uiRange)) return uiRange;
+  if (!usesLogSlider(p, uiRange)) return { ...uiRange, value };
   return { min: 0, max: 1, value: sliderValueFromPortValue(p, value, uiRange), step: 'any' };
 }
 
@@ -216,6 +236,214 @@ function clampRange(min, max, clampMin, clampMax) {
 
 function controlText(p) {
   return `${p.name ?? ''} ${p.symbol ?? ''}`;
+}
+
+function hasHiddenModulationSource(port, ports = []) {
+  const text = controlText(port).toLowerCase();
+  const sourceText = sourceTextForModulationGain(text);
+  if (!sourceText) return false;
+  return ports.some(other => {
+    if (other === port || other?.dir !== 'input' || other?.type !== 'control') return false;
+    if (!other.cv) return false;
+    const otherText = controlText(other).toLowerCase();
+    return sourceText.every(part => otherText.includes(part));
+  });
+}
+
+function sourceTextForModulationGain(text) {
+  if (/exp.*fm.*gain|gain.*exp.*fm/.test(text)) return ['exp', 'fm'];
+  if (/lin.*fm.*gain|gain.*lin.*fm/.test(text)) return ['lin', 'fm'];
+  if (/res(?:onance)?.*gain|gain.*res(?:onance)?/.test(text)) return ['res'];
+  return null;
+}
+
+function applyZamDynamicEqUiDefaults(ports, values, sampleRate) {
+  const bySymbol = new Map(ports.map(port => [String(port?.symbol ?? ''), port]));
+  if (!bySymbol.has('detectfreq') || !bySymbol.has('targetfreq') || !bySymbol.has('boostcut')) return;
+  if (!bySymbol.has('togglelow') || !bySymbol.has('togglepeak') || !bySymbol.has('togglehigh')) return;
+
+  setValue(values, bySymbol.get('togglelow'), 0, sampleRate);
+  setValue(values, bySymbol.get('togglepeak'), 1, sampleRate);
+  setValue(values, bySymbol.get('togglehigh'), 0, sampleRate);
+  setValue(values, bySymbol.get('thr'), -8, sampleRate);
+  setValue(values, bySymbol.get('kn'), 4, sampleRate);
+  setValue(values, bySymbol.get('rat'), 5, sampleRate);
+}
+
+function setValue(values, port, value, sampleRate = 44100) {
+  if (!port || !Number.isFinite(value)) return;
+  const range = portUiRange(port, sampleRate);
+  values.set(port, clamp(value, Math.min(range.min, range.max), Math.max(range.min, range.max)));
+}
+
+function applyAudibleEqBandDefaults(ports, values, sampleRate) {
+  const groups = new Map();
+  for (const port of ports) {
+    for (const key of eqGroupKeys(port)) {
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(port);
+    }
+  }
+
+  for (const group of groups.values()) {
+    const hasShape = group.some(isEqShapePort);
+    const gains = group.filter(isEqGainPort);
+    if (!hasShape || gains.length === 0) continue;
+    for (const gain of gains) {
+      const current = values.get(gain);
+      if (Number.isFinite(current) && Math.abs(current) > 1e-6) continue;
+      setValue(values, gain, eqBoostValue(gain), sampleRate);
+    }
+  }
+
+  const ungroupedShapePorts = ports.filter(port => eqGroupKeys(port).length === 0 && isEqShapePort(port));
+  const ungroupedGains = ports.filter(port => eqGroupKeys(port).length === 0 && isEqGainPort(port));
+  if (ungroupedShapePorts.length > 0 && ungroupedGains.length === 1) {
+    const gain = ungroupedGains[0];
+    const current = values.get(gain);
+    if (!Number.isFinite(current) || Math.abs(current) <= 1e-6) {
+      setValue(values, gain, eqBoostValue(gain), sampleRate);
+    }
+  }
+}
+
+function eqBoostValue(port) {
+  const min = finitePortNumber(port.min);
+  const max = finitePortNumber(port.max);
+  if (Number.isFinite(min) && Number.isFinite(max) && min < 0 && max > 0) {
+    return Math.min(max, Math.max(min, 6));
+  }
+  return Number.isFinite(max) ? max : 1;
+}
+
+function eqGroupKeys(port) {
+  const raw = `${port?.symbol ?? ''} ${port?.name ?? ''}`.toLowerCase();
+  const keys = new Set();
+  for (const match of raw.matchAll(/band\s*[_-]?(\d+)|band(\d+)/g)) {
+    keys.add(`band:${match[1] ?? match[2]}`);
+  }
+  for (const match of raw.matchAll(/(?:freq(?:uency)?|bw|bandwidth|q|gain|boost|cut|section|sec)[_\s-]*(\d+)/g)) {
+    keys.add(`band:${match[1]}`);
+  }
+  for (const match of raw.matchAll(/(?:freq|bw|gain|sec|q|boost|cut)(\d+)/g)) {
+    keys.add(`band:${match[1]}`);
+  }
+  if (/\blow[-_\s]*shel|lowshel|^ls|[\s_]ls/.test(raw)) keys.add('shelf:low');
+  if (/\bhigh[-_\s]*shel|highshel|^hs|[\s_]hs/.test(raw)) keys.add('shelf:high');
+  if (/^(boostl|fl)\b/.test(raw)) keys.add('shelf:low');
+  if (/^(boosth|fh)\b/.test(raw)) keys.add('shelf:high');
+  return [...keys];
+}
+
+function isEqShapePort(port) {
+  const text = controlText(port);
+  return /freq|frequency|cutoff|bandwidth|\bbw\b|\bq\b|slope|resonance|reso/i.test(text)
+    && !isEqGainPort(port);
+}
+
+function isEqGainPort(port) {
+  const text = controlText(port);
+  if (!/gain|boost|cut/i.test(text)) return false;
+  if (/input|output|master|makeup|drive|feedback|sidechain|reduction|control/i.test(text)) return false;
+  return true;
+}
+
+function applyAudibleModulationDefaults(ports, values, sampleRate) {
+  const hasModulation = ports.some(port => /lfo|mod|vibrato|chorus|flanger|slowdown|detune|voice/i.test(controlText(port)));
+  if (!hasModulation) return;
+
+  for (const port of ports) {
+    const text = controlText(port);
+    const current = values.get(port);
+    if (port.toggled || usesMenuControl(port)) continue;
+
+    if (/number of voices|voices|sections/i.test(text)) {
+      setValue(values, port, finitePortNumber(port.max) ?? current, sampleRate);
+      continue;
+    }
+
+    if (/depth|amount|mod.*amp|amp.*mod|slowdown|detune|feedback|mix/i.test(text)
+        && (!Number.isFinite(current) || Math.abs(current) <= 1e-6)) {
+      setValue(values, port, audibleHighValue(port), sampleRate);
+      continue;
+    }
+
+    if (/wet/i.test(text) && isMuteLikeValue(port, current)) {
+      setValue(values, port, audibleHighValue(port), sampleRate);
+      continue;
+    }
+
+    if (/lfo.*freq|freq.*lfo|mod.*freq|freq.*mod|frequency|rate/i.test(text)
+        && (!Number.isFinite(current) || Math.abs(current) <= 1e-6)) {
+      setValue(values, port, midValue(port), sampleRate);
+    }
+  }
+}
+
+function applyAudibleTapDelayDefaults(ports, values, sampleRate) {
+  const groups = new Map();
+  for (const port of ports) {
+    const key = tapGroupKey(port);
+    if (!key) continue;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(port);
+  }
+
+  for (const group of groups.values()) {
+    const distance = group.find(port => /distance|delay|time/i.test(controlText(port)));
+    const level = group.find(port => /level|gain|volume/i.test(controlText(port)));
+    if (distance) {
+      const current = values.get(distance);
+      if (!Number.isFinite(current) || Math.abs(current) <= 1e-6) {
+        setValue(values, distance, shortTimeValue(distance), sampleRate);
+      }
+    }
+    if (level) {
+      const current = values.get(level);
+      if (isMuteLikeValue(level, current)) setValue(values, level, audibleHighValue(level), sampleRate);
+    }
+  }
+}
+
+function tapGroupKey(port) {
+  const raw = controlText(port).toLowerCase();
+  const match = raw.match(/tap\s*(\d+)/);
+  return match ? `tap:${match[1]}` : '';
+}
+
+function midValue(port) {
+  const min = finitePortNumber(port.min);
+  const max = finitePortNumber(port.max);
+  if (!Number.isFinite(min) || !Number.isFinite(max)) return finitePortNumber(port.default) ?? 0;
+  return min + (max - min) * 0.5;
+}
+
+function highValue(port) {
+  const min = finitePortNumber(port.min);
+  const max = finitePortNumber(port.max);
+  if (!Number.isFinite(min) || !Number.isFinite(max)) return finitePortNumber(port.default) ?? 1;
+  return min + (max - min) * 0.9;
+}
+
+function shortTimeValue(port) {
+  const min = finitePortNumber(port.min);
+  const max = finitePortNumber(port.max);
+  if (!Number.isFinite(min) || !Number.isFinite(max)) return finitePortNumber(port.default) ?? 0;
+  return Math.min(max, Math.max(min, max > 20 ? 80 : min + (max - min) * 0.25));
+}
+
+function audibleHighValue(port) {
+  const min = finitePortNumber(port.min);
+  const max = finitePortNumber(port.max);
+  if (!Number.isFinite(min) || !Number.isFinite(max)) return finitePortNumber(port.default) ?? 1;
+  if (min < 0 && max >= 0) return max;
+  return highValue(port);
+}
+
+function isMuteLikeValue(port, value) {
+  if (!Number.isFinite(value)) return false;
+  if (finitePortNumber(port.min) !== null && value <= finitePortNumber(port.min) + 1e-7) return true;
+  return Math.abs(value) <= 1e-7;
 }
 
 function isFrequencyBandGainLabel(p) {

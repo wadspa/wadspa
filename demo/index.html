@@ -336,7 +336,9 @@ if ('serviceWorker' in navigator) {
 <script type="module">
 import { loadPlugin } from './core.js';
 import {
+  defaultPortValuesForUi,
   defaultPortValueForUi,
+  exclusiveToggleGroupForPort,
   formatPortValue,
   portUiRange as computePortUiRange,
   portValueFromSlider,
@@ -1126,6 +1128,7 @@ function renderChain() {
     card.className = 'card' + (eff.shaper ? ' has-shaper' : '');
 
     const ctrlPorts = visibleControlPorts(eff.ports);
+    const defaults = defaultPortValuesForUi(ctrlPorts, currentSampleRate(), { activateEffectToggles: true });
 
     card.innerHTML = `
       <div class="card-title">
@@ -1134,7 +1137,7 @@ function renderChain() {
       </div>
       ${ctrlPorts.map(p => {
         const range = portUiRange(p);
-        const value = defaultPortValueForUi(p, currentSampleRate(), { activateEffectToggles: true });
+        const value = defaults.get(p);
         return `
         <div class="ctrl-row">
           <label>${escapeHtml(p.name)}</label>
@@ -1158,11 +1161,11 @@ function renderChain() {
       const valEl  = control.closest('.ctrl-line').querySelector('.val');
       control.addEventListener(control.tagName === 'SELECT' ? 'change' : 'input', () => {
         const v = readControlValue(p, control);
+        applyExclusiveToggleUi(p, ctrlPorts, control, node);
         valEl.textContent = formatPortValue(p, v);
         node.set(p.name, portValueForSet(p, v, control));
       });
-      const range = portUiRange(p);
-      const value = defaultPortValueForUi(p, currentSampleRate(), { activateEffectToggles: true });
+      const value = defaults.get(p);
       if (Number.isFinite(value)) node.set(p.name, portValueForSet(p, value, control));
     }
 
@@ -1178,6 +1181,21 @@ function renderChain() {
     container.appendChild(arrow);
   }
   container.appendChild(outBadge);
+}
+
+function applyExclusiveToggleUi(port, ports, control, node) {
+  if (control.type !== 'checkbox' || !control.checked) return;
+  const group = exclusiveToggleGroupForPort(port, ports);
+  if (group.length <= 1) return;
+  for (const peer of group) {
+    if (peer === port) continue;
+    const peerControl = control.closest('.card').querySelector(`[data-port="${CSS.escape(peer.name)}"]`);
+    if (!peerControl || peerControl.type !== 'checkbox') continue;
+    peerControl.checked = false;
+    const peerValue = peerControl.closest('.ctrl-line')?.querySelector('.val');
+    if (peerValue) peerValue.textContent = formatPortValue(peer, 0);
+    node.set(peer.name, portValueForSet(peer, 0, peerControl));
+  }
 }
 
 async function addEffect(eff) {
