@@ -22,25 +22,41 @@ Existing browser plugin formats (CLAP, WAM, Web Audio Modules) repeatedly break 
 
 ---
 
-## Instruments (13)
+## Instruments (18)
 
 | Plugin | Description |
 |--------|-------------|
-| `synthv1` | Dual-oscillator polyphonic analog synthesizer (rncbc) |
-| `drumkv1` | Per-pad drum synthesizer with per-pad synthesis and effects (rncbc) |
-| `padthv1` | Polyphonic additive synthesizer using the PADsynth algorithm (rncbc) |
-| `amsynth` | 32-voice analog modeling synthesizer |
-| `fm_synth` | 2-operator FM synthesizer, 8-voice polyphonic |
 | `wadspa_synth` | 8-voice polyphonic sawtooth with ADSR and lowpass filter |
+| `fm_synth` | 2-operator FM synthesizer, 8-voice polyphonic |
 | `mda_DX10` | FM synthesizer, 8-voice polyphonic |
 | `mda_JX10` | Virtual analog polysynth, 8-voice |
 | `mda_EPiano` | Electric piano (Rhodes/Wurlitzer style) |
 | `mda_Piano` | Acoustic piano physical model |
+| `synthv1` | Dual-oscillator polyphonic analog synthesizer (rncbc) |
+| `drumkv1` | Per-pad drum synthesizer with per-pad synthesis and effects (rncbc) |
+| `padthv1` | Polyphonic additive synthesizer using the PADsynth algorithm (rncbc) |
+| `amsynth` | 32-voice analog modeling synthesizer |
 | `so-404` | SO-404 bass synthesizer — TB-303-style bass synth clone |
 | `so-kl5` | SO-kl5 electric piano clone |
 | `so-666` | SO-666 feedback oscillator synthesizer |
+| `tsf` | TinySoundFont General MIDI SF2 soundfont synthesizer |
+| `samplv1` | Polyphonic sampler LV2 (requires an external sample) |
+| `sorcer` | Polyphonic wavetable synthesizer LV2 |
+| `string-machine` | Polyphonic string ensemble synthesizer LV2 |
+| `geonkick` | MIDI-triggered kick drum synthesizer using the Geonkick DSP core |
 
 Plus 32+ LADSPA effects (reverb, chorus, EQ, dynamics, …) all available on the browser test page.
+
+## Top LV2 Synth Targets
+
+The requested top-20 LV2 synth list is tracked in [`docs/top-lv2-synths.json`](./docs/top-lv2-synths.json). Exact targets that are already browser-built are marked `supported`; the rest are `candidate` entries with source repos in `sources.json` and notes for the remaining porting work.
+
+```sh
+npm run test:top-lv2-synths
+npm run test:top-lv2-synths:strict
+```
+
+The normal test keeps the support matrix honest. The strict test intentionally fails until every one of the 20 targets is packaged as a browser MIDI instrument.
 
 ---
 
@@ -216,6 +232,35 @@ node scripts/build-instruments.js --only my-synth
 
 If no dedicated `setup-my-synth.js` exists, `setup-all.js` falls back to `auto-setup.js`, which discovers source files, detects Qt headers, handles `.ttl.in` templates, and iteratively resolves compile errors automatically.
 
+For source repositories that contain multiple instruments, add `targets` to `sources.json`. Target ids work with both fetch and setup:
+
+```json
+{
+  "id": "big-plugin-suite",
+  "git": "https://example.com/big-plugin-suite.git",
+  "setup": null,
+  "description": "A suite with several LV2 instruments",
+  "targets": [
+    {
+      "id": "my-synth",
+      "bundle": "plugins/my-synth.lv2",
+      "autoSetup": true,
+      "description": "My Synth instrument"
+    }
+  ]
+}
+```
+
+```sh
+node scripts/fetch-sources.js --only my-synth
+node scripts/setup-all.js --only my-synth
+node scripts/build-instruments.js --only my-synth
+node scripts/test-instruments.js --only my-synth
+node scripts/test-sliders.js --only my-synth --ui-defaults
+```
+
+Set `autoSetup` to `false` for large JUCE/DPF/modular instruments that need a dedicated setup script. That keeps setup output explicit instead of running a generic build that cannot reasonably succeed.
+
 For Qt-dependent plugins that need custom stub generation (QThread scheduler replacement, libsndfile substitution, etc.), write a `scripts/setup-<id>.js` following the pattern of `setup-drumkv1.js` or `setup-padthv1.js`.
 
 ---
@@ -251,11 +296,13 @@ LV2 registry entries live in `plugins/lv2.json`:
 ## Build scripts
 
 ```sh
-# Clone / update all source repos
+# Clone / update all source repos, or the source that owns a target id
 node scripts/fetch-sources.js
+node scripts/fetch-sources.js --only vitalium
 
-# Prepare plugin directories from source repos
+# Prepare plugin directories from source repos or source targets
 node scripts/setup-all.js
+node scripts/setup-all.js --only vitalium
 
 # Build all LV2 plugins → docs/instruments.json + docs/plugins/catalog.json
 node scripts/build-instruments.js
@@ -332,11 +379,12 @@ wadspa/
       fftw3.h               FFTW3 float API header (takes priority over qt-stub/fftw3.h)
   plugins/
     manifest.json           LADSPA effect registry (32+ plugins)
-    lv2.json                LV2 plugin registry (13 instruments + effects)
+    lv2.json                LV2 plugin registry (18 instruments + effects)
     synthv1/                Dual-oscillator polyphonic analog synthesizer
     drumkv1/                Per-pad drum synthesizer
     padthv1/                PADsynth additive synthesizer
     amsynth/                Analog modeling synthesizer
+    geonkick/               Kick drum synthesizer using the Geonkick DSP core
     wadspa_synth/           Built-in 8-voice sawtooth synth (LV2, C)
     fm_synth/               2-operator FM synthesizer (LV2, C++)
     mda_*/                  MDA LV2 collection (instruments + effects)
@@ -344,15 +392,17 @@ wadspa/
     sc4/ plate/ …           32+ LADSPA effects from swh-plugins
   scripts/
     fetch-sources.js         Clone / update all repos listed in sources.json
-    setup-all.js             Run setup scripts; falls back to auto-setup.js
+    setup-all.js             Run setup scripts/targets; falls back to auto-setup.js
     auto-setup.js            Generic LV2 setup: source discovery, Qt detection, iterative build
     setup-synthv1.js         synthv1 (Qt stub wiring, sched replacement)
     setup-drumkv1.js         drumkv1 (Qt stub, sched, libsndfile stub)
     setup-padthv1.js         padthv1 (Qt stub, sched, FFTW3 stub)
     setup-amsynth.js         amsynth preparation
+    setup-geonkick.js        Geonkick DSP-core wrapper preparation
     setup-mda-lv2.js         MDA LV2 plugin preparation
     setup-so-synth.js        SO-synth (legacy LV2 event API)
     build-instruments.js     Build all LV2 plugins → docs/
+    test-top-lv2-synths.js   Verify requested top synth targets and strict support gate
     build-all.js             Build all LADSPA effects → docs/
     test-instruments.js      Node WASM smoke test for LV2 plugins
   sources.json               External plugin repos (git URLs + setup script mapping)

@@ -63,7 +63,15 @@
     "id": "setBfree",
     "git": "https://github.com/pantherb/setBfree.git",
     "setup": null,
-    "description": "setBfree — Hammond B3 organ emulator LV2"
+    "description": "setBfree — Hammond B3 organ emulator LV2",
+    "targets": [
+      {
+        "id": "setbfree",
+        "bundle": "b_synth",
+        "autoSetup": false,
+        "description": "setBfree tonewheel organ instrument"
+      }
+    ]
   },
   {
     "id": "noise-repellent",
@@ -84,16 +92,215 @@
     "description": "wolf-shaper — waveshaper LV2 effect"
   },
   {
+    "id": "surge-xt",
+    "git": "https://github.com/surge-synthesizer/surge.git",
+    "setup": null,
+    "autoSetup": false,
+    "description": "Surge XT - hybrid synthesizer with LV2 builds",
+    "targets": [
+      {
+        "id": "surge-xt",
+        "autoSetup": false,
+        "description": "Surge XT hybrid synthesizer"
+      }
+    ]
+  },
+  {
+    "id": "distrho-ports",
+    "git": "https://github.com/DISTRHO/DISTRHO-Ports.git",
+    "setup": null,
+    "autoSetup": false,
+    "description": "DISTRHO Ports - LV2 ports including Vitalium, JuceOPL, Obxd, and other synths",
+    "targets": [
+      {
+        "id": "vitalium",
+        "bundle": "ports-juce6.0/vitalium",
+        "autoSetup": false,
+        "description": "Vitalium spectral wavetable synthesizer"
+      },
+      {
+        "id": "juce-opl",
+        "bundle": "ports-juce5/juce-opl",
+        "autoSetup": false,
+        "description": "JuceOPL OPL chip synthesizer"
+      },
+      {
+        "id": "obxd",
+        "bundle": "ports-juce5/obxd",
+        "autoSetup": false,
+        "description": "Obxd Oberheim-style synthesizer"
+      }
+    ]
+  },
+  {
+    "id": "odin2",
+    "git": "https://github.com/TheWaveWarden/odin2.git",
+    "setup": null,
+    "autoSetup": false,
+    "description": "Odin 2 - hybrid polyphonic synthesizer with LV2 builds",
+    "targets": [
+      {
+        "id": "odin2",
+        "autoSetup": false,
+        "description": "Odin 2 hybrid polyphonic synthesizer"
+      }
+    ]
+  },
+  {
+    "id": "helm",
+    "git": "https://github.com/mtytel/helm.git",
+    "setup": null,
+    "autoSetup": false,
+    "description": "Helm - polyphonic synthesizer LV2",
+    "targets": [
+      {
+        "id": "helm",
+        "autoSetup": false,
+        "description": "Helm polyphonic synthesizer"
+      }
+    ]
+  },
+  {
+    "id": "cardinal",
+    "git": "https://github.com/DISTRHO/Cardinal.git",
+    "setup": null,
+    "autoSetup": false,
+    "description": "Cardinal - self-contained modular synthesizer with LV2 builds",
+    "targets": [
+      {
+        "id": "cardinal",
+        "autoSetup": false,
+        "description": "Cardinal modular synthesizer"
+      }
+    ]
+  },
+  {
+    "id": "dexed",
+    "git": "https://github.com/asb2m10/dexed.git",
+    "setup": null,
+    "autoSetup": false,
+    "description": "Dexed - DX7 FM synthesizer with LV2 builds",
+    "targets": [
+      {
+        "id": "dexed",
+        "autoSetup": false,
+        "description": "Dexed DX7 FM synthesizer"
+      }
+    ]
+  },
+  {
+    "id": "adlplug",
+    "git": "https://github.com/jpcima/ADLplug.git",
+    "setup": null,
+    "autoSetup": false,
+    "description": "ADLplug - OPL and OPN FM chip synthesizer with LV2 builds",
+    "targets": [
+      {
+        "id": "adlplug",
+        "autoSetup": false,
+        "description": "ADLplug OPL and OPN FM chip synthesizer"
+      }
+    ]
+  },
+  {
+    "id": "vl1-emulator",
+    "git": "https://github.com/linuxmao-org/VL1-emulator.git",
+    "setup": null,
+    "autoSetup": false,
+    "description": "VL1-emulator - Casio VL-Tone VL1 emulator",
+    "targets": [
+      {
+        "id": "vl1-emulator",
+        "autoSetup": false,
+        "description": "Casio VL-Tone VL1 emulator"
+      }
+    ]
+  },
+  {
     "id": "zynaddsubfx",
     "git": "https://github.com/zynaddsubfx/zynaddsubfx.git",
     "setup": null,
-    "description": "ZynAddSubFX — complex additive/subtractive/FM synthesizer LV2"
+    "autoSetup": false,
+    "description": "ZynAddSubFX — complex additive/subtractive/FM synthesizer LV2",
+    "targets": [
+      {
+        "id": "zynaddsubfx",
+        "autoSetup": false,
+        "description": "ZynAddSubFX additive/subtractive/FM synthesizer"
+      }
+    ]
   },
   {
     "id": "geonkick",
     "git": "https://github.com/Geonkick-Synthesizer/geonkick.git",
     "setup": null,
-    "description": "Geonkick — kick drum synthesizer LV2"
+    "autoSetup": true,
+    "description": "Geonkick — kick drum synthesizer LV2",
+    "targets": [
+      {
+        "id": "geonkick",
+        "bundle": "src/plugin/lv2",
+        "setup": "setup-geonkick",
+        "autoSetup": true,
+        "description": "Geonkick kick drum synthesizer"
+      }
+    ]
+  },
+  {
+    "id": "chowkick",
+    "git": "https://github.com/Chowdhury-DSP/ChowKick.git",
+    "setup": null,
+    "autoSetup": false,
+    "description": "Chow Kick - physically modeled kick drum synthesizer",
+    "targets": [
+      {
+        "id": "chowkick",
+        "autoSetup": false,
+        "description": "Chow Kick physically modeled kick drum synthesizer"
+      }
+    ]
+  },
+  {
+    "id": "calf",
+    "git": "https://github.com/calf-studio-gear/calf.git",
+    "setup": null,
+    "autoSetup": false,
+    "description": "Calf Studio Gear - LV2 suite including Monosynth",
+    "targets": [
+      {
+        "id": "calf-monosynth",
+        "autoSetup": false,
+        "description": "Calf Monosynth"
+      }
+    ]
+  },
+  {
+    "id": "nekobi",
+    "git": "https://github.com/DISTRHO/Nekobi.git",
+    "setup": null,
+    "autoSetup": false,
+    "description": "DISTRHO Nekobi - TB-303-style acid bass synthesizer",
+    "targets": [
+      {
+        "id": "nekobi",
+        "autoSetup": false,
+        "description": "DISTRHO Nekobi acid bass synthesizer"
+      }
+    ]
+  },
+  {
+    "id": "infamous-plugins",
+    "git": "https://github.com/ssj71/infamousPlugins.git",
+    "setup": null,
+    "autoSetup": false,
+    "description": "Infamous Plugins - LV2 collection including Cellular Automaton Synth",
+    "targets": [
+      {
+        "id": "infamous-cellular-automaton-synth",
+        "autoSetup": false,
+        "description": "Infamous Cellular Automaton Synth"
+      }
+    ]
   },
   {
     "id": "sorcer",

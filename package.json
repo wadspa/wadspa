@@ -8,13 +8,15 @@
   ],
   "scripts": {
     "link-toolchain": "npm link --workspace=toolchain",
-    "test": "node scripts/test-ranges.js && node scripts/test-instruments.js && node scripts/test-effects.js && node scripts/test-sliders.js",
+    "test": "node scripts/test-ranges.js && node scripts/test-top-lv2-synths.js && node scripts/test-instruments.js && node scripts/test-effects.js && node scripts/test-sliders.js",
     "test:lv2": "node scripts/test-instruments.js",
     "test:effects": "node scripts/test-effects.js",
     "test:ranges": "node scripts/test-ranges.js",
     "test:sliders": "node scripts/test-sliders.js",
     "test:ui-defaults": "node scripts/test-sliders.js --ui-defaults",
     "test:ui-defaults:effects": "node scripts/test-sliders.js --ui-defaults --effects-only",
+    "test:top-lv2-synths": "node scripts/test-top-lv2-synths.js",
+    "test:top-lv2-synths:strict": "node scripts/test-top-lv2-synths.js --strict",
     "test:controls": "node scripts/test-controls.js",
     "build": "node scripts/build-archive.js",
     "build:skip": "node scripts/build-archive.js --skip-existing",
@@ -24,6 +26,8 @@
     "build:effects:skip": "node scripts/build-all.js --skip-existing",
     "build:lv2": "node scripts/build-instruments.js",
     "build:lv2:skip": "node scripts/build-instruments.js --skip-existing",
+    "fetch:sources": "node scripts/fetch-sources.js",
+    "setup:all": "node scripts/setup-all.js",
     "setup:mda-lv2": "node scripts/setup-mda-lv2.js",
     "sync:demo": "node scripts/sync-demo.js"
   }

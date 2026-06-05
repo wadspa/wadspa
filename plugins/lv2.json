@@ -1360,5 +1360,28 @@
       "_free"
     ],
     "shaper": true
+  },
+  {
+    "id": "geonkick",
+    "description": "Geonkick - MIDI-triggered kick drum synthesizer using the Geonkick DSP core",
+    "category": "Instruments",
+    "sources": [
+      "geonkick_lv2_wasm.c",
+      "geonkick_wasm_compat.c",
+      "synthesizer.c",
+      "oscillator.c",
+      "envelope.c",
+      "filter.c",
+      "distortion.c",
+      "audio_output.c",
+      "ring_buffer.c",
+      "gkick_buffer.c",
+      "humanizer.c",
+      "gkick_log.c"
+    ],
+    "includes": [
+      "plugins/geonkick",
+      "plugins/geonkick/quamplex_dsp_tools"
+    ]
   }
 ]

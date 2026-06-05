@@ -1,0 +1,167 @@
+[
+  {
+    "id": "surge-xt",
+    "name": "Surge XT",
+    "family": "Hybrid, Wavetable, and Modern Synths",
+    "status": "candidate",
+    "sourceIds": ["surge-xt"],
+    "notes": "Upstream is a large JUCE synth. It needs a dedicated DSP-only setup before wadspa can expose it as a browser instrument."
+  },
+  {
+    "id": "vitalium",
+    "name": "Vitalium",
+    "family": "Hybrid, Wavetable, and Modern Synths",
+    "status": "candidate",
+    "sourceIds": ["distrho-ports"],
+    "notes": "Tracked through DISTRHO-Ports. It needs dedicated preset/wavetable asset handling and a DSP-only LV2 setup."
+  },
+  {
+    "id": "odin2",
+    "name": "Odin 2",
+    "family": "Hybrid, Wavetable, and Modern Synths",
+    "status": "candidate",
+    "sourceIds": ["odin2"],
+    "notes": "Upstream supports LV2, but the JUCE/CMake build must be reduced to the DSP and metadata path for WASM."
+  },
+  {
+    "id": "helm",
+    "name": "Helm",
+    "family": "Hybrid, Wavetable, and Modern Synths",
+    "status": "candidate",
+    "sourceIds": ["helm"],
+    "notes": "Upstream is a full synth with visual modulation UI. It needs a dedicated setup script before it can be tested in the browser catalog."
+  },
+  {
+    "id": "cardinal",
+    "name": "Cardinal",
+    "family": "Hybrid, Wavetable, and Modern Synths",
+    "status": "candidate",
+    "sourceIds": ["cardinal"],
+    "notes": "Cardinal is a modular host-style instrument with many bundled modules. It needs a custom reduced WASM build plan."
+  },
+  {
+    "id": "dexed",
+    "name": "Dexed",
+    "family": "FM and Retro Chiptune Engines",
+    "status": "candidate",
+    "sourceIds": ["dexed"],
+    "notes": "Tracked as an exact DX7 target. Existing mda_DX10 covers simple FM, but does not count as Dexed support."
+  },
+  {
+    "id": "adlplug",
+    "name": "ADLplug",
+    "family": "FM and Retro Chiptune Engines",
+    "status": "candidate",
+    "sourceIds": ["adlplug"],
+    "notes": "Tracked as an exact OPL/OPN chip target. It needs a dedicated setup for its recursive dependencies and LV2 metadata."
+  },
+  {
+    "id": "juce-opl",
+    "name": "JuceOPL",
+    "family": "FM and Retro Chiptune Engines",
+    "status": "candidate",
+    "sourceIds": ["distrho-ports"],
+    "notes": "Tracked through DISTRHO-Ports. It needs an extracted LV2 build target before it can be packaged."
+  },
+  {
+    "id": "vl1-emulator",
+    "name": "VL1-Emulator",
+    "family": "FM and Retro Chiptune Engines",
+    "status": "candidate",
+    "sourceIds": ["vl1-emulator"],
+    "notes": "Tracked as an exact Casio VL-Tone target. It needs confirmation of LV2 metadata and a DSP-only build."
+  },
+  {
+    "id": "zynaddsubfx",
+    "name": "ZynAddSubFX",
+    "family": "Virtual Analog and Subtractive Workstations",
+    "status": "candidate",
+    "sourceIds": ["zynaddsubfx"],
+    "notes": "Source is already tracked locally. The full synth has a large engine/DPF path and still needs a dedicated setup script."
+  },
+  {
+    "id": "amsynth",
+    "name": "amsynth",
+    "family": "Virtual Analog and Subtractive Workstations",
+    "status": "supported",
+    "sourceIds": ["amsynth"],
+    "catalogIds": ["amsynth"],
+    "notes": "Exact target is built as a MIDI instrument and covered by the LV2 smoke and slider tests."
+  },
+  {
+    "id": "obxd",
+    "name": "Obxd",
+    "family": "Virtual Analog and Subtractive Workstations",
+    "status": "candidate",
+    "sourceIds": ["distrho-ports"],
+    "notes": "Tracked through DISTRHO-Ports. It is not equivalent to the current mda_JX10 virtual analog instrument."
+  },
+  {
+    "id": "synthv1",
+    "name": "synthv1",
+    "family": "Virtual Analog and Subtractive Workstations",
+    "status": "supported",
+    "sourceIds": ["synthv1"],
+    "catalogIds": ["synthv1"],
+    "notes": "Exact target is built as a MIDI instrument and covered by the LV2 smoke and slider tests."
+  },
+  {
+    "id": "calf-monosynth",
+    "name": "Calf Monosynth",
+    "family": "Virtual Analog and Subtractive Workstations",
+    "status": "candidate",
+    "sourceIds": ["calf"],
+    "notes": "Tracked through the Calf Studio Gear LV2 suite. It needs extraction from the suite before it can be packaged."
+  },
+  {
+    "id": "nekobi",
+    "name": "DISTRHO Nekobi",
+    "family": "Virtual Analog and Subtractive Workstations",
+    "status": "candidate",
+    "sourceIds": ["nekobi"],
+    "notes": "Tracked as the exact Nekobi acid synth. Existing so-404 is also TB-303-style but does not count as Nekobi support."
+  },
+  {
+    "id": "geonkick",
+    "name": "Geonkick",
+    "family": "Generative, Percussive, and Physical Modeling",
+    "status": "supported",
+    "sourceIds": ["geonkick"],
+    "catalogIds": ["geonkick"],
+    "notes": "Exact target is built as a MIDI-triggered kick drum instrument and covered by the LV2 smoke and slider tests."
+  },
+  {
+    "id": "chowkick",
+    "name": "Chow Kick",
+    "family": "Generative, Percussive, and Physical Modeling",
+    "status": "candidate",
+    "sourceIds": ["chowkick"],
+    "notes": "Tracked as an exact physically modeled kick target. It needs a JUCE/CMake-to-wadspa setup script."
+  },
+  {
+    "id": "setbfree",
+    "name": "setBfree",
+    "family": "Generative, Percussive, and Physical Modeling",
+    "status": "candidate",
+    "sourceIds": ["setBfree"],
+    "partialCatalogIds": ["setBfree-reverb", "setBfree-overdrive"],
+    "notes": "Only setBfree reverb and overdrive effects are packaged today. The B3 organ instrument still needs its own setup."
+  },
+  {
+    "id": "padthv1",
+    "name": "padthv1",
+    "family": "Generative, Percussive, and Physical Modeling",
+    "status": "supported",
+    "sourceIds": ["padthv1"],
+    "catalogIds": ["padthv1"],
+    "notes": "Exact target is built as a MIDI instrument and covered by the LV2 smoke and slider tests."
+  },
+  {
+    "id": "infamous-cellular-automaton-synth",
+    "name": "Infamous Cellular Automaton Synth",
+    "family": "Generative, Percussive, and Physical Modeling",
+    "status": "candidate",
+    "sourceIds": ["infamous-plugins"],
+    "notes": "Tracked through Infamous Plugins. It needs a dedicated LV2 setup and control mapping before browser packaging."
+  }
+]

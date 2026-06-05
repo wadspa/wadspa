@@ -3,9 +3,10 @@
  * Clone or update all external source repositories listed in sources.json.
  *
  * Usage:
- *   node scripts/fetch-sources.js [--only <id>] [--no-update]
+ *   node scripts/fetch-sources.js [--only <source-or-target-id>] [--no-update]
  *
- * --only <id>    Only fetch the source with this id
+ * --only <id>    Only fetch the source with this id, or the source that owns
+ *                a target with this id
  * --no-update    Skip git pull on repos that already exist (clone-only)
  */
 
@@ -29,11 +30,12 @@ function run(cmd, opts = {}) {
 let cloned = 0, updated = 0, skipped = 0, failed = 0;
 
 for (const src of sources) {
-    if (onlyId && src.id !== onlyId) continue;
+    if (!matchesOnly(src)) continue;
     if (!src.git) { skipped++; continue; }
 
     const destDir = join(ROOT, src.id);
-    process.stdout.write(`▶  ${src.id}  `);
+    const targetNote = onlyId && onlyId !== src.id ? ` for ${onlyId}` : '';
+    process.stdout.write(`▶  ${src.id}${targetNote}  `);
 
     try {
         if (!existsSync(destDir)) {
@@ -57,3 +59,8 @@ for (const src of sources) {
 console.log(`\n${'─'.repeat(50)}`);
 console.log(`↓ ${cloned} cloned   ↑ ${updated} updated   ⏭ ${skipped} skipped   ✗ ${failed} failed`);
 if (failed > 0) process.exit(1);
+
+function matchesOnly(src) {
+    if (!onlyId) return true;
+    return src.id === onlyId || (src.targets ?? []).some(target => target.id === onlyId);
+}

@@ -1,0 +1,315 @@
+#include <math.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "lv2.h"
+#include "lv2/atom/atom.h"
+#include "lv2/atom/util.h"
+#include "lv2/midi/midi.h"
+#include "lv2/urid/urid.h"
+
+#include "audio_output.h"
+#include "envelope.h"
+#include "synthesizer.h"
+
+#define PLUGIN_URI "https://wadspa.org/plugins/geonkick"
+
+enum {
+    PORT_MIDI_IN = 0,
+    PORT_OUT_L,
+    PORT_OUT_R,
+    PORT_FREQUENCY,
+    PORT_DECAY,
+    PORT_PITCH_DROP,
+    PORT_NOISE,
+    PORT_CLICK,
+    PORT_TONE,
+    PORT_RESONANCE,
+    PORT_DRIVE,
+    PORT_GAIN,
+};
+
+typedef struct {
+    const LV2_Atom_Sequence *midi_in;
+    float *out_l;
+    float *out_r;
+    const float *frequency;
+    const float *decay;
+    const float *pitch_drop;
+    const float *noise;
+    const float *click;
+    const float *tone;
+    const float *resonance;
+    const float *drive;
+    const float *gain;
+
+    double sample_rate;
+    LV2_URID midi_event_urid;
+    LV2_URID_Map *map;
+
+    struct gkick_synth *synth;
+    struct gkick_audio_output *output;
+
+    float last_frequency;
+    float last_decay;
+    float last_pitch_drop;
+    float last_noise;
+    float last_click;
+    float last_tone;
+    float last_resonance;
+    float last_drive;
+    float last_gain;
+    int dirty;
+} GeonkickLV2;
+
+static float clampf_local(float v, float lo, float hi)
+{
+    if (!isfinite(v)) return lo;
+    return fminf(hi, fmaxf(lo, v));
+}
+
+static float port_or_default(const float *p, float fallback)
+{
+    return p ? *p : fallback;
+}
+
+static void set_points(struct gkick_envelope_point_info *points, size_t npoints,
+                       float x0, float y0, float x1, float y1, float x2, float y2)
+{
+    points[0].x = x0;
+    points[0].y = y0;
+    points[0].control_point = false;
+    points[1].x = x1;
+    points[1].y = y1;
+    points[1].control_point = false;
+    if (npoints > 2) {
+        points[2].x = x2;
+        points[2].y = y2;
+        points[2].control_point = false;
+    }
+}
+
+static void set_kick_env(struct gkick_synth *synth, enum geonkick_envelope_type type,
+                         float y0, float y1, float y2)
+{
+    struct gkick_envelope_point_info points[3];
+    set_points(points, 3, 0.0f, y0, 0.78f, y1, 1.0f, y2);
+    gkick_synth_kick_envelope_set_points(synth, type, points, 3);
+}
+
+static void set_osc_env(struct gkick_synth *synth, size_t osc, enum geonkick_envelope_type type,
+                        float x1, float y0, float y1)
+{
+    struct gkick_envelope_point_info points[3];
+    set_points(points, 3, 0.0f, y0, x1, y1, 1.0f, 0.0f);
+    gkick_synth_osc_envelope_set_points(synth, (int)osc, (int)type, points, 3);
+}
+
+static void configure_synth(GeonkickLV2 *g)
+{
+    const float frequency = clampf_local(port_or_default(g->frequency, 62.0f), 30.0f, 220.0f);
+    const float decay = clampf_local(port_or_default(g->decay, 0.45f), 0.08f, 1.5f);
+    const float pitch_drop = clampf_local(port_or_default(g->pitch_drop, 28.0f), 0.0f, 48.0f);
+    const float noise = clampf_local(port_or_default(g->noise, 0.12f), 0.0f, 0.85f);
+    const float click = clampf_local(port_or_default(g->click, 0.22f), 0.0f, 1.0f);
+    const float tone = clampf_local(port_or_default(g->tone, 2100.0f), 120.0f, 8000.0f);
+    const float resonance = clampf_local(port_or_default(g->resonance, 1.2f), 0.5f, 4.0f);
+    const float drive = clampf_local(port_or_default(g->drive, 1.8f), 1.0f, 12.0f);
+    const float gain = clampf_local(port_or_default(g->gain, 0.75f), 0.1f, 1.0f);
+
+    if (!g->dirty
+        && fabsf(frequency - g->last_frequency) < 1e-5f
+        && fabsf(decay - g->last_decay) < 1e-5f
+        && fabsf(pitch_drop - g->last_pitch_drop) < 1e-5f
+        && fabsf(noise - g->last_noise) < 1e-5f
+        && fabsf(click - g->last_click) < 1e-5f
+        && fabsf(tone - g->last_tone) < 1e-5f
+        && fabsf(resonance - g->last_resonance) < 1e-5f
+        && fabsf(drive - g->last_drive) < 1e-5f
+        && fabsf(gain - g->last_gain) < 1e-5f) {
+        return;
+    }
+
+    g->last_frequency = frequency;
+    g->last_decay = decay;
+    g->last_pitch_drop = pitch_drop;
+    g->last_noise = noise;
+    g->last_click = click;
+    g->last_tone = tone;
+    g->last_resonance = resonance;
+    g->last_drive = drive;
+    g->last_gain = gain;
+    g->dirty = 0;
+
+    const float pitch_mult = powf(2.0f, pitch_drop / 12.0f);
+
+    gkick_synth_set_length(g->synth, decay);
+    gkick_synth_kick_set_amplitude(g->synth, gain);
+    gkick_synth_enable_group(g->synth, 0, true);
+    geonkick_synth_group_set_amplitude(g->synth, 0, 1.0f);
+
+    gkick_synth_enable_oscillator(g->synth, 0, 1);
+    gkick_synth_set_osc_function(g->synth, 0, GEONKICK_OSC_FUNC_SINE);
+    gkick_synth_set_osc_frequency(g->synth, 0, frequency);
+    gkick_synth_set_osc_amplitude(g->synth, 0, 1.0f);
+    {
+        struct gkick_envelope_point_info points[3];
+        set_points(points, 3, 0.0f, pitch_mult, 0.18f, 1.0f, 1.0f, 1.0f);
+        gkick_synth_osc_envelope_set_points(g->synth, 0, GEONKICK_FREQUENCY_ENVELOPE, points, 3);
+    }
+    set_osc_env(g->synth, 0, GEONKICK_AMPLITUDE_ENVELOPE, 0.82f, 1.0f, 0.35f);
+
+    gkick_synth_enable_oscillator(g->synth, 1, 1);
+    gkick_synth_set_osc_function(g->synth, 1, GEONKICK_OSC_FUNC_NOISE_WHITE);
+    gkick_synth_set_osc_amplitude(g->synth, 1, noise * 0.55f);
+    gkick_synth_set_osc_noise_density(g->synth, 1, 1.0f);
+    set_osc_env(g->synth, 1, GEONKICK_AMPLITUDE_ENVELOPE, 0.08f, 1.0f, 0.0f);
+
+    gkick_synth_enable_oscillator(g->synth, 2, 1);
+    gkick_synth_set_osc_function(g->synth, 2, GEONKICK_OSC_FUNC_TRIANGLE);
+    gkick_synth_set_osc_frequency(g->synth, 2, 1800.0f + tone * 0.45f);
+    gkick_synth_set_osc_amplitude(g->synth, 2, click * 0.35f);
+    set_osc_env(g->synth, 2, GEONKICK_AMPLITUDE_ENVELOPE, 0.035f, 1.0f, 0.0f);
+
+    geonkick_synth_kick_filter_enable(g->synth, 1);
+    gkick_synth_set_kick_filter_type(g->synth, GEONKICK_FILTER_LOW_PASS);
+    gkick_synth_kick_set_filter_frequency(g->synth, tone);
+    gkick_synth_kick_set_filter_factor(g->synth, resonance);
+
+    gkick_synth_distortion_enable(g->synth, drive > 1.001f);
+    gkick_synth_distortion_set_type(g->synth, GEONKICK_DISTORTION_SOFT_CLIPPING_TANH);
+    gkick_synth_distortion_set_drive(g->synth, drive);
+    gkick_synth_distortion_set_out_limiter(g->synth, 0.92f);
+
+    set_kick_env(g->synth, GEONKICK_AMPLITUDE_ENVELOPE, 1.0f, 0.28f, 0.0f);
+    gkick_synth_process(g->synth);
+}
+
+static void trigger(GeonkickLV2 *g, uint8_t note, uint8_t velocity)
+{
+    configure_synth(g);
+    struct gkick_note_info key;
+    key.state = GKICK_KEY_STATE_PRESSED;
+    key.channel = 0;
+    key.note_number = (signed char)note;
+    key.velocity = (signed char)(velocity ? velocity : 100);
+    key.timing = 0.0f;
+    gkick_audio_output_key_pressed(g->output, &key);
+}
+
+static LV2_Handle instantiate(const LV2_Descriptor *descriptor,
+                              double sample_rate,
+                              const char *bundle_path,
+                              const LV2_Feature *const *features)
+{
+    (void)descriptor;
+    (void)bundle_path;
+
+    GeonkickLV2 *g = (GeonkickLV2 *)calloc(1, sizeof(GeonkickLV2));
+    if (!g) return NULL;
+    g->sample_rate = sample_rate;
+    g->dirty = 1;
+
+    for (const LV2_Feature *const *f = features; f && *f; f++) {
+        if (!strcmp((*f)->URI, LV2_URID__map)) {
+            g->map = (LV2_URID_Map *)(*f)->data;
+        }
+    }
+    if (g->map) {
+        g->midi_event_urid = g->map->map(g->map->handle, LV2_MIDI__MidiEvent);
+    }
+
+    if (gkick_synth_new(&g->synth, (int)sample_rate) != GEONKICK_OK
+        || gkick_audio_output_create(&g->output, (int)sample_rate) != GEONKICK_OK) {
+        free(g);
+        return NULL;
+    }
+
+    g->output->limiter = 1000000;
+    gkick_audio_output_tune_output(g->output, false);
+    gkick_synth_set_output(g->synth, g->output);
+    return (LV2_Handle)g;
+}
+
+static void connect_port(LV2_Handle handle, uint32_t port, void *data)
+{
+    GeonkickLV2 *g = (GeonkickLV2 *)handle;
+    switch (port) {
+    case PORT_MIDI_IN: g->midi_in = (const LV2_Atom_Sequence *)data; break;
+    case PORT_OUT_L: g->out_l = (float *)data; break;
+    case PORT_OUT_R: g->out_r = (float *)data; break;
+    case PORT_FREQUENCY: g->frequency = (const float *)data; break;
+    case PORT_DECAY: g->decay = (const float *)data; break;
+    case PORT_PITCH_DROP: g->pitch_drop = (const float *)data; break;
+    case PORT_NOISE: g->noise = (const float *)data; break;
+    case PORT_CLICK: g->click = (const float *)data; break;
+    case PORT_TONE: g->tone = (const float *)data; break;
+    case PORT_RESONANCE: g->resonance = (const float *)data; break;
+    case PORT_DRIVE: g->drive = (const float *)data; break;
+    case PORT_GAIN: g->gain = (const float *)data; break;
+    default: break;
+    }
+}
+
+static void activate(LV2_Handle handle)
+{
+    GeonkickLV2 *g = (GeonkickLV2 *)handle;
+    g->dirty = 1;
+}
+
+static void run(LV2_Handle handle, uint32_t n_samples)
+{
+    GeonkickLV2 *g = (GeonkickLV2 *)handle;
+    configure_synth(g);
+
+    if (g->midi_in && g->midi_event_urid) {
+        LV2_ATOM_SEQUENCE_FOREACH(g->midi_in, ev) {
+            if (ev->body.type != g->midi_event_urid || ev->body.size < 3) continue;
+            const uint8_t *msg = (const uint8_t *)(ev + 1);
+            const uint8_t status = msg[0] & 0xF0;
+            if (status == 0x90 && msg[2] > 0) {
+                trigger(g, msg[1], msg[2]);
+            } else if (status == 0x90 && msg[2] == 0) {
+                struct gkick_note_info key = { GKICK_KEY_STATE_RELEASED, 0, (signed char)msg[1], 0, 0.0f };
+                gkick_audio_output_key_pressed(g->output, &key);
+            } else if (status == 0x80) {
+                struct gkick_note_info key = { GKICK_KEY_STATE_RELEASED, 0, (signed char)msg[1], 0, 0.0f };
+                gkick_audio_output_key_pressed(g->output, &key);
+            }
+        }
+    }
+
+    if (!g->out_l || !g->out_r) return;
+    memset(g->out_l, 0, n_samples * sizeof(float));
+    memset(g->out_r, 0, n_samples * sizeof(float));
+    gkick_real *data[2] = { g->out_l, g->out_r };
+    gkick_real leveler = 0.0f;
+    gkick_audio_output_get_data(g->output, data, &leveler, n_samples);
+    (void)leveler;
+}
+
+static void cleanup(LV2_Handle handle)
+{
+    GeonkickLV2 *g = (GeonkickLV2 *)handle;
+    if (!g) return;
+    gkick_synth_free(&g->synth);
+    gkick_audio_output_free(&g->output);
+    free(g);
+}
+
+static const LV2_Descriptor descriptor = {
+    PLUGIN_URI,
+    instantiate,
+    connect_port,
+    activate,
+    run,
+    NULL,
+    cleanup,
+    NULL,
+};
+
+const LV2_Descriptor *lv2_descriptor(uint32_t index)
+{
+    return index == 0 ? &descriptor : NULL;
+}
