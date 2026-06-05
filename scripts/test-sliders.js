@@ -50,6 +50,7 @@ const REL_RMS_DIFF = 1e-5;
 const NOISE_MULTIPLIER = 6;
 const DEFAULT_PROFILE = { key: 'default' };
 const DYNAMICS_PROFILE = { key: 'dynamics', audio: 'dynamics', renderBlocks: 1024 };
+const FAST_DYNAMICS_PROFILE = { key: 'fast-dynamics', audio: 'fast-dynamics', renderBlocks: 1024 };
 const ENVELOPE_PROFILE = { key: 'envelope', renderBlocks: 2048, midiNoteOffBlock: 512 };
 const SOFT_ENVELOPE_PROFILE = { key: 'soft-envelope', renderBlocks: 2048, midiNoteOffBlock: 512, midiVelocity: 72 };
 const LONG_SUSTAIN_PROFILE = { key: 'long-sustain', renderBlocks: 4096, midiNoteOffBlock: 8192 };
@@ -632,10 +633,10 @@ function supportOverridesFor(port, allCtrlPorts, options) {
     const currentIsDynamics = isDynamicsControl(text, allCtrlPorts, options);
     const currentIsEq = isEqOrFilterControl(text);
     const currentIsEnvelope = isEnvelopeControl(text);
-    const currentIsTimeFx = isTimeFxControl(text) && !currentIsEnvelope;
     const currentIsLfo = isLfoControl(`${options.id} ${options.meta.name ?? ''} ${text}`)
         || (/\brate\b/i.test(text)
             && /mod|depth|vibrato|tremolo|chorus|flanger|phaser|rotary/i.test(`${options.id} ${options.meta.name ?? ''} ${allText}`));
+    const currentIsTimeFx = isTimeFxControl(text) && !currentIsEnvelope && !currentIsLfo;
     const currentIsLfoDestination = currentIsLfo
         && /pitch|cutoff|reso|resonance|volume|panning|balance|ringmod|ring mod|amount|depth/i.test(text)
         && !/rate|freq|bpm|shape|width|sync|sweep|attack|att\b|decay|dec\b|sustain|sus\b|release|rel\b/i.test(text);
@@ -810,6 +811,7 @@ function supportOverridesFor(port, allCtrlPorts, options) {
                 set(other, minValue(other));
             }
             if (/\bhold\b/i.test(otherText) && /decay|dec\b|release|rel\b/i.test(text)) set(other, minValue(other));
+            if (/decay|dec\b/i.test(otherText) && /release|rel\b/i.test(text)) set(other, highValue(other));
             if (/decay|dec\b/i.test(otherText) && /\bhold\b/i.test(text)) set(other, minValue(other));
             if (/sustain|sus\b/i.test(otherText) && /decay|dec\b/i.test(text)) set(other, lowValue(other));
             if (/decay|dec\b/i.test(otherText) && /sustain|sus\b/i.test(text)) set(other, lowValue(other));
@@ -905,7 +907,9 @@ function uiContextSupportOverridesFor(port, allCtrlPorts, options) {
             if (/attack|att\b/i.test(otherText) && /decay|dec\b|sustain|sus\b|release|rel\b|hold/i.test(text)) {
                 set(other, minValue(other));
             }
-            if (/decay|dec\b/i.test(otherText) && /sustain|sus\b|release|rel\b|hold/i.test(text)) {
+            if (/decay|dec\b/i.test(otherText) && /release|rel\b/i.test(text)) {
+                set(other, highValue(other));
+            } else if (/decay|dec\b/i.test(otherText) && /sustain|sus\b|hold/i.test(text)) {
                 set(other, lowValue(other));
             }
             if (/sustain|sus\b/i.test(otherText) && /release|rel\b/i.test(text)) {
@@ -1005,6 +1009,9 @@ function renderProfileFor(options, port) {
     }
     if (!options.meta.ports.some(p => p.type === 'midi' && p.dir === 'input')
         && (isDynamicsControl(text, options.meta.ports, options) || /BeatBox|tap-dynamics/i.test(options.id))) {
+        if (/tap[_-]?dynamics/i.test(options.id) && /attack|att\b/i.test(text)) {
+            return FAST_DYNAMICS_PROFILE;
+        }
         return DYNAMICS_PROFILE;
     }
     if (!options.meta.ports.some(p => p.type === 'midi' && p.dir === 'input')
@@ -1333,6 +1340,19 @@ function fillAudioInputs(mod, inBufFns, blockIndex, profile = DEFAULT_PROFILE) {
                     0.72 * Math.sin(2 * Math.PI * fundamental * t)
                   + 0.28 * Math.sin(2 * Math.PI * mid * t)
                   + 0.08 * deterministicNoise(baseSample + i + channel * 8191)
+                ) + edge;
+                continue;
+            }
+            if (profile.audio === 'fast-dynamics') {
+                const period = Math.round(SAMPLE_RATE * 0.08);
+                const phase = ((baseSample + i) % period) / period;
+                const gate = phase < 0.18 ? 1 : 0.0001;
+                const amp = channel % 2 === 0 ? 2.25 : 1.35;
+                const edge = phase < 0.018 ? 0.7 * (1 - phase / 0.018) : 0;
+                mod.HEAPF32[ptr + i] = amp * gate * (
+                    0.74 * Math.sin(2 * Math.PI * fundamental * t)
+                  + 0.30 * Math.sin(2 * Math.PI * mid * t)
+                  + 0.10 * deterministicNoise(baseSample + i + channel * 8191)
                 ) + edge;
                 continue;
             }

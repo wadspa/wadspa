@@ -379,7 +379,7 @@ wadspa/
       fftw3.h               FFTW3 float API header (takes priority over qt-stub/fftw3.h)
   plugins/
     manifest.json           LADSPA effect registry (32+ plugins)
-    lv2.json                LV2 plugin registry (22 instruments + effects)
+    lv2.json                LV2 plugin registry (23 instruments + effects)
     synthv1/                Dual-oscillator polyphonic analog synthesizer
     drumkv1/                Per-pad drum synthesizer
     padthv1/                PADsynth additive synthesizer

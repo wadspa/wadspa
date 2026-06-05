@@ -1,0 +1,312 @@
+@prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix midi:  <http://lv2plug.in/ns/ext/midi#> .
+@prefix pprop: <http://lv2plug.in/ns/ext/port-props#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix urid:  <http://lv2plug.in/ns/ext/urid#> .
+
+<https://asb2m10.github.io/dexed#instrument>
+    a lv2:InstrumentPlugin, lv2:Plugin ;
+    doap:name "Dexed" ;
+    doap:description "DX7-compatible six-operator FM synthesizer" ;
+    lv2:requiredFeature urid:map ;
+    lv2:optionalFeature lv2:hardRTCapable ;
+
+    lv2:port [
+        a lv2:InputPort, atom:AtomPort ;
+        atom:bufferType atom:Sequence ;
+        atom:supports midi:MidiEvent ;
+        lv2:index 0 ;
+        lv2:symbol "midi_in" ;
+        lv2:name "MIDI In" ;
+    ] , [
+        a lv2:OutputPort, lv2:AudioPort ;
+        lv2:index 1 ;
+        lv2:symbol "out_l" ;
+        lv2:name "Audio Out L" ;
+    ] , [
+        a lv2:OutputPort, lv2:AudioPort ;
+        lv2:index 2 ;
+        lv2:symbol "out_r" ;
+        lv2:name "Audio Out R" ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 3 ;
+        lv2:symbol "algorithm" ;
+        lv2:name "Algorithm" ;
+        lv2:minimum 0 ;
+        lv2:maximum 31 ;
+        lv2:default 0 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 4 ;
+        lv2:symbol "feedback" ;
+        lv2:name "Feedback" ;
+        lv2:minimum 0 ;
+        lv2:maximum 7 ;
+        lv2:default 7 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 5 ;
+        lv2:symbol "transpose" ;
+        lv2:name "Transpose" ;
+        lv2:minimum -24 ;
+        lv2:maximum 24 ;
+        lv2:default 0 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 6 ;
+        lv2:symbol "lfo_rate" ;
+        lv2:name "LFO Rate" ;
+        lv2:minimum 0 ;
+        lv2:maximum 99 ;
+        lv2:default 35 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 7 ;
+        lv2:symbol "lfo_delay" ;
+        lv2:name "LFO Delay" ;
+        lv2:minimum 0 ;
+        lv2:maximum 99 ;
+        lv2:default 0 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 8 ;
+        lv2:symbol "lfo_pitch_depth" ;
+        lv2:name "LFO Pitch Depth" ;
+        lv2:minimum 0 ;
+        lv2:maximum 99 ;
+        lv2:default 0 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 9 ;
+        lv2:symbol "output_gain" ;
+        lv2:name "Output Gain" ;
+        lv2:minimum 0.1 ;
+        lv2:maximum 1.25 ;
+        lv2:default 0.7 ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 10 ;
+        lv2:symbol "op1_level" ;
+        lv2:name "Operator 1 Level" ;
+        lv2:minimum 0 ;
+        lv2:maximum 99 ;
+        lv2:default 99 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 11 ;
+        lv2:symbol "op1_coarse" ;
+        lv2:name "Operator 1 Coarse" ;
+        lv2:minimum 0 ;
+        lv2:maximum 31 ;
+        lv2:default 1 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 12 ;
+        lv2:symbol "op1_fine" ;
+        lv2:name "Operator 1 Fine" ;
+        lv2:minimum 0 ;
+        lv2:maximum 99 ;
+        lv2:default 0 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 13 ;
+        lv2:symbol "op1_detune" ;
+        lv2:name "Operator 1 Detune" ;
+        lv2:minimum -7 ;
+        lv2:maximum 7 ;
+        lv2:default 0 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 14 ;
+        lv2:symbol "op2_level" ;
+        lv2:name "Operator 2 Level" ;
+        lv2:minimum 0 ;
+        lv2:maximum 99 ;
+        lv2:default 99 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 15 ;
+        lv2:symbol "op2_coarse" ;
+        lv2:name "Operator 2 Coarse" ;
+        lv2:minimum 0 ;
+        lv2:maximum 31 ;
+        lv2:default 1 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 16 ;
+        lv2:symbol "op2_fine" ;
+        lv2:name "Operator 2 Fine" ;
+        lv2:minimum 0 ;
+        lv2:maximum 99 ;
+        lv2:default 0 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 17 ;
+        lv2:symbol "op2_detune" ;
+        lv2:name "Operator 2 Detune" ;
+        lv2:minimum -7 ;
+        lv2:maximum 7 ;
+        lv2:default 0 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 18 ;
+        lv2:symbol "op3_level" ;
+        lv2:name "Operator 3 Level" ;
+        lv2:minimum 0 ;
+        lv2:maximum 99 ;
+        lv2:default 99 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 19 ;
+        lv2:symbol "op3_coarse" ;
+        lv2:name "Operator 3 Coarse" ;
+        lv2:minimum 0 ;
+        lv2:maximum 31 ;
+        lv2:default 1 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 20 ;
+        lv2:symbol "op3_fine" ;
+        lv2:name "Operator 3 Fine" ;
+        lv2:minimum 0 ;
+        lv2:maximum 99 ;
+        lv2:default 0 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 21 ;
+        lv2:symbol "op3_detune" ;
+        lv2:name "Operator 3 Detune" ;
+        lv2:minimum -7 ;
+        lv2:maximum 7 ;
+        lv2:default 0 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 22 ;
+        lv2:symbol "op4_level" ;
+        lv2:name "Operator 4 Level" ;
+        lv2:minimum 0 ;
+        lv2:maximum 99 ;
+        lv2:default 99 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 23 ;
+        lv2:symbol "op4_coarse" ;
+        lv2:name "Operator 4 Coarse" ;
+        lv2:minimum 0 ;
+        lv2:maximum 31 ;
+        lv2:default 1 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 24 ;
+        lv2:symbol "op4_fine" ;
+        lv2:name "Operator 4 Fine" ;
+        lv2:minimum 0 ;
+        lv2:maximum 99 ;
+        lv2:default 0 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 25 ;
+        lv2:symbol "op4_detune" ;
+        lv2:name "Operator 4 Detune" ;
+        lv2:minimum -7 ;
+        lv2:maximum 7 ;
+        lv2:default 0 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 26 ;
+        lv2:symbol "op5_level" ;
+        lv2:name "Operator 5 Level" ;
+        lv2:minimum 0 ;
+        lv2:maximum 99 ;
+        lv2:default 99 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 27 ;
+        lv2:symbol "op5_coarse" ;
+        lv2:name "Operator 5 Coarse" ;
+        lv2:minimum 0 ;
+        lv2:maximum 31 ;
+        lv2:default 1 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 28 ;
+        lv2:symbol "op5_fine" ;
+        lv2:name "Operator 5 Fine" ;
+        lv2:minimum 0 ;
+        lv2:maximum 99 ;
+        lv2:default 0 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 29 ;
+        lv2:symbol "op5_detune" ;
+        lv2:name "Operator 5 Detune" ;
+        lv2:minimum -7 ;
+        lv2:maximum 7 ;
+        lv2:default 0 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 30 ;
+        lv2:symbol "op6_level" ;
+        lv2:name "Operator 6 Level" ;
+        lv2:minimum 0 ;
+        lv2:maximum 99 ;
+        lv2:default 99 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 31 ;
+        lv2:symbol "op6_coarse" ;
+        lv2:name "Operator 6 Coarse" ;
+        lv2:minimum 0 ;
+        lv2:maximum 31 ;
+        lv2:default 1 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 32 ;
+        lv2:symbol "op6_fine" ;
+        lv2:name "Operator 6 Fine" ;
+        lv2:minimum 0 ;
+        lv2:maximum 99 ;
+        lv2:default 0 ;
+        lv2:portProperty pprop:integer ;
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 33 ;
+        lv2:symbol "op6_detune" ;
+        lv2:name "Operator 6 Detune" ;
+        lv2:minimum -7 ;
+        lv2:maximum 7 ;
+        lv2:default 0 ;
+        lv2:portProperty pprop:integer ;
+    ] .

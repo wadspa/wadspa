@@ -1482,5 +1482,29 @@
     "includes": [
       "plugins/casynth"
     ]
+  },
+  {
+    "id": "dexed",
+    "description": "Dexed - DX7-compatible six-operator FM synthesizer",
+    "category": "Instruments",
+    "sources": [
+      "dexed_lv2.cpp",
+      "msfa/dx7note.cc",
+      "msfa/env.cc",
+      "msfa/exp2.cc",
+      "msfa/fm_core.cc",
+      "msfa/fm_op_kernel.cc",
+      "msfa/freqlut.cc",
+      "msfa/lfo.cc",
+      "msfa/pitchenv.cc",
+      "msfa/sin.cc"
+    ],
+    "includes": [
+      "plugins/dexed",
+      "plugins/dexed/msfa"
+    ],
+    "defines": [
+      "NDEBUG"
+    ]
   }
 ]

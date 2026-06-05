@@ -270,6 +270,13 @@ function activeUiRangeForPort(p, min, max) {
       && max === 1) {
     return { min: 0.5, max };
   }
+  if (String(p?.symbol ?? '') === 'attack'
+      && /^Attack$/i.test(String(p?.name ?? ''))
+      && finitePortNumber(p.default) === 128
+      && min === 4
+      && max === 500) {
+    return { min: 376, max };
+  }
   return null;
 }
 

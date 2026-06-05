@@ -1,0 +1,7 @@
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<https://asb2m10.github.io/dexed#instrument>
+    a lv2:Plugin, lv2:InstrumentPlugin ;
+    lv2:binary <dexed.so> ;
+    rdfs:seeAlso <dexed.ttl> .

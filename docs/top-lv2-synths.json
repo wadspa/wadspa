@@ -43,9 +43,10 @@
     "id": "dexed",
     "name": "Dexed",
     "family": "FM and Retro Chiptune Engines",
-    "status": "candidate",
-    "sourceIds": ["dexed"],
-    "notes": "Tracked as an exact DX7 target. Existing mda_DX10 covers simple FM, but does not count as Dexed support."
+    "status": "supported",
+    "sourceIds": ["dexed", "distrho-ports"],
+    "catalogIds": ["dexed"],
+    "notes": "Exact target is built as a MIDI instrument and covered by the LV2 smoke and slider tests."
   },
   {
     "id": "adlplug",

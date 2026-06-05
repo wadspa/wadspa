@@ -184,6 +184,7 @@
     "targets": [
       {
         "id": "dexed",
+        "setup": "setup-dexed.js",
         "autoSetup": false,
         "description": "Dexed DX7 FM synthesizer"
       }
