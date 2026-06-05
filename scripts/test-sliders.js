@@ -65,6 +65,9 @@ const VL1_RHYTHM_PROFILE = {
 };
 const LFO_PROFILE = { key: 'lfo', renderBlocks: 2048 };
 const SWEEP_PROFILE = { key: 'sweep', renderBlocks: 1024 };
+const BEATBOX_PROFILE = { key: 'beatbox', audio: 'beatbox-sequence', renderBlocks: 1024 };
+const BEATBOX_FAST_RATE_PROFILE = { key: 'beatbox-fast-rate', audio: 'beatbox-fast-rate', renderBlocks: 1024 };
+const BEATBOX_THRESHOLD_PROFILE = { key: 'beatbox-threshold', audio: 'beatbox-threshold', renderBlocks: 1024 };
 const POLYPHONY_PROFILE = {
     key: 'polyphony',
     midiNotes: POLYPHONY_PROBE_NOTES,
@@ -545,6 +548,9 @@ function requiresSliderSweepCoverage(port, options) {
     if (port.toggled || port.integer || port.enumeration || usesMenuControl(port) || isEnumLike(port)) return false;
     const text = controlText(port);
     const context = `${options.id} ${options.meta.name ?? ''} ${text}`;
+    if (/mda[_-]?BeatBox/i.test(context)) {
+        return !/record/i.test(text);
+    }
     if (/channel|program|preset|mode|select|output select|bypass|sync|latency|meter|reset|peakreset|threshold|thresh|(?:^|[_\s-])thr(?:$|[_\s-])|trigger|limiter|\blink\b|zero[_\s-]*db|0\s*dB|maximum|minimum|\bmax\b|\bmin\b/i.test(context)) {
         return false;
     }
@@ -1020,6 +1026,11 @@ function ensureFiniteRender(label, rendered) {
 function renderProfileFor(options, port) {
     const text = controlText(port);
     const contextText = `${options.id} ${options.meta.name ?? ''} ${text}`;
+    if (/mda[_-]?BeatBox/i.test(`${options.id} ${options.meta.name ?? ''}`)) {
+        if (/hat.*rate|hat_rate/i.test(text)) return BEATBOX_FAST_RATE_PROFILE;
+        if (/threshold|thresh|(?:^|[_\s-])thr(?:$|[_\s-])/i.test(text)) return BEATBOX_THRESHOLD_PROFILE;
+        return BEATBOX_PROFILE;
+    }
     if (/mda[_-]?TestTone/i.test(`${options.id} ${options.meta.name ?? ''}`) && /sweep/i.test(text)) {
         return SWEEP_PROFILE;
     }
@@ -1384,6 +1395,53 @@ function fillAudioInputs(mod, inBufFns, blockIndex, profile = DEFAULT_PROFILE) {
                     0.74 * Math.sin(2 * Math.PI * fundamental * t)
                   + 0.30 * Math.sin(2 * Math.PI * mid * t)
                   + 0.10 * deterministicNoise(baseSample + i + channel * 8191)
+                ) + edge;
+                continue;
+            }
+            if (profile.audio === 'beatbox-sequence') {
+                const period = Math.round(SAMPLE_RATE * 0.18);
+                const phase = ((baseSample + i) % period) / period;
+                const hit = Math.floor((baseSample + i) / period) % 3;
+                const freq = hit === 0 ? 110 : hit === 1 ? 660 : 2200;
+                const env = phase < 0.28 ? Math.exp(-phase * 12) : 0.00005;
+                const edge = phase < 0.012 ? 0.85 * (1 - phase / 0.012) : 0;
+                mod.HEAPF32[ptr + i] = env * (
+                    0.9 * Math.sin(2 * Math.PI * freq * t)
+                  + 0.18 * Math.sin(2 * Math.PI * freq * 2 * t)
+                  + 0.04 * Math.sin(2 * Math.PI * freq * 4 * t)
+                  + 0.03 * deterministicNoise(baseSample + i + channel * 8191)
+                ) + edge;
+                continue;
+            }
+            if (profile.audio === 'beatbox-fast-rate') {
+                const period = Math.round(SAMPLE_RATE * 0.055);
+                const phase = ((baseSample + i) % period) / period;
+                const freq = channel % 2 === 0 ? 5200 : 6100;
+                const env = phase < 0.34 ? Math.exp(-phase * 13) : 0.00004;
+                const edge = phase < 0.015 ? 0.9 * (1 - phase / 0.015) : 0;
+                mod.HEAPF32[ptr + i] = env * (
+                    0.8 * Math.sin(2 * Math.PI * freq * t)
+                  + 0.1 * Math.sin(2 * Math.PI * freq * 1.7 * t)
+                  + 0.07 * deterministicNoise(baseSample + i + channel * 8191)
+                ) + edge;
+                continue;
+            }
+            if (profile.audio === 'beatbox-threshold') {
+                const period = Math.round(SAMPLE_RATE * 0.12);
+                const phase = ((baseSample + i) % period) / period;
+                const hit = Math.floor((baseSample + i) / period) % 6;
+                const amp = [0.035, 0.07, 0.14, 0.28, 0.56, 1.1][hit];
+                const freq = hit % 3 === 0
+                    ? (channel % 2 === 0 ? 120 : 150)
+                    : hit % 3 === 1
+                        ? (channel % 2 === 0 ? 720 : 960)
+                        : (channel % 2 === 0 ? 3900 : 5200);
+                const env = phase < 0.24 ? Math.exp(-phase * 10) : 0.00003;
+                const edge = phase < 0.012 ? amp * 0.42 * (1 - phase / 0.012) : 0;
+                mod.HEAPF32[ptr + i] = amp * env * (
+                    0.9 * Math.sin(2 * Math.PI * freq * t)
+                  + 0.2 * Math.sin(2 * Math.PI * freq * 2 * t)
+                  + 0.04 * deterministicNoise(baseSample + i + channel * 8191)
                 ) + edge;
                 continue;
             }

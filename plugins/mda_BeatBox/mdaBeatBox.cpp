@@ -21,6 +21,23 @@
 #include <math.h>
 #include <stdlib.h>
 
+static float beatboxClamp01(float value)
+{
+  if(value < 0.f) return 0.f;
+  if(value > 1.f) return 1.f;
+  return value;
+}
+
+static float beatboxTriggerNorm(AudioEffectX* effect, float value)
+{
+  const float nyquist = 0.5f * (effect ? effect->getSampleRate() : 44100.f);
+  const float minHz = 25.f;
+  float maxHz = 12000.f;
+  if(maxHz > nyquist * 0.95f) maxHz = nyquist * 0.95f;
+  const float hz = minHz * (float)pow(maxHz / minHz, beatboxClamp01(value));
+  return hz / nyquist;
+}
+
 AudioEffect *createEffectInstance(audioMasterCallback audioMaster)
 {
   return new mdaBeatBox(audioMaster);
@@ -72,9 +89,9 @@ mdaBeatBox::mdaBeatBox(audioMasterCallback audioMaster)	: AudioEffectX(audioMast
   //calcs here
   hthr = (float)pow(10.f, 2.f * fParam1 - 2.f);
   hdel = (int32_t)((0.04 + 0.20 * fParam2) * getSampleRate());
-  sthr = (float)(40.0 * pow(10.f, 2.f * fParam7 - 2.f));
+  sthr = (float)(4.0 * pow(10.f, 2.f * fParam7 - 2.f));
   sdel = (int32_t)(0.12 * getSampleRate());
-  kthr = (float)(220.0 * pow(10.f, 2.f * fParam4 - 2.f));
+  kthr = (float)(2.2 * pow(10.f, 2.f * fParam4 - 2.f));
   kdel = (int32_t)(0.10 * getSampleRate());
 
   if(fParam3 == 0.0f) {
@@ -94,11 +111,11 @@ mdaBeatBox::mdaBeatBox(audioMasterCallback audioMaster)	: AudioEffectX(audioMast
     slev = (float)(0.0001f + pow(10.f, fParam9*1.8-1.2));
   }
 
-  kww = (float)pow(10.0,-3.0 + 2.2 * fParam5);
+  kww = beatboxTriggerNorm(this, fParam5);
   ksf1 = (float)cos(3.1415927 * kww);     //p
   ksf2 = (float)sin(3.1415927 * kww);     //q
 
-  ww = (float)pow(10.0,-3.0 + 2.2 * fParam8);
+  ww = beatboxTriggerNorm(this, fParam8);
   sf1 = (float)cos(3.1415927 * ww);     //p
   sf2 = (float)sin(3.1415927 * ww);     //q
   sf3 = 0.991f; //r
@@ -155,8 +172,8 @@ void mdaBeatBox::setParameter(int32_t index, float value)
   //calcs here
   hthr = (float)pow(10.f, 2.f * fParam1 - 2.f);
   hdel = (int32_t)((0.04 + 0.20 * fParam2) * getSampleRate());
-  sthr = (float)(40.0 * pow(10.f, 2.f * fParam7 - 2.f));
-  kthr = (float)(220.0 * pow(10.f, 2.f * fParam4 - 2.f));
+  sthr = (float)(4.0 * pow(10.f, 2.f * fParam7 - 2.f));
+  kthr = (float)(2.2 * pow(10.f, 2.f * fParam4 - 2.f));
 
   if(fParam3 <= 0.0f) {
     hlev = 0.f;
@@ -175,13 +192,13 @@ void mdaBeatBox::setParameter(int32_t index, float value)
   }
 
   wwx=ww;
-  ww = (float)pow(10.0,-3.0 + 2.2 * fParam8);
+  ww = beatboxTriggerNorm(this, fParam8);
   sf1 = (float)cos(3.1415927 * ww);     //p
   sf2 = (float)sin(3.1415927 * ww);     //q
   //sfx = 0; ksfx = 0;
 
   kwwx=kww;
-  kww = (float)pow(10.0,-3.0 + 2.2 * fParam5);
+  kww = beatboxTriggerNorm(this, fParam5);
   ksf1 = (float)cos(3.1415927 * kww);     //p
   ksf2 = (float)sin(3.1415927 * kww);     //q
 

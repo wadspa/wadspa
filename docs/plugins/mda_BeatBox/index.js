@@ -62,9 +62,9 @@ export const meta         = {
       "type": "control",
       "legacy": false,
       "cv": false,
-      "min": 22,
-      "max": 3494,
-      "default": 300,
+      "min": 25,
+      "max": 12000,
+      "default": 110,
       "logarithmic": true
     },
     {
@@ -99,9 +99,9 @@ export const meta         = {
       "type": "control",
       "legacy": false,
       "cv": false,
-      "min": 22,
-      "max": 3494,
-      "default": 527.4,
+      "min": 25,
+      "max": 12000,
+      "default": 880,
       "logarithmic": true
     },
     {

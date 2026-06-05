@@ -237,6 +237,9 @@ function validateKnownAdapterRangeMappings() {
         if (!wrapper.includes('beatboxTriggerValue') || !wrapper.includes('beatboxTriggerHz')) {
             issues.push('mda_BeatBox adapter: trigger Hz controls must use the DSP logarithmic detector mapping');
         }
+        if (!wrapper.includes('12000.0f') || !wrapper.includes('25.0f')) {
+            issues.push('mda_BeatBox adapter: trigger Hz controls must expose the widened audible detector range');
+        }
         if (/value\s*\*\s*3472\s*\+\s*22/.test(wrapper) || /\(value\s*-\s*22\)\s*\/\s*\(?3472\)?/.test(wrapper)) {
             issues.push('mda_BeatBox adapter: trigger Hz controls still contain the old linear 22..3494 mapping');
         }
@@ -251,6 +254,10 @@ function validateKnownAdapterRangeMappings() {
         }
         if (/fParam[369]\s*\*\s*fParam[369]\s*\*\s*4\.f/.test(sourceWithoutLineComments)) {
             issues.push('mda_BeatBox source: mix controls still use the old squared gain curve');
+        }
+        if (/220\.0\s*\*\s*pow\(10\.f,\s*2\.f\s*\*\s*fParam4\s*-\s*2\.f\)/.test(sourceWithoutLineComments)
+            || /40\.0\s*\*\s*pow\(10\.f,\s*2\.f\s*\*\s*fParam7\s*-\s*2\.f\)/.test(sourceWithoutLineComments)) {
+            issues.push('mda_BeatBox source: kick/snare detector thresholds still use the unusably high native multipliers');
         }
     }
 }

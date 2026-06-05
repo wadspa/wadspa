@@ -60,7 +60,11 @@ static float
 beatboxTriggerHz(PLUGIN_CLASS* effect, float value)
 {
     const float sampleRate = effect ? effect->getSampleRate() : 44100.0f;
-    return 0.5f * sampleRate * powf(10.0f, -3.0f + 2.2f * clamp01(value));
+    const float nyquist = 0.5f * sampleRate;
+    const float minHz = 25.0f;
+    float maxHz = 12000.0f;
+    if (maxHz > nyquist * 0.95f) maxHz = nyquist * 0.95f;
+    return minHz * powf(maxHz / minHz, clamp01(value));
 }
 
 static float
@@ -68,11 +72,12 @@ beatboxTriggerValue(PLUGIN_CLASS* effect, float hz)
 {
     const float sampleRate = effect ? effect->getSampleRate() : 44100.0f;
     const float nyquist = 0.5f * sampleRate;
-    const float minHz = nyquist * powf(10.0f, -3.0f);
-    const float maxHz = nyquist * powf(10.0f, -0.8f);
+    const float minHz = 25.0f;
+    float maxHz = 12000.0f;
+    if (maxHz > nyquist * 0.95f) maxHz = nyquist * 0.95f;
     if (hz < minHz) hz = minHz;
     if (hz > maxHz) hz = maxHz;
-    return clamp01((log10f(hz / nyquist) + 3.0f) / 2.2f);
+    return clamp01(logf(hz / minHz) / logf(maxHz / minHz));
 }
 
 

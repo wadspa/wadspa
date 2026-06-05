@@ -176,7 +176,7 @@ function scaffoldCandidate(candidate) {
 
     for (const entry of readdirSync(candidate.bundleDir, { withFileTypes: true })) {
         if (entry.isFile() && entry.name.endsWith('.ttl')) {
-            copy(join(candidate.bundleDir, entry.name), join(candidate.pluginDir, entry.name));
+            write(candidate.pluginDir, entry.name, ttlForCandidate(candidate, join(candidate.bundleDir, entry.name)));
             console.log(`  ${entry.name}`);
         }
     }
@@ -257,13 +257,42 @@ function ttlDescription(candidate) {
         : firstParagraph;
 }
 
+function ttlForCandidate(candidate, ttlPath) {
+    let ttl = readFileSync(ttlPath, 'utf8');
+    if (candidate.pluginId === 'mda_BeatBox') {
+        ttl = ttl
+            .replace(
+                '        lv2:default 300.0 ;\n        lv2:minimum 22.0 ;\n        lv2:maximum 3494.0 ;',
+                '        lv2:default 110.0 ;\n        lv2:minimum 25.0 ;\n        lv2:maximum 12000.0 ;')
+            .replace(
+                '        lv2:default 527.4 ;\n        lv2:minimum 22.0 ;\n        lv2:maximum 3494.0 ;',
+                '        lv2:default 880.0 ;\n        lv2:minimum 25.0 ;\n        lv2:maximum 12000.0 ;');
+    }
+    return ttl;
+}
+
 function sourceForCandidate(candidate) {
     let source = readFileSync(candidate.sourcePath, 'utf8');
     if (candidate.pluginId === 'mda_BeatBox') {
         source = source
             .replace(
+                '#include <stdlib.h>\n',
+                '#include <stdlib.h>\n\nstatic float beatboxClamp01(float value)\n{\n  if(value < 0.f) return 0.f;\n  if(value > 1.f) return 1.f;\n  return value;\n}\n\nstatic float beatboxTriggerNorm(AudioEffectX* effect, float value)\n{\n  const float nyquist = 0.5f * (effect ? effect->getSampleRate() : 44100.f);\n  const float minHz = 25.f;\n  float maxHz = 12000.f;\n  if(maxHz > nyquist * 0.95f) maxHz = nyquist * 0.95f;\n  const float hz = minHz * (float)pow(maxHz / minHz, beatboxClamp01(value));\n  return hz / nyquist;\n}\n')
+            .replace(
                 '    case 5: fParam6 = value*0.88; break; // *0.88 to compensate for the previously hacked together ranges in the turtle file so the range can be the same as the snare and hat ranges',
                 '    case 5: fParam6 = value; break;')
+            .replaceAll(
+                '  ww = (float)pow(10.0,-3.0 + 2.2 * fParam8);',
+                '  ww = beatboxTriggerNorm(this, fParam8);')
+            .replaceAll(
+                '  kww = (float)pow(10.0,-3.0 + 2.2 * fParam5);',
+                '  kww = beatboxTriggerNorm(this, fParam5);')
+            .replaceAll(
+                '  sthr = (float)(40.0 * pow(10.f, 2.f * fParam7 - 2.f));',
+                '  sthr = (float)(4.0 * pow(10.f, 2.f * fParam7 - 2.f));')
+            .replaceAll(
+                '  kthr = (float)(220.0 * pow(10.f, 2.f * fParam4 - 2.f));',
+                '  kthr = (float)(2.2 * pow(10.f, 2.f * fParam4 - 2.f));')
             .replace(
                 '  hlev = (float)(0.0001f + fParam3 * fParam3 * 4.f);\n  klev = (float)(0.0001f + fParam6 * fParam6 * 4.f);\n  slev = (float)(0.0001f + fParam9 * fParam9 * 4.f);',
                 '  if(fParam3 <= 0.0f) {\n    hlev = 0.f;\n  }else{\n    hlev = (float)(0.0001f + pow(10.f, fParam3*1.8f-1.2f));\n  }\n  if(fParam6 <= 0.0f) {\n    klev = 0.f;\n  }else{\n    klev = (float)(0.0001f + pow(10.f, fParam6*1.8f-1.2f));\n  }\n  if(fParam9 <= 0.0f) {\n    slev = 0.f;\n  }else{\n    slev = (float)(0.0001f + pow(10.f, fParam9*1.8f-1.2f));\n  }')
@@ -280,7 +309,7 @@ function sharedSourceForCandidate(candidate, src, dst) {
         source = source
             .replace(
                 '// Essa função trabalha como uma regra de 3 para adaptar os valores recebidos na instância do plugin\n// (que encontram-se determinados no ttl)\n// para valores de 0 a 1, pois o código do mda foi projetado para trabalhar com esses valores\n',
-                '// Essa função trabalha como uma regra de 3 para adaptar os valores recebidos na instância do plugin\n// (que encontram-se determinados no ttl)\n// para valores de 0 a 1, pois o código do mda foi projetado para trabalhar com esses valores\n\nstatic float\nclamp01(float value)\n{\n    if (value < 0.0f) return 0.0f;\n    if (value > 1.0f) return 1.0f;\n    return value;\n}\n\nstatic float\nbeatboxTriggerHz(PLUGIN_CLASS* effect, float value)\n{\n    const float sampleRate = effect ? effect->getSampleRate() : 44100.0f;\n    return 0.5f * sampleRate * powf(10.0f, -3.0f + 2.2f * clamp01(value));\n}\n\nstatic float\nbeatboxTriggerValue(PLUGIN_CLASS* effect, float hz)\n{\n    const float sampleRate = effect ? effect->getSampleRate() : 44100.0f;\n    const float nyquist = 0.5f * sampleRate;\n    const float minHz = nyquist * powf(10.0f, -3.0f);\n    const float maxHz = nyquist * powf(10.0f, -0.8f);\n    if (hz < minHz) hz = minHz;\n    if (hz > maxHz) hz = maxHz;\n    return clamp01((log10f(hz / nyquist) + 3.0f) / 2.2f);\n}\n')
+                '// Essa função trabalha como uma regra de 3 para adaptar os valores recebidos na instância do plugin\n// (que encontram-se determinados no ttl)\n// para valores de 0 a 1, pois o código do mda foi projetado para trabalhar com esses valores\n\nstatic float\nclamp01(float value)\n{\n    if (value < 0.0f) return 0.0f;\n    if (value > 1.0f) return 1.0f;\n    return value;\n}\n\nstatic float\nbeatboxTriggerHz(PLUGIN_CLASS* effect, float value)\n{\n    const float sampleRate = effect ? effect->getSampleRate() : 44100.0f;\n    const float nyquist = 0.5f * sampleRate;\n    const float minHz = 25.0f;\n    float maxHz = 12000.0f;\n    if (maxHz > nyquist * 0.95f) maxHz = nyquist * 0.95f;\n    return minHz * powf(maxHz / minHz, clamp01(value));\n}\n\nstatic float\nbeatboxTriggerValue(PLUGIN_CLASS* effect, float hz)\n{\n    const float sampleRate = effect ? effect->getSampleRate() : 44100.0f;\n    const float nyquist = 0.5f * sampleRate;\n    const float minHz = 25.0f;\n    float maxHz = 12000.0f;\n    if (maxHz > nyquist * 0.95f) maxHz = nyquist * 0.95f;\n    if (hz < minHz) hz = minHz;\n    if (hz > maxHz) hz = maxHz;\n    return clamp01(logf(hz / minHz) / logf(maxHz / minHz));\n}\n')
             .replace(
                 '            case(4):\n            return inverted ? value*3472 + 22 : (value - 22)/(3472);',
                 '            case(4):\n            return inverted ? beatboxTriggerHz(effect, value) : beatboxTriggerValue(effect, value);')

@@ -120,6 +120,7 @@ async function beatBoxCoverageNote(eff, factory, wasmBinary, SETTERS) {
         ['low', 110],
         ['mid', 440],
         ['high', 1760],
+        ['top', 7200],
     ];
     const peaks = [];
     for (const [label, freq] of probes) {
