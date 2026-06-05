@@ -122,6 +122,7 @@
       {
         "id": "juce-opl",
         "bundle": "ports-juce5/juce-opl",
+        "setup": "setup-juce-opl.js",
         "autoSetup": false,
         "description": "JuceOPL OPL chip synthesizer"
       },

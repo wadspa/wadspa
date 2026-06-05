@@ -1506,5 +1506,21 @@
     "defines": [
       "NDEBUG"
     ]
+  },
+  {
+    "id": "juce-opl",
+    "description": "JuceOPL - AdLib/Sound Blaster OPL2 chip synthesizer",
+    "category": "Instruments",
+    "sources": [
+      "juce_opl_lv2.cpp",
+      "hiopl.cpp",
+      "dbopl.cpp"
+    ],
+    "includes": [
+      "plugins/juce-opl"
+    ],
+    "defines": [
+      "NDEBUG"
+    ]
   }
 ]

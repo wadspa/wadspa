@@ -60,9 +60,10 @@
     "id": "juce-opl",
     "name": "JuceOPL",
     "family": "FM and Retro Chiptune Engines",
-    "status": "candidate",
+    "status": "supported",
     "sourceIds": ["distrho-ports"],
-    "notes": "Tracked through DISTRHO-Ports. It needs an extracted LV2 build target before it can be packaged."
+    "catalogIds": ["juce-opl"],
+    "notes": "Exact target is built as a MIDI instrument and covered by the LV2 smoke and slider tests."
   },
   {
     "id": "vl1-emulator",
