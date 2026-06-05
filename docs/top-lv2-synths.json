@@ -67,9 +67,10 @@
     "id": "vl1-emulator",
     "name": "VL1-Emulator",
     "family": "FM and Retro Chiptune Engines",
-    "status": "candidate",
+    "status": "supported",
     "sourceIds": ["vl1-emulator"],
-    "notes": "Tracked as an exact Casio VL-Tone target. It needs confirmation of LV2 metadata and a DSP-only build."
+    "catalogIds": ["vl1-emulator"],
+    "notes": "Exact target is built as a MIDI instrument and covered by the LV2 smoke and slider tests."
   },
   {
     "id": "zynaddsubfx",

@@ -48,7 +48,7 @@ void init_waves(WAVESOURCE* self)
     }
 
     //white and random
-    srand ((uint16_t) time (NULL));
+    srand(1);
     self->V = 2*rand() / (float)RAND_MAX - 1;
     self->V2 = self->V*self->V;
 

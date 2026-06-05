@@ -52,6 +52,16 @@ const DEFAULT_PROFILE = { key: 'default' };
 const DYNAMICS_PROFILE = { key: 'dynamics', audio: 'dynamics', renderBlocks: 1024 };
 const ENVELOPE_PROFILE = { key: 'envelope', renderBlocks: 2048, midiNoteOffBlock: 512 };
 const SOFT_ENVELOPE_PROFILE = { key: 'soft-envelope', renderBlocks: 2048, midiNoteOffBlock: 512, midiVelocity: 72 };
+const LONG_SUSTAIN_PROFILE = { key: 'long-sustain', renderBlocks: 4096, midiNoteOffBlock: 8192 };
+const VL1_RHYTHM_PROFILE = {
+    key: 'vl1-rhythm',
+    renderBlocks: 2048,
+    midiNoteOffBlock: 8192,
+    initialCc: [
+        [0, 0x50, 4],
+        [0, 0x51, 127],
+    ],
+};
 const LFO_PROFILE = { key: 'lfo', renderBlocks: 2048 };
 const SWEEP_PROFILE = { key: 'sweep', renderBlocks: 1024 };
 const POLYPHONY_PROFILE = {
@@ -621,8 +631,8 @@ function supportOverridesFor(port, allCtrlPorts, options) {
     const allText = allCtrlPorts.map(controlText).join(' ');
     const currentIsDynamics = isDynamicsControl(text, allCtrlPorts, options);
     const currentIsEq = isEqOrFilterControl(text);
-    const currentIsTimeFx = isTimeFxControl(text);
     const currentIsEnvelope = isEnvelopeControl(text);
+    const currentIsTimeFx = isTimeFxControl(text) && !currentIsEnvelope;
     const currentIsLfo = isLfoControl(`${options.id} ${options.meta.name ?? ''} ${text}`)
         || (/\brate\b/i.test(text)
             && /mod|depth|vibrato|tremolo|chorus|flanger|phaser|rotary/i.test(`${options.id} ${options.meta.name ?? ''} ${allText}`));
@@ -889,6 +899,24 @@ function uiContextSupportOverridesFor(port, allCtrlPorts, options) {
         set(controlMode, minValue(controlMode));
     }
 
+    if (isEnvelopeControl(text)) {
+        for (const other of allCtrlPorts) {
+            const otherText = controlText(other);
+            if (/attack|att\b/i.test(otherText) && /decay|dec\b|sustain|sus\b|release|rel\b|hold/i.test(text)) {
+                set(other, minValue(other));
+            }
+            if (/decay|dec\b/i.test(otherText) && /sustain|sus\b|release|rel\b|hold/i.test(text)) {
+                set(other, lowValue(other));
+            }
+            if (/sustain|sus\b/i.test(otherText) && /release|rel\b/i.test(text)) {
+                set(other, highValue(other));
+            }
+            if (/volume|level|gain/i.test(otherText)) {
+                set(other, audibleHighValue(other));
+            }
+        }
+    }
+
     const currentModFamily = modulationFamily(text);
     if (currentModFamily) {
         for (const other of allCtrlPorts) {
@@ -962,6 +990,12 @@ function renderProfileFor(options, port) {
     }
     if (/nekobi|tb-303|acid/i.test(contextText) && /decay/i.test(text)) {
         return SOFT_ENVELOPE_PROFILE;
+    }
+    if (/vl1|vl-tone/i.test(contextText) && /sustain.*time|sustain[_\s-]*time/i.test(text)) {
+        return LONG_SUSTAIN_PROFILE;
+    }
+    if (/vl1|vl-tone/i.test(contextText) && /tempo/i.test(text)) {
+        return VL1_RHYTHM_PROFILE;
     }
     if (options.meta.ports.some(p => p.type === 'midi' && p.dir === 'input') && isEnvelopeControl(text)) {
         return ENVELOPE_PROFILE;
@@ -1227,6 +1261,9 @@ function sendInitialMidiProbe(mod, profile = DEFAULT_PROFILE) {
         mod._shim_midi_cc(0, 1, 0);    // modwheel
         mod._shim_midi_cc(0, 7, 112);  // volume
         mod._shim_midi_cc(0, 74, 96);  // brightness/filter cutoff
+        for (const [channel, controller, value] of profile.initialCc ?? []) {
+            mod._shim_midi_cc(channel, controller, value);
+        }
     }
     if (typeof mod._shim_midi_channel_pressure === 'function') mod._shim_midi_channel_pressure(0, 0);
     if (typeof mod._shim_midi_pitch_bend === 'function') mod._shim_midi_pitch_bend(0, 0);

@@ -212,7 +212,9 @@
     "targets": [
       {
         "id": "vl1-emulator",
-        "autoSetup": false,
+        "bundle": "plugins/VL1",
+        "setup": "setup-vl1-emulator",
+        "autoSetup": true,
         "description": "Casio VL-Tone VL1 emulator"
       }
     ]

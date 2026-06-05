@@ -1432,6 +1432,45 @@
     ]
   },
   {
+    "id": "vl1-emulator",
+    "description": "VL1-emulator - Casio VL-Tone VL1 instrument",
+    "category": "Instruments",
+    "sources": [
+      "vl1_lv2.cpp",
+      "plugin/PluginVL1.cpp",
+      "plugin/SharedVL1.cpp",
+      "plugin/meta/PluginVL1Meta.cpp",
+      "ADSR.cpp",
+      "Calculator.cpp",
+      "Clock.cpp",
+      "DemoSong.cpp",
+      "EnvelopeShaper.cpp",
+      "EventManager.cpp",
+      "Filters.cpp",
+      "LFO.cpp",
+      "LcdBuffer.cpp",
+      "LineInTime.cpp",
+      "Noise.cpp",
+      "Rhythm.cpp",
+      "Sequencer.cpp",
+      "Utils.cpp",
+      "VL1Defs.cpp",
+      "VL1String.cpp",
+      "Voice.cpp",
+      "VoiceManager.cpp",
+      "Wave.cpp",
+      "WaveSet.cpp"
+    ],
+    "includes": [
+      "plugins/vl1-emulator",
+      "plugins/vl1-emulator/plugin",
+      "plugins/vl1-emulator/plugin/meta"
+    ],
+    "defines": [
+      "NDEBUG"
+    ]
+  },
+  {
     "id": "casynth",
     "description": "Infamous Cellular Automaton Synth - additive synth controlled by an elementary cellular automaton",
     "category": "Instruments",

@@ -41,6 +41,12 @@ for (const file of files) {
     copyFileSync(join(SRC, file), join(OUT, file));
 }
 
+writeFileSync(
+    join(OUT, 'waves.c'),
+    readFileSync(join(OUT, 'waves.c'), 'utf8')
+        .replace('srand ((uint16_t) time (NULL));', 'srand(1);')
+);
+
 writeFileSync(join(OUT, 'manifest.ttl'), manifestSource());
 registerPlugin();
 
