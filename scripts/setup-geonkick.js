@@ -148,8 +148,19 @@ typedef struct {
     float active_amp_x[MAX_ENV_POINTS];
     float active_amp_y[MAX_ENV_POINTS];
     size_t active_amp_count;
+    float active_pitch_x[MAX_ENV_POINTS];
+    float active_pitch_y[MAX_ENV_POINTS];
+    size_t active_pitch_count;
     uint32_t playback_sample;
     uint32_t playback_length_samples;
+    uint32_t voice_sample;
+    uint32_t voice_length_samples;
+    unsigned int noise_seed;
+    float voice_phase;
+    float filter_state;
+    float noise_state;
+    float velocity_gain;
+    int voice_active;
     float osc_pitch_x[MAX_ENV_POINTS];
     float osc_pitch_y[MAX_ENV_POINTS];
     size_t osc_pitch_count;
@@ -298,36 +309,113 @@ static void latch_amp_env_for_trigger(GeonkickLV2 *g)
         g->active_amp_x[i] = g->kick_amp_x[i];
         g->active_amp_y[i] = g->kick_amp_y[i];
     }
+    g->active_pitch_count = g->osc_pitch_count;
+    for (size_t i = 0; i < g->osc_pitch_count && i < MAX_ENV_POINTS; i++) {
+        g->active_pitch_x[i] = g->osc_pitch_x[i];
+        g->active_pitch_y[i] = g->osc_pitch_y[i];
+    }
     g->playback_sample = 0;
     g->playback_length_samples = (uint32_t)fmaxf(1.0f, g->last_decay * (float)g->sample_rate);
 }
 
-static void apply_active_amp_env(GeonkickLV2 *g, uint32_t n_samples)
+static float next_noise_sample(GeonkickLV2 *g)
 {
-    if (g->active_amp_count < 2 || g->playback_length_samples == 0 || !g->out_l || !g->out_r) {
-        return;
-    }
-    const float denom = (float)g->playback_length_samples;
+    g->noise_seed = g->noise_seed * 1664525u + 1013904223u;
+    return ((float)((g->noise_seed >> 8) & 0x00ffffffu) / 8388607.5f) - 1.0f;
+}
+
+static void start_kick_voice(GeonkickLV2 *g, uint8_t note, uint8_t velocity)
+{
+    g->voice_active = 1;
+    g->voice_sample = 0;
+    g->voice_length_samples = (uint32_t)fmaxf(64.0f, g->last_decay * (float)g->sample_rate);
+    g->voice_phase = 0.0f;
+    g->filter_state = 0.0f;
+    g->noise_state = 0.0f;
+    g->velocity_gain = clampf_local((float)(velocity ? velocity : 100) / 127.0f, 0.0f, 1.0f);
+    g->noise_seed = 0x9e3779b9u ^ ((unsigned int)note * 2654435761u);
+}
+
+static void render_kick_voice(GeonkickLV2 *g, uint32_t n_samples)
+{
+    if (!g->out_l || !g->out_r) return;
+
+    const float sr = (float)g->sample_rate;
+    const float two_pi = 6.28318530718f;
+    const float base_hz = clampf_local(g->last_frequency, 30.0f, 220.0f);
+    const float decay = clampf_local(g->last_decay, 0.08f, 1.5f);
+    const float pitch_drop = clampf_local(g->last_pitch_drop, 0.0f, 48.0f);
+    const float tone = clampf_local(g->last_tone, 120.0f, 8000.0f);
+    const float resonance = clampf_local(g->last_resonance, 0.5f, 4.0f);
+    const float drive = clampf_local(g->last_drive, 1.0f, 6.0f);
+    const float gain = clampf_local(g->last_gain, 0.08f, 0.9f);
+    const float filter_alpha = clampf_local(1.0f - expf(-two_pi * tone / sr), 0.01f, 1.0f);
+    const float tone_bright = clampf_local((logf(tone) - logf(120.0f)) / (logf(8000.0f) - logf(120.0f)), 0.0f, 1.0f);
+
     for (uint32_t i = 0; i < n_samples; i++) {
-        const float x = clampf_local((float)(g->playback_sample + i) / denom, 0.0f, 1.0f);
-        const float amp = clampf_local(sample_state_env(g->active_amp_x, g->active_amp_y, g->active_amp_count, x), 0.0f, 1.0f);
-        g->out_l[i] *= amp;
-        g->out_r[i] *= amp;
+        float sample = 0.0f;
+
+        if (g->voice_active) {
+            const float t = (float)g->voice_sample / sr;
+            const float x = clampf_local((float)g->voice_sample / fmaxf(1.0f, (float)g->voice_length_samples), 0.0f, 1.25f);
+            const float attack = 0.002f;
+            float amp_env = t < attack
+                ? t / attack
+                : expf(-(t - attack) / fmaxf(0.018f, decay * 0.32f));
+            if (x > 1.0f) amp_env *= fmaxf(0.0f, 1.0f - (x - 1.0f) * 8.0f);
+            amp_env *= clampf_local(sample_state_env(g->active_amp_x, g->active_amp_y, g->active_amp_count, clampf_local(x, 0.0f, 1.0f)), 0.0f, 1.0f);
+
+            const float default_pitch_env = expf(-t / fmaxf(0.008f, decay * 0.10f));
+            const float pitch_env = g->active_pitch_count >= 2
+                ? clampf_local(sample_state_env(g->active_pitch_x, g->active_pitch_y, g->active_pitch_count, clampf_local(x, 0.0f, 1.0f)), 0.0f, 1.0f)
+                : default_pitch_env;
+            const float freq = clampf_local(base_hz * powf(2.0f, (pitch_drop * pitch_env) / 12.0f), 20.0f, 2000.0f);
+            g->voice_phase += two_pi * freq / sr;
+            if (g->voice_phase > two_pi) g->voice_phase -= two_pi;
+
+            const float body = sinf(g->voice_phase) * amp_env * 0.92f;
+            const float click_env = expf(-t / 0.0045f);
+            const float click_hz = clampf_local(1500.0f + tone * 0.55f, 800.0f, 6200.0f);
+            const float click_wave = sinf(two_pi * click_hz * t);
+            const float transient_noise = next_noise_sample(g);
+            const float click = g->last_click * click_env * (0.18f * click_wave + 0.16f * transient_noise);
+
+            g->noise_state = 0.68f * g->noise_state + 0.32f * next_noise_sample(g);
+            const float noise_env = expf(-t / 0.022f);
+            const float noise = g->last_noise * g->noise_state * noise_env * 0.13f;
+
+            const float raw = body + click + noise;
+            g->filter_state += filter_alpha * (raw - g->filter_state);
+            const float high = raw - g->filter_state;
+            sample = g->filter_state * (0.94f + resonance * 0.035f)
+                + high * (0.16f + tone_bright * 0.48f) * (0.86f + resonance * 0.055f);
+
+            sample *= gain * g->velocity_gain;
+            if (drive > 1.001f) sample = tanhf(sample * drive) / tanhf(drive);
+            sample = clampf_local(sample, -0.95f, 0.95f);
+
+            g->voice_sample++;
+            if (g->voice_sample > g->voice_length_samples + (uint32_t)(0.08f * sr)) {
+                g->voice_active = 0;
+            }
+        }
+
+        g->out_l[i] = sample;
+        g->out_r[i] = sample;
     }
-    g->playback_sample += n_samples;
 }
 
 static void configure_synth(GeonkickLV2 *g)
 {
-    const float frequency = clampf_local(port_or_default(g->frequency, 62.0f), 30.0f, 220.0f);
-    const float decay = clampf_local(port_or_default(g->decay, 0.45f), 0.08f, 1.5f);
-    const float pitch_drop = clampf_local(port_or_default(g->pitch_drop, 28.0f), 0.0f, 48.0f);
-    const float noise = clampf_local(port_or_default(g->noise, 0.12f), 0.0f, 0.85f);
-    const float click = clampf_local(port_or_default(g->click, 0.22f), 0.0f, 1.0f);
-    const float tone = clampf_local(port_or_default(g->tone, 2100.0f), 120.0f, 8000.0f);
-    const float resonance = clampf_local(port_or_default(g->resonance, 1.2f), 0.5f, 4.0f);
+    const float frequency = clampf_local(port_or_default(g->frequency, 55.0f), 30.0f, 220.0f);
+    const float decay = clampf_local(port_or_default(g->decay, 0.52f), 0.08f, 1.5f);
+    const float pitch_drop = clampf_local(port_or_default(g->pitch_drop, 18.0f), 0.0f, 48.0f);
+    const float noise = clampf_local(port_or_default(g->noise, 0.06f), 0.0f, 0.85f);
+    const float click = clampf_local(port_or_default(g->click, 0.35f), 0.0f, 1.0f);
+    const float tone = clampf_local(port_or_default(g->tone, 3600.0f), 120.0f, 8000.0f);
+    const float resonance = clampf_local(port_or_default(g->resonance, 0.8f), 0.5f, 4.0f);
     const float drive = clampf_local(port_or_default(g->drive, 1.0f), 1.0f, 6.0f);
-    const float gain = clampf_local(port_or_default(g->gain, 0.52f), 0.08f, 0.9f);
+    const float gain = clampf_local(port_or_default(g->gain, 0.58f), 0.08f, 0.9f);
     const float decay_norm = clampf_local((decay - 0.08f) / (1.5f - 0.08f), 0.0f, 1.0f);
 
     if (!g->dirty
@@ -364,12 +452,12 @@ static void configure_synth(GeonkickLV2 *g)
     gkick_synth_enable_oscillator(g->synth, 0, 1);
     gkick_synth_set_osc_function(g->synth, 0, GEONKICK_OSC_FUNC_SINE);
     gkick_synth_set_osc_frequency(g->synth, 0, frequency * powf(2.0f, (0.5f - decay_norm) * 1.0f));
-    gkick_synth_set_osc_amplitude(g->synth, 0, 0.72f);
+    gkick_synth_set_osc_amplitude(g->synth, 0, 0.82f);
     if (g->osc_pitch_count >= 2) {
         set_osc_pitch_env_from_state(g, pitch_mult);
     } else {
         struct gkick_envelope_point_info points[3];
-        set_points(points, 3, 0.0f, pitch_mult, 0.18f, 1.0f, 1.0f, 1.0f);
+        set_points(points, 3, 0.0f, pitch_mult, 0.12f, 1.0f, 1.0f, 1.0f);
         gkick_synth_osc_envelope_set_points(g->synth, 0, GEONKICK_FREQUENCY_ENVELOPE, points, 3);
     }
     set_osc_env(
@@ -383,14 +471,14 @@ static void configure_synth(GeonkickLV2 *g)
 
     gkick_synth_enable_oscillator(g->synth, 1, 1);
     gkick_synth_set_osc_function(g->synth, 1, GEONKICK_OSC_FUNC_NOISE_WHITE);
-    gkick_synth_set_osc_amplitude(g->synth, 1, noise * 0.24f);
+    gkick_synth_set_osc_amplitude(g->synth, 1, noise * 0.16f);
     gkick_synth_set_osc_noise_density(g->synth, 1, 1.0f);
     set_osc_env(g->synth, 1, GEONKICK_AMPLITUDE_ENVELOPE, 0.08f, 1.0f, 0.0f);
 
     gkick_synth_enable_oscillator(g->synth, 2, 1);
     gkick_synth_set_osc_function(g->synth, 2, GEONKICK_OSC_FUNC_TRIANGLE);
     gkick_synth_set_osc_frequency(g->synth, 2, 1800.0f + tone * 0.45f);
-    gkick_synth_set_osc_amplitude(g->synth, 2, click * 0.16f);
+    gkick_synth_set_osc_amplitude(g->synth, 2, click * 0.22f);
     set_osc_env(g->synth, 2, GEONKICK_AMPLITUDE_ENVELOPE, 0.035f, 1.0f, 0.0f);
 
     geonkick_synth_kick_filter_enable(g->synth, 1);
@@ -419,20 +507,13 @@ static void configure_synth(GeonkickLV2 *g)
         );
         gkick_synth_kick_envelope_set_points(g->synth, GEONKICK_AMPLITUDE_ENVELOPE, points, 3);
     }
-    gkick_synth_process(g->synth);
 }
 
 static void trigger(GeonkickLV2 *g, uint8_t note, uint8_t velocity)
 {
     configure_synth(g);
     latch_amp_env_for_trigger(g);
-    struct gkick_note_info key;
-    key.state = GKICK_KEY_STATE_PRESSED;
-    key.channel = 0;
-    key.note_number = (signed char)note;
-    key.velocity = (signed char)(velocity ? velocity : 100);
-    key.timing = 0.0f;
-    gkick_audio_output_key_pressed(g->output, &key);
+    start_kick_voice(g, note, velocity);
 }
 
 static LV2_Handle instantiate(const LV2_Descriptor *descriptor,
@@ -508,23 +589,15 @@ static void run(LV2_Handle handle, uint32_t n_samples)
             if (status == 0x90 && msg[2] > 0) {
                 trigger(g, msg[1], msg[2]);
             } else if (status == 0x90 && msg[2] == 0) {
-                struct gkick_note_info key = { GKICK_KEY_STATE_RELEASED, 0, (signed char)msg[1], 0, 0.0f };
-                gkick_audio_output_key_pressed(g->output, &key);
+                (void)msg;
             } else if (status == 0x80) {
-                struct gkick_note_info key = { GKICK_KEY_STATE_RELEASED, 0, (signed char)msg[1], 0, 0.0f };
-                gkick_audio_output_key_pressed(g->output, &key);
+                (void)msg;
             }
         }
     }
 
     if (!g->out_l || !g->out_r) return;
-    memset(g->out_l, 0, n_samples * sizeof(float));
-    memset(g->out_r, 0, n_samples * sizeof(float));
-    gkick_real *data[2] = { g->out_l, g->out_r };
-    gkick_real leveler = 0.0f;
-    gkick_audio_output_get_data(g->output, data, &leveler, n_samples);
-    apply_active_amp_env(g, n_samples);
-    (void)leveler;
+    render_kick_voice(g, n_samples);
 }
 
 static void cleanup(LV2_Handle handle)
@@ -621,7 +694,7 @@ writeFileSync(join(OUT, 'geonkick.ttl'), String.raw`@prefix atom:  <http://lv2pl
         lv2:name "Bass Frequency" ;
         lv2:minimum 30.0 ;
         lv2:maximum 220.0 ;
-        lv2:default 62.0 ;
+        lv2:default 55.0 ;
         lv2:portProperty pprop:logarithmic ;
         units:unit units:hz ;
     ] , [
@@ -631,7 +704,7 @@ writeFileSync(join(OUT, 'geonkick.ttl'), String.raw`@prefix atom:  <http://lv2pl
         lv2:name "Decay" ;
         lv2:minimum 0.08 ;
         lv2:maximum 1.5 ;
-        lv2:default 0.45 ;
+        lv2:default 0.52 ;
         lv2:portProperty pprop:logarithmic ;
         units:unit units:s ;
     ] , [
@@ -641,7 +714,7 @@ writeFileSync(join(OUT, 'geonkick.ttl'), String.raw`@prefix atom:  <http://lv2pl
         lv2:name "Pitch Drop" ;
         lv2:minimum 0.0 ;
         lv2:maximum 48.0 ;
-        lv2:default 28.0 ;
+        lv2:default 18.0 ;
         units:unit units:semitone12TET ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
@@ -650,7 +723,7 @@ writeFileSync(join(OUT, 'geonkick.ttl'), String.raw`@prefix atom:  <http://lv2pl
         lv2:name "Noise Amount" ;
         lv2:minimum 0.0 ;
         lv2:maximum 0.85 ;
-        lv2:default 0.12 ;
+        lv2:default 0.06 ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
         lv2:index 7 ;
@@ -658,7 +731,7 @@ writeFileSync(join(OUT, 'geonkick.ttl'), String.raw`@prefix atom:  <http://lv2pl
         lv2:name "Click Amount" ;
         lv2:minimum 0.0 ;
         lv2:maximum 1.0 ;
-        lv2:default 0.22 ;
+        lv2:default 0.35 ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
         lv2:index 8 ;
@@ -666,7 +739,7 @@ writeFileSync(join(OUT, 'geonkick.ttl'), String.raw`@prefix atom:  <http://lv2pl
         lv2:name "Tone Cutoff" ;
         lv2:minimum 120.0 ;
         lv2:maximum 8000.0 ;
-        lv2:default 2100.0 ;
+        lv2:default 3600.0 ;
         lv2:portProperty pprop:logarithmic ;
         units:unit units:hz ;
     ] , [
@@ -676,7 +749,7 @@ writeFileSync(join(OUT, 'geonkick.ttl'), String.raw`@prefix atom:  <http://lv2pl
         lv2:name "Resonance" ;
         lv2:minimum 0.5 ;
         lv2:maximum 4.0 ;
-        lv2:default 1.2 ;
+        lv2:default 0.8 ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
         lv2:index 10 ;
@@ -692,7 +765,7 @@ writeFileSync(join(OUT, 'geonkick.ttl'), String.raw`@prefix atom:  <http://lv2pl
         lv2:name "Gain" ;
         lv2:minimum 0.08 ;
         lv2:maximum 0.9 ;
-        lv2:default 0.52 ;
+        lv2:default 0.58 ;
     ] .
 `);
 
@@ -707,8 +780,7 @@ const entry = {
             name: 'Amp Envelope',
             defaultPoints: [
                 { x: 0, y: 1 },
-                { x: 0.78, y: 0.28 },
-                { x: 1, y: 0 },
+                { x: 1, y: 1 },
             ],
             presets: {
                 punch: [
@@ -733,7 +805,7 @@ const entry = {
             name: 'Pitch Envelope',
             defaultPoints: [
                 { x: 0, y: 1 },
-                { x: 0.18, y: 0 },
+                { x: 0.12, y: 0 },
                 { x: 1, y: 0 },
             ],
             presets: {

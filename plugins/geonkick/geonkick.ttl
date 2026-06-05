@@ -38,7 +38,7 @@
         lv2:name "Bass Frequency" ;
         lv2:minimum 30.0 ;
         lv2:maximum 220.0 ;
-        lv2:default 62.0 ;
+        lv2:default 55.0 ;
         lv2:portProperty pprop:logarithmic ;
         units:unit units:hz ;
     ] , [
@@ -48,7 +48,7 @@
         lv2:name "Decay" ;
         lv2:minimum 0.08 ;
         lv2:maximum 1.5 ;
-        lv2:default 0.45 ;
+        lv2:default 0.52 ;
         lv2:portProperty pprop:logarithmic ;
         units:unit units:s ;
     ] , [
@@ -58,7 +58,7 @@
         lv2:name "Pitch Drop" ;
         lv2:minimum 0.0 ;
         lv2:maximum 48.0 ;
-        lv2:default 28.0 ;
+        lv2:default 18.0 ;
         units:unit units:semitone12TET ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
@@ -67,7 +67,7 @@
         lv2:name "Noise Amount" ;
         lv2:minimum 0.0 ;
         lv2:maximum 0.85 ;
-        lv2:default 0.12 ;
+        lv2:default 0.06 ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
         lv2:index 7 ;
@@ -75,7 +75,7 @@
         lv2:name "Click Amount" ;
         lv2:minimum 0.0 ;
         lv2:maximum 1.0 ;
-        lv2:default 0.22 ;
+        lv2:default 0.35 ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
         lv2:index 8 ;
@@ -83,7 +83,7 @@
         lv2:name "Tone Cutoff" ;
         lv2:minimum 120.0 ;
         lv2:maximum 8000.0 ;
-        lv2:default 2100.0 ;
+        lv2:default 3600.0 ;
         lv2:portProperty pprop:logarithmic ;
         units:unit units:hz ;
     ] , [
@@ -93,7 +93,7 @@
         lv2:name "Resonance" ;
         lv2:minimum 0.5 ;
         lv2:maximum 4.0 ;
-        lv2:default 1.2 ;
+        lv2:default 0.8 ;
     ] , [
         a lv2:InputPort, lv2:ControlPort ;
         lv2:index 10 ;
@@ -109,5 +109,5 @@
         lv2:name "Gain" ;
         lv2:minimum 0.08 ;
         lv2:maximum 0.9 ;
-        lv2:default 0.52 ;
+        lv2:default 0.58 ;
     ] .

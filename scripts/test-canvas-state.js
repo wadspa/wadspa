@@ -29,6 +29,8 @@ const RENDER_BLOCKS = 1024;
 const NOISE_MULTIPLIER = 6;
 const MAX_DEFAULT_PEAK = 0.98;
 const MAX_CLIPPED_RATIO = 0.0005;
+const BODY_WINDOW_SAMPLES = Math.floor(SAMPLE_RATE * 0.7);
+const GEONKICK_MIN_BODY_RMS = 0.04;
 
 const args = process.argv.slice(2);
 const onlyId = args.includes('--only') ? args[args.indexOf('--only') + 1] : null;
@@ -68,6 +70,9 @@ for (const entry of candidates) {
         }
         if (baseline.peak > MAX_DEFAULT_PEAK || baseline.clippedRatio > MAX_CLIPPED_RATIO) {
             throw new Error(`default canvas state is too hot (${renderSummary(baseline)})`);
+        }
+        if (entry.id === 'geonkick' && baseline.bodyRms < GEONKICK_MIN_BODY_RMS) {
+            throw new Error(`Geonkick default canvas state has too little body (${renderSummary(baseline)})`);
         }
 
         const noise = compareAudio(baseline.audio, repeat.audio);
@@ -200,6 +205,8 @@ async function renderWith(options, states) {
     let write = 0;
     let peak = 0;
     let sumSquares = 0;
+    let bodySumSquares = 0;
+    let bodySampleCount = 0;
     let sampleCount = 0;
     let clipped = 0;
     let nonFinite = 0;
@@ -222,6 +229,10 @@ async function renderWith(options, states) {
                 if (abs > peak) peak = abs;
                 if (abs >= 0.995) clipped++;
                 sumSquares += sample * sample;
+                if (block * BLOCK_SIZE + i < BODY_WINDOW_SAMPLES) {
+                    bodySumSquares += sample * sample;
+                    bodySampleCount++;
+                }
                 sampleCount++;
             }
         }
@@ -231,6 +242,7 @@ async function renderWith(options, states) {
         audio,
         peak,
         rms: Math.sqrt(sumSquares / sampleCount),
+        bodyRms: Math.sqrt(bodySumSquares / Math.max(1, bodySampleCount)),
         clipped,
         clippedRatio: clipped / sampleCount,
         nonFinite,
@@ -340,5 +352,5 @@ function audioChanged(diff, noise) {
 }
 
 function renderSummary(rendered) {
-    return `${audibleRenderSummary(rendered)}, clipped ${(rendered.clippedRatio * 100).toFixed(3)}%`;
+    return `${audibleRenderSummary(rendered)}, body rms ${fmtMetric(rendered.bodyRms)}, clipped ${(rendered.clippedRatio * 100).toFixed(3)}%`;
 }
