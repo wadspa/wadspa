@@ -18,11 +18,11 @@ Existing browser plugin formats (CLAP, WAM, Web Audio Modules) repeatedly break 
 - **Qt plugin support** — `toolchain/qt-stub/` is a header-only Qt shim that lets Qt-dependent LV2 DSP layers (synthv1, drumkv1, padthv1, …) compile to WASM without any Qt installation
 - **Fully automated pipeline** — adding a new plugin repo requires one entry in `sources.json`; `setup-all.js` and `build-instruments.js` handle the rest
 - **GTK / Qt UI skipped automatically** — LV2 separates DSP from UI; wadspa compiles only the DSP layer, excluding `*_gtk.*` and `*_qt*.*` source files
-- **Zero runtime dependencies** — plugins are plain npm packages; `@wadspa/core` is a single 97-line file
+- **Zero runtime dependencies** — plugins are plain npm packages; `@wadspa/core` is a small ESM runtime host
 
 ---
 
-## Instruments (28)
+## Instruments (30)
 
 | Plugin | Description |
 |--------|-------------|
@@ -54,8 +54,10 @@ Existing browser plugin formats (CLAP, WAM, Web Audio Modules) repeatedly break 
 | `chowkick` | Physically modeled kick drum synthesizer |
 | `calf-monosynth` | Virtual analog monophonic synthesizer |
 | `adlplug` | OPL3 FM chip synthesizer |
+| `helm` | Browser-sized LV2 build of the Helm-style polyphonic subtractive synth |
+| `zynaddsubfx` | Browser instrument adapter for ZynAddSubFX-style additive/subtractive synthesis |
 
-Plus 32+ LADSPA effects (reverb, chorus, EQ, dynamics, …) all available on the browser test page.
+Plus 112 browser-built effects (LADSPA and LV2: reverbs, chorus/flanger, EQ, dynamics, filters, distortion, spatial tools, and more) all available on the browser test page.
 
 ## Top LV2 Synth Targets
 
@@ -70,12 +72,49 @@ The normal test keeps the support matrix honest. The strict test intentionally f
 
 ---
 
+## Audio and Control Audit
+
+The browser catalog is guarded by audio-difference tests, not only load tests. The default suite validates the metadata, UI wiring, generated processors, LV2 targets, and the audible influence of plugin controls:
+
+```sh
+npm test
+```
+
+Focused checks are useful while porting or debugging one plugin:
+
+```sh
+npm run test:licenses      # every dropdown entry has license metadata
+npm run test:dropdowns     # instrument/effect dropdown wiring and canvas editor UI
+npm run test:ranges        # slider ranges, sample-rate ports, log sliders, audible Hz bounds
+npm run test:lv2           # LV2 instrument smoke tests
+npm run test:effects       # effect smoke tests
+npm run test:sliders -- --only geonkick --verbose
+npm run test:canvas-state -- --only geonkick --verbose
+npm run test:ui-defaults   # browser-slider sweep from UI defaults
+```
+
+`test:sliders` checks every control input port by resolving the generated AudioWorklet setter, round-tripping values through WASM, rendering deterministic audio, and failing when every candidate value is acoustically unchanged. In UI-default mode, continuous sliders are sampled across four distinct positions so dead regions in the slider travel are caught.
+
+`test:ranges` keeps UI controls inside usable bounds, including audible frequency ports. `test:canvas-state` covers editable drawing surfaces such as Geonkick envelopes and shaper curves; it also rejects generated AudioWorklet state writers that use browser-missing APIs such as `TextEncoder`.
+
+---
+
 ## Packages
 
 | Package | Description | npm |
 |---|---|---|
 | [`@wadspa/core`](./core) | Runtime: load and connect wadspa plugins | _(coming soon)_ |
 | [`@wadspa/toolchain`](./toolchain) | CLI: compile LADSPA/LV2 source into a wadspa npm package | _(coming soon)_ |
+
+---
+
+## License Metadata
+
+The demo dropdowns show each plugin license beside the plugin name. The generated catalogs currently include GPL, LGPL, MIT, BSD-3-Clause, BSL-1.0, and CC0/MIT entries, so consumers should check the per-plugin license badge or catalog metadata before redistributing bundles.
+
+```sh
+npm run test:licenses
+```
 
 ---
 
@@ -320,11 +359,18 @@ node scripts/build-instruments.js
 # Build all LADSPA effects → docs/plugins/catalog.json
 node scripts/build-all.js
 
+# Build the full browser archive and sync demo/
+npm run build
+npm run sync:demo
+
 # Auto-setup any LV2 repo (source discovery + iterative compile)
 node scripts/auto-setup.js path/to/repo --id my-plugin
 
 # Smoke-test LV2 plugins in Node
 node scripts/test-instruments.js
+
+# Run the full metadata/UI/audio audit
+npm test
 ```
 
 ---
@@ -388,8 +434,8 @@ wadspa/
       fftw3_kissfft.c       fftwf_plan_r2r_1d / fftwf_plan_dft_r2c_1d / etc.
       fftw3.h               FFTW3 float API header (takes priority over qt-stub/fftw3.h)
   plugins/
-    manifest.json           LADSPA effect registry (32+ plugins)
-    lv2.json                LV2 plugin registry (30 instruments + effects)
+    manifest.json           LADSPA effect registry (32 plugins)
+    lv2.json                LV2 plugin registry (30 instruments + LV2 effects)
     synthv1/                Dual-oscillator polyphonic analog synthesizer
     drumkv1/                Per-pad drum synthesizer
     padthv1/                PADsynth additive synthesizer

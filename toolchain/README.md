@@ -1,6 +1,6 @@
 # @wadspa/toolchain
 
-CLI for compiling LADSPA C plugins to wadspa npm packages (WebAssembly + AudioWorklet).
+CLI for compiling LADSPA and LV2 plugins to wadspa npm packages (WebAssembly + AudioWorklet).
 
 ## Requirements
 
@@ -25,6 +25,7 @@ Verify:
 ```sh
 wadspa
 # wadspa build <plugin-dir> [options]
+# wadspa build-lv2 <plugin-dir> [options]
 ```
 
 ---
@@ -32,18 +33,24 @@ wadspa
 ## Usage
 
 ```sh
-wadspa build <plugin-dir> [options]
+wadspa build <plugin-dir> [options]       # LADSPA
+wadspa build-lv2 <plugin-dir> [options]   # LV2
 ```
 
 ### Options
 
-| Flag | Default | Description |
-|---|---|---|
-| `--out <dir>` | `<plugin-dir>/dist` | Output directory for the compiled package |
-| `--name <name>` | `@wadspa/<label>` | npm package name |
-| `--include <dir>` | _(none)_ | Extra include directory passed to the compiler (repeatable) |
-| `--define <D>` | _(none)_ | Extra preprocessor define (repeatable) |
-| `--sources <files>` | all `*.c` in plugin-dir | Comma-separated list of `.c` source files to compile |
+| Flag | Scope | Default | Description |
+|---|---|---|---|
+| `--out <dir>` | both | `<plugin-dir>/dist` | Output directory for the compiled package |
+| `--name <name>` | both | `@wadspa/<label>` | npm package name |
+| `--include <dir>` | both | _(none)_ | Extra include directory passed to the compiler (repeatable) |
+| `--define <D>` | both | _(none)_ | Extra preprocessor define (repeatable) |
+| `--sources <files>` | both | LADSPA: all `*.c`; LV2: all `*.c`/`*.cpp` except UI files | Comma-separated source files, relative to the plugin dir |
+| `--threads` | LV2 | `false` | Enable pthreads; browser hosting requires COOP/COEP / `crossOriginIsolated` |
+| `--memory-growth` | LV2 | `false` | Enable Emscripten heap growth |
+| `--embed-file <src@dst>` | LV2 | _(none)_ | Embed data files into the WASM virtual filesystem |
+| `--extra-export <fn>` | LV2 | _(none)_ | Export an additional shim/plugin function |
+| `--extra-feature <name>` | LV2 | _(none)_ | Enable a generated LV2 host feature, such as `worker` |
 
 ---
 
@@ -136,7 +143,48 @@ cd my-plugin/dist && npm publish --access public
 
 ---
 
-## What the build does
+## Walkthrough: compiling an LV2 plugin
+
+LV2 builds read Turtle metadata from `manifest.ttl` and related `.ttl` files in the plugin directory. The generated package shape is the same as LADSPA packages, but the shim also hosts LV2 features such as URID mapping, atom MIDI, control symbols, and descriptor lookup by URI.
+
+Minimal layout:
+
+```
+my-lv2-plugin/
+  manifest.ttl
+  my_plugin.ttl
+  my_plugin.cpp
+  my_plugin_lv2.cpp
+```
+
+Build:
+
+```sh
+wadspa build-lv2 ./my-lv2-plugin \
+  --include ./my-lv2-plugin \
+  --sources my_plugin.cpp,my_plugin_lv2.cpp
+```
+
+Common LV2 options:
+
+```sh
+# Plugins that need pthread support
+wadspa build-lv2 ./my-lv2-plugin --threads
+
+# Plugins that need data files in Emscripten's virtual FS
+wadspa build-lv2 ./my-lv2-plugin --embed-file data/table.bin@/data/table.bin
+
+# DPF/stateful plugins whose wrapper provides _shim_set_plugin_state
+wadspa build-lv2 ./my-lv2-plugin \
+  --extra-feature worker \
+  --extra-export _shim_set_plugin_state
+```
+
+UI sources are skipped automatically for LV2 builds when they match common GTK/Qt UI filename patterns such as `*_gtk.*`, `*_qt*.*`, and `*_ui.*`.
+
+---
+
+## What the LADSPA build does
 
 ### Step 1 — Inspect
 
@@ -217,6 +265,29 @@ export const processorUrl = new URL('./processor.js', import.meta.url).href;
 
 ---
 
+## What the LV2 build adds
+
+`wadspa build-lv2` follows the same inspect/generate/compile/emit shape, but its metadata comes from LV2 Turtle files instead of a native LADSPA descriptor probe.
+
+The generated LV2 shim provides:
+
+- URID mapping for LV2 string URIs
+- `LV2_Options` block-size features required by DPF-style plugins
+- modern atom MIDI and legacy event MIDI input support
+- descriptor lookup by plugin URI for bundles that export multiple descriptors
+- audio, CV, control, MIDI, and atom port buffers
+- named control setters/getters based on LV2 symbols
+- optional worker plumbing for DPF-style plugins, plus state writes when the plugin/wrapper provides and exports `_shim_set_plugin_state`
+
+The generated LV2 AudioWorklet processor handles:
+
+- raw MIDI messages plus note/controller/pressure/pitch-bend helper messages from `@wadspa/core`
+- stereo routing via separate mono worklet outputs for Safari compatibility
+- browser-safe static imports, not dynamic `import()`
+- browser-safe plugin state writes for canvas/editor surfaces; generated state writers use a small C-string encoder instead of `TextEncoder`, which is not available in target AudioWorklet environments
+
+---
+
 ## Handling external dependencies
 
 Some LADSPA plugins from the SWH collection include utility headers (`ladspa-util.h`, `util/biquad.h`, etc.). Pass their parent directory as `--include`:
@@ -265,3 +336,5 @@ dist/
 **Safari: Dynamic-import not available in Worklets** — caused by using `import()` inside an AudioWorklet. The toolchain generates static `import` statements — make sure you're using the output from the current toolchain, not a cached or hand-written processor.
 
 **Chrome: URL is not defined** — caused by Emscripten's `findWasmBinary()` being called without a `locateFile` override. The toolchain always passes `locateFile: (p, d) => d + p` in the generated processor to prevent this. If you see this with a manually-written processor, add that option to your factory call.
+
+**Canvas/editor changes do not affect sound** — for LV2 plugins that use state keys for envelopes, shaper curves, or other editor data, make sure `_shim_set_plugin_state` is exported or the `worker` feature is enabled. The generated processor should contain `function encodeCString(value)` and must not contain `TextEncoder`.
