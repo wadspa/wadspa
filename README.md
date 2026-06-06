@@ -4,6 +4,8 @@
 
 wadspa takes the battle-tested [LADSPA](https://www.ladspa.org/) and [LV2](https://lv2plug.in/) plugin ecosystems — hundreds of high-quality audio effects and instruments written in C and C++ — and makes them available in any browser via the Web Audio API. Each plugin is a self-contained `.wasm` binary loaded as an `AudioWorkletNode`. No native code. No security issues. No browser-update breakage.
 
+**Current browser-built catalog:** 142 plugins total — 30 instruments and 112 effects.
+
 **Live browser test page:** [wadspa.github.io/wadspa](https://wadspa.github.io/wadspa/)
 
 ---
@@ -13,7 +15,7 @@ wadspa takes the battle-tested [LADSPA](https://www.ladspa.org/) and [LV2](https
 Existing browser plugin formats (CLAP, WAM, Web Audio Modules) repeatedly break as browsers tighten security around `SharedArrayBuffer`, cross-origin isolation, and WASM instantiation. wadspa avoids all of that:
 
 - **Standard Web Audio API** — uses `AudioWorkletNode`, which every modern browser supports and has no plans to remove
-- **LADSPA effects** — hundreds of production-ready C audio effects compiled to WASM with no changes to the source
+- **112 browser-built effects** — LADSPA and LV2 reverbs, filters, EQs, dynamics processors, distortions, delays, and spatial tools
 - **LV2 plugins** — effects and MIDI instruments written in C or C++, from filters and processors to full polyphonic synthesizers
 - **Qt plugin support** — `toolchain/qt-stub/` is a header-only Qt shim that lets Qt-dependent LV2 DSP layers (synthv1, drumkv1, padthv1, …) compile to WASM without any Qt installation
 - **Fully automated pipeline** — adding a new plugin repo requires one entry in `sources.json`; `setup-all.js` and `build-instruments.js` handle the rest
@@ -435,7 +437,7 @@ wadspa/
       fftw3.h               FFTW3 float API header (takes priority over qt-stub/fftw3.h)
   plugins/
     manifest.json           LADSPA effect registry (32 plugins)
-    lv2.json                LV2 plugin registry (30 instruments + LV2 effects)
+    lv2.json                LV2 plugin registry (30 instruments plus LV2 effects)
     synthv1/                Dual-oscillator polyphonic analog synthesizer
     drumkv1/                Per-pad drum synthesizer
     padthv1/                PADsynth additive synthesizer
@@ -445,7 +447,7 @@ wadspa/
     fm_synth/               2-operator FM synthesizer (LV2, C++)
     mda_*/                  MDA LV2 collection (instruments + effects)
     so-404/ so-kl5/ so-666/ SO-synth collection (bass, piano, feedback)
-    sc4/ plate/ …           32+ LADSPA effects from swh-plugins
+    sc4/ plate/ …           LADSPA effects from swh-plugins
   scripts/
     fetch-sources.js         Clone / update all repos listed in sources.json
     setup-all.js             Run setup scripts/targets; falls back to auto-setup.js

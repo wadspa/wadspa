@@ -118,11 +118,14 @@ assertIncludes(html, 'item.appendChild(badge);', 'dropdown item badge remains in
 const effectDropdown = functionBody('buildDropdown');
 assertIncludes(effectDropdown, "const dd = document.getElementById('dropdown');", 'effect dropdown targets #dropdown');
 assertIncludes(effectDropdown, 'const categories = [...new Set(EFFECTS.map(e => e.category))]', 'effect dropdown is generated from the effect catalog');
+assertIncludes(effectDropdown, 'count.textContent = `${EFFECTS.length} supported effects/plugins`;', 'effect dropdown shows the supported effect/plugin count');
 assertIncludes(effectDropdown, "item.className = 'dropdown-item';", 'effect rows use the selectable dropdown-item class');
 assertIncludes(effectDropdown, 'item.dataset.effect = eff.id;', 'effect rows expose stable data-effect ids');
 assertIncludes(effectDropdown, 'setPluginMenuItemContent(item, eff);', 'effect rows render name and license badge');
 assertIncludes(effectDropdown, "item.addEventListener('click', () => addEffect(eff));", 'effect rows call addEffect when selected');
 assertIncludes(effectDropdown, 'dd.appendChild(item);', 'effect rows are appended to the menu');
+assertIncludes(html, 'function effectButtonLabel()', 'effect button label helper exists');
+assertIncludes(effectDropdown, 'document.getElementById(\'add-btn\').textContent = effectButtonLabel();', 'effect dropdown uses the counted button label');
 
 const instrumentDropdown = functionBody('buildInstrumentDropdown');
 assertIncludes(instrumentDropdown, "const dd = document.getElementById('instrument-dropdown');", 'instrument dropdown targets #instrument-dropdown');
