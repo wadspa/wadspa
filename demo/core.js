@@ -15,18 +15,36 @@ function symbolName(name) {
     return name.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
 }
 
+const assetVersion = Date.now().toString(36);
+const loadedWorkletModules = new WeakMap();
+
+function cacheBustedUrl(url) {
+    const resolved = new URL(url, globalThis.location?.href ?? import.meta.url);
+    resolved.searchParams.set('wadspa_v', assetVersion);
+    return resolved.href;
+}
+
 export async function loadPlugin(ctx, pluginModule) {
     const { meta, wasmUrl, processorUrl } = pluginModule;
     if (!meta || !wasmUrl || !processorUrl) {
         throw new Error('@wadspa/core: plugin module must export { meta, wasmUrl, processorUrl }');
     }
 
-    const wasmBytes = await fetch(wasmUrl).then(r => {
+    const wasmBytes = await fetch(cacheBustedUrl(wasmUrl), { cache: 'no-cache' }).then(r => {
         if (!r.ok) throw new Error(`Failed to fetch WASM: ${r.status} ${wasmUrl}`);
         return r.arrayBuffer();
     });
 
-    await ctx.audioWorklet.addModule(processorUrl);
+    const workletUrl = cacheBustedUrl(processorUrl);
+    let loaded = loadedWorkletModules.get(ctx);
+    if (!loaded) {
+        loaded = new Set();
+        loadedWorkletModules.set(ctx, loaded);
+    }
+    if (!loaded.has(workletUrl)) {
+        await ctx.audioWorklet.addModule(workletUrl);
+        loaded.add(workletUrl);
+    }
 
     const audioIn  = meta.ports.filter(p => p.type === 'audio' && p.dir === 'input');
     const audioOut = meta.ports.filter(p => p.type === 'audio' && p.dir === 'output');

@@ -1116,12 +1116,22 @@ function buildCurveCanvas(container, node, editor) {
     };
   }
   function hitTest(cx, cy) {
-    const R = 8 * SIZE / getRect().width;
+    const R = 14 * SIZE / getRect().width;
     for (let i = 0; i < pts.length; i++) {
       const p = ptToCanvas(pts[i]);
       if (Math.hypot(p.cx - cx, p.cy - cy) < R) return i;
     }
     return -1;
+  }
+  function capturePointer(e) {
+    try { canvas.setPointerCapture?.(e.pointerId); } catch {}
+  }
+  function releasePointer(e) {
+    try { canvas.releasePointerCapture?.(e.pointerId); } catch {}
+  }
+  function stopDrag(e) {
+    if (dragging !== null) releasePointer(e);
+    dragging = null;
   }
 
   canvas.addEventListener('pointerdown', e => {
@@ -1130,13 +1140,15 @@ function buildCurveCanvas(container, node, editor) {
     const hit = hitTest(cx, cy);
     if (hit >= 0) {
       dragging = hit;
+      capturePointer(e);
       return;
     }
-    if ((e.detail === 2 || e.button === 2) && pts.length < maxPoints) {
+    if (e.button !== 2 && pts.length < maxPoints) {
       const np = canvasToPt(cx, cy);
       pts.push(np);
       pts.sort((a, b) => a.x - b.x);
       dragging = pts.findIndex(p => p === np);
+      capturePointer(e);
       commit();
     }
   });
@@ -1147,8 +1159,8 @@ function buildCurveCanvas(container, node, editor) {
     pts[dragging] = canvasToPt(cx, cy);
     commit();
   });
-  canvas.addEventListener('pointerup', () => { dragging = null; });
-  canvas.addEventListener('pointercancel', () => { dragging = null; });
+  canvas.addEventListener('pointerup', stopDrag);
+  canvas.addEventListener('pointercancel', stopDrag);
   canvas.addEventListener('contextmenu', e => {
     e.preventDefault();
     const { cx, cy } = evCoords(e);
@@ -1279,12 +1291,22 @@ function buildShaperCanvas(card, node) {
     return { cx: (cl - r.left) * SIZE / r.width, cy: (ct - r.top) * SIZE / r.height };
   }
   function hitTest(cx, cy) {
-    const R = 8 * SIZE / getRect().width;
+    const R = 14 * SIZE / getRect().width;
     for (let i = 0; i < pts.length; i++) {
       const p = ptToCanvas(pts[i]);
       if (Math.hypot(p.cx - cx, p.cy - cy) < R) return i;
     }
     return -1;
+  }
+  function capturePointer(e) {
+    try { canvas.setPointerCapture?.(e.pointerId); } catch {}
+  }
+  function releasePointer(e) {
+    try { canvas.releasePointerCapture?.(e.pointerId); } catch {}
+  }
+  function stopDrag(e) {
+    if (dragging !== null) releasePointer(e);
+    dragging = null;
   }
 
   canvas.addEventListener('pointerdown', e => {
@@ -1293,16 +1315,15 @@ function buildShaperCanvas(card, node) {
     const hit = hitTest(cx, cy);
     if (hit >= 0) {
       dragging = hit;
-    } else {
-      // Add point on double-click or right-click
-      if (e.detail === 2 || e.button === 2) {
-        const np = canvasToPt(cx, cy);
-        pts.push(np);
-        pts.sort((a, b) => a.x - b.x);
-        dragging = pts.findIndex(p => p === np);
-        drawCurve();
-        node.setPluginState('graph', shaperPointsToState(pts));
-      }
+      capturePointer(e);
+    } else if (e.button !== 2) {
+      const np = canvasToPt(cx, cy);
+      pts.push(np);
+      pts.sort((a, b) => a.x - b.x);
+      dragging = pts.findIndex(p => p === np);
+      capturePointer(e);
+      drawCurve();
+      node.setPluginState('graph', shaperPointsToState(pts));
     }
   });
 
@@ -1319,8 +1340,8 @@ function buildShaperCanvas(card, node) {
     node.setPluginState('graph', shaperPointsToState(pts));
   });
 
-  canvas.addEventListener('pointerup',     () => { dragging = null; });
-  canvas.addEventListener('pointercancel', () => { dragging = null; });
+  canvas.addEventListener('pointerup',     stopDrag);
+  canvas.addEventListener('pointercancel', stopDrag);
 
   // Right-click removes interior points
   canvas.addEventListener('contextmenu', e => {

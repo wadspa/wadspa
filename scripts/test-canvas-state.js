@@ -82,7 +82,7 @@ for (const entry of candidates) {
             testedEditors++;
             const variants = editorVariants(editor);
             const diffs = [];
-            let changed = false;
+            const unchanged = [];
             for (const variant of variants) {
                 const states = new Map(defaultStates);
                 states.set(editor.key, pointsToState(variant.points));
@@ -90,13 +90,10 @@ for (const entry of candidates) {
                 ensureGoodRender(`${entry.id}/${editor.key}/${variant.name}`, rendered);
                 const diff = compareAudio(baseline.audio, rendered.audio);
                 diffs.push(`${variant.name} rms=${fmtMetric(diff.rms)} rel=${fmtMetric(diff.relative)}`);
-                if (audioChanged(diff, noise)) {
-                    changed = true;
-                    if (!verbose) break;
-                }
+                if (!audioChanged(diff, noise)) unchanged.push(variant.name);
             }
-            if (!changed) {
-                issues.push(`${editor.name ?? editor.key}: no audible state change (${diffs.join(', ')})`);
+            if (unchanged.length > 0) {
+                issues.push(`${editor.name ?? editor.key}: unchanged variants ${unchanged.join(', ')} (${diffs.join(', ')})`);
             } else if (verbose) {
                 console.log(`\n    ${editor.name ?? editor.key}: ${diffs.join(', ')}`);
             }
@@ -157,6 +154,9 @@ function defaultCanvasStates(entry) {
 
 function editorVariants(editor) {
     const variants = [];
+    for (const variant of drawnCanvasVariants()) {
+        if (pointsDifferent(editor.defaultPoints, variant.points)) variants.push(variant);
+    }
     for (const [name, points] of Object.entries(editor.presets ?? {})) {
         if (pointsDifferent(editor.defaultPoints, points)) variants.push({ name, points });
     }
@@ -167,6 +167,13 @@ function editorVariants(editor) {
     }
 
     return variants;
+}
+
+function drawnCanvasVariants() {
+    return [
+        { name: 'drawn-low-mid', points: [{ x: 0, y: 1 }, { x: 0.5, y: 0.05 }, { x: 1, y: 1 }] },
+        { name: 'drawn-high-mid', points: [{ x: 0, y: 0 }, { x: 0.5, y: 0.95 }, { x: 1, y: 0 }] },
+    ];
 }
 
 function pointsDifferent(a = [], b = []) {

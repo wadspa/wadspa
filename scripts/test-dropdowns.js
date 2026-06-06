@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const html = readFileSync(join(ROOT, 'docs/index.html'), 'utf8');
+const core = readFileSync(join(ROOT, 'docs/core.js'), 'utf8');
 const instruments = JSON.parse(readFileSync(join(ROOT, 'docs/instruments.json'), 'utf8'));
 const effects = JSON.parse(readFileSync(join(ROOT, 'docs/plugins/catalog.json'), 'utf8'));
 
@@ -104,6 +105,10 @@ assertIncludes(html, 'function setPluginMenuItemContent(item, plugin)', 'shared 
 assertIncludes(html, 'function buildCanvasEditors(container, node, plugin)', 'instrument canvas editor renderer exists');
 assertIncludes(html, 'function buildCurveCanvas(container, node, editor)', 'generic editable curve canvas exists');
 assertIncludes(html, 'node.setPluginState(editor.key, normalizedPointsToState(pts));', 'canvas editors write state into the plugin');
+assertIncludes(html, 'canvas.setPointerCapture?.(e.pointerId);', 'canvas editors capture pointer drags');
+assertIncludes(html, 'canvas.releasePointerCapture?.(e.pointerId);', 'canvas editors release pointer drags');
+assertIncludes(html, 'const R = 14 * SIZE / getRect().width;', 'canvas editors use a forgiving point hit target');
+assertIncludes(html, 'if (e.button !== 2 && pts.length < maxPoints)', 'canvas editors add a point on normal click-drag');
 assertIncludes(html, 'buildCanvasEditors(ctrls, node, inst);', 'instrument controls render canvas editors');
 assertIncludes(html, "name.className = 'item-name';", 'dropdown item renderer keeps a selectable name span');
 assertIncludes(html, "badge.className = 'license-badge';", 'dropdown item renderer keeps a license badge');
@@ -136,6 +141,13 @@ assertIncludes(instrumentDropdown, 'btn.textContent = instrumentButtonLabel();',
 
 const switchInstrument = functionBody('switchInstrument');
 assertIncludes(switchInstrument, "document.getElementById('instrument-btn').textContent = instrumentButtonLabel();", 'instrument selection preserves the supported count in the button');
+
+assertIncludes(core, 'const assetVersion = Date.now().toString(36);', 'runtime creates a per-page asset cache version');
+assertIncludes(core, 'function cacheBustedUrl(url)', 'runtime has a cache-busted asset URL helper');
+assertIncludes(core, "resolved.searchParams.set('wadspa_v', assetVersion);", 'runtime appends the cache version to plugin assets');
+assertIncludes(core, "fetch(cacheBustedUrl(wasmUrl), { cache: 'no-cache' })", 'runtime fetches fresh WASM assets');
+assertIncludes(core, 'const loadedWorkletModules = new WeakMap();', 'runtime tracks loaded worklet modules per audio context');
+assertIncludes(core, 'await ctx.audioWorklet.addModule(workletUrl);', 'runtime loads the cache-busted worklet URL');
 
 const geonkick = instruments.find(entry => entry.id === 'geonkick');
 assert(Boolean(geonkick?.canvasEditors?.some(editor => editor.key === 'kick_amp_env')), 'geonkick exposes an amp envelope canvas editor');
