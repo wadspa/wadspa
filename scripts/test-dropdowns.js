@@ -93,6 +93,7 @@ assert(malformedCanvasEditors(instruments).length === 0, 'instrument canvas edit
 
 assertIncludes(html, '<button id="instrument-btn">', 'instrument dropdown button exists');
 assertIncludes(html, '<div id="instrument-dropdown">', 'instrument dropdown container exists');
+assertIncludes(html, '<h2 id="chain-title">effects / plugins chain</h2>', 'effect chain heading has a countable title node');
 assertIncludes(html, '<button id="add-btn">', 'effect dropdown button exists');
 assertMatches(/<div\b[^>]*\bid="dropdown"[^>]*>/, 'effect dropdown container exists');
 assertMatches(/#instrument-dropdown\.open\s*\{\s*display:\s*block;\s*\}/, 'instrument dropdown open class makes it visible');
@@ -114,6 +115,7 @@ assertIncludes(html, "name.className = 'item-name';", 'dropdown item renderer ke
 assertIncludes(html, "badge.className = 'license-badge';", 'dropdown item renderer keeps a license badge');
 assertIncludes(html, 'item.appendChild(name);', 'dropdown item name remains inside the clickable row');
 assertIncludes(html, 'item.appendChild(badge);', 'dropdown item badge remains inside the clickable row');
+assertIncludes(html, "document.getElementById('chain-title').textContent = EFFECTS.length", 'effect chain heading shows the supported effect count');
 
 const effectDropdown = functionBody('buildDropdown');
 assertIncludes(effectDropdown, "const dd = document.getElementById('dropdown');", 'effect dropdown targets #dropdown');

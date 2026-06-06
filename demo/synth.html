@@ -334,7 +334,7 @@
   <!-- ── Effects chain ─────────────────────────────────── -->
   <div id="chain-section">
     <div id="chain-header">
-      <h2>effects / plugins chain</h2>
+      <h2 id="chain-title">effects / plugins chain</h2>
       <div class="add-btn" id="add-wrap">
         <button id="add-btn">+ add effect/plugin ▾</button>
         <div class="dropdown" id="dropdown"></div>
@@ -402,6 +402,9 @@ const totalPlugins = INSTRUMENTS.length + EFFECTS.length;
 catalogStats.textContent = totalPlugins
   ? `${totalPlugins} plugins: ${INSTRUMENTS.length} instruments, ${EFFECTS.length} effects`
   : 'catalog unavailable';
+document.getElementById('chain-title').textContent = EFFECTS.length
+  ? `effects / plugins chain (${EFFECTS.length})`
+  : 'effects / plugins chain';
 
 // ── Plugin URL helpers ──────────────────────────────────────────
 const BASE = new URL('./plugins/', import.meta.url).href;
