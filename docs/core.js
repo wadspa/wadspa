@@ -81,6 +81,16 @@ export async function loadPlugin(ctx, pluginModule) {
             if (data.type === 'sf2loaded'    && pending.sf2)            { pending.sf2();            delete pending.sf2; }
             if (data.type === 'sampleloaded' && pending.sample)        { pending.sample();          delete pending.sample; }
             if (data.type === 'padloaded'    && pending[`pad${data.note}`]) { pending[`pad${data.note}`](); delete pending[`pad${data.note}`]; }
+            if (data.type === 'stateSet' && pending[`state${data.id}`]) {
+                pending[`state${data.id}`].resolve(data);
+                clearTimeout(pending[`state${data.id}`].timer);
+                delete pending[`state${data.id}`];
+            }
+            if (data.type === 'stateError' && pending[`state${data.id}`]) {
+                pending[`state${data.id}`].reject(new Error(data.message));
+                clearTimeout(pending[`state${data.id}`].timer);
+                delete pending[`state${data.id}`];
+            }
         };
         workletNode.port.postMessage(
             { type: 'setup', wasm: wasmBytes, inBufs, outBufs, setters: setterMap },
@@ -107,6 +117,7 @@ class WadspNode {
     #hasMidi;
     #pending;
     #ctx;
+    #stateSeq;
 
     constructor(workletNode, outputNode, meta, hasMidi = false, pending = {}, ctx = null) {
         this.#node     = workletNode;
@@ -114,6 +125,7 @@ class WadspNode {
         this.#hasMidi  = hasMidi;
         this.#pending  = pending;
         this.#ctx      = ctx;
+        this.#stateSeq = 0;
         this.#controls = controlMap(meta);
         this.input  = workletNode;
         this.output = outputNode;
@@ -222,6 +234,19 @@ class WadspNode {
     setPluginState(key, value) {
         this.#node.port.postMessage({ type: 'setState', key: String(key), value: String(value) });
         return this;
+    }
+
+    setPluginStateAsync(key, value, timeoutMs = 500) {
+        const id = ++this.#stateSeq;
+        return new Promise((resolve, reject) => {
+            const pendingKey = `state${id}`;
+            const timer = setTimeout(() => {
+                delete this.#pending[pendingKey];
+                reject(new Error(`Timed out setting plugin state "${key}"`));
+            }, timeoutMs);
+            this.#pending[pendingKey] = { resolve, reject, timer };
+            this.#node.port.postMessage({ type: 'setState', id, key: String(key), value: String(value) });
+        });
     }
 
     get node()     { return this.#node; }

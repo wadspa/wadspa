@@ -7,7 +7,7 @@
  * drawable amp and pitch envelopes.
  */
 
-import { readFileSync, readdirSync } from 'fs';
+import { existsSync, readFileSync, readdirSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
 import {
@@ -40,6 +40,13 @@ const instruments = readJson(join(DOCS, 'instruments.json'));
 const candidates = instruments
     .filter(entry => Array.isArray(entry.canvasEditors) && entry.canvasEditors.length > 0)
     .filter(entry => !onlyId || entry.id === onlyId);
+
+for (const id of readdirSync(DOCS_PLUGINS)) {
+    const processorPath = join(DOCS_PLUGINS, id, 'processor.js');
+    if (!existsSync(processorPath)) continue;
+    const processorSrc = readFileSync(processorPath, 'utf8');
+    if (processorSrc.includes("data.type === 'setState'")) verifyStateProcessorStringWriter(id, processorSrc);
+}
 
 let passed = 0;
 let failed = 0;
@@ -139,8 +146,18 @@ function verifyProcessorStateWriter(entry, processorSrc) {
     if (!processorSrc.includes("data.type === 'setState'")) {
         throw new Error(`${entry.id} has canvas editors but processor does not handle setState messages`);
     }
+    verifyStateProcessorStringWriter(entry.id, processorSrc);
+}
+
+function verifyStateProcessorStringWriter(id, processorSrc) {
     if (!processorSrc.includes('new Uint8Array(mod.HEAPF32.buffer)')) {
-        throw new Error(`${entry.id} processor state writer lacks HEAPU8 fallback for generated Emscripten modules`);
+        throw new Error(`${id} processor state writer lacks HEAPU8 fallback for generated Emscripten modules`);
+    }
+    if (processorSrc.includes('new TextEncoder()') || processorSrc.includes('TextEncoder')) {
+        throw new Error(`${id} processor state writer uses TextEncoder, which is unavailable in AudioWorklets in target browsers`);
+    }
+    if (!processorSrc.includes('function encodeCString(value)')) {
+        throw new Error(`${id} processor state writer lacks the AudioWorklet-safe string encoder`);
     }
 }
 
