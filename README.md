@@ -4,7 +4,9 @@
 
 wadspa takes the battle-tested [LADSPA](https://www.ladspa.org/) and [LV2](https://lv2plug.in/) plugin ecosystems — hundreds of high-quality audio effects and instruments written in C and C++ — and makes them available in any browser via the Web Audio API. Each plugin is a self-contained `.wasm` binary loaded as an `AudioWorkletNode`. No native code. No security issues. No browser-update breakage.
 
-**Current browser-built catalog:** 142 plugins total — 30 instruments and 112 effects.
+**Current browser-built coverage:** 142 plugins total — 30 instruments and 112 effects across the packaged LADSPA/LV2 browser catalog.
+
+**Top-20 LV2 synth coverage:** 16 of 20 tracked targets are supported; the remaining candidates are Surge XT, Vitalium, Odin 2, and Cardinal.
 
 **Live browser test page:** [wadspa.github.io/wadspa](https://wadspa.github.io/wadspa/)
 
@@ -63,7 +65,9 @@ Plus 112 browser-built effects (LADSPA and LV2: reverbs, chorus/flanger, EQ, dyn
 
 ## Top LV2 Synth Targets
 
-The requested top-20 LV2 synth list is tracked in [`docs/top-lv2-synths.json`](./docs/top-lv2-synths.json). Exact targets that are already browser-built are marked `supported`; the rest are `candidate` entries with source repos, explicit build blockers, and next porting steps. The normal test also verifies that every supported target has rebuildable plugin sources or a build script plus setup automation in `sources.json`.
+The requested top-20 LV2 synth list is tracked in [`docs/top-lv2-synths.json`](./docs/top-lv2-synths.json). Current coverage is **16/20 supported**. The unsupported candidates are **Surge XT**, **Vitalium**, **Odin 2**, and **Cardinal**.
+
+That top-20 tracker is only a priority subset, not the full catalog. The full browser-built ecosystem currently contains **30 instruments** and **112 effects** (**142 plugins total**). Exact top-20 targets that are already browser-built are marked `supported`; the rest are `candidate` entries with source repos, explicit build blockers, and next porting steps. The normal test also verifies that every supported target has rebuildable plugin sources or a build script plus setup automation in `sources.json`.
 
 ```sh
 npm run test:top-lv2-synths
