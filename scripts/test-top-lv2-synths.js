@@ -6,10 +6,11 @@
  *   - exactly 20 targets are tracked
  *   - supported targets exist in the built browser instrument catalog
  *   - candidate targets have source repositories in sources.json
+ *   - out-of-scope targets document why they are not active porting work
  *   - partial support is not counted as instrument support
  *
- * Strict mode additionally fails every candidate, so it can be used as the
- * backlog gate when moving the top-20 list from tracked to fully supported:
+ * Strict mode additionally fails every active candidate, so it can be used as
+ * the backlog gate while ignoring deliberately out-of-scope targets:
  *   node scripts/test-top-lv2-synths.js --strict
  */
 
@@ -39,6 +40,7 @@ const effectsById = new Map(effects.map(entry => [entry.id, entry]));
 const issues = [];
 const supported = [];
 const candidates = [];
+const outOfScope = [];
 
 if (!Array.isArray(targets)) {
     issues.push('docs/top-lv2-synths.json must be an array');
@@ -68,8 +70,8 @@ for (const target of Array.isArray(targets) ? targets : []) {
     }
 
     const status = target.status;
-    if (status !== 'supported' && status !== 'candidate') {
-        issues.push(`${label}: status must be supported or candidate`);
+    if (status !== 'supported' && status !== 'candidate' && status !== 'out-of-scope') {
+        issues.push(`${label}: status must be supported, candidate, or out-of-scope`);
         continue;
     }
 
@@ -87,9 +89,12 @@ for (const target of Array.isArray(targets) ? targets : []) {
     if (status === 'supported') {
         supported.push(target);
         validateSupportedTarget(target);
-    } else {
+    } else if (status === 'candidate') {
         candidates.push(target);
         validateCandidateTarget(target);
+    } else {
+        outOfScope.push(target);
+        validateOutOfScopeTarget(target);
     }
 }
 
@@ -100,7 +105,7 @@ if (issues.length > 0) {
 }
 
 const mode = strict ? 'strict' : 'tracking';
-console.log(`top LV2 synth support ok (${mode}: ${supported.length} supported, ${candidates.length} candidates)`);
+console.log(`top LV2 synth support ok (${mode}: ${supported.length} supported, ${candidates.length} candidates, ${outOfScope.length} out-of-scope)`);
 
 function validateSupportedTarget(target) {
     const catalogIds = target.catalogIds ?? [];
@@ -177,6 +182,23 @@ function validateCandidateTarget(target) {
 
     if (strict) {
         issues.push(`${target.name}: tracked candidate, not yet built as a browser instrument`);
+    }
+}
+
+function validateOutOfScopeTarget(target) {
+    if (!target.notes || typeof target.notes !== 'string') {
+        issues.push(`${target.name}: out-of-scope target must describe why it is not active work in notes`);
+    }
+    validateStringList(target, 'blockers', 'out-of-scope target must list the reasons support is not planned');
+
+    if (Array.isArray(target.nextSteps) && target.nextSteps.length > 0) {
+        issues.push(`${target.name}: out-of-scope target should not list nextSteps`);
+    }
+
+    for (const catalogId of target.catalogIds ?? []) {
+        if (instrumentsById.has(catalogId)) {
+            issues.push(`${target.name}: has built instrument catalogId ${catalogId} but is marked out-of-scope`);
+        }
     }
 }
 

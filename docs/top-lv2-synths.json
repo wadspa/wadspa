@@ -19,16 +19,13 @@
     "id": "vitalium",
     "name": "Vitalium",
     "family": "Hybrid, Wavetable, and Modern Synths",
-    "status": "candidate",
+    "status": "out-of-scope",
     "sourceIds": ["distrho-ports"],
-    "notes": "Tracked through DISTRHO-Ports. It needs dedicated preset/wavetable asset handling and a DSP-only LV2 setup.",
+    "notes": "Tracked through DISTRHO-Ports for top-20 accounting, but intentionally not planned for wadspa support. A useful Vitalium port would require a browser-native wavetable editor/preset system and a major DSP/UI rewrite rather than a normal LV2-to-WebAudio port.",
     "blockers": [
-      "Vitalium depends on a large JUCE/Vital-derived wavetable engine and visual wavetable/preset asset model.",
-      "The browser build needs deterministic wavetable asset loading before the sliders can be meaningfully validated."
-    ],
-    "nextSteps": [
-      "Build a DSP-only Vitalium probe with one stock wavetable and MIDI note rendering.",
-      "Add wavetable/preset asset packaging after the first audio path passes the generic slider tests."
+      "The instrument is centered on a visual wavetable/spectral editing workflow that wadspa does not currently implement.",
+      "A faithful browser version would need a new editable wavetable/preset asset layer, not just generated sliders over an LV2 DSP surface.",
+      "The expected porting cost is closer to a new instrument rewrite than a tractable source adaptation."
     ]
   },
   {

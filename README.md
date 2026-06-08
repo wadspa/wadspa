@@ -6,7 +6,7 @@ wadspa takes the battle-tested [LADSPA](https://www.ladspa.org/) and [LV2](https
 
 **Current browser-built coverage:** 142 plugins total — 30 instruments and 112 effects across the packaged LADSPA/LV2 browser catalog.
 
-**Top-20 LV2 synth coverage:** 16 of 20 tracked targets are supported; the remaining candidates are Surge XT, Vitalium, Odin 2, and Cardinal.
+**Top-20 LV2 synth coverage:** 16 of 20 tracked targets are supported; 3 are active candidates (Surge XT, Odin 2, Cardinal); Vitalium is intentionally out of scope.
 
 **Live browser test page:** [wadspa.github.io/wadspa](https://wadspa.github.io/wadspa/)
 
@@ -65,16 +65,16 @@ Plus 112 browser-built effects (LADSPA and LV2: reverbs, chorus/flanger, EQ, dyn
 
 ## Top LV2 Synth Targets
 
-The requested top-20 LV2 synth list is tracked in [`docs/top-lv2-synths.json`](./docs/top-lv2-synths.json). Current coverage is **16/20 supported**. The unsupported candidates are **Surge XT**, **Vitalium**, **Odin 2**, and **Cardinal**.
+The requested top-20 LV2 synth list is tracked in [`docs/top-lv2-synths.json`](./docs/top-lv2-synths.json). Current coverage is **16/20 supported**. The active unsupported candidates are **Surge XT**, **Odin 2**, and **Cardinal**. **Vitalium** remains tracked for top-20 accounting, but it is intentionally out of scope because a useful browser version would require a new wavetable/preset editing system rather than a normal LV2-to-WebAudio port.
 
-That top-20 tracker is only a priority subset, not the full catalog. The full browser-built ecosystem currently contains **30 instruments** and **112 effects** (**142 plugins total**). Exact top-20 targets that are already browser-built are marked `supported`; the rest are `candidate` entries with source repos, explicit build blockers, and next porting steps. The normal test also verifies that every supported target has rebuildable plugin sources or a build script plus setup automation in `sources.json`.
+That top-20 tracker is only a priority subset, not the full catalog. The full browser-built ecosystem currently contains **30 instruments** and **112 effects** (**142 plugins total**). Exact top-20 targets that are already browser-built are marked `supported`; active backlog items are marked `candidate`; intentionally skipped targets are marked `out-of-scope`. The normal test also verifies that every supported target has rebuildable plugin sources or a build script plus setup automation in `sources.json`.
 
 ```sh
 npm run test:top-lv2-synths
 npm run test:top-lv2-synths:strict
 ```
 
-The normal test keeps the support matrix honest. The strict test intentionally fails until every one of the 20 targets is packaged as a browser MIDI instrument.
+The normal test keeps the support matrix honest. The strict test intentionally fails until every active candidate is packaged as a browser MIDI instrument; out-of-scope targets remain documented but are not treated as backlog.
 
 ---
 
