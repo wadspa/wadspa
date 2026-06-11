@@ -172,7 +172,13 @@ public:
 	{
 		//portamento on osc input voltage
 		//implements rc circuit
-		float ptNote  =tptlpupw(prtst, midiIndx-81, porta * (1+PortaDetune*PortaDetuneAmt),sampleRateInv);
+		const float noteTarget = midiIndx - 81;
+		const float portaCutoff = porta * (1+PortaDetune*PortaDetuneAmt);
+		float ptNote = noteTarget;
+		if (portaCutoff > 1.0e-6f)
+			ptNote = tptlpupw(prtst, noteTarget, portaCutoff, sampleRateInv);
+		else
+			prtst = noteTarget;
 		osc.notePlaying = ptNote;
 		//both envelopes and filter cv need a delay equal to osc internal delay
 		float lfoDelayed = lfod.feedReturn(lfoIn);

@@ -1,0 +1,2 @@
+# Intentionally empty. package.json "files" controls the publish payload,
+# including generated assets that are ignored by git.

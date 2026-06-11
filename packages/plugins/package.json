@@ -1,0 +1,41 @@
+{
+  "name": "@wadspa/plugins",
+  "version": "0.1.0",
+  "description": "Aggregate wadspa plugin catalog and lazy-loadable WASM assets",
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./catalog": "./catalog.js",
+    "./catalog.json": "./catalog.json",
+    "./instruments": "./instruments.js",
+    "./instruments.json": "./instruments.json",
+    "./plugins/*": "./plugins/*",
+    "./soundfonts/*": "./soundfonts/*"
+  },
+  "files": [
+    "README.md",
+    "LICENSES.md",
+    "index.js",
+    "catalog.js",
+    "catalog.json",
+    "instruments.js",
+    "instruments.json",
+    "plugins/",
+    "soundfonts/"
+  ],
+  "license": "SEE LICENSE IN LICENSES.md",
+  "sideEffects": false,
+  "scripts": {
+    "build": "node ../../scripts/build-plugins-package.js",
+    "prepack": "npm run build"
+  },
+  "peerDependencies": {
+    "@wadspa/core": "^0.1.0"
+  },
+  "peerDependenciesMeta": {
+    "@wadspa/core": {
+      "optional": true
+    }
+  }
+}

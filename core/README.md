@@ -5,17 +5,17 @@ Runtime host for wadspa WASM audio plugins. Loads a compiled LADSPA/LV2-to-WASM 
 ## Installation
 
 ```sh
-npm install @wadspa/core
+npm install @wadspa/core @wadspa/plugins
 ```
 
 ## Usage
 
 ```js
 import { loadPlugin } from '@wadspa/core';
-import * as amp from '@wadspa/amp';
+import { pluginModule } from '@wadspa/plugins';
 
 const ctx = new AudioContext();
-const node = await loadPlugin(ctx, amp);
+const node = await loadPlugin(ctx, pluginModule('amp'));
 
 node.set('Gain (dB)', -6);
 source.connect(node.input);
@@ -28,12 +28,12 @@ node.output.connect(ctx.destination);
 
 ```js
 import { loadPlugin } from '@wadspa/core';
-import * as synth from '@wadspa/fm_synth';
+import { pluginModule } from '@wadspa/plugins';
 
 const ctx = new AudioContext();
 await ctx.resume();
 
-const inst = await loadPlugin(ctx, synth);
+const inst = await loadPlugin(ctx, pluginModule('fm_synth'));
 inst.output.connect(ctx.destination);
 
 inst.noteOn(60, 100);   // middle C

@@ -22,7 +22,7 @@ Existing browser plugin formats (CLAP, WAM, Web Audio Modules) repeatedly break 
 - **Qt plugin support** — `toolchain/qt-stub/` is a header-only Qt shim that lets Qt-dependent LV2 DSP layers (synthv1, drumkv1, padthv1, …) compile to WASM without any Qt installation
 - **Fully automated pipeline** — adding a new plugin repo requires one entry in `sources.json`; `setup-all.js` and `build-instruments.js` handle the rest
 - **GTK / Qt UI skipped automatically** — LV2 separates DSP from UI; wadspa compiles only the DSP layer, excluding `*_gtk.*` and `*_qt*.*` source files
-- **Zero runtime dependencies** — plugins are plain npm packages; `@wadspa/core` is a small ESM runtime host
+- **Small runtime, aggregate assets** — `@wadspa/core` is a small ESM runtime host, while `@wadspa/plugins` provides the full catalog and lazy-loadable WASM assets
 
 ---
 
@@ -94,12 +94,15 @@ npm run test:dropdowns     # instrument/effect dropdown wiring and canvas editor
 npm run test:ranges        # slider ranges, sample-rate ports, log sliders, audible Hz bounds
 npm run test:lv2           # LV2 instrument smoke tests
 npm run test:effects       # effect smoke tests
+npm run test:switching     # plugin A -> B -> A switch-back audio renders
 npm run test:sliders -- --only geonkick --verbose
 npm run test:canvas-state -- --only geonkick --verbose
 npm run test:ui-defaults   # browser-slider sweep from UI defaults
 ```
 
 `test:sliders` checks every control input port by resolving the generated AudioWorklet setter, round-tripping values through WASM, rendering deterministic audio, and failing when every candidate value is acoustically unchanged. In UI-default mode, continuous sliders are sampled across four distinct positions so dead regions in the slider travel are caught.
+
+`test:switching` uses the same demo catalogs as the browser page, renders plugins in an A -> B -> A pattern, and fails when any switched-in or switched-back plugin stops producing finite audible audio.
 
 `test:ranges` keeps UI controls inside usable bounds, including audible frequency ports. `test:canvas-state` covers editable drawing surfaces such as Geonkick envelopes and shaper curves; it also rejects generated AudioWorklet state writers that use browser-missing APIs such as `TextEncoder`.
 
@@ -110,7 +113,10 @@ npm run test:ui-defaults   # browser-slider sweep from UI defaults
 | Package | Description | npm |
 |---|---|---|
 | [`@wadspa/core`](./core) | Runtime: load and connect wadspa plugins | _(coming soon)_ |
+| [`@wadspa/plugins`](./packages/plugins) | Aggregate catalog and lazy-loadable plugin assets | _(coming soon)_ |
 | [`@wadspa/toolchain`](./toolchain) | CLI: compile LADSPA/LV2 source into a wadspa npm package | _(coming soon)_ |
+
+The default npm distribution is intentionally **not** one package per plugin. Use `@wadspa/core` plus `@wadspa/plugins` to install the runtime and one aggregate asset catalog, then lazy-load only the plugin WASM files you actually instantiate. Individual plugin packages can still be published later for especially popular standalone targets.
 
 ---
 
@@ -130,10 +136,10 @@ npm run test:licenses
 
 ```js
 import { loadPlugin } from '@wadspa/core';
-import * as djEq from '@wadspa/dj-eq-mono';
+import { pluginModule } from '@wadspa/plugins';
 
 const ctx = new AudioContext();
-const node = await loadPlugin(ctx, djEq);
+const node = await loadPlugin(ctx, pluginModule('dj_eq'));
 
 node.set('Lo gain (dB)', -6);
 source.connect(node.input);
@@ -144,10 +150,10 @@ node.output.connect(ctx.destination);
 
 ```js
 import { loadPlugin } from '@wadspa/core';
-import * as fmSynth from '@wadspa/fm_synth';
+import { pluginModule } from '@wadspa/plugins';
 
 const ctx  = new AudioContext();
-const inst = await loadPlugin(ctx, fmSynth);
+const inst = await loadPlugin(ctx, pluginModule('fm_synth'));
 
 inst.noteOn(60, 100);   // middle C, velocity 100
 inst.output.connect(ctx.destination);
@@ -156,8 +162,8 @@ inst.output.connect(ctx.destination);
 ### Chaining effects
 
 ```js
-const eq  = await loadPlugin(ctx, djEqMono);
-const rev = await loadPlugin(ctx, plateReverb);
+const eq  = await loadPlugin(ctx, pluginModule('dj_eq'));
+const rev = await loadPlugin(ctx, pluginModule('plate'));
 
 source.connect(eq.input);
 eq.output.connect(rev.input);
@@ -467,6 +473,7 @@ wadspa/
     test-top-lv2-synths.js   Verify requested top synth targets and strict support gate
     build-all.js             Build all LADSPA effects → docs/
     test-instruments.js      Node WASM smoke test for LV2 plugins
+    test-plugin-switching.js Verify A -> B -> A plugin switching keeps audio playable
   sources.json               External plugin repos (git URLs + setup script mapping)
   docs/
     index.html               GitHub Pages browser test page

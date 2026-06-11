@@ -97,6 +97,17 @@ function patchEngine() {
         readFileSync(synthPath, 'utf8')
             .replace('#include "../PluginProcessor.h"\n', '#include "ObxdCompat.h"\n')
     );
+
+    const voicePath = join(OUT_ENGINE, 'ObxdVoice.h');
+    const voiceText = readFileSync(voicePath, 'utf8');
+    const patchedVoiceText = voiceText.replace(
+        '\t\tfloat ptNote  =tptlpupw(prtst, midiIndx-81, porta * (1+PortaDetune*PortaDetuneAmt),sampleRateInv);\n\t\tosc.notePlaying = ptNote;',
+        '\t\tconst float noteTarget = midiIndx - 81;\n\t\tconst float portaCutoff = porta * (1+PortaDetune*PortaDetuneAmt);\n\t\tfloat ptNote = noteTarget;\n\t\tif (portaCutoff > 1.0e-6f)\n\t\t\tptNote = tptlpupw(prtst, noteTarget, portaCutoff, sampleRateInv);\n\t\telse\n\t\t\tprtst = noteTarget;\n\t\tosc.notePlaying = ptNote;'
+    );
+    if (patchedVoiceText === voiceText) {
+        throw new Error('ObxdVoice.h portamento patch did not match upstream source');
+    }
+    writeFileSync(voicePath, patchedVoiceText);
 }
 
 function compatHeaderSource() {

@@ -3,9 +3,9 @@
  *
  * Usage:
  *   import { loadPlugin } from '@wadspa/core';
- *   import * as amp from '@wadspa/amp';
+ *   import { pluginModule } from '@wadspa/plugins';
  *
- *   const node = await loadPlugin(audioContext, amp);
+ *   const node = await loadPlugin(audioContext, pluginModule('amp'));
  *   node.set('Gain (dB)', -6);
  *   source.connect(node.input);
  *   node.output.connect(audioContext.destination);
