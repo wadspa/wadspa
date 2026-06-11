@@ -10,8 +10,7 @@
     "./catalog.json": "./catalog.json",
     "./instruments": "./instruments.js",
     "./instruments.json": "./instruments.json",
-    "./plugins/*": "./plugins/*",
-    "./soundfonts/*": "./soundfonts/*"
+    "./plugins/*": "./plugins/*"
   },
   "files": [
     "README.md",
@@ -21,8 +20,7 @@
     "catalog.json",
     "instruments.js",
     "instruments.json",
-    "plugins/",
-    "soundfonts/"
+    "plugins/"
   ],
   "license": "SEE LICENSE IN LICENSES.md",
   "sideEffects": false,

@@ -54,11 +54,6 @@ export async function loadPluginById(ctx, idOrEntry, options = {}) {
     return loadPlugin(ctx, pluginModule(idOrEntry, options));
 }
 
-export function soundfontUrl(fileName, options = {}) {
-    const baseUrl = options.baseUrl ?? import.meta.url;
-    return packageUrl(['soundfonts', fileName].map(encodePathSegment).join('/'), baseUrl);
-}
-
 function resolveEntry(idOrEntry) {
     if (idOrEntry && typeof idOrEntry === 'object') return idOrEntry;
     return requirePlugin(String(idOrEntry));

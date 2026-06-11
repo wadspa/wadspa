@@ -40,6 +40,7 @@ assertExists(join(OUT, 'instruments.js'));
 assertExists(join(OUT, 'LICENSES.md'));
 assertExists(join(OUT, 'plugins', 'obxd', 'Obxd.wasm'));
 assertExists(join(OUT, 'plugins', 'obxd', 'processor.js'));
+assert(!existsSync(join(OUT, 'soundfonts')), 'soundfont/sample packs are not bundled');
 
 const wasmSize = statSync(join(OUT, 'plugins', 'obxd', 'Obxd.wasm')).size;
 assert(wasmSize > 0, 'obxd WASM is non-empty');

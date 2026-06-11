@@ -27,7 +27,6 @@ The package exports:
 - `effects`: effect catalog
 - `pluginModule(id)`: returns `{ meta, wasmUrl, processorUrl }` for `@wadspa/core`
 - `pluginAssetUrl(id, fileName)`: URL for a plugin asset
-- `soundfontUrl(fileName)`: URL for packaged soundfonts
 - `listPlugins(filters)` and `getPlugin(id)`: catalog helpers
 
 For CDNs or apps that copy this package to a public directory, pass a package base URL:
@@ -39,3 +38,5 @@ const mod = pluginModule('plate', {
 ```
 
 The payload includes mixed-license third-party plugin builds. See `LICENSES.md` and each catalog entry's `license` field before redistributing subsets.
+
+Sample packs and soundfonts are not bundled in the npm package. For SF2/sample-based instruments, host your own sample assets and load them with `@wadspa/core` APIs such as `node.loadSF2(url)`.

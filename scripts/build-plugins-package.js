@@ -15,7 +15,6 @@ import { fileURLToPath } from 'url';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DOCS = join(ROOT, 'docs');
 const DOCS_PLUGINS = join(DOCS, 'plugins');
-const DOCS_SOUNDFONTS = join(DOCS, 'soundfonts');
 const OUT = join(ROOT, 'packages', 'plugins');
 
 const effects = readJson(join(DOCS_PLUGINS, 'catalog.json'));
@@ -30,7 +29,6 @@ writeJsCatalog(join(OUT, 'instruments.js'), 'instruments', instruments);
 writeFileSync(join(OUT, 'LICENSES.md'), licensesMarkdown(instruments, effects));
 
 copy(DOCS_PLUGINS, join(OUT, 'plugins'));
-if (existsSync(DOCS_SOUNDFONTS)) copy(DOCS_SOUNDFONTS, join(OUT, 'soundfonts'));
 
 console.log(`@wadspa/plugins package built: ${instruments.length} instruments, ${effects.length} effects`);
 
