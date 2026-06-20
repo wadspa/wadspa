@@ -1217,6 +1217,7 @@ function renderPluginControls(container, node, plugin, options = {}) {
     sectionEl.className = 'ui-section';
     sectionEl.dataset.uiSection = section.id;
     sectionEl.dataset.uiPanel = section.panel;
+    sectionEl.dataset.uiPanelReason = section.panelReason;
     sectionEl.dataset.density = section.density;
     sectionEl.dataset.uiWeight = String(estimatedSectionWeight(section));
 

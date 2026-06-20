@@ -14,6 +14,16 @@ export const WADSPA_UI_MODEL = Object.freeze({
     panels: 'Promote coherent signal blocks into panels when they have enough controls, dense controls, or native group-box/panel hints; keep one/two-control groups compact.',
     canvas: 'Use canvas layouts only for real editable curve/envelope/wave editors exposed by the web port.',
   }),
+  panelRules: Object.freeze([
+    'drawbar-bank: organ registrations and native drawbar banks',
+    'parallel-fader-bank: EQ gains, drawbars, and repeated level strips',
+    'dense-control-bank: very large control families that need matrix packing',
+    'native-tabbed-panel: Qt/GTK/FLTK tab hints from source UI files',
+    'native-grouped-panel: Qt/GTK/FLTK group/frame hints from source UI files',
+    'signal-block: oscillator, filter, envelope, and modulation blocks',
+    'program-block: preset, sample, and program controls',
+    'compact-few-controls: one/two-control groups stay unframed',
+  ]),
   sections: Object.freeze([
     'oscillators',
     'drawbars',
@@ -104,13 +114,17 @@ function sectionsForFields(fields, hint) {
   }
   return [...grouped.entries()]
     .sort((a, b) => (SECTION_ORDER.get(a[0]) ?? 99) - (SECTION_ORDER.get(b[0]) ?? 99))
-    .map(([id, sectionFields]) => ({
-      id,
-      title: SECTION_TITLES[id] ?? id,
-      panel: panelForSection(id, sectionFields, hint),
-      density: densityForFields(sectionFields),
-      fields: sectionFields.sort((a, b) => a.priority - b.priority),
-    }));
+    .map(([id, sectionFields]) => {
+      const panel = panelForSection(id, sectionFields, hint);
+      return {
+        id,
+        title: SECTION_TITLES[id] ?? id,
+        panel: panel.type,
+        panelReason: panel.reason,
+        density: densityForFields(sectionFields),
+        fields: sectionFields.sort((a, b) => a.priority - b.priority),
+      };
+    });
 }
 
 function inferFamily(plugin, hint, target) {
@@ -240,19 +254,33 @@ function isMixerFaderBank(port, ports) {
 }
 
 function panelForSection(section, fields, hint) {
-  if (section === 'drawbars') return 'drawbar-bank';
-  if (section === 'equalizer' && fields.filter(field => field.widget === 'fader').length >= 6) return 'rack-strip';
-  if (fields.length >= 18) return 'dense-bank';
+  if (section === 'drawbars') return panelDecision('drawbar-bank', 'drawbar-bank');
+  if (section === 'equalizer' && fields.filter(field => field.widget === 'fader').length >= 6) {
+    return panelDecision('rack-strip', 'parallel-fader-bank');
+  }
+  if (fields.length >= 18) return panelDecision('dense-bank', 'dense-control-bank');
+  const nativeTabbed = hasNativeTabbedPanels(hint);
   const nativeGrouped = hasNativeGroupedPanels(hint);
   if (nativeGrouped && fields.length > 1) {
-    if (section === 'playback') return 'program-panel';
-    if (section === 'envelopes' || section === 'oscillators' || section === 'filter' || section === 'modulation') return 'synth-panel';
-    return 'control-panel';
+    const reason = nativeTabbed ? 'native-tabbed-panel' : 'native-grouped-panel';
+    if (section === 'playback') return panelDecision('program-panel', reason);
+    if (section === 'envelopes' || section === 'oscillators' || section === 'filter' || section === 'modulation') {
+      return panelDecision('synth-panel', reason);
+    }
+    return panelDecision('control-panel', reason);
   }
-  if (fields.length <= 2) return 'compact-panel';
-  if (section === 'envelopes' || section === 'oscillators' || section === 'filter' || section === 'modulation') return 'synth-panel';
-  if (section === 'playback') return 'program-panel';
-  return fields.length <= 3 ? 'compact-panel' : 'control-panel';
+  if (fields.length <= 2) return panelDecision('compact-panel', 'compact-few-controls');
+  if (section === 'envelopes' || section === 'oscillators' || section === 'filter' || section === 'modulation') {
+    return panelDecision('synth-panel', 'signal-block');
+  }
+  if (section === 'playback') return panelDecision('program-panel', 'program-block');
+  return fields.length <= 3
+    ? panelDecision('compact-panel', 'compact-few-controls')
+    : panelDecision('control-panel', 'signal-block');
+}
+
+function panelDecision(type, reason) {
+  return { type, reason };
 }
 
 function densityForFields(fields) {
@@ -329,4 +357,8 @@ function portText(port) {
 
 function hasNativeGroupedPanels(hint) {
   return Boolean(hint?.nativeLayouts?.some(layout => layout === 'grouped-panel' || layout === 'tabbed-panel'));
+}
+
+function hasNativeTabbedPanels(hint) {
+  return Boolean(hint?.nativeLayouts?.includes('tabbed-panel'));
 }

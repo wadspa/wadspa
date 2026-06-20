@@ -679,7 +679,8 @@ function sliderSweepCoverage(port, renderedCandidates, noise, profile = DEFAULT_
         const left = renderedCandidates[i];
         const right = renderedCandidates[i + 1];
         const diff = compareRenders(left.rendered, right.rendered, profile);
-        const active = sliderSegmentChanged(diff, noise);
+        const active = sliderSegmentChanged(diff, noise)
+            || sliderLevelSegmentChanged(port, left.rendered, right.rendered);
         activeSegments.push(active);
         segmentSummaries.push(`${left.candidate.label}-${right.candidate.label} rms=${fmtMetric(diff.rms)} rel=${fmtMetric(diff.relative)}`);
     }
@@ -716,6 +717,23 @@ function sliderSegmentChanged(diff, noise) {
     const rmsFloor = Math.max(ABS_RMS_DIFF * 0.5, noise.rms * NOISE_MULTIPLIER);
     const relFloor = Math.max(REL_RMS_DIFF * 0.5, noise.relative * NOISE_MULTIPLIER);
     return diff.rms > rmsFloor && diff.relative > relFloor && diff.max > SILENCE;
+}
+
+function sliderLevelSegmentChanged(port, left, right) {
+    if (!isLevelSweepControl(port)) return false;
+    if (!Number.isFinite(left.rms) || !Number.isFinite(right.rms)) return false;
+    const louder = Math.max(left.rms, right.rms);
+    const delta = Math.abs(left.rms - right.rms);
+    if (louder <= ABS_RMS_DIFF * 8) return false;
+    return delta > Math.max(ABS_RMS_DIFF * 8, louder * 0.06);
+}
+
+function isLevelSweepControl(port) {
+    const text = controlText(port);
+    if (/frequency|freq|rate|time|attack|decay|sustain|release|threshold|ratio|channel|program|preset|mode|select/i.test(text)) {
+        return false;
+    }
+    return /swell|volume|level|gain|output|mix|wet|dry|drive|distort|amount|depth|send|feedback/i.test(text);
 }
 
 function browserDefaultOverridesFor(allCtrlPorts) {

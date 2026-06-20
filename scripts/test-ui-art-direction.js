@@ -25,6 +25,17 @@ const PANEL_TYPES = new Set([
   'synth-panel',
 ]);
 
+const PANEL_REASONS = new Set([
+  'compact-few-controls',
+  'dense-control-bank',
+  'drawbar-bank',
+  'native-grouped-panel',
+  'native-tabbed-panel',
+  'parallel-fader-bank',
+  'program-block',
+  'signal-block',
+]);
+
 const DENSITY_TYPES = new Set(['open', 'medium', 'dense']);
 const widgetTotals = new Map();
 const failures = [];
@@ -57,6 +68,7 @@ const cssChecks = [
   ['section band chrome', /\.ui-section\[data-ui-panel="synth-panel"\][\s\S]*border-top:\s*1px solid rgba\(255,255,255,0\.12\);[\s\S]*background:\s*none;/],
   ['section column packing', /\.plugin-ui-column\s*\{[^}]*display:\s*flex;\s*flex-direction:\s*column;\s*gap:\s*0\.42rem/s],
   ['balanced section renderer', /function arrangePluginUiSections\(wrap,\s*sectionEls,\s*model\)[\s\S]*wrap\.dataset\.uiFlow = 'balanced-columns'[\s\S]*target\.weight \+= Number\(sectionEl\.dataset\.uiWeight\)/],
+  ['panel reason stamp', /sectionEl\.dataset\.uiPanelReason = section\.panelReason;/],
   ['dense grid sizing', /\.ui-control-grid\[data-density="dense"\]\s*\{[^}]*minmax\(78px,\s*1fr\)/s],
   ['rack/drawbar strip sizing', /\.ui-control-grid\[data-ui-panel="rack-strip"\][^{]*\{[^}]*minmax\(72px,\s*1fr\)/s],
   ['knob/fader stable cell', /\.ctrl-row\[data-widget="knob"\],\s*\.ctrl-row\[data-widget="fader"\s*\]\s*\{[^}]*min-height:\s*94px/s],
@@ -96,6 +108,12 @@ if (!WADSPA_UI_MODEL.artDirection?.panels?.includes('signal blocks')) {
 if (!WADSPA_UI_MODEL.artDirection?.panels?.includes('one/two-control groups compact')) {
   fail('art direction keeps tiny groups compact');
 }
+if (!WADSPA_UI_MODEL.panelRules?.some(rule => rule.includes('native-tabbed-panel'))) {
+  fail('UI model exposes native tab panel rule');
+}
+if (!WADSPA_UI_MODEL.panelRules?.some(rule => rule.includes('compact-few-controls'))) {
+  fail('UI model exposes compact few-control panel rule');
+}
 
 validateLayoutContract();
 
@@ -112,18 +130,37 @@ for (const entry of entries) {
 
   for (const section of model.sections) {
     if (!PANEL_TYPES.has(section.panel)) fail(`${entry.id}/${section.id}: unsupported panel ${section.panel}`);
+    if (!PANEL_REASONS.has(section.panelReason)) fail(`${entry.id}/${section.id}: unsupported panel reason ${section.panelReason}`);
     if (!DENSITY_TYPES.has(section.density)) fail(`${entry.id}/${section.id}: unsupported density ${section.density}`);
     if (section.density === 'dense' && section.fields.length < 24) {
       fail(`${entry.id}/${section.id}: dense section has only ${section.fields.length} fields`);
     }
+    if (section.panel === 'dense-bank' && section.panelReason !== 'dense-control-bank') {
+      fail(`${entry.id}/${section.id}: dense bank lacks dense-control-bank reason`);
+    }
+    if (section.panel === 'compact-panel' && section.fields.length <= 2 && section.panelReason !== 'compact-few-controls') {
+      fail(`${entry.id}/${section.id}: compact one/two-control section lacks compact-few-controls reason`);
+    }
     if (section.panel === 'rack-strip' && section.fields.filter(field => field.widget === 'fader').length < 6) {
       fail(`${entry.id}/${section.id}: rack strip needs at least six faders`);
+    }
+    if (section.panel === 'rack-strip' && section.panelReason !== 'parallel-fader-bank') {
+      fail(`${entry.id}/${section.id}: rack strip lacks parallel-fader-bank reason`);
     }
     if (section.panel === 'drawbar-bank' && !section.fields.some(isRegistrationField)) {
       fail(`${entry.id}/${section.id}: drawbar bank lacks registration-style controls`);
     }
+    if (section.panel === 'drawbar-bank' && section.panelReason !== 'drawbar-bank') {
+      fail(`${entry.id}/${section.id}: drawbar section lacks drawbar-bank reason`);
+    }
     if (hasNativeGroupedPanels(hint) && section.fields.length > 1 && section.panel === 'compact-panel') {
       fail(`${entry.id}/${section.id}: native grouped/tabbed UI should render multi-control sections as panels`);
+    }
+    if (hasNativeTabbedPanels(hint) && section.fields.length > 1 && section.panelReason !== 'native-tabbed-panel' && section.panel !== 'dense-bank') {
+      fail(`${entry.id}/${section.id}: native tabbed UI section should keep native-tabbed-panel reason`);
+    }
+    if (!hasNativeTabbedPanels(hint) && hasNativeGroupedPanels(hint) && section.fields.length > 1 && section.panelReason !== 'native-grouped-panel' && section.panel !== 'dense-bank') {
+      fail(`${entry.id}/${section.id}: native grouped UI section should keep native-grouped-panel reason`);
     }
     if (!hasNativeGroupedPanels(hint)
       && section.fields.length <= 2
@@ -370,6 +407,10 @@ function isSampleLoopSlider(field) {
 
 function hasNativeGroupedPanels(hint) {
   return Boolean(hint?.nativeLayouts?.some(layout => layout === 'grouped-panel' || layout === 'tabbed-panel'));
+}
+
+function hasNativeTabbedPanels(hint) {
+  return Boolean(hint?.nativeLayouts?.includes('tabbed-panel'));
 }
 
 function hasCanvasSourceEvidence(hint) {
