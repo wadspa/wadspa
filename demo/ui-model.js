@@ -12,7 +12,7 @@ export const WADSPA_UI_MODEL = Object.freeze({
     knobs: 'Default continuous synth/effect controls to rotary knobs, matching Qt/LV2 dial-heavy native UIs.',
     faders: 'Reserve vertical faders for EQ gain strips, drawbars, and true gain banks where scanning parallel levels matters.',
     menus: 'Use menus for enumerated mode/type/select controls, including integer controls with embedded numeric choice labels.',
-    panels: 'Promote coherent signal blocks into panels when they have enough controls, dense controls, or native group-box/panel hints; keep one/two-control groups compact.',
+    panels: 'Promote coherent signal blocks into panels when they have enough controls, dense controls, or native group-box/panel hints; keep one/two-control groups compact and cap sparse plugins at two balanced columns.',
     canvas: 'Use canvas layouts only for real editable curve/envelope/wave editors exposed by the web port.',
   }),
   panelRules: Object.freeze([
@@ -82,6 +82,9 @@ export function createWadspaUiModel(plugin, options = {}) {
     };
   });
 
+  const layout = layoutForPlugin(plugin, family, fields, hint);
+  const sections = sectionsForFields(fields, hint);
+
   return {
     schema: WADSPA_UI_MODEL.schema,
     pluginId: plugin?.id ?? null,
@@ -90,10 +93,11 @@ export function createWadspaUiModel(plugin, options = {}) {
     label: hint?.label ?? plugin?.name ?? plugin?.label ?? 'plugin',
     category: plugin?.category ?? null,
     family,
-    layout: layoutForPlugin(plugin, family, fields, hint),
+    layout,
+    sectionColumns: sectionColumnCountForLayout(layout, fields, sections),
     sourceHints: sourceHintsForModel(hint),
     fields,
-    sections: sectionsForFields(fields, hint),
+    sections,
     canvasEditors: plugin?.canvasEditors ?? [],
   };
 }
@@ -147,6 +151,12 @@ function layoutForPlugin(plugin, family, fields, hint) {
   if (family === 'tone-shaper' || fields.filter(field => field.section === 'equalizer').length >= 6) return 'rack';
   if (fields.length <= 4) return 'compact';
   return 'panel';
+}
+
+function sectionColumnCountForLayout(layout, fields, sections) {
+  if (sections.length <= 1 || layout === 'rack' || layout === 'drawbar') return 1;
+  if (layout === 'compact' || fields.length <= 9) return Math.min(sections.length, 2);
+  return Math.min(sections.length, 3);
 }
 
 function sourceHintsForModel(hint) {

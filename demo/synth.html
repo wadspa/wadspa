@@ -244,7 +244,7 @@
     }
     #synth-ctrls .plugin-ui-sections { --ui-section-width: 172px; }
     #synth-ctrls .plugin-ui-sections[data-ui-layout="matrix"] { --ui-section-width: 238px; }
-    #synth-ctrls .ui-control-grid { grid-template-columns: repeat(auto-fit, minmax(84px, 1fr)); }
+    #synth-ctrls .ui-control-grid { grid-template-columns: repeat(auto-fit, minmax(78px, 1fr)); }
     #synth-ctrls .ui-control-grid[data-density="dense"] { grid-template-columns: repeat(auto-fit, minmax(76px, 1fr)); }
     .ctrl-row[data-widget="knob"], .ctrl-row[data-widget="fader"], .ctrl-row[data-widget="toggle"], .ctrl-row[data-widget="menu"] {
       margin-top: 0; min-width: 0;
@@ -1210,6 +1210,7 @@ function renderPluginControls(container, node, plugin, options = {}) {
   wrap.className = 'plugin-ui-sections';
   wrap.dataset.uiModel = WADSPA_UI_MODEL.schema;
   wrap.dataset.uiLayout = model.layout;
+  wrap.dataset.uiColumns = String(model.sectionColumns);
 
   const sectionEls = [];
   for (const section of model.sections) {
@@ -1265,7 +1266,7 @@ function arrangePluginUiSections(wrap, sectionEls, model) {
     return;
   }
 
-  const columnCount = Math.min(sectionEls.length, model.layout === 'compact' ? 2 : 3);
+  const columnCount = Math.min(sectionEls.length, Math.max(1, Number(model.sectionColumns) || 1));
   const columns = Array.from({ length: columnCount }, () => ({
     weight: 0,
     el: document.createElement('div'),

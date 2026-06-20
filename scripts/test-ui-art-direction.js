@@ -68,6 +68,7 @@ const cssChecks = [
   ['section band chrome', /\.ui-section\[data-ui-panel="synth-panel"\][\s\S]*border-top:\s*1px solid rgba\(255,255,255,0\.12\);[\s\S]*background:\s*none;/],
   ['section column packing', /\.plugin-ui-column\s*\{[^}]*display:\s*flex;\s*flex-direction:\s*column;\s*gap:\s*0\.42rem/s],
   ['balanced section renderer', /function arrangePluginUiSections\(wrap,\s*sectionEls,\s*model\)[\s\S]*wrap\.dataset\.uiFlow = 'balanced-columns'[\s\S]*target\.weight \+= Number\(sectionEl\.dataset\.uiWeight\)/],
+  ['model-driven section column count', /wrap\.dataset\.uiColumns = String\(model\.sectionColumns\);[\s\S]*const columnCount = Math\.min\(sectionEls\.length,\s*Math\.max\(1,\s*Number\(model\.sectionColumns\) \|\| 1\)\);/],
   ['panel reason stamp', /sectionEl\.dataset\.uiPanelReason = section\.panelReason;/],
   ['dense grid sizing', /\.ui-control-grid\[data-density="dense"\]\s*\{[^}]*minmax\(78px,\s*1fr\)/s],
   ['rack/drawbar strip sizing', /\.ui-control-grid\[data-ui-panel="rack-strip"\][^{]*\{[^}]*minmax\(72px,\s*1fr\)/s],
@@ -107,6 +108,9 @@ if (!WADSPA_UI_MODEL.artDirection?.panels?.includes('signal blocks')) {
 }
 if (!WADSPA_UI_MODEL.artDirection?.panels?.includes('one/two-control groups compact')) {
   fail('art direction keeps tiny groups compact');
+}
+if (!WADSPA_UI_MODEL.artDirection?.panels?.includes('cap sparse plugins at two balanced columns')) {
+  fail('art direction caps sparse plugins at two balanced columns');
 }
 if (!WADSPA_UI_MODEL.panelRules?.some(rule => rule.includes('native-tabbed-panel'))) {
   fail('UI model exposes native tab panel rule');
@@ -194,6 +198,9 @@ for (const entry of entries) {
   if (model.layout === 'matrix' && (counts.knob ?? 0) < 40) {
     fail(`${entry.id}: matrix layout should be a knob-dominant dense panel`);
   }
+  if (model.fields.length <= 9 && model.sections.length > 1 && !['rack', 'drawbar'].includes(model.layout) && model.sectionColumns > 2) {
+    fail(`${entry.id}: sparse layouts should not spread across more than two section columns`);
+  }
 
   const eqFrequencyFaders = model.fields.filter(field => (
     field.section === 'equalizer'
@@ -262,6 +269,12 @@ function validateLayoutContract() {
   if (layout.synthDenseColumn < layout.knobHit + 12) {
     fail(`dense synth control column ${layout.synthDenseColumn}px is too narrow for ${layout.knobHit}px knob hitboxes`);
   }
+  if (layout.synthColumn < layout.knobHit + 12) {
+    fail(`synth control column ${layout.synthColumn}px is too narrow for ${layout.knobHit}px knob hitboxes`);
+  }
+  if (layout.synthColumn > 80) {
+    fail(`synth control column ${layout.synthColumn}px wastes sparse instrument panel space`);
+  }
   if (layout.rackColumn < layout.faderHit + 6) {
     fail(`rack/drawbar column ${layout.rackColumn}px is too narrow for ${layout.faderHit}px fader hitboxes`);
   }
@@ -303,6 +316,7 @@ function validateLetterSpacing() {
 function validateRepresentativeLayouts(models) {
   const synthv1 = requireModel(models, 'synthv1');
   if (synthv1?.model.layout !== 'matrix') fail('synthv1 representative dense synth should use matrix layout');
+  if (synthv1?.model.sectionColumns !== 3) fail('synthv1 representative dense synth should allow three balanced columns');
   if ((synthv1?.counts.knob ?? 0) < 100) fail('synthv1 representative dense synth should stay knob-dominant');
   if (columnsFor(layout.synthMatrixSection, layout.synthDenseColumn) < 3) {
     fail('minimum synth matrix section should fit at least three dense knob columns');
@@ -330,6 +344,11 @@ function validateRepresentativeLayouts(models) {
 
   const geonkick = requireModel(models, 'geonkick');
   if (geonkick?.model.layout !== 'canvas') fail('geonkick representative envelope editor should keep canvas layout');
+
+  const wadspaSynth = requireModel(models, 'wadspa_synth');
+  if (wadspaSynth?.model.sectionColumns !== 2) {
+    fail('wadspa_synth representative sparse instrument should pack into two columns');
+  }
 
   const stringMachine = requireModel(models, 'string-machine');
   if (stringMachine?.model.layout === 'drawbar') fail('string-machine representative synth should not become a drawbar organ');

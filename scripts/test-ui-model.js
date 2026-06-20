@@ -37,6 +37,15 @@ for (const entry of entries) {
   if (expected.length > 0 && model.sections.length === 0) {
     fail(`${entry.id}: controls exist but no UI sections were generated`);
   }
+  if (!Number.isInteger(model.sectionColumns) || model.sectionColumns < 1 || model.sectionColumns > 3) {
+    fail(`${entry.id}: sectionColumns should be an integer between 1 and 3`);
+  }
+  if ((model.layout === 'rack' || model.layout === 'drawbar') && model.sectionColumns !== 1) {
+    fail(`${entry.id}: rack/drawbar layouts should stay single-column`);
+  }
+  if (model.fields.length <= 9 && model.sections.length > 1 && !['rack', 'drawbar'].includes(model.layout) && model.sectionColumns > 2) {
+    fail(`${entry.id}: sparse plugins should cap section columns at two`);
+  }
 
   const fieldPorts = new Set(model.fields.map(field => field.portName));
   for (const port of expected) {
@@ -66,6 +75,9 @@ if (!WADSPA_UI_MODEL.artDirection?.menus?.includes('mode/type/select')) {
 }
 if (!WADSPA_UI_MODEL.artDirection.panels.includes('one/two-control groups compact')) {
   fail('UI model art direction keeps tiny groups compact');
+}
+if (!WADSPA_UI_MODEL.artDirection.panels.includes('cap sparse plugins at two balanced columns')) {
+  fail('UI model art direction caps sparse plugins at two balanced columns');
 }
 
 const tapEq = hints.plugins?.['tap-eq'];
@@ -141,6 +153,16 @@ if (!geonkickHint?.nativeLayouts?.includes('canvas-editor')
 
 const geonkick = models.get('geonkick')?.model;
 if (geonkick?.layout !== 'canvas') fail('geonkick keeps canvas layout for implemented envelope editors');
+
+if (models.get('wadspa_synth')?.model.sectionColumns !== 2) {
+  fail('wadspa_synth sparse default UI should use two balanced columns, not three sparse columns');
+}
+if (models.get('fm_synth')?.model.sectionColumns !== 2) {
+  fail('fm_synth sparse multi-section UI should use two balanced columns');
+}
+if (models.get('synthv1')?.model.sectionColumns !== 3) {
+  fail('synthv1 dense matrix UI should still allow three section columns');
+}
 
 const wadspaSynthFilter = models.get('wadspa_synth')?.model.sections.find(section => section.id === 'filter');
 if (wadspaSynthFilter?.panel !== 'compact-panel') {
