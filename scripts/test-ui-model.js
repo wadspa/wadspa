@@ -87,10 +87,35 @@ if (!casynth?.nativeLayouts?.includes('dial-bank') || !casynth?.nativeLayouts?.i
 
 const setbfree = hints.plugins?.setbfree;
 if (!setbfree?.assets?.includes('drawbar')) fail('setbfree hint includes drawbar metadata');
+if (setbfree?.assets?.includes('canvas-editor')) {
+  fail('setbfree tonegen spline math should not be inferred as an editable canvas');
+}
 
 const zynaddsubfx = hints.plugins?.zynaddsubfx;
 if (!zynaddsubfx?.nativeLayouts?.includes('tabbed-panel') || !zynaddsubfx?.nativeWidgets?.tabs) {
   fail('zynaddsubfx hint preserves FLTK tabbed-panel metadata');
+}
+
+for (const id of ['delay', 'vl1-emulator']) {
+  const hint = hints.plugins?.[id];
+  if (hint?.assets?.includes('canvas-editor') || hint?.nativeLayouts?.includes('canvas-editor')) {
+    fail(`${id}: interpolation/DSP code should not be inferred as an editable canvas`);
+  }
+}
+
+const wolfShaper = hints.plugins?.['wolf-shaper'];
+if (!wolfShaper?.nativeLayouts?.includes('canvas-editor')
+  || !wolfShaper?.sourceFiles?.some(file => /Graph|WolfShaperPlugin|wolf_shaper\.ttl/.test(file))) {
+  fail('wolf-shaper hint preserves real graph editor metadata');
+}
+if (wolfShaper?.sourceFiles?.some(file => /DSPFilters/i.test(file))) {
+  fail('wolf-shaper hint should not cite DSPFilters support headers as UI sources');
+}
+
+const geonkickHint = hints.plugins?.geonkick;
+if (!geonkickHint?.nativeLayouts?.includes('canvas-editor')
+  || !geonkickHint?.sourceFiles?.some(file => /geonkick_lv2_wasm\.c/.test(file))) {
+  fail('geonkick hint preserves explicit canvas edit bridge metadata');
 }
 
 const geonkick = models.get('geonkick')?.model;

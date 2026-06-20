@@ -158,7 +158,14 @@ function collectAssetHints(hint, base) {
 }
 
 function collectTextHints(hint, text, rel) {
-  collectNativeWidgetHints(hint, text);
+  const lowerRel = rel.toLowerCase();
+  const hasCanvasEditor = hasCanvasEditorEvidence(text);
+  collectNativeWidgetHints(hint, text, { hasCanvasEditor });
+
+  if (hasCanvasEditor) {
+    hint.assets.add('canvas-editor');
+    hint.sourceFiles.add(rel);
+  }
 
   for (const match of text.matchAll(/\b(?:mod|modgui):brand\s+"([^"]+)"/g)) {
     hint.brand ??= match[1];
@@ -206,20 +213,29 @@ function collectTextHints(hint, text, rel) {
   if (/OBJ_DRAWBAR|drawbar/i.test(text)) hint.assets.add('drawbar');
   if (/OBJ_DIAL|\bdial\b|\bknob\b/i.test(text)) hint.assets.add('knob');
   if (/OBJ_SWITCH|\bswitch\b|\btoggle\b/i.test(text)) hint.assets.add('switch');
-  if (/\bcanvas\b|\bspline\b|OscilGen|EnvelopeUI|widget_(?:wave|env)|QPainter[\s\S]{0,500}\b(?:wave|envelope|curve)\b/i.test(text)) {
+  if (/Graph\.hpp|lineEditor|graph\s*state|spline-based graph/i.test(text) && !lowerRel.includes('/dspfilters/')) {
     hint.assets.add('canvas-editor');
+    hint.sourceFiles.add(rel);
   }
 }
 
-function collectNativeWidgetHints(hint, text) {
+function collectNativeWidgetHints(hint, text, options = {}) {
   addMatches(hint.nativeWidgets, 'knobs', text, /\bQDial\b|\bFl_Dial\b|\bqsynthKnob\b|\bOBJ_DIAL\b|mod-knob|button-type=["']knob/gi);
   addMatches(hint.nativeWidgets, 'sliders', text, /\bQSlider\b|\bFl_Slider\b|\bGtkScale\b|gtk_scale|\buiSlider\b|add(?:Horizontal|Vertical)Slider|button-type=["']slider|mod-slider/gi);
   addMatches(hint.nativeWidgets, 'switches', text, /\bQCheckBox\b|\bGtkToggleButton\b|\bGtkSwitch\b|gtk_check_button|\bFl_(?:Check_)?Button\b|\bOBJ_SWITCH\b|footswitch/gi);
   addMatches(hint.nativeWidgets, 'menus', text, /\bQComboBox\b|\bGtkCombo\b|\bGtkMenu\b|\bFl_Choice\b|\buiMenu\b/gi);
   addMatches(hint.nativeWidgets, 'panels', text, /\bQGroupBox\b|\bGtkFrame\b|gtk_frame_new|\bFl_Group\b|add(?:Horizontal|Vertical)Box/gi);
   addMatches(hint.nativeWidgets, 'tabs', text, /\bQTabWidget\b|\bGtkNotebook\b|gtk_notebook|\bFl_Tabs\b|openTabBox/gi);
-  addMatches(hint.nativeWidgets, 'canvases', text, /\bcanvas\b|\bspline\b|OscilGen|EnvelopeUI|widget_(?:wave|env)|QPainter[\s\S]{0,500}\b(?:wave|envelope|curve)\b/gi);
+  if (options.hasCanvasEditor) hint.nativeWidgets.canvases += 1;
   addMatches(hint.nativeWidgets, 'meters', text, /\bmeter\b|\bled\b|LevelMeter|VU\s*Meter/gi);
+}
+
+function hasCanvasEditorEvidence(text) {
+  return /\bcanvas\b[\s\S]{0,80}\b(?:edit|edits|editor|point|draw|drag|state|envelope|curve)\b/i.test(text)
+    || /\b(?:edit|edits|editor|point|draw|drag|state|envelope|curve)\b[\s\S]{0,80}\bcanvas\b/i.test(text)
+    || /\bspline-based graph\b/i.test(text)
+    || /\b(?:curve|graph)\s+editor\b/i.test(text)
+    || /\blineEditor\b|OscilGen|EnvelopeUI|widget_(?:wave|env)|QPainter[\s\S]{0,500}\b(?:wave|envelope|curve)\b/i.test(text);
 }
 
 function addMatches(counts, key, text, pattern) {
@@ -242,8 +258,9 @@ function compactCounts(counts) {
 }
 
 function isUiSourceFile(base, lower) {
+  if (lower.includes('/dspfilters/')) return false;
   return /\b(gui|ui|layout|editor|view)\b/i.test(base)
-    || /widget|knob|dial|slider|fader|switch|panel|palette|levelmeter|\bvu\b/i.test(base)
+    || /widget|knob|dial|slider|fader|switch|panel|palette|levelmeter|\bgraph\b|\bvu\b/i.test(base)
     || lower.endsWith('.fl')
     || lower.includes('/modgui/');
 }

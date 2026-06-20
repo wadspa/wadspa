@@ -101,6 +101,10 @@ for (const entry of entries) {
     }
   }
 
+  if (hint.nativeLayouts?.includes('canvas-editor') && !hasCanvasSourceEvidence(hint)) {
+    fail(`${entry.id}: canvas-editor hint lacks concrete editor/graph source evidence`);
+  }
+
   if (model.layout === 'drawbar' && !model.fields.some(isRegistrationField)) {
     fail(`${entry.id}: drawbar layout requires drawbar/harmonic/footage controls`);
   }
@@ -232,4 +236,11 @@ function isSampleLoopSlider(field) {
 
 function hasNativeGroupedPanels(hint) {
   return Boolean(hint?.nativeLayouts?.some(layout => layout === 'grouped-panel' || layout === 'tabbed-panel'));
+}
+
+function hasCanvasSourceEvidence(hint) {
+  return Boolean(hint?.sourceFiles?.some(file => (
+    /canvas|graph|EnvelopeUI|OscilGen|widget_(?:wave|env)|samplv1widget_(?:env|wave)|geonkick_lv2_wasm|WolfShaperPlugin/i.test(file)
+      && !/DSPFilters/i.test(file)
+  )));
 }
