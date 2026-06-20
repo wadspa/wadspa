@@ -116,6 +116,16 @@ assertIncludes(html, "badge.className = 'license-badge';", 'dropdown item render
 assertIncludes(html, 'item.appendChild(name);', 'dropdown item name remains inside the clickable row');
 assertIncludes(html, 'item.appendChild(badge);', 'dropdown item badge remains inside the clickable row');
 assertIncludes(html, "document.getElementById('chain-title').textContent = EFFECTS.length", 'effect chain heading shows the supported effect count');
+assertIncludes(html, 'id="midi-connect-btn"', 'MIDI connect button exists');
+assertIncludes(html, 'id="midi-status-lbl"', 'MIDI status label exists');
+assertIncludes(html, 'navigator.requestMIDIAccess({ sysex: false })', 'Web MIDI access is requested without sysex');
+assertIncludes(html, 'input.onmidimessage = handleMidiMessage;', 'MIDI inputs are bound to the message handler');
+assertIncludes(html, 'midiAccess.onstatechange = handleMidiStateChange;', 'MIDI device changes rebind inputs');
+assertIncludes(html, 'synth?.midi(status, data1, data2);', 'MIDI channel messages are forwarded to the active synth');
+assertIncludes(html, 'synth?.midi(0x80 | channel, data1, 0);', 'MIDI note-off and zero-velocity note-on are normalized');
+assertIncludes(html, 'ctx?.resume();', 'MIDI input resumes the audio context');
+assertIncludes(html, 'releaseMidiNotes(synth);', 'instrument switching releases held MIDI notes');
+assertIncludes(html, '.midi-dot.loaded', 'MIDI connection status has a visible connected state');
 
 const effectDropdown = functionBody('buildDropdown');
 assertIncludes(effectDropdown, "const dd = document.getElementById('dropdown');", 'effect dropdown targets #dropdown');

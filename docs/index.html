@@ -214,6 +214,14 @@
     #piano-wrap { margin: 0.5rem 0 0.4rem; }
     .oct-row { display: flex; align-items: center; gap: 0.4rem; font-size: 0.72rem; color: var(--muted); margin-bottom: 0.35rem; }
     .oct-row button { padding: 0.1rem 0.45rem; font-size: 0.8rem; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 2px; cursor: pointer; }
+    .midi-row { display: flex; align-items: center; gap: 0.45rem; margin-bottom: 0.35rem; font-size: 0.7rem; color: var(--muted); }
+    .midi-row button { padding: 0.12rem 0.5rem; font-family: monospace; font-size: 0.7rem; background: var(--surface); color: var(--accent); border: 1px solid var(--border); border-radius: 2px; cursor: pointer; }
+    .midi-row button:hover { border-color: var(--accent); }
+    .midi-row button:disabled { opacity: 0.45; cursor: default; }
+    .midi-status { display: inline-flex; align-items: center; gap: 0.35rem; min-width: 0; }
+    .midi-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
+    .midi-dot.loaded { background: var(--accent2); }
+    #midi-status-lbl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 230px; }
     .piano { position: relative; display: flex; height: 80px; user-select: none; }
     .wk {
       width: 30px; height: 80px; background: #e0e0e0; border: 1px solid #888;
@@ -322,6 +330,10 @@
           <span id="oct-lbl">octave 4</span>
           <button id="oct-up">+</button>
           <span style="margin-left:0.5rem;font-size:0.65rem">A–J / W E T Y U · −= octave</span>
+        </div>
+        <div class="midi-row">
+          <button id="midi-connect-btn">MIDI</button>
+          <span id="midi-status" class="midi-status"><span class="midi-dot"></span><span id="midi-status-lbl">off</span></span>
         </div>
         <div class="piano" id="piano"></div>
       </div>
@@ -461,6 +473,8 @@ let octave = 4;
 let mouseHeld = null;
 const kbActive = new Map();
 const pressedKeys = new Set();
+let midiAccess = null;
+const midiHeldNotes = new Map();
 
 function midiNote(semi) { return (octave + 1) * 12 + semi; }
 
@@ -530,6 +544,120 @@ window.addEventListener('keyup', e => {
 
 document.getElementById('oct-dn').onclick = () => { if (octave > 0) { octave--; document.getElementById('oct-lbl').textContent = `octave ${octave}`; } };
 document.getElementById('oct-up').onclick = () => { if (octave < 8) { octave++; document.getElementById('oct-lbl').textContent = `octave ${octave}`; } };
+
+function midiKey(channel, note) {
+  return `${channel}:${note}`;
+}
+
+function midiSemiForVisibleOctave(note) {
+  const semi = note - ((octave + 1) * 12);
+  return semi >= 0 && semi < 12 ? semi : null;
+}
+
+function markMidiNote(note, on) {
+  const semi = midiSemiForVisibleOctave(note);
+  if (semi !== null) markKey(semi, on);
+}
+
+function setMidiStatus(message, connected = false) {
+  const label = document.getElementById('midi-status-lbl');
+  const dot = document.querySelector('#midi-status .midi-dot');
+  if (label) label.textContent = message;
+  if (dot) dot.classList.toggle('loaded', connected);
+}
+
+function connectedMidiInputs() {
+  if (!midiAccess) return [];
+  return [...midiAccess.inputs.values()].filter(input => input.state !== 'disconnected');
+}
+
+function midiInputLabel(input) {
+  return input.name || input.manufacturer || input.id || 'MIDI input';
+}
+
+function updateMidiStatus() {
+  const inputs = connectedMidiInputs();
+  if (inputs.length === 0) {
+    setMidiStatus('no inputs');
+  } else if (inputs.length === 1) {
+    setMidiStatus(midiInputLabel(inputs[0]), true);
+  } else {
+    setMidiStatus(`${inputs.length} inputs`, true);
+  }
+}
+
+function bindMidiInputs() {
+  if (!midiAccess) return;
+  for (const input of midiAccess.inputs.values()) {
+    input.onmidimessage = handleMidiMessage;
+  }
+  updateMidiStatus();
+}
+
+function handleMidiStateChange() {
+  bindMidiInputs();
+}
+
+function handleMidiMessage(event) {
+  const [status, data1 = 0, data2 = 0] = event.data ?? [];
+  if (!status || status >= 0xF0) return;
+  const type = status & 0xF0;
+  const channel = status & 0x0F;
+  ctx?.resume();
+
+  try {
+    if (type === 0x90 && data2 > 0) {
+      midiHeldNotes.set(midiKey(channel, data1), data1);
+      markMidiNote(data1, true);
+      synth?.midi(status, data1, data2);
+    } else if (type === 0x80 || type === 0x90) {
+      midiHeldNotes.delete(midiKey(channel, data1));
+      markMidiNote(data1, false);
+      synth?.midi(0x80 | channel, data1, 0);
+    } else {
+      synth?.midi(status, data1, data2);
+    }
+  } catch (error) {
+    setMidiStatus('error');
+    console.error('[wadspa] MIDI error', error);
+  }
+}
+
+function releaseMidiNotes(node = synth) {
+  for (const key of midiHeldNotes.keys()) {
+    const [channel, note] = key.split(':').map(Number);
+    try { node?.midi(0x80 | channel, note, 0); } catch {}
+    markMidiNote(note, false);
+  }
+  midiHeldNotes.clear();
+}
+
+async function connectMidi() {
+  const btn = document.getElementById('midi-connect-btn');
+  if (!navigator.requestMIDIAccess) {
+    setMidiStatus('unavailable');
+    return;
+  }
+
+  btn.disabled = true;
+  setMidiStatus('requesting');
+  try {
+    if (!ctx || !synth) await startAudio();
+    else await ctx.resume();
+    midiAccess = await navigator.requestMIDIAccess({ sysex: false });
+    midiAccess.onstatechange = handleMidiStateChange;
+    bindMidiInputs();
+    setStatus('midi ready');
+  } catch (error) {
+    setMidiStatus('denied');
+    setStatus(`MIDI ERROR: ${error.message}`);
+    console.error(error);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+document.getElementById('midi-connect-btn').addEventListener('click', connectMidi);
 
 buildPiano();
 
@@ -886,7 +1014,7 @@ function setSF2Status(msg) {
 
 async function switchInstrument(inst) {
   if (!ctx) return;
-  if (synth) { safeDisconnect(synth); synth = null; }
+  if (synth) { releaseMidiNotes(synth); safeDisconnect(synth); synth = null; }
   setStatus(`loading ${inst.name}…`);
   try {
     synth = await loadPlugin(ctx, instrumentModule(inst));
@@ -1571,6 +1699,12 @@ buildInstrumentDropdown();
 function setStatus(msg) { document.getElementById('status').textContent = msg; }
 
 async function startAudio() {
+  if (ctx && synth) {
+    await ctx.resume();
+    document.getElementById('start-overlay').style.display = 'none';
+    setStatus('ready');
+    return;
+  }
   const overlayStatus = document.getElementById('overlay-status');
   const overlayBtn    = document.getElementById('start-overlay-btn');
   overlayBtn.disabled = true;
