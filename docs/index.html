@@ -286,6 +286,7 @@
       grid-row: 1; grid-column: 1; z-index: 2;
       width: 56px; height: 56px; display: block; touch-action: none; cursor: ns-resize;
       user-select: none; -webkit-user-select: none; -webkit-user-drag: none;
+      -webkit-tap-highlight-color: transparent;
     }
     .ctrl-row[data-widget="knob"] input[type=range],
     .ctrl-row[data-widget="fader"] input[type=range] {
@@ -1389,17 +1390,26 @@ function bindRelativeControlGesture(row, control, port, commitControl) {
     if (pointerId !== null) target.setPointerCapture?.(pointerId);
     dragging = true;
 
-    const startX = startEvent.clientX;
     const startY = startEvent.clientY;
+    let dragOriginY = startY;
+    let dragEngaged = false;
     const widget = row.dataset.widget;
 
     const handleMove = moveEvent => {
       if (pointerId !== null && 'pointerId' in moveEvent && moveEvent.pointerId !== pointerId) return;
+      if ('buttons' in moveEvent && moveEvent.buttons === 0) return;
       cancelRelativePointerEvent(moveEvent);
-      const dy = moveEvent.clientY - startY;
+      const deadzone = moveEvent.shiftKey ? 1 : 8;
+      if (!dragEngaged) {
+        const initialTravel = -(moveEvent.clientY - startY);
+        if (gestureTravelPastDeadzone(initialTravel, deadzone) === 0) return;
+        dragEngaged = true;
+        dragOriginY = moveEvent.clientY;
+        return;
+      }
+      const dy = moveEvent.clientY - dragOriginY;
       const pixels = moveEvent.shiftKey ? 520 : widget === 'fader' ? 128 : 220;
-      const rawTravel = -dy;
-      const travel = gestureTravelPastDeadzone(rawTravel, moveEvent.shiftKey ? 1 : 8);
+      const travel = -dy;
       if (travel === 0) return;
       const previousValue = control.value;
       setSliderValue(control, startValue + (travel / pixels) * span);
