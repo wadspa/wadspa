@@ -285,6 +285,7 @@
     .ctrl-row[data-widget="fader"] .control-stack {
       grid-row: 1; grid-column: 1; z-index: 2;
       width: 56px; height: 56px; display: block; touch-action: none; cursor: ns-resize;
+      user-select: none; -webkit-user-select: none; -webkit-user-drag: none;
     }
     .ctrl-row[data-widget="knob"] input[type=range],
     .ctrl-row[data-widget="fader"] input[type=range] {
@@ -1359,6 +1360,8 @@ function bindRelativeControlGesture(row, control, port, commitControl) {
   target.setAttribute('role', 'slider');
   target.setAttribute('aria-label', row.querySelector('label')?.textContent ?? port.name);
   syncSliderAria(target, control, port);
+  control.tabIndex = -1;
+  control.setAttribute('aria-hidden', 'true');
 
   let dragging = false;
   let suppressMouseUntil = 0;
@@ -1386,11 +1389,10 @@ function bindRelativeControlGesture(row, control, port, commitControl) {
     const handleMove = moveEvent => {
       if (pointerId !== null && 'pointerId' in moveEvent && moveEvent.pointerId !== pointerId) return;
       cancelRelativePointerEvent(moveEvent);
-      const dx = moveEvent.clientX - startX;
       const dy = moveEvent.clientY - startY;
-      const pixels = moveEvent.shiftKey ? 420 : widget === 'fader' ? 128 : 170;
-      const rawTravel = widget === 'fader' ? -dy : dx - dy;
-      const travel = gestureTravelPastDeadzone(rawTravel, moveEvent.shiftKey ? 1 : 3);
+      const pixels = moveEvent.shiftKey ? 520 : widget === 'fader' ? 128 : 220;
+      const rawTravel = -dy;
+      const travel = gestureTravelPastDeadzone(rawTravel, moveEvent.shiftKey ? 1 : 8);
       if (travel === 0) return;
       const previousValue = control.value;
       setSliderValue(control, startValue + (travel / pixels) * span);
@@ -1402,6 +1404,7 @@ function bindRelativeControlGesture(row, control, port, commitControl) {
 
     const endDrag = endEvent => {
       if (pointerId !== null && 'pointerId' in endEvent && endEvent.pointerId !== pointerId) return;
+      cancelRelativePointerEvent(endEvent);
       if (pointerId !== null) target.releasePointerCapture?.(pointerId);
       moveSource.removeEventListener(moveName, handleMove);
       endSource.removeEventListener(endName, endDrag);
@@ -1436,6 +1439,13 @@ function bindRelativeControlGesture(row, control, port, commitControl) {
     }
     beginDrag(e, document, document, 'mousemove', 'mouseup', null);
   });
+
+  for (const eventName of ['click', 'dblclick', 'dragstart']) {
+    target.addEventListener(eventName, cancelRelativePointerEvent);
+  }
+  for (const eventName of ['pointerdown', 'mousedown', 'click', 'dblclick', 'dragstart']) {
+    control.addEventListener(eventName, cancelRelativePointerEvent);
+  }
 
   target.addEventListener('keydown', e => {
     const direction = {
