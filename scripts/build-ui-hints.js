@@ -76,6 +76,7 @@ function scanEntry(entry, dirs) {
   const hint = {
     brand: null,
     label: null,
+    modgui: {},
     sourceKinds: new Set(),
     nativeUiTypes: new Set(),
     assets: new Set(),
@@ -101,6 +102,9 @@ function scanEntry(entry, dirs) {
       }
 
       if (!/\.(ttl|cpp|cc|cxx|c|h|hpp|hh|xml|fl)$/i.test(base)) continue;
+      if (lower.endsWith('.ttl')) {
+        hint.sourceKinds.add('lv2-metadata');
+      }
       let text = '';
       try {
         text = readFileSync(file, 'utf8');
@@ -115,6 +119,7 @@ function scanEntry(entry, dirs) {
   const normalized = {
     ...(hint.brand ? { brand: hint.brand } : {}),
     ...(hint.label ? { label: hint.label } : {}),
+    ...(Object.keys(hint.modgui).length > 0 ? { modgui: hint.modgui } : {}),
     sourceKinds: [...hint.sourceKinds].sort(),
     nativeUiTypes: [...hint.nativeUiTypes].sort(),
     assets: [...hint.assets].sort(),
@@ -146,6 +151,16 @@ function collectTextHints(hint, text, rel) {
     hint.label ??= match[1];
     hint.sourceKinds.add(rel.includes('modgui') ? 'modgui' : 'lv2-mod-metadata');
   }
+  for (const key of ['model', 'panel', 'color', 'knob']) {
+    const pattern = new RegExp(`\\b(?:mod|modgui):${key}\\s+"([^"]+)"`, 'g');
+    for (const match of text.matchAll(pattern)) {
+      hint.modgui[key] ??= match[1];
+      hint.sourceKinds.add('modgui');
+      if (key === 'panel' && /slider|fader/i.test(match[1])) hint.assets.add('slider');
+      if (key === 'panel' && /knob|dial/i.test(match[1])) hint.assets.add('knob');
+      if (key === 'knob') hint.assets.add('knob');
+    }
+  }
   for (const match of text.matchAll(/\b(?:lv2ui|ui):([A-Za-z0-9_]+UI)\b/g)) {
     hint.nativeUiTypes.add(match[1]);
     hint.sourceKinds.add('lv2-native-ui');
@@ -165,10 +180,12 @@ function collectTextHints(hint, text, rel) {
     hint.nativeUiTypes.add('DPFUI');
     hint.sourceKinds.add('dpf-native-ui');
   }
+  if (/mod-slider|button-type=["']slider|class=["'][^"']*slider/i.test(text)) hint.assets.add('slider');
+  if (/mod-knob|button-type=["']knob|class=["'][^"']*(knob|dial)/i.test(text)) hint.assets.add('knob');
   if (/OBJ_DRAWBAR|drawbar/i.test(text)) hint.assets.add('drawbar');
   if (/OBJ_DIAL|\bdial\b|\bknob\b/i.test(text)) hint.assets.add('knob');
   if (/OBJ_SWITCH|\bswitch\b|\btoggle\b/i.test(text)) hint.assets.add('switch');
-  if (/\bcanvas\b|\bwave\b|\bspline\b|\benvelope\b|OscilGen|EnvelopeUI/i.test(text)) {
+  if (/\bcanvas\b|\bspline\b|OscilGen|EnvelopeUI|widget_(?:wave|env)|QPainter[\s\S]{0,500}\b(?:wave|envelope|curve)\b/i.test(text)) {
     hint.assets.add('canvas-editor');
   }
 }
@@ -196,6 +213,7 @@ function* walk(dir, depth) {
 function hasHint(hint) {
   return Boolean(hint.brand)
     || Boolean(hint.label)
+    || Object.keys(hint.modgui ?? {}).length > 0
     || hint.sourceKinds.length > 0
     || hint.nativeUiTypes.length > 0
     || hint.assets.length > 0

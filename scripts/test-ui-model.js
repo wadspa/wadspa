@@ -16,6 +16,7 @@ const entries = [
 
 let failures = 0;
 let fields = 0;
+const models = new Map();
 
 function fail(message) {
   failures += 1;
@@ -25,6 +26,7 @@ function fail(message) {
 for (const entry of entries) {
   const expected = visibleControlPorts(entry.ports ?? []);
   const model = createWadspaUiModel(entry, { target: entry.target, hints });
+  models.set(entry.id, { entry, model });
 
   if (model.schema !== WADSPA_UI_MODEL.schema) {
     fail(`${entry.id}: schema is ${model.schema}`);
@@ -50,11 +52,22 @@ for (const entry of entries) {
       fail(`${entry.id}/${field.portName}: incomplete UI field metadata`);
     }
   }
+
+  if (model.layout === 'canvas' && !(entry.canvasEditors?.length > 0)) {
+    fail(`${entry.id}: canvas layout is reserved for implemented editable canvas instruments`);
+  }
+}
+
+if (!WADSPA_UI_MODEL.artDirection?.knobs || !WADSPA_UI_MODEL.artDirection?.panels) {
+  fail('UI model exposes art direction for knob and panel decisions');
 }
 
 const tapEq = hints.plugins?.['tap-eq'];
 if (!tapEq?.sourceKinds?.includes('modgui')) fail('tap-eq hint includes MOD GUI source metadata');
 if (!tapEq?.assets?.includes('knob')) fail('tap-eq hint includes knob asset metadata');
+
+const tapChorus = hints.plugins?.['tap-chorusflanger'];
+if (!/knobs/i.test(tapChorus?.modgui?.panel ?? '')) fail('tap-chorusflanger hint includes MOD knob-panel metadata');
 
 const samplv1 = hints.plugins?.samplv1;
 if (!samplv1?.nativeUiTypes?.some(type => /Qt|X11|external/i.test(type))) {
@@ -63,6 +76,25 @@ if (!samplv1?.nativeUiTypes?.some(type => /Qt|X11|external/i.test(type))) {
 
 const setbfree = hints.plugins?.setbfree;
 if (!setbfree?.assets?.includes('drawbar')) fail('setbfree hint includes drawbar metadata');
+
+const geonkick = models.get('geonkick')?.model;
+if (geonkick?.layout !== 'canvas') fail('geonkick keeps canvas layout for implemented envelope editors');
+
+const setbfreeModel = models.get('setbfree')?.model;
+if (setbfreeModel?.layout !== 'drawbar') fail('setbfree uses a drawbar bank layout');
+if ((widgetCount(setbfreeModel, 'fader') ?? 0) < 9) fail('setbfree drawbars render as faders');
+
+for (const id of ['obxd', 'padthv1', 'synthv1']) {
+  const model = models.get(id)?.model;
+  if (!model) continue;
+  if (model.layout === 'canvas') fail(`${id}: Qt-style synth should not be inferred as canvas-only UI`);
+  if ((widgetCount(model, 'knob') ?? 0) <= (widgetCount(model, 'slider') ?? 0)) {
+    fail(`${id}: Qt-style synth should prefer knobs over sliders`);
+  }
+}
+
+const chorusModel = models.get('tap-chorusflanger')?.model;
+if ((widgetCount(chorusModel, 'knob') ?? 0) < 6) fail('tap-chorusflanger MOD knob panel renders primarily as knobs');
 
 if (failures > 0) {
   console.error(`wadspa UI model failed: ${failures} problem${failures === 1 ? '' : 's'}`);
@@ -73,4 +105,8 @@ console.log(`wadspa UI model ok (${entries.length} plugins, ${fields} fields)`);
 
 function readJson(path) {
   return JSON.parse(readFileSync(path, 'utf8'));
+}
+
+function widgetCount(model, widget) {
+  return model?.fields?.filter(field => field.widget === widget).length ?? 0;
 }

@@ -11,13 +11,13 @@
     },
     "amsynth": {
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-native-ui"
       ],
       "nativeUiTypes": [
         "X11UI"
       ],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -39,23 +39,24 @@
       "sourceFiles": []
     },
     "calf-monosynth": {
-      "sourceKinds": [],
+      "sourceKinds": [
+        "lv2-metadata"
+      ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
     },
     "casynth": {
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-native-ui"
       ],
       "nativeUiTypes": [
         "X11UI"
       ],
       "assets": [
-        "canvas-editor",
         "knob",
         "switch"
       ],
@@ -70,7 +71,9 @@
       "sourceFiles": []
     },
     "chowkick": {
-      "sourceKinds": [],
+      "sourceKinds": [
+        "lv2-metadata"
+      ],
       "nativeUiTypes": [],
       "assets": [
         "switch"
@@ -127,10 +130,11 @@
       "sourceFiles": []
     },
     "dexed": {
-      "sourceKinds": [],
+      "sourceKinds": [
+        "lv2-metadata"
+      ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -139,7 +143,6 @@
       "sourceKinds": [],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -154,6 +157,7 @@
     },
     "drumkv1": {
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-native-ui",
         "qt-native-ui"
       ],
@@ -164,7 +168,6 @@
         "X11UI"
       ],
       "assets": [
-        "canvas-editor",
         "knob",
         "switch"
       ],
@@ -187,7 +190,9 @@
       "sourceFiles": []
     },
     "fil4": {
-      "sourceKinds": [],
+      "sourceKinds": [
+        "lv2-metadata"
+      ],
       "nativeUiTypes": [],
       "assets": [
         "switch"
@@ -203,80 +208,85 @@
       "sourceFiles": []
     },
     "fm_synth": {
-      "sourceKinds": [],
+      "sourceKinds": [
+        "lv2-metadata"
+      ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
     },
     "fomp-autowah": {
-      "sourceKinds": [],
+      "sourceKinds": [
+        "lv2-metadata"
+      ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
     },
     "fomp-blvco": {
-      "sourceKinds": [],
-      "nativeUiTypes": [],
-      "assets": [
-        "canvas-editor"
+      "sourceKinds": [
+        "lv2-metadata"
       ],
+      "nativeUiTypes": [],
+      "assets": [],
       "sourceFiles": []
     },
     "fomp-cs_chorus": {
-      "sourceKinds": [],
-      "nativeUiTypes": [],
-      "assets": [
-        "canvas-editor"
+      "sourceKinds": [
+        "lv2-metadata"
       ],
+      "nativeUiTypes": [],
+      "assets": [],
       "sourceFiles": []
     },
     "fomp-cs_phaser": {
-      "sourceKinds": [],
-      "nativeUiTypes": [],
-      "assets": [
-        "canvas-editor"
+      "sourceKinds": [
+        "lv2-metadata"
       ],
+      "nativeUiTypes": [],
+      "assets": [],
       "sourceFiles": []
     },
     "fomp-filters": {
-      "sourceKinds": [],
+      "sourceKinds": [
+        "lv2-metadata"
+      ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
     },
     "fomp-mvchpf24": {
-      "sourceKinds": [],
+      "sourceKinds": [
+        "lv2-metadata"
+      ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
     },
     "fomp-mvclpf24": {
-      "sourceKinds": [],
+      "sourceKinds": [
+        "lv2-metadata"
+      ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
     },
     "fomp-reverbs": {
-      "sourceKinds": [],
-      "nativeUiTypes": [],
-      "assets": [
-        "canvas-editor"
+      "sourceKinds": [
+        "lv2-metadata"
       ],
+      "nativeUiTypes": [],
+      "assets": [],
       "sourceFiles": []
     },
     "foverdrive": {
@@ -296,7 +306,9 @@
       "sourceFiles": []
     },
     "geonkick": {
-      "sourceKinds": [],
+      "sourceKinds": [
+        "lv2-metadata"
+      ],
       "nativeUiTypes": [],
       "assets": [
         "canvas-editor",
@@ -337,10 +349,11 @@
       "sourceFiles": []
     },
     "juce-opl": {
-      "sourceKinds": [],
+      "sourceKinds": [
+        "lv2-metadata"
+      ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -357,11 +370,11 @@
       "brand": "MDA",
       "label": "Ambience",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -370,11 +383,11 @@
       "brand": "MDA",
       "label": "Bandisto",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -383,11 +396,11 @@
       "brand": "MDA",
       "label": "BeatBox",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -396,11 +409,11 @@
       "brand": "MDA",
       "label": "Combo",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -409,11 +422,11 @@
       "brand": "MDA",
       "label": "DeEss",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -422,11 +435,11 @@
       "brand": "MDA",
       "label": "Degrade",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -435,11 +448,11 @@
       "brand": "MDA",
       "label": "Delay",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -448,11 +461,11 @@
       "brand": "MDA",
       "label": "Detune",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -461,11 +474,11 @@
       "brand": "MDA",
       "label": "Dither",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -474,11 +487,11 @@
       "brand": "MDA",
       "label": "DubDelay",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -487,11 +500,11 @@
       "brand": "MDA",
       "label": "DX10",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -500,11 +513,11 @@
       "brand": "MDA",
       "label": "Dynamics",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -513,11 +526,11 @@
       "brand": "MDA",
       "label": "ePiano",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -526,11 +539,11 @@
       "brand": "MDA",
       "label": "Image",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -539,11 +552,11 @@
       "brand": "MDA",
       "label": "JX10",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -552,11 +565,11 @@
       "brand": "MDA",
       "label": "Leslie",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -565,11 +578,11 @@
       "brand": "MDA",
       "label": "Limiter",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -578,11 +591,11 @@
       "brand": "MDA",
       "label": "Loudness",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -591,11 +604,11 @@
       "brand": "MDA",
       "label": "MultiBand",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -604,11 +617,11 @@
       "brand": "MDA",
       "label": "Overdrive",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -617,11 +630,11 @@
       "brand": "MDA",
       "label": "Piano",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -630,11 +643,11 @@
       "brand": "MDA",
       "label": "RePsycho",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -643,11 +656,11 @@
       "brand": "MDA",
       "label": "RezFilter",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -656,11 +669,11 @@
       "brand": "MDA",
       "label": "RingMod",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -669,11 +682,11 @@
       "brand": "MDA",
       "label": "RoundPan",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -682,11 +695,11 @@
       "brand": "MDA",
       "label": "Shepard",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -695,11 +708,11 @@
       "brand": "MDA",
       "label": "Splitter",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -708,11 +721,11 @@
       "brand": "MDA",
       "label": "Stereo",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -721,11 +734,11 @@
       "brand": "MDA",
       "label": "SubSynth",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -734,11 +747,11 @@
       "brand": "MDA",
       "label": "TalkBox",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -747,11 +760,11 @@
       "brand": "MDA",
       "label": "TestTone",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -760,11 +773,11 @@
       "brand": "MDA",
       "label": "ThruZero",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -773,11 +786,11 @@
       "brand": "MDA",
       "label": "Tracker",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -786,11 +799,11 @@
       "brand": "MDA",
       "label": "Transient",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -799,11 +812,11 @@
       "brand": "MDA",
       "label": "VocInput",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -812,26 +825,29 @@
       "brand": "MDA",
       "label": "Vocoder",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
     },
     "nekobi": {
-      "sourceKinds": [],
+      "sourceKinds": [
+        "lv2-metadata"
+      ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
     },
     "noise-repellent": {
-      "sourceKinds": [],
+      "sourceKinds": [
+        "lv2-metadata"
+      ],
       "nativeUiTypes": [],
       "assets": [
         "switch"
@@ -847,10 +863,11 @@
       "sourceFiles": []
     },
     "obxd": {
-      "sourceKinds": [],
+      "sourceKinds": [
+        "lv2-metadata"
+      ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "knob",
         "switch"
       ],
@@ -858,13 +875,13 @@
     },
     "padthv1": {
       "sourceKinds": [
+        "lv2-metadata",
         "qt-native-ui"
       ],
       "nativeUiTypes": [
         "QtUI"
       ],
       "assets": [
-        "canvas-editor",
         "knob",
         "switch"
       ],
@@ -888,6 +905,7 @@
     },
     "samplv1": {
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-native-ui",
         "qt-native-ui"
       ],
@@ -924,6 +942,7 @@
       "brand": "x42",
       "label": "setBfree",
       "sourceKinds": [
+        "lv2-metadata",
         "modgui"
       ],
       "nativeUiTypes": [],
@@ -947,7 +966,9 @@
       ]
     },
     "setBfree-overdrive": {
-      "sourceKinds": [],
+      "sourceKinds": [
+        "lv2-metadata"
+      ],
       "nativeUiTypes": [],
       "assets": [
         "switch"
@@ -955,7 +976,9 @@
       "sourceFiles": []
     },
     "setBfree-reverb": {
-      "sourceKinds": [],
+      "sourceKinds": [
+        "lv2-metadata"
+      ],
       "nativeUiTypes": [],
       "assets": [
         "switch"
@@ -971,16 +994,19 @@
       "sourceFiles": []
     },
     "so-404": {
-      "sourceKinds": [],
+      "sourceKinds": [
+        "lv2-metadata"
+      ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
     },
     "so-666": {
-      "sourceKinds": [],
+      "sourceKinds": [
+        "lv2-metadata"
+      ],
       "nativeUiTypes": [],
       "assets": [
         "switch"
@@ -988,7 +1014,9 @@
       "sourceFiles": []
     },
     "so-kl5": {
-      "sourceKinds": [],
+      "sourceKinds": [
+        "lv2-metadata"
+      ],
       "nativeUiTypes": [],
       "assets": [
         "switch"
@@ -997,6 +1025,7 @@
     },
     "sorcer": {
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-native-ui"
       ],
       "nativeUiTypes": [
@@ -1012,6 +1041,7 @@
       "label": "String machine",
       "sourceKinds": [
         "dpf-native-ui",
+        "lv2-metadata",
         "lv2-mod-metadata",
         "lv2-native-ui"
       ],
@@ -1020,7 +1050,6 @@
         "DPFUI"
       ],
       "assets": [
-        "canvas-editor",
         "knob",
         "meter",
         "slider",
@@ -1037,10 +1066,11 @@
       "sourceFiles": []
     },
     "synthv1": {
-      "sourceKinds": [],
+      "sourceKinds": [
+        "lv2-metadata"
+      ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -1048,7 +1078,14 @@
     "tap-autopan": {
       "brand": "TAP",
       "label": "Auto Panner",
+      "modgui": {
+        "model": "boxy",
+        "panel": "3-knobs",
+        "color": "darkblue",
+        "knob": "black"
+      },
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "modgui"
       ],
@@ -1073,7 +1110,14 @@
     "tap-chorusflanger": {
       "brand": "TAP",
       "label": "Chorus/Flanger",
+      "modgui": {
+        "model": "japanese",
+        "panel": "7-a-knobs",
+        "color": "purple",
+        "knob": "purple"
+      },
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "modgui"
       ],
@@ -1096,7 +1140,14 @@
     "tap-deesser": {
       "brand": "TAP",
       "label": "DeEsser",
+      "modgui": {
+        "model": "boxy",
+        "panel": "2-knobs",
+        "color": "red",
+        "knob": "black"
+      },
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "modgui"
       ],
@@ -1121,7 +1172,14 @@
     "tap-doubler": {
       "brand": "TAP",
       "label": "Fractal Doubler",
+      "modgui": {
+        "model": "japanese",
+        "panel": "8-knobs",
+        "color": "darkblue",
+        "knob": "cream"
+      },
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "modgui"
       ],
@@ -1143,13 +1201,19 @@
     "tap-dynamics": {
       "brand": "TAP",
       "label": "Mono Dynamics",
+      "modgui": {
+        "model": "boxy",
+        "panel": "1-select-3-knobs",
+        "color": "red",
+        "knob": "black"
+      },
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "modgui"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "knob",
         "panel-art",
         "switch"
@@ -1169,13 +1233,19 @@
     "tap-dynamics-st": {
       "brand": "TAP",
       "label": "Stereo Dynamics",
+      "modgui": {
+        "model": "boxy",
+        "panel": "1-select-3-knobs",
+        "color": "red",
+        "knob": "black"
+      },
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "modgui"
       ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "knob",
         "panel-art",
         "switch"
@@ -1195,7 +1265,14 @@
     "tap-echo": {
       "brand": "TAP",
       "label": "Stereo Echo",
+      "modgui": {
+        "model": "japanese",
+        "panel": "7-a-knobs",
+        "color": "cream",
+        "knob": "white"
+      },
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "modgui"
       ],
@@ -1220,6 +1297,7 @@
       "brand": "TAP",
       "label": "Equalizer",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "modgui"
       ],
@@ -1248,6 +1326,7 @@
       "brand": "TAP",
       "label": "Equalizer/BW",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "modgui"
       ],
@@ -1275,7 +1354,14 @@
     "tap-limiter": {
       "brand": "TAP",
       "label": "Scaling Limiter",
+      "modgui": {
+        "model": "boxy",
+        "panel": "2-knobs",
+        "color": "red",
+        "knob": "black"
+      },
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "modgui"
       ],
@@ -1300,7 +1386,14 @@
     "tap-pinknoise": {
       "brand": "TAP",
       "label": "Pink Noise",
+      "modgui": {
+        "model": "boxy",
+        "panel": "3-knobs",
+        "color": "pink",
+        "knob": "black"
+      },
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "modgui"
       ],
@@ -1326,7 +1419,14 @@
     "tap-pitch": {
       "brand": "TAP",
       "label": "Pitch Shifter",
+      "modgui": {
+        "model": "boxy",
+        "panel": "5-knobs",
+        "color": "darkblue",
+        "knob": "black"
+      },
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "modgui"
       ],
@@ -1351,7 +1451,14 @@
     "tap-reflector": {
       "brand": "TAP",
       "label": "Reflector",
+      "modgui": {
+        "model": "boxy",
+        "panel": "3-knobs",
+        "color": "white",
+        "knob": "black"
+      },
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "modgui"
       ],
@@ -1376,7 +1483,14 @@
     "tap-reverb": {
       "brand": "TAP",
       "label": "Reverberator",
+      "modgui": {
+        "model": "boxy",
+        "panel": "1-select-3-knobs",
+        "color": "cream",
+        "knob": "black"
+      },
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "modgui"
       ],
@@ -1401,7 +1515,14 @@
     "tap-rotspeak": {
       "brand": "TAP",
       "label": "Rotary Speaker",
+      "modgui": {
+        "model": "japanese",
+        "panel": "4-knobs",
+        "color": "purple",
+        "knob": "petrol"
+      },
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "modgui"
       ],
@@ -1424,7 +1545,14 @@
     "tap-sigmoid": {
       "brand": "TAP",
       "label": "Sigmoid Booster",
+      "modgui": {
+        "model": "boxy",
+        "panel": "2-knobs",
+        "color": "orange",
+        "knob": "aluminium"
+      },
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "modgui"
       ],
@@ -1449,7 +1577,14 @@
     "tap-tremolo": {
       "brand": "TAP",
       "label": "Tremolo",
+      "modgui": {
+        "model": "boxy",
+        "panel": "3-knobs",
+        "color": "racing",
+        "knob": "black"
+      },
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "modgui"
       ],
@@ -1475,7 +1610,14 @@
     "tap-tubewarmth": {
       "brand": "TAP",
       "label": "Tubewarmth",
+      "modgui": {
+        "model": "boxy",
+        "panel": "2-knobs",
+        "color": "brown",
+        "knob": "black"
+      },
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "modgui"
       ],
@@ -1500,7 +1642,14 @@
     "tap-vibrato": {
       "brand": "TAP",
       "label": "Vibrato",
+      "modgui": {
+        "model": "japanese",
+        "panel": "4-knobs",
+        "color": "green",
+        "knob": "green"
+      },
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "modgui"
       ],
@@ -1542,7 +1691,6 @@
       "sourceKinds": [],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -1556,7 +1704,9 @@
       "sourceFiles": []
     },
     "vl1-emulator": {
-      "sourceKinds": [],
+      "sourceKinds": [
+        "lv2-metadata"
+      ],
       "nativeUiTypes": [],
       "assets": [
         "canvas-editor",
@@ -1573,10 +1723,11 @@
       "sourceFiles": []
     },
     "wadspa_synth": {
-      "sourceKinds": [],
+      "sourceKinds": [
+        "lv2-metadata"
+      ],
       "nativeUiTypes": [],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -1586,6 +1737,7 @@
       "label": "Wolf Shaper",
       "sourceKinds": [
         "dpf-native-ui",
+        "lv2-metadata",
         "lv2-mod-metadata"
       ],
       "nativeUiTypes": [
@@ -1604,6 +1756,7 @@
       "brand": "ZamAudio",
       "label": "ZamAutoSat",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "lv2-native-ui"
       ],
@@ -1617,6 +1770,7 @@
       "brand": "ZamAudio",
       "label": "ZaMaximX2",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "lv2-native-ui"
       ],
@@ -1632,6 +1786,7 @@
       "brand": "ZamAudio",
       "label": "ZamComp",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "lv2-native-ui"
       ],
@@ -1647,6 +1802,7 @@
       "brand": "ZamAudio",
       "label": "ZamCompX2",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "lv2-native-ui"
       ],
@@ -1662,6 +1818,7 @@
       "brand": "ZamAudio",
       "label": "ZamDelay",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "lv2-native-ui"
       ],
@@ -1677,6 +1834,7 @@
       "brand": "ZamAudio",
       "label": "ZamDynamicEQ",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "lv2-native-ui"
       ],
@@ -1692,6 +1850,7 @@
       "brand": "ZamAudio",
       "label": "ZamEcho",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "lv2-native-ui"
       ],
@@ -1707,6 +1866,7 @@
       "brand": "ZamAudio",
       "label": "ZamEQ2",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "lv2-native-ui"
       ],
@@ -1722,6 +1882,7 @@
       "brand": "ZamAudio",
       "label": "ZamGate",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "lv2-native-ui"
       ],
@@ -1737,6 +1898,7 @@
       "brand": "ZamAudio",
       "label": "ZamGateX2",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "lv2-native-ui"
       ],
@@ -1752,6 +1914,7 @@
       "brand": "ZamAudio",
       "label": "ZamGEQ31",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "lv2-native-ui"
       ],
@@ -1767,6 +1930,7 @@
       "brand": "ZamAudio",
       "label": "ZamGrains",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "lv2-native-ui"
       ],
@@ -1782,6 +1946,7 @@
       "brand": "ZamAudio",
       "label": "ZamPhono",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "lv2-native-ui"
       ],
@@ -1797,6 +1962,7 @@
       "brand": "ZamAudio",
       "label": "ZamTube",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "lv2-native-ui"
       ],
@@ -1804,7 +1970,6 @@
         "CocoaUI"
       ],
       "assets": [
-        "canvas-editor",
         "switch"
       ],
       "sourceFiles": []
@@ -1813,6 +1978,7 @@
       "brand": "ZamAudio",
       "label": "ZaMultiComp",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "lv2-native-ui"
       ],
@@ -1828,6 +1994,7 @@
       "brand": "ZamAudio",
       "label": "ZaMultiCompX2",
       "sourceKinds": [
+        "lv2-metadata",
         "lv2-mod-metadata",
         "lv2-native-ui"
       ],

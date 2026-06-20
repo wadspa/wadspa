@@ -8,6 +8,12 @@ import {
 export const WADSPA_UI_MODEL = Object.freeze({
   schema: 'wadspa-ui-model-v1',
   widgets: Object.freeze(['knob', 'slider', 'fader', 'toggle', 'menu', 'canvas']),
+  artDirection: Object.freeze({
+    knobs: 'Default continuous synth/effect controls to rotary knobs, matching Qt/LV2 dial-heavy native UIs.',
+    faders: 'Use vertical faders for EQ strips, drawbars, and primary gain banks where scanning levels matters.',
+    panels: 'Promote coherent signal blocks into panels when a plugin has multiple sections, dense controls, or native group-box/panel hints.',
+    canvas: 'Use canvas layouts only for real editable curve/envelope/wave editors exposed by the web port.',
+  }),
   sections: Object.freeze([
     'oscillators',
     'drawbars',
@@ -101,6 +107,8 @@ function sectionsForFields(fields) {
     .map(([id, sectionFields]) => ({
       id,
       title: SECTION_TITLES[id] ?? id,
+      panel: panelForSection(id, sectionFields),
+      density: densityForFields(sectionFields),
       fields: sectionFields.sort((a, b) => a.priority - b.priority),
     }));
 }
@@ -117,7 +125,8 @@ function inferFamily(plugin, hint, target) {
 }
 
 function layoutForPlugin(plugin, family, fields, hint) {
-  if ((plugin?.canvasEditors?.length ?? 0) > 0 || hint?.assets?.includes('canvas-editor')) return 'canvas';
+  if ((plugin?.canvasEditors?.length ?? 0) > 0) return 'canvas';
+  if (fields.some(field => field.section === 'drawbars')) return 'drawbar';
   if (fields.length >= 80) return 'matrix';
   if (family === 'instrument') return 'instrument';
   if (family === 'tone-shaper' || fields.filter(field => field.section === 'equalizer').length >= 6) return 'rack';
@@ -130,6 +139,7 @@ function sourceHintsForModel(hint) {
     sourceKinds: hint?.sourceKinds ?? [],
     nativeUiTypes: hint?.nativeUiTypes ?? [],
     assets: hint?.assets ?? [],
+    modgui: hint?.modgui ?? null,
     sourceFiles: hint?.sourceFiles ?? [],
   };
 }
@@ -195,14 +205,30 @@ function roleForPort(port, section) {
 function widgetForPort(port, section, role, ports, hint) {
   if (usesMenuControl(port)) return 'menu';
   if (port.toggled) return 'toggle';
+  if (/slider/i.test(hint?.modgui?.panel ?? '') && section === 'equalizer') return 'fader';
   if (section === 'equalizer' && (role === 'level' || /band\s*\d|band\d/i.test(portText(port)))) return 'fader';
   if (section === 'drawbars' && /drawbar|harmonic|foot|[0-9]'/i.test(portText(port))) return 'fader';
-  if (ports.length >= 80) return 'slider';
   if (hint?.assets?.includes('slider') && section === 'equalizer') return 'fader';
-  if (role === 'envelope') return 'slider';
+  if (role === 'envelope') return 'knob';
   if (role === 'frequency' || role === 'shape' || role === 'motion') return 'knob';
   if (section === 'mixer' && /gain|level|volume/i.test(portText(port))) return 'fader';
-  return ports.length <= 48 ? 'knob' : 'slider';
+  if (/sample start|sample end|loop start|loop end|position|offset/i.test(portText(port))) return 'slider';
+  return 'knob';
+}
+
+function panelForSection(section, fields) {
+  if (section === 'drawbars') return 'drawbar-bank';
+  if (section === 'equalizer' && fields.filter(field => field.widget === 'fader').length >= 6) return 'rack-strip';
+  if (fields.length >= 18) return 'dense-bank';
+  if (section === 'envelopes' || section === 'oscillators' || section === 'filter' || section === 'modulation') return 'synth-panel';
+  if (section === 'playback') return 'program-panel';
+  return fields.length <= 3 ? 'compact-panel' : 'control-panel';
+}
+
+function densityForFields(fields) {
+  if (fields.length >= 24) return 'dense';
+  if (fields.length >= 10) return 'medium';
+  return 'open';
 }
 
 function priorityForPort(port, section, index) {
