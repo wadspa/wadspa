@@ -171,7 +171,10 @@ function shouldInferLogSlider(p, min, max) {
 
 export function scalePointOptions(p) {
   const seen = new Set();
-  return (p.scalePoints ?? [])
+  const points = (p.scalePoints?.length ?? 0) > 0
+    ? p.scalePoints
+    : inferredScalePointOptions(p);
+  return points
     .map(point => ({ label: String(point.label ?? point.value), value: Number(point.value) }))
     .filter(point => Number.isFinite(point.value))
     .sort((a, b) => a.value - b.value)
@@ -181,6 +184,37 @@ export function scalePointOptions(p) {
       seen.add(key);
       return true;
     });
+}
+
+function inferredScalePointOptions(p) {
+  const embedded = embeddedScalePointOptions(p);
+  if (embedded.length > 1) return embedded;
+  if (!shouldInferNumericMenuOptions(p)) return [];
+  const min = finitePortNumber(p.min);
+  const max = finitePortNumber(p.max);
+  return Array.from({ length: max - min + 1 }, (_, offset) => {
+    const value = min + offset;
+    return { label: trimNumber(value, 0), value };
+  });
+}
+
+function embeddedScalePointOptions(p) {
+  const name = String(p?.name ?? '');
+  const matches = [...name.matchAll(/(-?\d+(?:\.\d+)?)\s*(?:=|for)\s*([^,;)]+)/gi)]
+    .map(match => ({
+      label: match[2].trim(),
+      value: Number(match[1]),
+    }))
+    .filter(point => point.label && Number.isFinite(point.value) && valueInRawRange(p, point.value));
+  return matches.length > 1 ? matches : [];
+}
+
+function shouldInferNumericMenuOptions(p) {
+  const min = finitePortNumber(p.min);
+  const max = finitePortNumber(p.max);
+  if (!Number.isInteger(min) || !Number.isInteger(max) || max < min || max - min > 16) return false;
+  if (!(p.integer || p.enumeration)) return false;
+  return /\b(?:mode|type|select|selector|option)\b/i.test(String(p?.name ?? ''));
 }
 
 export function usesMenuControl(p) {

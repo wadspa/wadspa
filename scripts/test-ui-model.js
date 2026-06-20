@@ -2,7 +2,7 @@
 import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
-import { visibleControlPorts } from '../docs/control-utils.js';
+import { scalePointOptions, visibleControlPorts } from '../docs/control-utils.js';
 import { WADSPA_UI_MODEL, createWadspaUiModel } from '../docs/ui-model.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -60,6 +60,9 @@ for (const entry of entries) {
 
 if (!WADSPA_UI_MODEL.artDirection?.knobs || !WADSPA_UI_MODEL.artDirection?.panels) {
   fail('UI model exposes art direction for knob and panel decisions');
+}
+if (!WADSPA_UI_MODEL.artDirection?.menus?.includes('mode/type/select')) {
+  fail('UI model art direction reserves menus for enumerated mode/type/select controls');
 }
 if (!WADSPA_UI_MODEL.artDirection.panels.includes('one/two-control groups compact')) {
   fail('UI model art direction keeps tiny groups compact');
@@ -174,6 +177,25 @@ for (const id of ['obxd', 'padthv1', 'synthv1']) {
 
 const chorusModel = models.get('tap-chorusflanger')?.model;
 if ((widgetCount(chorusModel, 'knob') ?? 0) < 6) fail('tap-chorusflanger MOD knob panel renders primarily as knobs');
+
+for (const [id, portPattern, labels] of [
+  ['diode', /Mode \(0 for none/i, ['none', 'half wave', 'full wave']],
+  ['gate', /Output select/i, ['key listen', 'gate', 'bypass']],
+  ['svf', /Filter type/i, ['none', 'LP', 'HP', 'BP', 'BR', 'AP']],
+]) {
+  const model = models.get(id)?.model;
+  const field = model?.fields.find(item => portPattern.test(item.portName));
+  if (field?.widget !== 'menu') fail(`${id}/${field?.portName ?? portPattern}: embedded numeric choices should render as a menu`);
+  const options = scalePointOptions(field?.port);
+  for (const label of labels) {
+    if (!options.some(option => option.label === label)) {
+      fail(`${id}/${field?.portName ?? portPattern}: inferred menu is missing ${label}`);
+    }
+  }
+}
+
+const zamPhonoType = models.get('ZamPhono')?.model.fields.find(field => /Filter Type/i.test(field.portName));
+if (zamPhonoType?.widget !== 'menu') fail('ZamPhono integer filter type should render as a compact menu');
 
 for (const id of ['tap-eq', 'tap-eqbw', 'triple_para']) {
   const model = models.get(id)?.model;

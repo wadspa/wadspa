@@ -11,6 +11,7 @@ export const WADSPA_UI_MODEL = Object.freeze({
   artDirection: Object.freeze({
     knobs: 'Default continuous synth/effect controls to rotary knobs, matching Qt/LV2 dial-heavy native UIs.',
     faders: 'Reserve vertical faders for EQ gain strips, drawbars, and true gain banks where scanning parallel levels matters.',
+    menus: 'Use menus for enumerated mode/type/select controls, including integer controls with embedded numeric choice labels.',
     panels: 'Promote coherent signal blocks into panels when they have enough controls, dense controls, or native group-box/panel hints; keep one/two-control groups compact.',
     canvas: 'Use canvas layouts only for real editable curve/envelope/wave editors exposed by the web port.',
   }),
