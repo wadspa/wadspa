@@ -70,6 +70,8 @@ const cssChecks = [
   ['stationary knob body', /\.knob-face\s*\{[^}]*transform:\s*none;/s],
   ['rotating knob indicator', /\.knob-face::after\s*\{[^}]*transform:\s*rotate\(var\(--knob-angle,\s*-135deg\)\)/s],
   ['stationary fader cap', /\.ctrl-row\[data-widget="fader"\] \.knob-face::after\s*\{[^}]*transform:\s*none;/s],
+  ['full-width menu controls', /\.ctrl-row\[data-widget="menu"\] \.ctrl-line\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\);[\s\S]*\.ctrl-row\[data-widget="menu"\] select\s*\{[^}]*width:\s*100%;/s],
+  ['menu duplicate value hidden', /\.ctrl-row\[data-widget="menu"\] \.val\s*\{[^}]*display:\s*none;/s],
   ['compact label clamp', /-webkit-line-clamp:\s*2/],
   ['mobile breakpoint', /@media \(max-width:\s*900px\)/],
 ];

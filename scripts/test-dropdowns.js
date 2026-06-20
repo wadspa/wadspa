@@ -111,6 +111,8 @@ assertIncludes(html, "wrap.dataset.uiModel = WADSPA_UI_MODEL.schema;", 'control 
 assertIncludes(html, 'const model = createWadspaUiModel(plugin, {', 'control renderer builds a wadspa UI model per plugin');
 assertIncludes(html, "row.dataset.widget = field.widget;", 'model widget type is exposed on each control row');
 assertIncludes(html, 'syncControlVisual(control);', 'knob and fader visuals are synchronized with control values');
+assertMatches(/\.ctrl-row\[data-widget="menu"\] \.ctrl-line\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\);/, 'menu controls keep selects full-width instead of splitting width with duplicate values');
+assertMatches(/\.ctrl-row\[data-widget="menu"\] \.val\s*\{[^}]*display:\s*none;/, 'menu controls hide redundant value readouts');
 assertIncludes(html, 'function buildCanvasEditors(container, node, plugin)', 'instrument canvas editor renderer exists');
 assertIncludes(html, 'function buildCurveCanvas(container, node, editor)', 'generic editable curve canvas exists');
 assertIncludes(html, 'node.setPluginState(editor.key, normalizedPointsToState(pts));', 'canvas editors write state into the plugin');

@@ -189,6 +189,7 @@
     .ctrl-row select {
       flex: 1; min-width: 0; padding: 0.15rem 0.25rem; font-family: monospace; font-size: 0.62rem;
       background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 2px;
+      overflow: hidden; text-overflow: ellipsis;
     }
     .ctrl-row .val { font-size: 0.62rem; color: #aaa; min-width: 3rem; text-align: right; }
     .plugin-ui-sections {
@@ -312,7 +313,9 @@
     .ctrl-row[data-widget="toggle"] .ctrl-line { justify-content: space-between; min-height: 22px; }
     .ctrl-row[data-widget="menu"] label,
     .ctrl-row[data-widget="toggle"] label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .ctrl-row[data-widget="menu"] .ctrl-line { display: grid; grid-template-columns: minmax(0, 1fr) minmax(2.5rem, max-content); }
+    .ctrl-row[data-widget="menu"] .ctrl-line { display: grid; grid-template-columns: minmax(0, 1fr); }
+    .ctrl-row[data-widget="menu"] select { width: 100%; }
+    .ctrl-row[data-widget="menu"] .val { display: none; }
     .toggle-shell { display: inline-flex; align-items: center; gap: 0.35rem; cursor: pointer; }
     .toggle-shell input { position: absolute; opacity: 0; pointer-events: none; }
     .toggle-track {
