@@ -89,6 +89,9 @@ for (const entry of entries) {
     if (section.panel === 'drawbar-bank' && !section.fields.some(isRegistrationField)) {
       fail(`${entry.id}/${section.id}: drawbar bank lacks registration-style controls`);
     }
+    if (hasNativeGroupedPanels(hint) && section.fields.length > 1 && section.panel === 'compact-panel') {
+      fail(`${entry.id}/${section.id}: native grouped/tabbed UI should render multi-control sections as panels`);
+    }
     validateSectionGeometry(entry, model, section);
   }
 
@@ -103,6 +106,9 @@ for (const entry of entries) {
   }
   if (entry.id === 'tap-rotspeak' && model.layout === 'drawbar') {
     fail('tap-rotspeak is a rotary speaker, not a drawbar bank');
+  }
+  if ((entry.id === 'casynth' || entry.id === 'string-machine') && model.layout === 'drawbar') {
+    fail(`${entry.id}: harmonic/footage controls are not enough evidence for organ drawbar layout`);
   }
   if (model.layout === 'matrix' && (counts.knob ?? 0) < 40) {
     fail(`${entry.id}: matrix layout should be a knob-dominant dense panel`);
@@ -222,4 +228,8 @@ function isRegistrationField(field) {
 
 function isSampleLoopSlider(field) {
   return /(?:sample|loop)\s*(?:start|end|position|offset)/i.test(`${field.portName} ${field.symbol ?? ''}`);
+}
+
+function hasNativeGroupedPanels(hint) {
+  return Boolean(hint?.nativeLayouts?.some(layout => layout === 'grouped-panel' || layout === 'tabbed-panel'));
 }

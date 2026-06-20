@@ -82,7 +82,7 @@ export function createWadspaUiModel(plugin, options = {}) {
     layout: layoutForPlugin(plugin, family, fields, hint),
     sourceHints: sourceHintsForModel(hint),
     fields,
-    sections: sectionsForFields(fields),
+    sections: sectionsForFields(fields, hint),
     canvasEditors: plugin?.canvasEditors ?? [],
   };
 }
@@ -96,7 +96,7 @@ export function fieldByPortName(model, portName) {
   return model?.fields?.find(field => field.portName === portName) ?? null;
 }
 
-function sectionsForFields(fields) {
+function sectionsForFields(fields, hint) {
   const grouped = new Map();
   for (const field of fields) {
     if (!grouped.has(field.section)) grouped.set(field.section, []);
@@ -107,7 +107,7 @@ function sectionsForFields(fields) {
     .map(([id, sectionFields]) => ({
       id,
       title: SECTION_TITLES[id] ?? id,
-      panel: panelForSection(id, sectionFields),
+      panel: panelForSection(id, sectionFields, hint),
       density: densityForFields(sectionFields),
       fields: sectionFields.sort((a, b) => a.priority - b.priority),
     }));
@@ -139,6 +139,8 @@ function sourceHintsForModel(hint) {
     sourceKinds: hint?.sourceKinds ?? [],
     nativeUiTypes: hint?.nativeUiTypes ?? [],
     assets: hint?.assets ?? [],
+    nativeLayouts: hint?.nativeLayouts ?? [],
+    nativeWidgets: hint?.nativeWidgets ?? {},
     modgui: hint?.modgui ?? null,
     sourceFiles: hint?.sourceFiles ?? [],
   };
@@ -148,7 +150,9 @@ function sectionForPort(port, plugin, family, hint) {
   const text = portText(port);
   const all = modelText(plugin, hint);
 
-  if (/drawbar|tonewheel|harmonic\s*(?:bar|level|mix)?|[0-9]'\s*(?:drawbar|level)?/i.test(text)) {
+  const organLike = /drawbar|tonewheel|organ|setbfree/i.test(all);
+  if (/drawbar|tonewheel/i.test(text)
+    || (organLike && /(?:harmonic\s*(?:bar|level|mix)?|[0-9]'\s*(?:drawbar|level)?)/i.test(text))) {
     return 'drawbars';
   }
   if (/kick|drum|snare|hat|cymbal|tom|trigger|beatbox|velocity|accent/i.test(text) || /drum|kick/i.test(all)) {
@@ -217,10 +221,15 @@ function widgetForPort(port, section, role, ports, hint) {
   return 'knob';
 }
 
-function panelForSection(section, fields) {
+function panelForSection(section, fields, hint) {
   if (section === 'drawbars') return 'drawbar-bank';
   if (section === 'equalizer' && fields.filter(field => field.widget === 'fader').length >= 6) return 'rack-strip';
   if (fields.length >= 18) return 'dense-bank';
+  if (hasNativeGroupedPanels(hint) && fields.length > 1) {
+    if (section === 'playback') return 'program-panel';
+    if (section === 'envelopes' || section === 'oscillators' || section === 'filter' || section === 'modulation') return 'synth-panel';
+    return 'control-panel';
+  }
   if (section === 'envelopes' || section === 'oscillators' || section === 'filter' || section === 'modulation') return 'synth-panel';
   if (section === 'playback') return 'program-panel';
   return fields.length <= 3 ? 'compact-panel' : 'control-panel';
@@ -290,9 +299,14 @@ function modelText(plugin, hint) {
     ...(hint?.sourceKinds ?? []),
     ...(hint?.nativeUiTypes ?? []),
     ...(hint?.assets ?? []),
+    ...(hint?.nativeLayouts ?? []),
   ].filter(Boolean).join(' ');
 }
 
 function portText(port) {
   return `${port?.name ?? ''} ${port?.symbol ?? ''}`;
+}
+
+function hasNativeGroupedPanels(hint) {
+  return Boolean(hint?.nativeLayouts?.some(layout => layout === 'grouped-panel' || layout === 'tabbed-panel'));
 }

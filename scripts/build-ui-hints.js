@@ -80,6 +80,17 @@ function scanEntry(entry, dirs) {
     sourceKinds: new Set(),
     nativeUiTypes: new Set(),
     assets: new Set(),
+    nativeLayouts: new Set(),
+    nativeWidgets: {
+      knobs: 0,
+      sliders: 0,
+      switches: 0,
+      menus: 0,
+      panels: 0,
+      tabs: 0,
+      canvases: 0,
+      meters: 0,
+    },
     sourceFiles: new Set(),
   };
 
@@ -92,7 +103,7 @@ function scanEntry(entry, dirs) {
       if (lower.includes('/modgui/') || lower.endsWith('/modgui.ttl')) {
         hint.sourceKinds.add('modgui');
       }
-      if (/\b(gui|ui|widget|layout|editor|view)\b/i.test(base) || lower.includes('/modgui/')) {
+      if (isUiSourceFile(base, lower)) {
         hint.sourceFiles.add(rel);
       }
 
@@ -116,6 +127,8 @@ function scanEntry(entry, dirs) {
     }
   }
 
+  const nativeLayouts = nativeLayoutsForHint(hint);
+  const nativeWidgets = compactCounts(hint.nativeWidgets);
   const normalized = {
     ...(hint.brand ? { brand: hint.brand } : {}),
     ...(hint.label ? { label: hint.label } : {}),
@@ -123,6 +136,8 @@ function scanEntry(entry, dirs) {
     sourceKinds: [...hint.sourceKinds].sort(),
     nativeUiTypes: [...hint.nativeUiTypes].sort(),
     assets: [...hint.assets].sort(),
+    ...(nativeLayouts.length > 0 ? { nativeLayouts } : {}),
+    ...(Object.keys(nativeWidgets).length > 0 ? { nativeWidgets } : {}),
     sourceFiles: [...hint.sourceFiles].sort().slice(0, 16),
   };
 
@@ -143,6 +158,8 @@ function collectAssetHints(hint, base) {
 }
 
 function collectTextHints(hint, text, rel) {
+  collectNativeWidgetHints(hint, text);
+
   for (const match of text.matchAll(/\b(?:mod|modgui):brand\s+"([^"]+)"/g)) {
     hint.brand ??= match[1];
     hint.sourceKinds.add(rel.includes('modgui') ? 'modgui' : 'lv2-mod-metadata');
@@ -176,6 +193,10 @@ function collectTextHints(hint, text, rel) {
     hint.nativeUiTypes.add('GtkUI');
     hint.sourceKinds.add('gtk-native-ui');
   }
+  if (/\bFl_(?:Group|Tabs|Dial|Slider|Choice|Button)\b|\bFL\/Fl_/i.test(text)) {
+    hint.nativeUiTypes.add('FLTKUI');
+    hint.sourceKinds.add('fltk-native-ui');
+  }
   if (/DISTRHO_UI|DistrhoUI|NanoVG|CairoUI|ExternalUI/.test(text)) {
     hint.nativeUiTypes.add('DPFUI');
     hint.sourceKinds.add('dpf-native-ui');
@@ -188,6 +209,43 @@ function collectTextHints(hint, text, rel) {
   if (/\bcanvas\b|\bspline\b|OscilGen|EnvelopeUI|widget_(?:wave|env)|QPainter[\s\S]{0,500}\b(?:wave|envelope|curve)\b/i.test(text)) {
     hint.assets.add('canvas-editor');
   }
+}
+
+function collectNativeWidgetHints(hint, text) {
+  addMatches(hint.nativeWidgets, 'knobs', text, /\bQDial\b|\bFl_Dial\b|\bqsynthKnob\b|\bOBJ_DIAL\b|mod-knob|button-type=["']knob/gi);
+  addMatches(hint.nativeWidgets, 'sliders', text, /\bQSlider\b|\bFl_Slider\b|\bGtkScale\b|gtk_scale|\buiSlider\b|add(?:Horizontal|Vertical)Slider|button-type=["']slider|mod-slider/gi);
+  addMatches(hint.nativeWidgets, 'switches', text, /\bQCheckBox\b|\bGtkToggleButton\b|\bGtkSwitch\b|gtk_check_button|\bFl_(?:Check_)?Button\b|\bOBJ_SWITCH\b|footswitch/gi);
+  addMatches(hint.nativeWidgets, 'menus', text, /\bQComboBox\b|\bGtkCombo\b|\bGtkMenu\b|\bFl_Choice\b|\buiMenu\b/gi);
+  addMatches(hint.nativeWidgets, 'panels', text, /\bQGroupBox\b|\bGtkFrame\b|gtk_frame_new|\bFl_Group\b|add(?:Horizontal|Vertical)Box/gi);
+  addMatches(hint.nativeWidgets, 'tabs', text, /\bQTabWidget\b|\bGtkNotebook\b|gtk_notebook|\bFl_Tabs\b|openTabBox/gi);
+  addMatches(hint.nativeWidgets, 'canvases', text, /\bcanvas\b|\bspline\b|OscilGen|EnvelopeUI|widget_(?:wave|env)|QPainter[\s\S]{0,500}\b(?:wave|envelope|curve)\b/gi);
+  addMatches(hint.nativeWidgets, 'meters', text, /\bmeter\b|\bled\b|LevelMeter|VU\s*Meter/gi);
+}
+
+function addMatches(counts, key, text, pattern) {
+  counts[key] += [...text.matchAll(pattern)].length;
+}
+
+function nativeLayoutsForHint(hint) {
+  const layouts = new Set(hint.nativeLayouts);
+  const counts = hint.nativeWidgets;
+  if (counts.panels > 0) layouts.add('grouped-panel');
+  if (counts.tabs > 0) layouts.add('tabbed-panel');
+  if (counts.canvases > 0 || hint.assets.has('canvas-editor')) layouts.add('canvas-editor');
+  if (counts.knobs >= Math.max(4, counts.sliders * 2)) layouts.add('dial-bank');
+  if (counts.sliders >= 6 && counts.sliders > counts.knobs) layouts.add('fader-strip');
+  return [...layouts].sort();
+}
+
+function compactCounts(counts) {
+  return Object.fromEntries(Object.entries(counts).filter(([, value]) => value > 0));
+}
+
+function isUiSourceFile(base, lower) {
+  return /\b(gui|ui|layout|editor|view)\b/i.test(base)
+    || /widget|knob|dial|slider|fader|switch|panel|palette|levelmeter|\bvu\b/i.test(base)
+    || lower.endsWith('.fl')
+    || lower.includes('/modgui/');
 }
 
 function* walk(dir, depth) {
@@ -217,5 +275,7 @@ function hasHint(hint) {
     || hint.sourceKinds.length > 0
     || hint.nativeUiTypes.length > 0
     || hint.assets.length > 0
+    || (hint.nativeLayouts?.length ?? 0) > 0
+    || Object.values(hint.nativeWidgets ?? {}).some(value => value > 0)
     || hint.sourceFiles.length > 0;
 }

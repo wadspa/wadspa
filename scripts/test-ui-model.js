@@ -73,9 +73,25 @@ const samplv1 = hints.plugins?.samplv1;
 if (!samplv1?.nativeUiTypes?.some(type => /Qt|X11|external/i.test(type))) {
   fail('samplv1 hint includes native Qt/X11/external UI metadata');
 }
+if (!samplv1?.nativeLayouts?.includes('grouped-panel') || !samplv1?.nativeWidgets?.panels) {
+  fail('samplv1 hint preserves Qt grouped-panel metadata');
+}
+
+const casynth = hints.plugins?.casynth;
+if (!casynth?.sourceKinds?.includes('fltk-native-ui') || !casynth?.nativeUiTypes?.includes('FLTKUI')) {
+  fail('casynth hint includes FLTK native UI metadata');
+}
+if (!casynth?.nativeLayouts?.includes('dial-bank') || !casynth?.nativeLayouts?.includes('grouped-panel')) {
+  fail('casynth hint preserves FLTK dial/group layout metadata');
+}
 
 const setbfree = hints.plugins?.setbfree;
 if (!setbfree?.assets?.includes('drawbar')) fail('setbfree hint includes drawbar metadata');
+
+const zynaddsubfx = hints.plugins?.zynaddsubfx;
+if (!zynaddsubfx?.nativeLayouts?.includes('tabbed-panel') || !zynaddsubfx?.nativeWidgets?.tabs) {
+  fail('zynaddsubfx hint preserves FLTK tabbed-panel metadata');
+}
 
 const geonkick = models.get('geonkick')?.model;
 if (geonkick?.layout !== 'canvas') fail('geonkick keeps canvas layout for implemented envelope editors');
@@ -83,6 +99,11 @@ if (geonkick?.layout !== 'canvas') fail('geonkick keeps canvas layout for implem
 const setbfreeModel = models.get('setbfree')?.model;
 if (setbfreeModel?.layout !== 'drawbar') fail('setbfree uses a drawbar bank layout');
 if ((widgetCount(setbfreeModel, 'fader') ?? 0) < 9) fail('setbfree drawbars render as faders');
+
+for (const id of ['casynth', 'string-machine']) {
+  const model = models.get(id)?.model;
+  if (model?.layout === 'drawbar') fail(`${id}: harmonic/footage synth controls should not become organ drawbar banks`);
+}
 
 for (const id of ['obxd', 'padthv1', 'synthv1']) {
   const model = models.get(id)?.model;

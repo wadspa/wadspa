@@ -50,17 +50,30 @@
     },
     "casynth": {
       "sourceKinds": [
+        "fltk-native-ui",
         "lv2-metadata",
         "lv2-native-ui"
       ],
       "nativeUiTypes": [
+        "FLTKUI",
         "X11UI"
       ],
       "assets": [
         "knob",
         "switch"
       ],
-      "sourceFiles": []
+      "nativeLayouts": [
+        "dial-bank",
+        "grouped-panel"
+      ],
+      "nativeWidgets": {
+        "knobs": 19,
+        "switches": 29,
+        "panels": 1
+      },
+      "sourceFiles": [
+        "infamous-plugins/src/casynth/casynth_ui.fl"
+      ]
     },
     "chorus": {
       "sourceKinds": [],
@@ -78,7 +91,9 @@
       "assets": [
         "switch"
       ],
-      "sourceFiles": []
+      "sourceFiles": [
+        "distrho-ports/ports-juce6.1/chow/ChowSlider.h"
+      ]
     },
     "comb": {
       "sourceKinds": [],
@@ -127,6 +142,12 @@
         "canvas-editor",
         "switch"
       ],
+      "nativeLayouts": [
+        "canvas-editor"
+      ],
+      "nativeWidgets": {
+        "canvases": 1
+      },
       "sourceFiles": []
     },
     "dexed": {
@@ -137,7 +158,13 @@
       "assets": [
         "switch"
       ],
-      "sourceFiles": []
+      "nativeWidgets": {
+        "meters": 8
+      },
+      "sourceFiles": [
+        "distrho-ports/ports-juce5/dexed/source/ParamDialog.cpp",
+        "distrho-ports/ports-juce5/dexed/source/ParamDialog.h"
+      ]
     },
     "diode": {
       "sourceKinds": [],
@@ -314,6 +341,12 @@
         "canvas-editor",
         "switch"
       ],
+      "nativeLayouts": [
+        "canvas-editor"
+      ],
+      "nativeWidgets": {
+        "canvases": 1
+      },
       "sourceFiles": []
     },
     "gverb": {
@@ -871,7 +904,9 @@
         "knob",
         "switch"
       ],
-      "sourceFiles": []
+      "sourceFiles": [
+        "distrho-ports/ports-juce5/obxd/source/Gui/Knob.h"
+      ]
     },
     "padthv1": {
       "sourceKinds": [
@@ -920,7 +955,37 @@
         "knob",
         "switch"
       ],
-      "sourceFiles": []
+      "nativeLayouts": [
+        "canvas-editor",
+        "dial-bank",
+        "grouped-panel"
+      ],
+      "nativeWidgets": {
+        "knobs": 9,
+        "switches": 7,
+        "menus": 48,
+        "panels": 15,
+        "canvases": 72,
+        "meters": 2
+      },
+      "sourceFiles": [
+        "plugins/samplv1/samplv1widget.cpp",
+        "plugins/samplv1/samplv1widget.h",
+        "plugins/samplv1/samplv1widget_config.cpp",
+        "plugins/samplv1/samplv1widget_config.h",
+        "plugins/samplv1/samplv1widget_control.cpp",
+        "plugins/samplv1/samplv1widget_control.h",
+        "plugins/samplv1/samplv1widget_controls.cpp",
+        "plugins/samplv1/samplv1widget_controls.h",
+        "plugins/samplv1/samplv1widget_env.cpp",
+        "plugins/samplv1/samplv1widget_env.h",
+        "plugins/samplv1/samplv1widget_filt.cpp",
+        "plugins/samplv1/samplv1widget_filt.h",
+        "plugins/samplv1/samplv1widget_jack.cpp",
+        "plugins/samplv1/samplv1widget_jack.h",
+        "plugins/samplv1/samplv1widget_keybd.cpp",
+        "plugins/samplv1/samplv1widget_keybd.h"
+      ]
     },
     "satan_maximiser": {
       "sourceKinds": [],
@@ -953,6 +1018,15 @@
         "panel-art",
         "switch"
       ],
+      "nativeLayouts": [
+        "canvas-editor",
+        "dial-bank"
+      ],
+      "nativeWidgets": {
+        "knobs": 10,
+        "switches": 11,
+        "canvases": 5
+      },
       "sourceFiles": [
         "setBfree/b_synth/b_synth.ui.ttl.in",
         "setBfree/b_synth/manifest.ui.ttl.in",
@@ -962,6 +1036,7 @@
         "setBfree/b_synth/modgui/stylesheet-setbfree-dsp-tonewheel-organ.css",
         "setBfree/b_synth/modgui/thumbnail-setbfree-dsp-tonewheel-organ.png",
         "setBfree/b_synth/modgui/wood3.png",
+        "setBfree/b_synth/textures/dial.c",
         "setBfree/b_synth/ui.c"
       ]
     },
@@ -1034,6 +1109,14 @@
       "assets": [
         "switch"
       ],
+      "nativeLayouts": [
+        "fader-strip",
+        "tabbed-panel"
+      ],
+      "nativeWidgets": {
+        "sliders": 27,
+        "tabs": 3
+      },
       "sourceFiles": []
     },
     "string-machine": {
@@ -1041,13 +1124,15 @@
       "label": "String machine",
       "sourceKinds": [
         "dpf-native-ui",
+        "fltk-native-ui",
         "lv2-metadata",
         "lv2-mod-metadata",
         "lv2-native-ui"
       ],
       "nativeUiTypes": [
         "CocoaUI",
-        "DPFUI"
+        "DPFUI",
+        "FLTKUI"
       ],
       "assets": [
         "knob",
@@ -1055,7 +1140,30 @@
         "slider",
         "switch"
       ],
-      "sourceFiles": []
+      "nativeLayouts": [
+        "fader-strip",
+        "grouped-panel"
+      ],
+      "nativeWidgets": {
+        "knobs": 25,
+        "sliders": 28,
+        "switches": 2,
+        "panels": 11,
+        "meters": 4
+      },
+      "sourceFiles": [
+        "string-machine/plugins/string-machine/artwork/images/knob.png",
+        "string-machine/plugins/string-machine/artwork/images/slider.png",
+        "string-machine/plugins/string-machine/artwork/images/vu.png",
+        "string-machine/plugins/string-machine/layouts/Main.fl",
+        "string-machine/resources/ui/knob.knob",
+        "string-machine/resources/ui/led.knob",
+        "string-machine/resources/ui/slider.knob",
+        "string-machine/resources/ui/toggle-button.knob",
+        "string-machine/resources/ui/trigger-button.knob",
+        "string-machine/resources/ui/value-display.knob",
+        "string-machine/resources/ui/vu.knob"
+      ]
     },
     "svf": {
       "sourceKinds": [],
@@ -1712,6 +1820,12 @@
         "canvas-editor",
         "switch"
       ],
+      "nativeLayouts": [
+        "canvas-editor"
+      ],
+      "nativeWidgets": {
+        "canvases": 1
+      },
       "sourceFiles": []
     },
     "vynil": {
@@ -1748,6 +1862,12 @@
         "knob",
         "switch"
       ],
+      "nativeLayouts": [
+        "canvas-editor"
+      ],
+      "nativeWidgets": {
+        "canvases": 2
+      },
       "sourceFiles": [
         "plugins/wolf-shaper/libs/DSPFilters/include/DspFilters/Layout.h"
       ]
@@ -2007,14 +2127,51 @@
       "sourceFiles": []
     },
     "zynaddsubfx": {
-      "sourceKinds": [],
-      "nativeUiTypes": [],
+      "sourceKinds": [
+        "fltk-native-ui"
+      ],
+      "nativeUiTypes": [
+        "FLTKUI"
+      ],
       "assets": [
         "canvas-editor",
         "knob",
         "switch"
       ],
-      "sourceFiles": []
+      "nativeLayouts": [
+        "canvas-editor",
+        "dial-bank",
+        "grouped-panel",
+        "tabbed-panel"
+      ],
+      "nativeWidgets": {
+        "knobs": 266,
+        "sliders": 37,
+        "switches": 278,
+        "menus": 119,
+        "panels": 207,
+        "tabs": 5,
+        "canvases": 30,
+        "meters": 24
+      },
+      "sourceFiles": [
+        "zynaddsubfx/src/UI/ADnoteUI.fl",
+        "zynaddsubfx/src/UI/BankUI.fl",
+        "zynaddsubfx/src/UI/ConfigUI.fl",
+        "zynaddsubfx/src/UI/EffUI.fl",
+        "zynaddsubfx/src/UI/EnvelopeUI.fl",
+        "zynaddsubfx/src/UI/FilterUI.fl",
+        "zynaddsubfx/src/UI/Fl_Osc_Dial.H",
+        "zynaddsubfx/src/UI/Fl_Osc_Dial.cpp",
+        "zynaddsubfx/src/UI/Fl_Osc_DialF.H",
+        "zynaddsubfx/src/UI/Fl_Osc_DialF.cpp",
+        "zynaddsubfx/src/UI/Fl_Osc_Slider.H",
+        "zynaddsubfx/src/UI/Fl_Osc_Slider.cpp",
+        "zynaddsubfx/src/UI/Fl_Osc_TSlider.H",
+        "zynaddsubfx/src/UI/Fl_Osc_TSlider.cpp",
+        "zynaddsubfx/src/UI/Fl_Osc_VSlider.H",
+        "zynaddsubfx/src/UI/Fl_Osc_VSlider.cpp"
+      ]
     }
   }
 }
