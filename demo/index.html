@@ -24,7 +24,7 @@
       display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
       padding: 0.9rem 1.4rem; border-bottom: 1px solid var(--border);
     }
-    header h1 { font-size: 1rem; letter-spacing: 0; }
+    header h1 { font-size: 1rem; letter-spacing: 0.05em; }
     header a   { font-size: 0.75rem; color: var(--muted); text-decoration: none; }
     header a:hover { color: var(--text); }
     #catalog-stats {
@@ -47,13 +47,13 @@
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       gap: 1rem;
     }
-    #start-overlay h2 { font-size: 1.5rem; letter-spacing: 0; color: var(--text); }
+    #start-overlay h2 { font-size: 1.5rem; letter-spacing: 0.1em; color: var(--text); }
     #start-overlay p  { font-size: 0.82rem; color: var(--muted); }
     #start-overlay-btn {
       margin-top: 0.5rem;
       padding: 0.9rem 2.8rem; font-family: monospace; font-size: 1.1rem;
       background: var(--accent); color: #fff; border: none; border-radius: 5px;
-      cursor: pointer; letter-spacing: 0;
+      cursor: pointer; letter-spacing: 0.04em;
     }
     #start-overlay-btn:hover { background: #5588ff; }
     #status { font-size: 0.75rem; color: var(--muted); }
@@ -68,13 +68,13 @@
     #synth-section {
       border-right: 1px solid var(--border);
       display: flex; gap: 0; flex-wrap: wrap;
-      flex: 0 0 clamp(420px, 46vw, 800px); min-width: 0; overflow-y: auto;
+      flex-shrink: 0; overflow-y: auto;
     }
     #synth-header {
       display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;
     }
     #synth-header .section-lbl {
-      font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0;
+      font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em;
     }
     #instrument-wrap { position: relative; display: inline-block; }
     #instrument-btn {
@@ -106,7 +106,7 @@
     #chain-header {
       display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.8rem;
     }
-    #chain-header h2 { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0; }
+    #chain-header h2 { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
 
     .add-btn {
       position: relative; display: inline-block;
@@ -131,7 +131,7 @@
     .dropdown-item:hover { background: var(--border); color: #fff; }
     .dropdown-count {
       font-size: 0.62rem; color: var(--muted); padding: 0.45rem 0.8rem 0.25rem;
-      text-transform: uppercase; letter-spacing: 0;
+      text-transform: uppercase; letter-spacing: 0.06em;
     }
     .item-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
     .license-badge {
@@ -159,13 +159,10 @@
 
     .card {
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: 6px; padding: 0.7rem 0.8rem; min-width: 180px; max-width: 260px;
+      border-radius: 6px; padding: 0.7rem 0.8rem; min-width: 160px; max-width: 220px;
       flex-shrink: 0; position: relative;
     }
-    .card[data-ui-layout="rack"], .card[data-ui-layout="drawbar"] { max-width: 720px; min-width: 380px; }
-    .card[data-ui-layout="matrix"] { max-width: 900px; min-width: 460px; }
-    .card[data-ui-layout="panel"], .card[data-ui-layout="instrument"] { max-width: 560px; min-width: 320px; }
-    .card.has-shaper { max-width: 300px; min-width: 240px; }
+    .card.has-shaper { max-width: 240px; min-width: 200px; }
     .card.loading { opacity: 0.5; }
     .card-title {
       font-size: 0.75rem; font-weight: bold; color: var(--accent);
@@ -178,176 +175,16 @@
     }
     .remove-btn:hover { color: var(--danger); }
 
-    /* ── Controls in cards ────────────────────────────────────── */
-    .ctrl-row { margin-top: 0.4rem; min-width: 0; }
-    .ctrl-row label {
-      display: block; font-size: 0.65rem; color: var(--muted); margin-bottom: 1px;
-      line-height: 1.15; overflow-wrap: anywhere;
-    }
+    /* ── Sliders in cards ─────────────────────────────────────── */
+    .ctrl-row { margin-top: 0.4rem; }
+    .ctrl-row label { display: block; font-size: 0.65rem; color: var(--muted); margin-bottom: 1px; }
     .ctrl-row .ctrl-line { display: flex; align-items: center; gap: 0.4rem; }
     .ctrl-row input[type=range] { flex: 1; accent-color: var(--accent); height: 3px; }
     .ctrl-row select {
       flex: 1; min-width: 0; padding: 0.15rem 0.25rem; font-family: monospace; font-size: 0.62rem;
       background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 2px;
-      overflow: hidden; text-overflow: ellipsis;
     }
     .ctrl-row .val { font-size: 0.62rem; color: #aaa; min-width: 3rem; text-align: right; }
-    .plugin-ui-sections {
-      --ui-section-width: 150px;
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(var(--ui-section-width), 1fr));
-      gap: 0.42rem 0.6rem; align-items: start;
-    }
-    .plugin-ui-sections[data-ui-layout="matrix"] { --ui-section-width: 190px; }
-    .plugin-ui-sections[data-ui-layout="rack"],
-    .plugin-ui-sections[data-ui-layout="drawbar"] {
-      --ui-section-width: 100%;
-      grid-template-columns: 1fr;
-    }
-    .plugin-ui-column {
-      min-width: 0; display: flex; flex-direction: column; gap: 0.42rem;
-    }
-    .ui-section {
-      min-width: 0; border-top: 1px solid var(--border); padding-top: 0.32rem;
-      break-inside: avoid; page-break-inside: avoid;
-    }
-    .ui-section[data-ui-panel="synth-panel"],
-    .ui-section[data-ui-panel="dense-bank"],
-    .ui-section[data-ui-panel="control-panel"],
-    .ui-section[data-ui-panel="program-panel"] {
-      padding: 0.32rem 0 0.38rem;
-      border: 0;
-      border-top: 1px solid rgba(255,255,255,0.12);
-      border-radius: 0;
-      background: none;
-    }
-    .ui-section[data-ui-panel="rack-strip"],
-    .ui-section[data-ui-panel="drawbar-bank"] {
-      padding-top: 0.35rem;
-      border-top-color: rgba(68,119,238,0.45);
-    }
-    .ui-section-title {
-      font-size: 0.58rem; color: var(--muted); text-transform: uppercase;
-      letter-spacing: 0; margin-bottom: 0.16rem;
-    }
-    .ui-control-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
-      gap: 0.3rem 0.36rem; align-items: start;
-    }
-    .ui-control-grid[data-ui-panel="rack-strip"],
-    .ui-control-grid[data-ui-panel="drawbar-bank"] {
-      grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
-      gap: 0.28rem;
-    }
-    .ui-control-grid[data-density="dense"] {
-      grid-template-columns: repeat(auto-fit, minmax(78px, 1fr));
-      gap: 0.28rem;
-    }
-    #synth-ctrls .plugin-ui-sections { --ui-section-width: 172px; }
-    #synth-ctrls .plugin-ui-sections[data-ui-layout="matrix"] { --ui-section-width: 238px; }
-    #synth-ctrls .ui-control-grid { grid-template-columns: repeat(auto-fit, minmax(78px, 1fr)); }
-    #synth-ctrls .ui-control-grid[data-density="dense"] { grid-template-columns: repeat(auto-fit, minmax(76px, 1fr)); }
-    .ctrl-row[data-widget="knob"], .ctrl-row[data-widget="fader"], .ctrl-row[data-widget="toggle"], .ctrl-row[data-widget="menu"] {
-      margin-top: 0; min-width: 0;
-    }
-    .ctrl-row[data-widget="knob"], .ctrl-row[data-widget="fader"] {
-      display: flex; flex-direction: column; align-items: stretch; gap: 0.14rem;
-      min-height: 94px;
-    }
-    .ctrl-row[data-widget="knob"] label,
-    .ctrl-row[data-widget="fader"] label {
-      order: 2; width: 100%; min-height: 2.15em; margin: 0;
-      text-align: center; font-size: 0.57rem; color: #858585;
-      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .ctrl-row[data-widget="knob"] .ctrl-line,
-    .ctrl-row[data-widget="fader"] .ctrl-line {
-      order: 1; position: relative;
-      display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; align-items: center;
-      gap: 0.08rem;
-    }
-    .knob-face {
-      grid-row: 1; grid-column: 1;
-      width: 46px; height: 46px; border-radius: 50%;
-      border: 1px solid #424242;
-      background:
-        radial-gradient(circle at 35% 28%, rgba(255,255,255,0.22), transparent 18%),
-        radial-gradient(circle, #32363a 0 48%, #111 52% 100%);
-      box-shadow: inset 0 -6px 10px rgba(0,0,0,0.38), 0 1px 0 rgba(255,255,255,0.05);
-      position: relative; transform: none;
-    }
-    .knob-face::after {
-      content: ""; position: absolute; left: calc(50% - 2px); top: 6px; width: 4px; height: 13px;
-      background: var(--accent2); border-radius: 2px;
-      transform: rotate(var(--knob-angle, -135deg)); transform-origin: 50% 17px;
-    }
-    .ctrl-row[data-widget="knob"] .control-stack,
-    .ctrl-row[data-widget="fader"] .control-stack {
-      grid-row: 1; grid-column: 1; z-index: 2;
-      width: 56px; height: 56px; display: block; touch-action: none; cursor: ns-resize;
-      user-select: none; -webkit-user-select: none; -webkit-user-drag: none;
-    }
-    .ctrl-row[data-widget="knob"] input[type=range],
-    .ctrl-row[data-widget="fader"] input[type=range] {
-      width: 56px; height: 56px; opacity: 0; pointer-events: none; display: block;
-    }
-    .ctrl-row[data-widget="knob"] .val,
-    .ctrl-row[data-widget="fader"] .val {
-      grid-row: 2; grid-column: 1; width: 100%; min-width: 0;
-      text-align: center; font-size: 0.54rem; color: #a8a8a8;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    .ctrl-row[data-widget="fader"] .knob-face {
-      border-radius: 3px; width: 22px; height: 58px; margin: 0;
-      background:
-        linear-gradient(to right, transparent 0 43%, rgba(68,119,238,0.5) 43% 57%, transparent 57% 100%),
-        linear-gradient(to bottom, #080808, #2b2f33);
-      transform: none;
-    }
-    .ctrl-row[data-widget="fader"] .knob-face::after {
-      left: -4px; top: var(--fader-top, 31px); width: 30px; height: 5px;
-      background: var(--accent); transform: none;
-    }
-    .control-stack { min-width: 0; display: grid; gap: 0.16rem; }
-    .ctrl-row[data-widget="slider"] { grid-column: span 2; min-width: min(100%, 160px); }
-    .ctrl-row[data-widget="slider"] .ctrl-line { display: grid; grid-template-columns: minmax(90px, 1fr) minmax(3rem, max-content); }
-    .ctrl-row[data-widget="toggle"] .ctrl-line { justify-content: space-between; min-height: 22px; }
-    .ctrl-row[data-widget="menu"] label,
-    .ctrl-row[data-widget="toggle"] label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .ctrl-row[data-widget="menu"] .ctrl-line { display: grid; grid-template-columns: minmax(0, 1fr); }
-    .ctrl-row[data-widget="menu"] select { width: 100%; }
-    .ctrl-row[data-widget="menu"] .val { display: none; }
-    .ui-control-grid[data-density="medium"] .ctrl-row[data-widget="menu"],
-    .ui-control-grid[data-density="dense"] .ctrl-row[data-widget="menu"] {
-      grid-column: span 2;
-      min-width: min(100%, 132px);
-    }
-    .toggle-shell { display: inline-flex; align-items: center; gap: 0.35rem; cursor: pointer; }
-    .toggle-shell input { position: absolute; opacity: 0; pointer-events: none; }
-    .toggle-track {
-      width: 34px; height: 18px; border-radius: 10px; border: 1px solid var(--border);
-      background: #111; position: relative;
-    }
-    .toggle-track::after {
-      content: ""; position: absolute; width: 12px; height: 12px; border-radius: 50%;
-      top: 2px; left: 2px; background: var(--muted); transition: transform 120ms ease, background 120ms ease;
-    }
-    .toggle-shell input:checked + .toggle-track { border-color: var(--accent2); }
-    .toggle-shell input:checked + .toggle-track::after { transform: translateX(16px); background: var(--accent2); }
-
-    @media (max-width: 900px) {
-      main { flex-direction: column; height: auto; min-height: calc(100vh - 46px); overflow: visible; }
-      #synth-section {
-        flex: none; width: 100%; border-right: 0; border-bottom: 1px solid var(--border);
-        max-height: none;
-      }
-      #chain-section { width: 100%; overflow: visible; }
-      #chain-cards { align-items: stretch; }
-      .card, .card[data-ui-layout="rack"], .card[data-ui-layout="drawbar"], .card[data-ui-layout="matrix"],
-      .card[data-ui-layout="panel"], .card[data-ui-layout="instrument"] {
-        width: 100%; min-width: min(100%, 280px); max-width: none;
-      }
-    }
 
     /* ── Curve/shaper editor ─────────────────────────────────── */
     .shaper-wrap { margin-top: 0.5rem; }
@@ -369,7 +206,7 @@
     /* ── Synth card (special) ─────────────────────────────────── */
     #synth-card {
       padding: 0.8rem 1.2rem 0.8rem 1.4rem; border-right: 1px solid var(--border);
-      width: 100%; min-width: 0;
+      min-width: 340px;
     }
     #synth-card .card-title { font-size: 0.82rem; color: var(--accent2); margin-bottom: 0.5rem; }
 
@@ -402,7 +239,7 @@
     .bk.on { background: #2a4a99; }
 
     /* ── Synth sliders ────────────────────────────────────────── */
-    #synth-ctrls { display: grid; grid-template-columns: 1fr; gap: 0.65rem; margin-top: 0.4rem; }
+    #synth-ctrls { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; margin-top: 0.4rem; }
 
     /* ── SF2 library panel ───────────────────────────────────── */
     #sf2-panel { margin-top: 0.5rem; border-top: 1px solid var(--border); padding-top: 0.55rem; display: none; }
@@ -417,7 +254,7 @@
     .sf2-lib-row {
       display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.45rem;
     }
-    .sf2-lib-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0; }
+    .sf2-lib-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
     .sf2-lib-item {
       padding: 0.2rem 0.55rem; font-family: monospace; font-size: 0.72rem;
       background: var(--surface); color: var(--text); border: 1px solid var(--border);
@@ -534,6 +371,7 @@ if ('serviceWorker' in navigator) {
 import { loadPlugin } from './core.js?wadspa_runtime=20260606_canvas_audio';
 import {
   defaultPortValuesForUi,
+  defaultPortValueForUi,
   exclusiveToggleGroupForPort,
   formatPortValue,
   portUiRange as computePortUiRange,
@@ -544,7 +382,6 @@ import {
   usesMenuControl,
   visibleControlPorts,
 } from './control-utils.js?wadspa_runtime=20260606_canvas_audio';
-import { WADSPA_UI_MODEL, createWadspaUiModel } from './ui-model.js?wadspa_runtime=20260620_menu_labels';
 
 // ── Plugin catalog ────────────────────────────────────────────
 // meta.ports drives both the loadPlugin call and the UI sliders.
@@ -570,16 +407,6 @@ try {
   });
 } catch (e) {
   console.error('Failed to load catalog.json:', e);
-}
-
-let UI_HINTS = { plugins: {} };
-try {
-  UI_HINTS = await fetch('./ui-hints.json', { cache: 'no-cache' }).then(r => {
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    return r.json();
-  });
-} catch (e) {
-  console.warn('UI hints unavailable; using inferred wadspa UI model only:', e);
 }
 
 const catalogStats = document.getElementById('catalog-stats');
@@ -889,8 +716,26 @@ function buildSynthControls(node, inst) {
     samplePanel.style.display = 'none';
   }
 
-  const { model } = renderPluginControls(ctrls, node, inst, { target: 'instrument' });
-  document.getElementById('synth-card').dataset.uiLayout = model.layout;
+  const ctrlPorts = visibleControlPorts(inst.ports);
+  for (const p of ctrlPorts) {
+    const range = portUiRange(p);
+    const initialValue = defaultPortValueForUi(p, currentSampleRate());
+    const row = document.createElement('div');
+    row.className = 'ctrl-row';
+    row.innerHTML = `<label>${escapeHtml(p.name)}</label>
+      <div class="ctrl-line">
+        ${controlMarkup(p, range, initialValue)}
+        <span class="val">${formatPortValue(p, initialValue)}</span>
+      </div>`;
+    const control = row.querySelector('input, select');
+    const val    = row.querySelector('.val');
+    control.addEventListener(control.tagName === 'SELECT' ? 'change' : 'input', () => {
+      const v = readControlValue(p, control); val.textContent = formatPortValue(p, v);
+      node.set(p.name, portValueForSet(p, v, control));
+    });
+    ctrls.appendChild(row);
+    if (Number.isFinite(initialValue)) node.set(p.name, portValueForSet(p, initialValue, control));
+  }
   buildCanvasEditors(ctrls, node, inst);
 }
 
@@ -1200,136 +1045,20 @@ function portUiRange(p) {
   return computePortUiRange(p, currentSampleRate());
 }
 
-function renderPluginControls(container, node, plugin, options = {}) {
-  const ctrlPorts = visibleControlPorts(plugin.ports);
-  const defaults = defaultPortValuesForUi(ctrlPorts, currentSampleRate(), {
-    activateEffectToggles: Boolean(options.activateEffectToggles),
-  });
-  const model = createWadspaUiModel(plugin, {
-    target: options.target,
-    hints: UI_HINTS,
-    ports: ctrlPorts,
-  });
-
-  const wrap = document.createElement('div');
-  wrap.className = 'plugin-ui-sections';
-  wrap.dataset.uiModel = WADSPA_UI_MODEL.schema;
-  wrap.dataset.uiLayout = model.layout;
-  wrap.dataset.uiColumns = String(model.sectionColumns);
-
-  const sectionEls = [];
-  for (const section of model.sections) {
-    const sectionEl = document.createElement('div');
-    sectionEl.className = 'ui-section';
-    sectionEl.dataset.uiSection = section.id;
-    sectionEl.dataset.uiPanel = section.panel;
-    sectionEl.dataset.uiPanelReason = section.panelReason;
-    sectionEl.dataset.density = section.density;
-    sectionEl.dataset.uiWeight = String(estimatedSectionWeight(section));
-
-    const title = document.createElement('div');
-    title.className = 'ui-section-title';
-    title.textContent = section.title;
-    sectionEl.appendChild(title);
-
-    const grid = document.createElement('div');
-    grid.className = 'ui-control-grid';
-    grid.dataset.uiPanel = section.panel;
-    grid.dataset.density = section.density;
-    for (const field of section.fields) {
-      const p = field.port;
-      const range = portUiRange(p);
-      const value = defaults.get(p);
-      const row = buildControlRow(field, range, value);
-      const control = row.querySelector('input, select');
-      const val = row.querySelector('.val');
-      const commitControl = () => {
-        const v = readControlValue(p, control);
-        applyExclusiveToggleUi(p, ctrlPorts, control, node);
-        val.textContent = formatPortValue(p, v);
-        syncControlVisual(control);
-        node.set(p.name, portValueForSet(p, v, control));
-      };
-      control.addEventListener(control.tagName === 'SELECT' ? 'change' : 'input', commitControl);
-      bindRelativeControlGesture(row, control, p, commitControl);
-      grid.appendChild(row);
-      syncControlVisual(control);
-      if (Number.isFinite(value)) node.set(p.name, portValueForSet(p, value, control));
-    }
-    sectionEl.appendChild(grid);
-    sectionEls.push(sectionEl);
-  }
-
-  arrangePluginUiSections(wrap, sectionEls, model);
-  container.appendChild(wrap);
-  return { model, ctrlPorts, defaults };
-}
-
-function arrangePluginUiSections(wrap, sectionEls, model) {
-  if (sectionEls.length <= 1 || model.layout === 'rack' || model.layout === 'drawbar') {
-    for (const sectionEl of sectionEls) wrap.appendChild(sectionEl);
-    return;
-  }
-
-  const columnCount = Math.min(sectionEls.length, Math.max(1, Number(model.sectionColumns) || 1));
-  const columns = Array.from({ length: columnCount }, () => ({
-    weight: 0,
-    el: document.createElement('div'),
-  }));
-  wrap.dataset.uiFlow = 'balanced-columns';
-  for (const column of columns) column.el.className = 'plugin-ui-column';
-
-  for (const sectionEl of sectionEls) {
-    const target = columns.reduce((best, column) => column.weight < best.weight ? column : best, columns[0]);
-    target.el.appendChild(sectionEl);
-    target.weight += Number(sectionEl.dataset.uiWeight) || 1;
-  }
-
-  for (const column of columns) wrap.appendChild(column.el);
-}
-
-function estimatedSectionWeight(section) {
-  const fieldCount = section.fields.length;
-  if (section.panel === 'rack-strip' || section.panel === 'drawbar-bank') return Math.max(1, fieldCount / 2);
-  if (section.density === 'dense') return Math.max(1, fieldCount / 3);
-  return Math.max(1, fieldCount / 2);
-}
-
-function buildControlRow(field, range, value) {
-  const row = document.createElement('div');
-  row.className = 'ctrl-row ui-field';
-  row.dataset.widget = field.widget;
-  row.dataset.role = field.role;
-  row.dataset.section = field.section;
-  row.innerHTML = `<label title="${escapeAttr(field.portName)}">${escapeHtml(field.label)}</label>
-    <div class="ctrl-line">
-      ${controlMarkup(field.port, range, value, field)}
-      <span class="val">${formatPortValue(field.port, value)}</span>
-    </div>`;
-  return row;
-}
-
-function controlMarkup(p, range, value = range.value, field = null) {
+function controlMarkup(p, range, value = range.value) {
   if (usesMenuControl(p)) {
     return `<select data-port="${escapeAttr(p.name)}">${scalePointOptions(p).map(point => `
           <option value="${point.value}"${Math.abs(point.value - value) < 1e-6 ? ' selected' : ''}>${escapeHtml(point.label)}</option>`).join('')}
         </select>`;
   }
   if (p.toggled) {
-    return `<label class="toggle-shell">
-          <input type="checkbox" value="1"${value >= 0.5 ? ' checked' : ''}
-                 data-port="${escapeAttr(p.name)}">
-          <span class="toggle-track"></span>
-        </label>`;
+    return `<input type="checkbox" value="1"${value >= 0.5 ? ' checked' : ''}
+                   data-port="${escapeAttr(p.name)}">`;
   }
   const slider = sliderRangeForPort(p, range, value);
-  const input = `<input type="range" min="${slider.min}" max="${slider.max}"
-                     step="${slider.step}" value="${slider.value}"
-                     data-port="${escapeAttr(p.name)}">`;
-  if (field?.widget === 'knob' || field?.widget === 'fader') {
-    return `<span class="knob-face"></span><span class="control-stack">${input}</span>`;
-  }
-  return input;
+  return `<input type="range" min="${slider.min}" max="${slider.max}"
+                   step="${slider.step}" value="${slider.value}"
+                   data-port="${escapeAttr(p.name)}">`;
 }
 
 function readControlValue(p, control) {
@@ -1337,185 +1066,6 @@ function readControlValue(p, control) {
   const raw = parseFloat(control.value);
   if (control.tagName === 'SELECT') return raw;
   return portValueFromSlider(p, raw, portUiRange(p));
-}
-
-function syncControlVisual(control) {
-  const row = control.closest('.ctrl-row');
-  const face = row?.querySelector('.knob-face');
-  if (!row || !face) return;
-  const min = Number(control.min);
-  const max = Number(control.max);
-  const value = Number(control.value);
-  const span = max - min;
-  const fraction = Number.isFinite(span) && Math.abs(span) > 1e-12
-    ? Math.max(0, Math.min(1, (value - min) / span))
-    : 0;
-  if (row.dataset.widget === 'fader') {
-    face.style.setProperty('--fader-top', `${4 + (1 - fraction) * 27}px`);
-  } else {
-    face.style.setProperty('--knob-angle', `${-135 + fraction * 270}deg`);
-  }
-}
-
-function bindRelativeControlGesture(row, control, port, commitControl) {
-  if (!row || !control || control.type !== 'range') return;
-  if (row.dataset.widget !== 'knob' && row.dataset.widget !== 'fader') return;
-  const target = row.querySelector('.control-stack');
-  if (!target) return;
-
-  target.tabIndex = 0;
-  target.setAttribute('role', 'slider');
-  target.setAttribute('aria-label', row.querySelector('label')?.textContent ?? port.name);
-  syncSliderAria(target, control, port);
-  control.tabIndex = -1;
-  control.setAttribute('aria-hidden', 'true');
-
-  let dragging = false;
-  let suppressMouseUntil = 0;
-  const cancelRelativePointerEvent = event => {
-    event.preventDefault();
-    event.stopPropagation();
-  };
-  const beginDrag = (startEvent, moveSource, endSource, moveName, endName, cancelName, pointerId = null) => {
-    cancelRelativePointerEvent(startEvent);
-    if (dragging) return;
-    const min = Number(control.min);
-    const max = Number(control.max);
-    const startValue = Number(control.value);
-    const span = max - min;
-    if (!Number.isFinite(startValue) || !Number.isFinite(span) || Math.abs(span) <= 1e-12) return;
-
-    target.focus({ preventScroll: true });
-    if (pointerId !== null) target.setPointerCapture?.(pointerId);
-    dragging = true;
-
-    const startX = startEvent.clientX;
-    const startY = startEvent.clientY;
-    const widget = row.dataset.widget;
-
-    const handleMove = moveEvent => {
-      if (pointerId !== null && 'pointerId' in moveEvent && moveEvent.pointerId !== pointerId) return;
-      cancelRelativePointerEvent(moveEvent);
-      const dy = moveEvent.clientY - startY;
-      const pixels = moveEvent.shiftKey ? 520 : widget === 'fader' ? 128 : 220;
-      const rawTravel = -dy;
-      const travel = gestureTravelPastDeadzone(rawTravel, moveEvent.shiftKey ? 1 : 8);
-      if (travel === 0) return;
-      const previousValue = control.value;
-      setSliderValue(control, startValue + (travel / pixels) * span);
-      if (control.value !== previousValue) {
-        commitControl();
-        syncSliderAria(target, control, port);
-      }
-    };
-
-    const endDrag = endEvent => {
-      if (pointerId !== null && 'pointerId' in endEvent && endEvent.pointerId !== pointerId) return;
-      cancelRelativePointerEvent(endEvent);
-      if (pointerId !== null) target.releasePointerCapture?.(pointerId);
-      moveSource.removeEventListener(moveName, handleMove);
-      endSource.removeEventListener(endName, endDrag);
-      if (cancelName) endSource.removeEventListener(cancelName, endDrag);
-      if (pointerId !== null) {
-        document.removeEventListener('mousemove', handleMove);
-        document.removeEventListener('mouseup', endDrag);
-      }
-      dragging = false;
-    };
-
-    moveSource.addEventListener(moveName, handleMove);
-    endSource.addEventListener(endName, endDrag);
-    if (cancelName) endSource.addEventListener(cancelName, endDrag);
-    if (pointerId !== null) {
-      document.addEventListener('mousemove', handleMove);
-      document.addEventListener('mouseup', endDrag);
-    }
-  };
-
-  target.addEventListener('pointerdown', e => {
-    if (e.button !== undefined && e.button !== 0) return;
-    suppressMouseUntil = Date.now() + 800;
-    beginDrag(e, target, target, 'pointermove', 'pointerup', 'pointercancel', e.pointerId);
-  });
-
-  target.addEventListener('mousedown', e => {
-    if (e.button !== 0) return;
-    if (Date.now() < suppressMouseUntil) {
-      cancelRelativePointerEvent(e);
-      return;
-    }
-    beginDrag(e, document, document, 'mousemove', 'mouseup', null);
-  });
-
-  for (const eventName of ['click', 'dblclick', 'dragstart']) {
-    target.addEventListener(eventName, cancelRelativePointerEvent);
-  }
-  for (const eventName of ['pointerdown', 'mousedown', 'click', 'dblclick', 'dragstart']) {
-    control.addEventListener(eventName, cancelRelativePointerEvent);
-  }
-
-  target.addEventListener('keydown', e => {
-    const direction = {
-      ArrowUp: 1,
-      ArrowRight: 1,
-      ArrowDown: -1,
-      ArrowLeft: -1,
-      PageUp: 10,
-      PageDown: -10,
-      Home: 'min',
-      End: 'max',
-    }[e.key];
-    if (direction === undefined) return;
-    e.preventDefault();
-    const min = Number(control.min);
-    const max = Number(control.max);
-    const span = max - min;
-    const baseStep = sliderStepSize(control, span);
-    if (direction === 'min') setSliderValue(control, min);
-    else if (direction === 'max') setSliderValue(control, max);
-    else setSliderValue(control, Number(control.value) + baseStep * direction);
-    commitControl();
-    syncSliderAria(target, control, port);
-  });
-
-  control.addEventListener('input', () => syncSliderAria(target, control, port));
-}
-
-function gestureTravelPastDeadzone(travel, deadzone) {
-  if (!Number.isFinite(travel)) return 0;
-  if (Math.abs(travel) <= deadzone) return 0;
-  return travel - Math.sign(travel) * deadzone;
-}
-
-function setSliderValue(control, nextValue) {
-  const min = Number(control.min);
-  const max = Number(control.max);
-  if (!Number.isFinite(nextValue) || !Number.isFinite(min) || !Number.isFinite(max)) return;
-  const low = Math.min(min, max);
-  const high = Math.max(min, max);
-  const clamped = Math.max(low, Math.min(high, nextValue));
-  const stepped = applySliderStep(clamped, control.step, min);
-  control.value = String(Math.max(low, Math.min(high, stepped)));
-}
-
-function sliderStepSize(control, span) {
-  const explicit = Number(control.step);
-  if (Number.isFinite(explicit) && explicit > 0) return explicit;
-  return Math.max(Math.abs(span) / 100, 0.000001);
-}
-
-function applySliderStep(value, step, min) {
-  const size = Number(step);
-  if (!Number.isFinite(size) || size <= 0) return value;
-  return min + Math.round((value - min) / size) * size;
-}
-
-function syncSliderAria(target, control, port) {
-  const value = readControlValue(port, control);
-  target.setAttribute('aria-valuemin', control.min);
-  target.setAttribute('aria-valuemax', control.max);
-  target.setAttribute('aria-valuenow', control.value);
-  target.setAttribute('aria-valuetext', formatPortValue(port, value));
 }
 
 function escapeHtml(value) {
@@ -1958,11 +1508,26 @@ function renderChain() {
     const card = document.createElement('div');
     card.className = 'card' + (eff.shaper ? ' has-shaper' : '');
 
+    const ctrlPorts = visibleControlPorts(eff.ports);
+    const defaults = defaultPortValuesForUi(ctrlPorts, currentSampleRate(), { activateEffectToggles: true });
+
     card.innerHTML = `
       <div class="card-title">
         <span>${eff.name}</span>
         <button class="remove-btn" title="remove">×</button>
       </div>
+      ${ctrlPorts.map(p => {
+        const range = portUiRange(p);
+        const value = defaults.get(p);
+        return `
+        <div class="ctrl-row">
+          <label>${escapeHtml(p.name)}</label>
+          <div class="ctrl-line">
+            ${controlMarkup(p, range, value)}
+            <span class="val">${formatPortValue(p, value)}</span>
+          </div>
+        </div>`;
+      }).join('')}
     `;
 
     card.querySelector('.remove-btn').addEventListener('click', async () => {
@@ -1972,11 +1537,18 @@ function renderChain() {
       rewire();
     });
 
-    const { model } = renderPluginControls(card, node, eff, {
-      target: 'effect',
-      activateEffectToggles: true,
-    });
-    card.dataset.uiLayout = model.layout;
+    for (const p of ctrlPorts) {
+      const control = card.querySelector(`[data-port="${CSS.escape(p.name)}"]`);
+      const valEl  = control.closest('.ctrl-line').querySelector('.val');
+      control.addEventListener(control.tagName === 'SELECT' ? 'change' : 'input', () => {
+        const v = readControlValue(p, control);
+        applyExclusiveToggleUi(p, ctrlPorts, control, node);
+        valEl.textContent = formatPortValue(p, v);
+        node.set(p.name, portValueForSet(p, v, control));
+      });
+      const value = defaults.get(p);
+      if (Number.isFinite(value)) node.set(p.name, portValueForSet(p, value, control));
+    }
 
     // ── Curve editor (shaper plugins) ──────────────────────────
     if (eff.shaper) buildShaperCanvas(card, node);
@@ -1996,15 +1568,13 @@ function applyExclusiveToggleUi(port, ports, control, node) {
   if (control.type !== 'checkbox' || !control.checked) return;
   const group = exclusiveToggleGroupForPort(port, ports);
   if (group.length <= 1) return;
-  const scope = control.closest('.card, #synth-card, .plugin-ui-sections') ?? document;
   for (const peer of group) {
     if (peer === port) continue;
-    const peerControl = scope.querySelector(`[data-port="${CSS.escape(peer.name)}"]`);
+    const peerControl = control.closest('.card').querySelector(`[data-port="${CSS.escape(peer.name)}"]`);
     if (!peerControl || peerControl.type !== 'checkbox') continue;
     peerControl.checked = false;
     const peerValue = peerControl.closest('.ctrl-line')?.querySelector('.val');
     if (peerValue) peerValue.textContent = formatPortValue(peer, 0);
-    syncControlVisual(peerControl);
     node.set(peer.name, portValueForSet(peer, 0, peerControl));
   }
 }
@@ -2065,7 +1635,7 @@ function buildDropdown() {
     const sep = document.createElement('div');
     sep.className = 'dropdown-sep';
     const lbl = document.createElement('div');
-    lbl.style.cssText = 'font-size:0.62rem;color:var(--muted);padding:0.3rem 0.8rem 0.1rem;text-transform:uppercase;letter-spacing:0';
+    lbl.style.cssText = 'font-size:0.62rem;color:var(--muted);padding:0.3rem 0.8rem 0.1rem;text-transform:uppercase;letter-spacing:0.06em';
     lbl.textContent = cat;
     dd.appendChild(sep); dd.appendChild(lbl);
     for (const eff of EFFECTS.filter(e => e.category === cat)) {

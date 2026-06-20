@@ -7,8 +7,7 @@
  *   2. setup-all       — copy sources and generate stubs for each plugin collection
  *   3. build-all       — compile LADSPA/SWH effects
  *   4. build-instruments — compile LV2 instruments and effects
- *   5. build-ui-hints  — derive browser UI hints from native LV2 UI metadata
- *   6. sync-demo       — sync built assets to the local demo directory
+ *   5. sync-demo       — sync built assets to the local demo directory
  *
  * Usage:
  *   node scripts/build-archive.js [options]
@@ -51,7 +50,6 @@ if (!skipSetup)
 
 run('3/5  LADSPA effects',   process.execPath, ['scripts/build-all.js',         ...maybeSkip]);
 run('4/5  LV2 plugins',      process.execPath, ['scripts/build-instruments.js', ...maybeSkip]);
-run('5/6  UI hints',         process.execPath, ['scripts/build-ui-hints.js']);
-run('6/6  sync demo',        process.execPath, ['scripts/sync-demo.js']);
+run('5/5  sync demo',        process.execPath, ['scripts/sync-demo.js']);
 
 console.log('\nArchive build complete.');

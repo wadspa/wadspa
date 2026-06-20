@@ -8,7 +8,6 @@ const html = readFileSync(join(ROOT, 'docs/index.html'), 'utf8');
 const core = readFileSync(join(ROOT, 'docs/core.js'), 'utf8');
 const instruments = JSON.parse(readFileSync(join(ROOT, 'docs/instruments.json'), 'utf8'));
 const effects = JSON.parse(readFileSync(join(ROOT, 'docs/plugins/catalog.json'), 'utf8'));
-const uiHints = JSON.parse(readFileSync(join(ROOT, 'docs/ui-hints.json'), 'utf8'));
 
 let failures = 0;
 
@@ -104,15 +103,6 @@ assertMatches(/#instrument-dropdown\s*\{[\s\S]*width:\s*var\(--dropdown-width\);
 assertMatches(/\.dropdown\s*\{[\s\S]*width:\s*var\(--dropdown-width\);[\s\S]*max-width:\s*calc\(100vw - 1rem\);[\s\S]*max-height:\s*60vh;[\s\S]*overflow-y:\s*auto;/, 'effect dropdown uses the shared size and scroll behavior');
 
 assertIncludes(html, 'function setPluginMenuItemContent(item, plugin)', 'shared dropdown item renderer exists');
-assertIncludes(html, "import { WADSPA_UI_MODEL, createWadspaUiModel } from './ui-model.js", 'wadspa UI model is imported');
-assertIncludes(html, "await fetch('./ui-hints.json'", 'native UI hints are loaded by the browser page');
-assertIncludes(html, 'function renderPluginControls(container, node, plugin, options = {})', 'shared model-driven control renderer exists');
-assertIncludes(html, "wrap.dataset.uiModel = WADSPA_UI_MODEL.schema;", 'control renderer stamps the UI model schema into the DOM');
-assertIncludes(html, 'const model = createWadspaUiModel(plugin, {', 'control renderer builds a wadspa UI model per plugin');
-assertIncludes(html, "row.dataset.widget = field.widget;", 'model widget type is exposed on each control row');
-assertIncludes(html, 'syncControlVisual(control);', 'knob and fader visuals are synchronized with control values');
-assertMatches(/\.ctrl-row\[data-widget="menu"\] \.ctrl-line\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\);/, 'menu controls keep selects full-width instead of splitting width with duplicate values');
-assertMatches(/\.ctrl-row\[data-widget="menu"\] \.val\s*\{[^}]*display:\s*none;/, 'menu controls hide redundant value readouts');
 assertIncludes(html, 'function buildCanvasEditors(container, node, plugin)', 'instrument canvas editor renderer exists');
 assertIncludes(html, 'function buildCurveCanvas(container, node, editor)', 'generic editable curve canvas exists');
 assertIncludes(html, 'node.setPluginState(editor.key, normalizedPointsToState(pts));', 'canvas editors write state into the plugin');
@@ -126,8 +116,6 @@ assertIncludes(html, "badge.className = 'license-badge';", 'dropdown item render
 assertIncludes(html, 'item.appendChild(name);', 'dropdown item name remains inside the clickable row');
 assertIncludes(html, 'item.appendChild(badge);', 'dropdown item badge remains inside the clickable row');
 assertIncludes(html, "document.getElementById('chain-title').textContent = EFFECTS.length", 'effect chain heading shows the supported effect count');
-assert(uiHints.schema === 'wadspa-ui-hints-v1', 'UI hints use the wadspa UI hint schema');
-assert(Object.keys(uiHints.plugins ?? {}).length >= instruments.length + effects.length - 2, 'UI hints cover nearly the entire catalog');
 assertIncludes(html, 'id="midi-connect-btn"', 'MIDI connect button exists');
 assertIncludes(html, 'id="midi-status-lbl"', 'MIDI status label exists');
 assertIncludes(html, 'navigator.requestMIDIAccess({ sysex: false })', 'Web MIDI access is requested without sysex');
