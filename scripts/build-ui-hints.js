@@ -92,6 +92,7 @@ function scanEntry(entry, dirs) {
       meters: 0,
     },
     sourceFiles: new Set(),
+    evidenceFiles: new Set(),
   };
 
   for (const dir of dirs) {
@@ -104,7 +105,7 @@ function scanEntry(entry, dirs) {
         hint.sourceKinds.add('modgui');
       }
       if (isUiSourceFile(base, lower)) {
-        hint.sourceFiles.add(rel);
+        addSourceFile(hint, rel);
       }
 
       if (/\.(png|jpg|jpeg|svg|html|css)$/i.test(base)) {
@@ -138,7 +139,7 @@ function scanEntry(entry, dirs) {
     assets: [...hint.assets].sort(),
     ...(nativeLayouts.length > 0 ? { nativeLayouts } : {}),
     ...(Object.keys(nativeWidgets).length > 0 ? { nativeWidgets } : {}),
-    sourceFiles: [...hint.sourceFiles].sort().slice(0, 16),
+    sourceFiles: prioritizedSourceFiles(hint).slice(0, 16),
   };
 
   if (normalized.sourceKinds.length === 0 && /Zam|ZaMulti|ZaMaxim/i.test(entry.id)) {
@@ -160,26 +161,33 @@ function collectAssetHints(hint, base) {
 function collectTextHints(hint, text, rel) {
   const lowerRel = rel.toLowerCase();
   const hasCanvasEditor = hasCanvasEditorEvidence(text);
+  const hasNativeWidgets = hasNativeWidgetEvidence(text, { hasCanvasEditor });
   collectNativeWidgetHints(hint, text, { hasCanvasEditor });
 
   if (hasCanvasEditor) {
     hint.assets.add('canvas-editor');
-    hint.sourceFiles.add(rel);
+    addSourceFile(hint, rel, true);
+  }
+  if (hasNativeWidgets) {
+    addSourceFile(hint, rel, true);
   }
 
   for (const match of text.matchAll(/\b(?:mod|modgui):brand\s+"([^"]+)"/g)) {
     hint.brand ??= match[1];
     hint.sourceKinds.add(rel.includes('modgui') ? 'modgui' : 'lv2-mod-metadata');
+    if (rel.includes('modgui')) addSourceFile(hint, rel, true);
   }
   for (const match of text.matchAll(/\b(?:mod|modgui):label\s+"([^"]+)"/g)) {
     hint.label ??= match[1];
     hint.sourceKinds.add(rel.includes('modgui') ? 'modgui' : 'lv2-mod-metadata');
+    if (rel.includes('modgui')) addSourceFile(hint, rel, true);
   }
   for (const key of ['model', 'panel', 'color', 'knob']) {
     const pattern = new RegExp(`\\b(?:mod|modgui):${key}\\s+"([^"]+)"`, 'g');
     for (const match of text.matchAll(pattern)) {
       hint.modgui[key] ??= match[1];
       hint.sourceKinds.add('modgui');
+      addSourceFile(hint, rel, true);
       if (key === 'panel' && /slider|fader/i.test(match[1])) hint.assets.add('slider');
       if (key === 'panel' && /knob|dial/i.test(match[1])) hint.assets.add('knob');
       if (key === 'knob') hint.assets.add('knob');
@@ -188,25 +196,31 @@ function collectTextHints(hint, text, rel) {
   for (const match of text.matchAll(/\b(?:lv2ui|ui):([A-Za-z0-9_]+UI)\b/g)) {
     hint.nativeUiTypes.add(match[1]);
     hint.sourceKinds.add('lv2-native-ui');
+    addSourceFile(hint, rel, true);
   }
   if (/modgui:gui|modgui:resourcesDirectory|modgui:iconTemplate/.test(text)) {
     hint.sourceKinds.add('modgui');
+    addSourceFile(hint, rel, true);
   }
   if (/\bQWidget\b|\bQDialog\b|\bQApplication\b|\bQt::|Qt[456]UI/.test(text)) {
     hint.nativeUiTypes.add('QtUI');
     hint.sourceKinds.add('qt-native-ui');
+    addSourceFile(hint, rel, true);
   }
   if (/\bGTK\b|\bGtk\b|gtk_widget|GtkUI/.test(text)) {
     hint.nativeUiTypes.add('GtkUI');
     hint.sourceKinds.add('gtk-native-ui');
+    addSourceFile(hint, rel, true);
   }
   if (/\bFl_(?:Group|Tabs|Dial|Slider|Choice|Button)\b|\bFL\/Fl_/i.test(text)) {
     hint.nativeUiTypes.add('FLTKUI');
     hint.sourceKinds.add('fltk-native-ui');
+    addSourceFile(hint, rel, true);
   }
   if (/DISTRHO_UI|DistrhoUI|NanoVG|CairoUI|ExternalUI/.test(text)) {
     hint.nativeUiTypes.add('DPFUI');
     hint.sourceKinds.add('dpf-native-ui');
+    addSourceFile(hint, rel, true);
   }
   if (/mod-slider|button-type=["']slider|class=["'][^"']*slider/i.test(text)) hint.assets.add('slider');
   if (/mod-knob|button-type=["']knob|class=["'][^"']*(knob|dial)/i.test(text)) hint.assets.add('knob');
@@ -215,8 +229,19 @@ function collectTextHints(hint, text, rel) {
   if (/OBJ_SWITCH|\bswitch\b|\btoggle\b/i.test(text)) hint.assets.add('switch');
   if (/Graph\.hpp|lineEditor|graph\s*state|spline-based graph/i.test(text) && !lowerRel.includes('/dspfilters/')) {
     hint.assets.add('canvas-editor');
-    hint.sourceFiles.add(rel);
+    addSourceFile(hint, rel, true);
   }
+}
+
+function hasNativeWidgetEvidence(text, options = {}) {
+  return options.hasCanvasEditor
+    || /\bQDial\b|\bFl_Dial\b|\bqsynthKnob\b|\bOBJ_DIAL\b|mod-knob|button-type=["']knob/i.test(text)
+    || /\bQSlider\b|\bFl_Slider\b|\bGtkScale\b|gtk_scale|\buiSlider\b|add(?:Horizontal|Vertical)Slider|button-type=["']slider|mod-slider/i.test(text)
+    || /\bQCheckBox\b|\bGtkToggleButton\b|\bGtkSwitch\b|gtk_check_button|\bFl_(?:Check_)?Button\b|\bOBJ_SWITCH\b|footswitch/i.test(text)
+    || /\bQComboBox\b|\bGtkCombo\b|\bGtkMenu\b|\bFl_Choice\b|\buiMenu\b/i.test(text)
+    || /\bQGroupBox\b|\bGtkFrame\b|gtk_frame_new|\bFl_Group\b|add(?:Horizontal|Vertical)Box/i.test(text)
+    || /\bQTabWidget\b|\bGtkNotebook\b|gtk_notebook|\bFl_Tabs\b|openTabBox/i.test(text)
+    || /\bmeter\b|\bled\b|LevelMeter|VU\s*Meter/i.test(text);
 }
 
 function collectNativeWidgetHints(hint, text, options = {}) {
@@ -257,12 +282,48 @@ function compactCounts(counts) {
   return Object.fromEntries(Object.entries(counts).filter(([, value]) => value > 0));
 }
 
+function addSourceFile(hint, rel, evidence = false) {
+  const lower = rel.toLowerCase();
+  if (isGeneratedUiStubFile(lower) || isFrameworkUiFile(lower)) return;
+  hint.sourceFiles.add(rel);
+  if (evidence) hint.evidenceFiles.add(rel);
+}
+
+function prioritizedSourceFiles(hint) {
+  const files = [...hint.sourceFiles].sort();
+  return files.sort((a, b) => {
+    const evidenceDelta = Number(hint.evidenceFiles.has(b)) - Number(hint.evidenceFiles.has(a));
+    if (evidenceDelta !== 0) return evidenceDelta;
+    return sourceFilePriority(b) - sourceFilePriority(a) || a.localeCompare(b);
+  });
+}
+
+function sourceFilePriority(file) {
+  const lower = file.toLowerCase();
+  let score = 0;
+  if (/widget_param|widget_controls?|widget_env|widget_wave|graph|wolfshaperplugin|geonkick_lv2_wasm/.test(lower)) score += 4;
+  if (/modgui\.ttl|\.fl$|\.ui$|\.xml$/.test(lower)) score += 3;
+  if (/knob|dial|slider|fader|switch|panel|group|tab|canvas|editor|graph/.test(lower)) score += 2;
+  if (/\.(png|jpg|jpeg|svg|css|html)$/.test(lower)) score -= 1;
+  return score;
+}
+
 function isUiSourceFile(base, lower) {
   if (lower.includes('/dspfilters/')) return false;
+  if (isGeneratedUiStubFile(lower) || isFrameworkUiFile(lower)) return false;
   return /\b(gui|ui|layout|editor|view)\b/i.test(base)
     || /widget|knob|dial|slider|fader|switch|panel|palette|levelmeter|\bgraph\b|\bvu\b/i.test(base)
     || lower.endsWith('.fl')
     || lower.includes('/modgui/');
+}
+
+function isGeneratedUiStubFile(lower) {
+  return lower.endsWith('/lv2ui_stub.cpp') || lower.endsWith('/lv2ui_stub.c');
+}
+
+function isFrameworkUiFile(lower) {
+  return /\/dpf(?:_full)?\/(?:src|extra|distrho|dgl)\//.test(lower)
+    || /\/dpf(?:_full)?\/distrhoui(?:main|stub|lv2|dssi|vst3|internal|privatedata)?\.(?:cpp|hpp|h|mm)$/.test(lower);
 }
 
 function* walk(dir, depth) {

@@ -20,7 +20,9 @@
       "assets": [
         "switch"
       ],
-      "sourceFiles": []
+      "sourceFiles": [
+        "plugins/amsynth/amsynth.ttl"
+      ]
     },
     "bandpass_iir": {
       "sourceKinds": [],
@@ -72,7 +74,11 @@
         "panels": 1
       },
       "sourceFiles": [
-        "infamous-plugins/src/casynth/casynth_ui.fl"
+        "infamous-plugins/src/casynth/casynth_ui.fl",
+        "infamous-plugins/src/casynth/casynth_ui_main.cxx",
+        "infamous-plugins/src/casynth/cellgrid.h",
+        "infamous-plugins/src/casynth/manifest.ttl",
+        "plugins/casynth/cellgrid.h"
       ]
     },
     "chorus": {
@@ -155,6 +161,12 @@
         "meters": 8
       },
       "sourceFiles": [
+        "distrho-ports/ports-juce5/dexed/source/GlobalEditor.cpp",
+        "distrho-ports/ports-juce5/dexed/source/GlobalEditor.h",
+        "distrho-ports/ports-juce5/dexed/source/OperatorEditor.cpp",
+        "distrho-ports/ports-juce5/dexed/source/OperatorEditor.h",
+        "distrho-ports/ports-juce5/dexed/source/DXComponents.cpp",
+        "distrho-ports/ports-juce5/dexed/source/DXComponents.h",
         "distrho-ports/ports-juce5/dexed/source/ParamDialog.cpp",
         "distrho-ports/ports-juce5/dexed/source/ParamDialog.h"
       ]
@@ -191,7 +203,12 @@
         "knob",
         "switch"
       ],
-      "sourceFiles": []
+      "sourceFiles": [
+        "plugins/drumkv1/drumkv1_lv2.cpp",
+        "plugins/drumkv1/drumkv1_lv2.h",
+        "plugins/drumkv1/drumkv1_ui-win32.ttl",
+        "plugins/drumkv1/drumkv1_ui.ttl"
+      ]
     },
     "dyson_compress": {
       "sourceKinds": [],
@@ -915,7 +932,10 @@
         "knob",
         "switch"
       ],
-      "sourceFiles": []
+      "sourceFiles": [
+        "plugins/padthv1/padthv1_lv2.cpp",
+        "plugins/padthv1/padthv1_lv2.h"
+      ]
     },
     "plate": {
       "sourceKinds": [],
@@ -964,22 +984,22 @@
         "meters": 2
       },
       "sourceFiles": [
-        "plugins/samplv1/samplv1widget.cpp",
-        "plugins/samplv1/samplv1widget.h",
-        "plugins/samplv1/samplv1widget_config.cpp",
-        "plugins/samplv1/samplv1widget_config.h",
         "plugins/samplv1/samplv1widget_control.cpp",
         "plugins/samplv1/samplv1widget_control.h",
         "plugins/samplv1/samplv1widget_controls.cpp",
         "plugins/samplv1/samplv1widget_controls.h",
         "plugins/samplv1/samplv1widget_env.cpp",
         "plugins/samplv1/samplv1widget_env.h",
-        "plugins/samplv1/samplv1widget_filt.cpp",
-        "plugins/samplv1/samplv1widget_filt.h",
-        "plugins/samplv1/samplv1widget_jack.cpp",
-        "plugins/samplv1/samplv1widget_jack.h",
-        "plugins/samplv1/samplv1widget_keybd.cpp",
-        "plugins/samplv1/samplv1widget_keybd.h"
+        "plugins/samplv1/samplv1widget_param.cpp",
+        "plugins/samplv1/samplv1widget_param.h",
+        "plugins/samplv1/samplv1widget_wave.cpp",
+        "plugins/samplv1/samplv1widget_wave.h",
+        "plugins/samplv1/samplv1_jack.cpp",
+        "plugins/samplv1/samplv1_lv2.cpp",
+        "plugins/samplv1/samplv1_lv2.h",
+        "plugins/samplv1/samplv1_lv2ui.cpp",
+        "plugins/samplv1/samplv1_nsm.cpp",
+        "plugins/samplv1/samplv1_ui-win32.ttl"
       ]
     },
     "satan_maximiser": {
@@ -1020,16 +1040,18 @@
         "switches": 11
       },
       "sourceFiles": [
+        "setBfree/b_synth/modgui.ttl",
+        "setBfree/b_synth/ui_model.h",
+        "setBfree/b_synth/ui.c",
+        "setBfree/b_synth/textures/dial.c",
+        "setBfree/b_synth/modgui/footswitch.png",
         "setBfree/b_synth/b_synth.ui.ttl.in",
         "setBfree/b_synth/manifest.ui.ttl.in",
-        "setBfree/b_synth/modgui/footswitch.png",
         "setBfree/b_synth/modgui/icon-setbfree-dsp-tonewheel-organ.html",
         "setBfree/b_synth/modgui/screenshot-setbfree-dsp-tonewheel-organ.png",
         "setBfree/b_synth/modgui/stylesheet-setbfree-dsp-tonewheel-organ.css",
         "setBfree/b_synth/modgui/thumbnail-setbfree-dsp-tonewheel-organ.png",
-        "setBfree/b_synth/modgui/wood3.png",
-        "setBfree/b_synth/textures/dial.c",
-        "setBfree/b_synth/ui.c"
+        "setBfree/b_synth/modgui/wood3.png"
       ]
     },
     "setBfree-overdrive": {
@@ -1109,7 +1131,10 @@
         "sliders": 27,
         "tabs": 3
       },
-      "sourceFiles": []
+      "sourceFiles": [
+        "plugins/sorcer/main.cpp",
+        "plugins/sorcer/sorcer.ttl"
+      ]
     },
     "string-machine": {
       "brand": "Jean Pierre Cimalando",
@@ -1144,17 +1169,22 @@
         "meters": 4
       },
       "sourceFiles": [
-        "string-machine/plugins/string-machine/artwork/images/knob.png",
-        "string-machine/plugins/string-machine/artwork/images/slider.png",
-        "string-machine/plugins/string-machine/artwork/images/vu.png",
         "string-machine/plugins/string-machine/layouts/Main.fl",
+        "plugins/string-machine/gen/dsp/AsymWaveshaper.cpp",
+        "plugins/string-machine/gen/dsp/Delay3PhaseDigital.cpp",
+        "plugins/string-machine/gen/dsp/Delay3PhaseDigitalStereo.cpp",
+        "plugins/string-machine/gen/dsp/LFO3PhaseDual.cpp",
+        "plugins/string-machine/gen/dsp/NoiseLFO.cpp",
+        "plugins/string-machine/gen/dsp/PwmOscillator.cpp",
+        "plugins/string-machine/gen/dsp/StringFiltersHighshelf.cpp",
+        "plugins/string-machine/manifest.ttl",
+        "plugins/string-machine/sources/dsp/architecture/Generic.cpp",
+        "string-machine/plugins/string-machine/StringMachineUI.cpp",
+        "string-machine/plugins/string-machine/StringMachineUI.hpp",
         "string-machine/resources/ui/knob.knob",
         "string-machine/resources/ui/led.knob",
         "string-machine/resources/ui/slider.knob",
-        "string-machine/resources/ui/toggle-button.knob",
-        "string-machine/resources/ui/trigger-button.knob",
-        "string-machine/resources/ui/value-display.knob",
-        "string-machine/resources/ui/vu.knob"
+        "string-machine/resources/ui/toggle-button.knob"
       ]
     },
     "svf": {
@@ -1196,10 +1226,11 @@
         "switch"
       ],
       "sourceFiles": [
-        "tap-lv2/autopan/modgui/icon-tap-autopanner.html",
+        "tap-lv2/autopan/modgui.ttl",
         "tap-lv2/autopan/modgui/knobs/boxy/black.png",
-        "tap-lv2/autopan/modgui/pedals/boxy/darkblue.png",
         "tap-lv2/autopan/modgui/pedals/footswitch.png",
+        "tap-lv2/autopan/modgui/icon-tap-autopanner.html",
+        "tap-lv2/autopan/modgui/pedals/boxy/darkblue.png",
         "tap-lv2/autopan/modgui/screenshot-tap-autopanner.png",
         "tap-lv2/autopan/modgui/stylesheet-tap-autopanner.css",
         "tap-lv2/autopan/modgui/thumbnail-tap-autopanner.png",
@@ -1228,9 +1259,10 @@
         "switch"
       ],
       "sourceFiles": [
-        "tap-lv2/chorusflanger/modgui/icon-tap-chorusflanger.html",
+        "tap-lv2/chorusflanger/modgui.ttl",
         "tap-lv2/chorusflanger/modgui/knobs/japanese/cream.png",
         "tap-lv2/chorusflanger/modgui/knobs/japanese/purple.png",
+        "tap-lv2/chorusflanger/modgui/icon-tap-chorusflanger.html",
         "tap-lv2/chorusflanger/modgui/pedals/japanese/purple.png",
         "tap-lv2/chorusflanger/modgui/screenshot-tap-chorusflanger.png",
         "tap-lv2/chorusflanger/modgui/stylesheet-tap-chorusflanger.css",
@@ -1258,10 +1290,11 @@
         "switch"
       ],
       "sourceFiles": [
-        "tap-lv2/deesser/modgui/icon-tap-deesser.html",
+        "tap-lv2/deesser/modgui.ttl",
         "tap-lv2/deesser/modgui/knobs/boxy/black.png",
-        "tap-lv2/deesser/modgui/pedals/boxy/red.png",
         "tap-lv2/deesser/modgui/pedals/footswitch.png",
+        "tap-lv2/deesser/modgui/icon-tap-deesser.html",
+        "tap-lv2/deesser/modgui/pedals/boxy/red.png",
         "tap-lv2/deesser/modgui/screenshot-tap-deesser.png",
         "tap-lv2/deesser/modgui/stylesheet-tap-deesser.css",
         "tap-lv2/deesser/modgui/thumbnail-tap-deesser.png",
@@ -1290,8 +1323,9 @@
         "switch"
       ],
       "sourceFiles": [
-        "tap-lv2/doubler/modgui/icon-tap-fractal-doubler.html",
+        "tap-lv2/doubler/modgui.ttl",
         "tap-lv2/doubler/modgui/knobs/japanese/cream.png",
+        "tap-lv2/doubler/modgui/icon-tap-fractal-doubler.html",
         "tap-lv2/doubler/modgui/pedals/japanese/darkblue.png",
         "tap-lv2/doubler/modgui/screenshot-tap-fractal-doubler.png",
         "tap-lv2/doubler/modgui/stylesheet-tap-fractal-doubler.css",
@@ -1319,10 +1353,11 @@
         "switch"
       ],
       "sourceFiles": [
-        "tap-lv2/dynamics/modgui/icon-tap-mono-dynamics.html",
+        "tap-lv2/dynamics/modgui.ttl",
         "tap-lv2/dynamics/modgui/knobs/boxy/black.png",
-        "tap-lv2/dynamics/modgui/pedals/boxy/red.png",
         "tap-lv2/dynamics/modgui/pedals/footswitch.png",
+        "tap-lv2/dynamics/modgui/icon-tap-mono-dynamics.html",
+        "tap-lv2/dynamics/modgui/pedals/boxy/red.png",
         "tap-lv2/dynamics/modgui/screenshot-tap-mono-dynamics.png",
         "tap-lv2/dynamics/modgui/stylesheet-tap-mono-dynamics.css",
         "tap-lv2/dynamics/modgui/thumbnail-tap-mono-dynamics.png",
@@ -1351,10 +1386,11 @@
         "switch"
       ],
       "sourceFiles": [
-        "tap-lv2/dynamics-st/modgui/icon-tap-stereo-dynamics.html",
+        "tap-lv2/dynamics-st/modgui.ttl",
         "tap-lv2/dynamics-st/modgui/knobs/boxy/black.png",
-        "tap-lv2/dynamics-st/modgui/pedals/boxy/red.png",
         "tap-lv2/dynamics-st/modgui/pedals/footswitch.png",
+        "tap-lv2/dynamics-st/modgui/icon-tap-stereo-dynamics.html",
+        "tap-lv2/dynamics-st/modgui/pedals/boxy/red.png",
         "tap-lv2/dynamics-st/modgui/screenshot-tap-stereo-dynamics.png",
         "tap-lv2/dynamics-st/modgui/stylesheet-tap-stereo-dynamics.css",
         "tap-lv2/dynamics-st/modgui/thumbnail-tap-stereo-dynamics.png",
@@ -1383,9 +1419,10 @@
         "switch"
       ],
       "sourceFiles": [
-        "tap-lv2/echo/modgui/icon-tap-stereo-echo.html",
+        "tap-lv2/echo/modgui.ttl",
         "tap-lv2/echo/modgui/knobs/japanese/cream.png",
         "tap-lv2/echo/modgui/knobs/japanese/white.png",
+        "tap-lv2/echo/modgui/icon-tap-stereo-echo.html",
         "tap-lv2/echo/modgui/pedals/japanese/cream.png",
         "tap-lv2/echo/modgui/pedals/japanese/white.png",
         "tap-lv2/echo/modgui/screenshot-tap-stereo-echo.png",
@@ -1410,14 +1447,15 @@
         "switch"
       ],
       "sourceFiles": [
+        "tap-lv2/eq/modgui.ttl",
         "tap-lv2/eq/modgui/footswitch.png",
+        "tap-lv2/eq/modgui/slider.png",
+        "tap-lv2/eq/modgui/tap-equalizer-knob.png",
         "tap-lv2/eq/modgui/icon-tap-equalizer.html",
         "tap-lv2/eq/modgui/red-light-off.png",
         "tap-lv2/eq/modgui/red-light-on.png",
         "tap-lv2/eq/modgui/screenshot-tap-equalizer.png",
-        "tap-lv2/eq/modgui/slider.png",
         "tap-lv2/eq/modgui/tap-equalizer-background.png",
-        "tap-lv2/eq/modgui/tap-equalizer-knob.png",
         "tap-lv2/eq/modgui/tap-equalizer.css",
         "tap-lv2/eq/modgui/thumbnail-tap-equalizer.png"
       ]
@@ -1439,14 +1477,15 @@
         "switch"
       ],
       "sourceFiles": [
+        "tap-lv2/eqbw/modgui.ttl",
         "tap-lv2/eqbw/modgui/footswitch.png",
+        "tap-lv2/eqbw/modgui/slider.png",
+        "tap-lv2/eqbw/modgui/tap-equalizer-knob.png",
         "tap-lv2/eqbw/modgui/icon-tap-equalizerbw.html",
         "tap-lv2/eqbw/modgui/red-light-off.png",
         "tap-lv2/eqbw/modgui/red-light-on.png",
         "tap-lv2/eqbw/modgui/screenshot-tap-equalizerbw.png",
-        "tap-lv2/eqbw/modgui/slider.png",
         "tap-lv2/eqbw/modgui/tap-eqbw-background.png",
-        "tap-lv2/eqbw/modgui/tap-equalizer-knob.png",
         "tap-lv2/eqbw/modgui/tap-equalizerbw.css",
         "tap-lv2/eqbw/modgui/thumbnail-tap-equalizerbw.png"
       ]
@@ -1472,10 +1511,11 @@
         "switch"
       ],
       "sourceFiles": [
-        "tap-lv2/limiter/modgui/icon-tap-scaling-limiter.html",
+        "tap-lv2/limiter/modgui.ttl",
         "tap-lv2/limiter/modgui/knobs/boxy/black.png",
-        "tap-lv2/limiter/modgui/pedals/boxy/red.png",
         "tap-lv2/limiter/modgui/pedals/footswitch.png",
+        "tap-lv2/limiter/modgui/icon-tap-scaling-limiter.html",
+        "tap-lv2/limiter/modgui/pedals/boxy/red.png",
         "tap-lv2/limiter/modgui/screenshot-tap-scaling-limiter.png",
         "tap-lv2/limiter/modgui/stylesheet-tap-scaling-limiter.css",
         "tap-lv2/limiter/modgui/thumbnail-tap-scaling-limiter.png",
@@ -1504,11 +1544,12 @@
         "switch"
       ],
       "sourceFiles": [
-        "tap-lv2/pinknoise/modgui/icon-tap-pinkfractal-noise.html",
+        "tap-lv2/pinknoise/modgui.ttl",
         "tap-lv2/pinknoise/modgui/knobs/boxy/black.png",
+        "tap-lv2/pinknoise/modgui/pedals/footswitch.png",
+        "tap-lv2/pinknoise/modgui/icon-tap-pinkfractal-noise.html",
         "tap-lv2/pinknoise/modgui/pedals/boxy/green.png",
         "tap-lv2/pinknoise/modgui/pedals/boxy/pink.png",
-        "tap-lv2/pinknoise/modgui/pedals/footswitch.png",
         "tap-lv2/pinknoise/modgui/screenshot-tap-pinkfractal-noise.png",
         "tap-lv2/pinknoise/modgui/stylesheet-tap-pinkfractal-noise.css",
         "tap-lv2/pinknoise/modgui/thumbnail-tap-pinkfractal-noise.png",
@@ -1537,10 +1578,11 @@
         "switch"
       ],
       "sourceFiles": [
-        "tap-lv2/pitch/modgui/icon-tap-pitch-shifter.html",
+        "tap-lv2/pitch/modgui.ttl",
         "tap-lv2/pitch/modgui/knobs/boxy/black.png",
-        "tap-lv2/pitch/modgui/pedals/boxy/darkblue.png",
         "tap-lv2/pitch/modgui/pedals/footswitch.png",
+        "tap-lv2/pitch/modgui/icon-tap-pitch-shifter.html",
+        "tap-lv2/pitch/modgui/pedals/boxy/darkblue.png",
         "tap-lv2/pitch/modgui/screenshot-tap-pitch-shifter.png",
         "tap-lv2/pitch/modgui/stylesheet-tap-pitch-shifter.css",
         "tap-lv2/pitch/modgui/thumbnail-tap-pitch-shifter.png",
@@ -1569,10 +1611,11 @@
         "switch"
       ],
       "sourceFiles": [
-        "tap-lv2/reflector/modgui/icon-tap-reflector.html",
+        "tap-lv2/reflector/modgui.ttl",
         "tap-lv2/reflector/modgui/knobs/boxy/black.png",
-        "tap-lv2/reflector/modgui/pedals/boxy/white.png",
         "tap-lv2/reflector/modgui/pedals/footswitch.png",
+        "tap-lv2/reflector/modgui/icon-tap-reflector.html",
+        "tap-lv2/reflector/modgui/pedals/boxy/white.png",
         "tap-lv2/reflector/modgui/screenshot-tap-reflector.png",
         "tap-lv2/reflector/modgui/stylesheet-tap-reflector.css",
         "tap-lv2/reflector/modgui/thumbnail-tap-reflector.png",
@@ -1601,10 +1644,11 @@
         "switch"
       ],
       "sourceFiles": [
-        "tap-lv2/reverb/modgui/icon-tap-reverberator.html",
+        "tap-lv2/reverb/modgui.ttl",
         "tap-lv2/reverb/modgui/knobs/boxy/black.png",
-        "tap-lv2/reverb/modgui/pedals/boxy/cream.png",
         "tap-lv2/reverb/modgui/pedals/footswitch.png",
+        "tap-lv2/reverb/modgui/icon-tap-reverberator.html",
+        "tap-lv2/reverb/modgui/pedals/boxy/cream.png",
         "tap-lv2/reverb/modgui/screenshot-tap-reverberator.png",
         "tap-lv2/reverb/modgui/stylesheet-tap-reverberator.css",
         "tap-lv2/reverb/modgui/thumbnail-tap-reverberator.png",
@@ -1633,9 +1677,10 @@
         "switch"
       ],
       "sourceFiles": [
-        "tap-lv2/rotspeak/modgui/icon-tap-rotary-speaker.html",
+        "tap-lv2/rotspeak/modgui.ttl",
         "tap-lv2/rotspeak/modgui/knobs/japanese/cream.png",
         "tap-lv2/rotspeak/modgui/knobs/japanese/petrol.png",
+        "tap-lv2/rotspeak/modgui/icon-tap-rotary-speaker.html",
         "tap-lv2/rotspeak/modgui/pedals/japanese/purple.png",
         "tap-lv2/rotspeak/modgui/screenshot-tap-rotary-speaker.png",
         "tap-lv2/rotspeak/modgui/stylesheet-tap-rotary-speaker.css",
@@ -1663,10 +1708,11 @@
         "switch"
       ],
       "sourceFiles": [
-        "tap-lv2/sigmoid/modgui/icon-tap-sigmoid-booster.html",
+        "tap-lv2/sigmoid/modgui.ttl",
         "tap-lv2/sigmoid/modgui/knobs/boxy/aluminium.png",
-        "tap-lv2/sigmoid/modgui/pedals/boxy/orange.png",
         "tap-lv2/sigmoid/modgui/pedals/footswitch.png",
+        "tap-lv2/sigmoid/modgui/icon-tap-sigmoid-booster.html",
+        "tap-lv2/sigmoid/modgui/pedals/boxy/orange.png",
         "tap-lv2/sigmoid/modgui/screenshot-tap-sigmoid-booster.png",
         "tap-lv2/sigmoid/modgui/stylesheet-tap-sigmoid-booster.css",
         "tap-lv2/sigmoid/modgui/thumbnail-tap-sigmoid-booster.png",
@@ -1695,11 +1741,12 @@
         "switch"
       ],
       "sourceFiles": [
-        "tap-lv2/tremolo/modgui/icon-tap-tremolo.html",
+        "tap-lv2/tremolo/modgui.ttl",
         "tap-lv2/tremolo/modgui/knobs/boxy/black.png",
+        "tap-lv2/tremolo/modgui/pedals/footswitch.png",
+        "tap-lv2/tremolo/modgui/icon-tap-tremolo.html",
         "tap-lv2/tremolo/modgui/pedals/boxy/purple.png",
         "tap-lv2/tremolo/modgui/pedals/boxy/racing.png",
-        "tap-lv2/tremolo/modgui/pedals/footswitch.png",
         "tap-lv2/tremolo/modgui/screenshot-tap-tremolo.png",
         "tap-lv2/tremolo/modgui/stylesheet-tap-tremolo.css",
         "tap-lv2/tremolo/modgui/thumbnail-tap-tremolo.png",
@@ -1728,10 +1775,11 @@
         "switch"
       ],
       "sourceFiles": [
-        "tap-lv2/tubewarmth/modgui/icon-tap-tubewarmth.html",
+        "tap-lv2/tubewarmth/modgui.ttl",
         "tap-lv2/tubewarmth/modgui/knobs/boxy/black.png",
-        "tap-lv2/tubewarmth/modgui/pedals/boxy/brown.png",
         "tap-lv2/tubewarmth/modgui/pedals/footswitch.png",
+        "tap-lv2/tubewarmth/modgui/icon-tap-tubewarmth.html",
+        "tap-lv2/tubewarmth/modgui/pedals/boxy/brown.png",
         "tap-lv2/tubewarmth/modgui/screenshot-tap-tubewarmth.png",
         "tap-lv2/tubewarmth/modgui/stylesheet-tap-tubewarmth.css",
         "tap-lv2/tubewarmth/modgui/thumbnail-tap-tubewarmth.png",
@@ -1760,10 +1808,11 @@
         "switch"
       ],
       "sourceFiles": [
-        "tap-lv2/vibrato/modgui/icon-tap-vibrato.html",
+        "tap-lv2/vibrato/modgui.ttl",
         "tap-lv2/vibrato/modgui/knobs/japanese/cream.png",
         "tap-lv2/vibrato/modgui/knobs/japanese/green.png",
         "tap-lv2/vibrato/modgui/knobs/japanese/purple.png",
+        "tap-lv2/vibrato/modgui/icon-tap-vibrato.html",
         "tap-lv2/vibrato/modgui/pedals/japanese/green.png",
         "tap-lv2/vibrato/modgui/pedals/japanese/purple.png",
         "tap-lv2/vibrato/modgui/screenshot-tap-vibrato.png",
@@ -1854,10 +1903,13 @@
         "canvases": 2
       },
       "sourceFiles": [
-        "plugins/wolf-shaper/src/Structures/Graph.hpp",
         "plugins/wolf-shaper/src/Structures/src/Graph.cpp",
         "plugins/wolf-shaper/src/WolfShaperPlugin.cpp",
-        "plugins/wolf-shaper/wolf_shaper.ttl"
+        "plugins/wolf-shaper/src/DistrhoPluginInfo.h",
+        "plugins/wolf-shaper/src/Structures/Animation.hpp",
+        "plugins/wolf-shaper/src/Structures/src/Animation.cpp",
+        "plugins/wolf-shaper/wolf_shaper.ttl",
+        "plugins/wolf-shaper/src/Structures/Graph.hpp"
       ]
     },
     "ZamAutoSat": {
@@ -1872,7 +1924,9 @@
         "CocoaUI"
       ],
       "assets": [],
-      "sourceFiles": []
+      "sourceFiles": [
+        "plugins/ZamAutoSat/manifest.ttl"
+      ]
     },
     "ZaMaximX2": {
       "brand": "ZamAudio",
@@ -1888,7 +1942,9 @@
       "assets": [
         "switch"
       ],
-      "sourceFiles": []
+      "sourceFiles": [
+        "plugins/ZaMaximX2/manifest.ttl"
+      ]
     },
     "ZamComp": {
       "brand": "ZamAudio",
@@ -1904,7 +1960,9 @@
       "assets": [
         "switch"
       ],
-      "sourceFiles": []
+      "sourceFiles": [
+        "plugins/ZamComp/manifest.ttl"
+      ]
     },
     "ZamCompX2": {
       "brand": "ZamAudio",
@@ -1920,7 +1978,9 @@
       "assets": [
         "switch"
       ],
-      "sourceFiles": []
+      "sourceFiles": [
+        "plugins/ZamCompX2/manifest.ttl"
+      ]
     },
     "ZamDelay": {
       "brand": "ZamAudio",
@@ -1936,7 +1996,9 @@
       "assets": [
         "switch"
       ],
-      "sourceFiles": []
+      "sourceFiles": [
+        "plugins/ZamDelay/manifest.ttl"
+      ]
     },
     "ZamDynamicEQ": {
       "brand": "ZamAudio",
@@ -1952,7 +2014,9 @@
       "assets": [
         "switch"
       ],
-      "sourceFiles": []
+      "sourceFiles": [
+        "plugins/ZamDynamicEQ/manifest.ttl"
+      ]
     },
     "ZamEcho": {
       "brand": "ZamAudio",
@@ -1968,7 +2032,9 @@
       "assets": [
         "switch"
       ],
-      "sourceFiles": []
+      "sourceFiles": [
+        "plugins/ZamEcho/manifest.ttl"
+      ]
     },
     "ZamEQ2": {
       "brand": "ZamAudio",
@@ -1984,7 +2050,9 @@
       "assets": [
         "switch"
       ],
-      "sourceFiles": []
+      "sourceFiles": [
+        "plugins/ZamEQ2/manifest.ttl"
+      ]
     },
     "ZamGate": {
       "brand": "ZamAudio",
@@ -2000,7 +2068,9 @@
       "assets": [
         "switch"
       ],
-      "sourceFiles": []
+      "sourceFiles": [
+        "plugins/ZamGate/manifest.ttl"
+      ]
     },
     "ZamGateX2": {
       "brand": "ZamAudio",
@@ -2016,7 +2086,9 @@
       "assets": [
         "switch"
       ],
-      "sourceFiles": []
+      "sourceFiles": [
+        "plugins/ZamGateX2/manifest.ttl"
+      ]
     },
     "ZamGEQ31": {
       "brand": "ZamAudio",
@@ -2032,7 +2104,9 @@
       "assets": [
         "switch"
       ],
-      "sourceFiles": []
+      "sourceFiles": [
+        "plugins/ZamGEQ31/manifest.ttl"
+      ]
     },
     "ZamGrains": {
       "brand": "ZamAudio",
@@ -2048,7 +2122,9 @@
       "assets": [
         "switch"
       ],
-      "sourceFiles": []
+      "sourceFiles": [
+        "plugins/ZamGrains/manifest.ttl"
+      ]
     },
     "ZamPhono": {
       "brand": "ZamAudio",
@@ -2064,7 +2140,9 @@
       "assets": [
         "switch"
       ],
-      "sourceFiles": []
+      "sourceFiles": [
+        "plugins/ZamPhono/manifest.ttl"
+      ]
     },
     "ZamTube": {
       "brand": "ZamAudio",
@@ -2080,7 +2158,9 @@
       "assets": [
         "switch"
       ],
-      "sourceFiles": []
+      "sourceFiles": [
+        "plugins/ZamTube/manifest.ttl"
+      ]
     },
     "ZaMultiComp": {
       "brand": "ZamAudio",
@@ -2096,7 +2176,9 @@
       "assets": [
         "switch"
       ],
-      "sourceFiles": []
+      "sourceFiles": [
+        "plugins/ZaMultiComp/manifest.ttl"
+      ]
     },
     "ZaMultiCompX2": {
       "brand": "ZamAudio",
@@ -2112,7 +2194,9 @@
       "assets": [
         "switch"
       ],
-      "sourceFiles": []
+      "sourceFiles": [
+        "plugins/ZaMultiCompX2/manifest.ttl"
+      ]
     },
     "zynaddsubfx": {
       "sourceKinds": [
@@ -2143,22 +2227,22 @@
         "meters": 24
       },
       "sourceFiles": [
+        "zynaddsubfx/src/UI/Fl_EQGraph.cpp",
+        "zynaddsubfx/src/UI/Fl_EQGraph.H",
+        "zynaddsubfx/src/UI/Fl_Resonance_Graph.cpp",
+        "zynaddsubfx/src/UI/Fl_Resonance_Graph.H",
+        "zynaddsubfx/src/UI/FormantFilterGraph.H",
         "zynaddsubfx/src/UI/ADnoteUI.fl",
         "zynaddsubfx/src/UI/BankUI.fl",
         "zynaddsubfx/src/UI/ConfigUI.fl",
         "zynaddsubfx/src/UI/EffUI.fl",
         "zynaddsubfx/src/UI/EnvelopeUI.fl",
         "zynaddsubfx/src/UI/FilterUI.fl",
-        "zynaddsubfx/src/UI/Fl_Osc_Dial.H",
-        "zynaddsubfx/src/UI/Fl_Osc_Dial.cpp",
-        "zynaddsubfx/src/UI/Fl_Osc_DialF.H",
-        "zynaddsubfx/src/UI/Fl_Osc_DialF.cpp",
-        "zynaddsubfx/src/UI/Fl_Osc_Slider.H",
-        "zynaddsubfx/src/UI/Fl_Osc_Slider.cpp",
-        "zynaddsubfx/src/UI/Fl_Osc_TSlider.H",
-        "zynaddsubfx/src/UI/Fl_Osc_TSlider.cpp",
-        "zynaddsubfx/src/UI/Fl_Osc_VSlider.H",
-        "zynaddsubfx/src/UI/Fl_Osc_VSlider.cpp"
+        "zynaddsubfx/src/UI/LFOUI.fl",
+        "zynaddsubfx/src/UI/MasterUI.fl",
+        "zynaddsubfx/src/UI/MicrotonalUI.fl",
+        "zynaddsubfx/src/UI/OscilGenUI.fl",
+        "zynaddsubfx/src/UI/PADnoteUI.fl"
       ]
     }
   }

@@ -79,6 +79,12 @@ if (!samplv1?.nativeUiTypes?.some(type => /Qt|X11|external/i.test(type))) {
 if (!samplv1?.nativeLayouts?.includes('grouped-panel') || !samplv1?.nativeWidgets?.panels) {
   fail('samplv1 hint preserves Qt grouped-panel metadata');
 }
+if (!samplv1?.sourceFiles?.some(file => /samplv1widget_param\.(?:cpp|h)$/.test(file))) {
+  fail('samplv1 hint cites Qt parameter widgets that drive knob/group art direction');
+}
+if (!samplv1?.sourceFiles?.some(file => /samplv1widget_wave\.(?:cpp|h)$/.test(file))) {
+  fail('samplv1 hint cites Qt wave editor sources for canvas evidence');
+}
 
 const casynth = hints.plugins?.casynth;
 if (!casynth?.sourceKinds?.includes('fltk-native-ui') || !casynth?.nativeUiTypes?.includes('FLTKUI')) {
@@ -113,6 +119,15 @@ if (!wolfShaper?.nativeLayouts?.includes('canvas-editor')
 }
 if (wolfShaper?.sourceFiles?.some(file => /DSPFilters/i.test(file))) {
   fail('wolf-shaper hint should not cite DSPFilters support headers as UI sources');
+}
+
+for (const [id, hint] of Object.entries(hints.plugins ?? {})) {
+  for (const file of hint.sourceFiles ?? []) {
+    if (/lv2ui_stub/i.test(file)) fail(`${id}: generated lv2ui stubs should not be UI source evidence`);
+    if (/\/dpf(?:_full)?\/(?:src|extra|distrho|dgl)\//i.test(file)) {
+      fail(`${id}: DPF framework files should not be cited as plugin UI source evidence`);
+    }
+  }
 }
 
 const geonkickHint = hints.plugins?.geonkick;

@@ -1358,7 +1358,13 @@ function bindRelativeControlGesture(row, control, port, commitControl) {
   syncSliderAria(target, control, port);
 
   let dragging = false;
+  let suppressMouseUntil = 0;
+  const cancelRelativePointerEvent = event => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
   const beginDrag = (startEvent, moveSource, endSource, moveName, endName, cancelName, pointerId = null) => {
+    cancelRelativePointerEvent(startEvent);
     if (dragging) return;
     const min = Number(control.min);
     const max = Number(control.max);
@@ -1366,7 +1372,6 @@ function bindRelativeControlGesture(row, control, port, commitControl) {
     const span = max - min;
     if (!Number.isFinite(startValue) || !Number.isFinite(span) || Math.abs(span) <= 1e-12) return;
 
-    startEvent.preventDefault();
     target.focus({ preventScroll: true });
     if (pointerId !== null) target.setPointerCapture?.(pointerId);
     dragging = true;
@@ -1377,14 +1382,19 @@ function bindRelativeControlGesture(row, control, port, commitControl) {
 
     const handleMove = moveEvent => {
       if (pointerId !== null && 'pointerId' in moveEvent && moveEvent.pointerId !== pointerId) return;
-      moveEvent.preventDefault();
+      cancelRelativePointerEvent(moveEvent);
       const dx = moveEvent.clientX - startX;
       const dy = moveEvent.clientY - startY;
       const pixels = moveEvent.shiftKey ? 420 : widget === 'fader' ? 128 : 170;
-      const travel = widget === 'fader' ? -dy : dx - dy;
+      const rawTravel = widget === 'fader' ? -dy : dx - dy;
+      const travel = gestureTravelPastDeadzone(rawTravel, moveEvent.shiftKey ? 1 : 3);
+      if (travel === 0) return;
+      const previousValue = control.value;
       setSliderValue(control, startValue + (travel / pixels) * span);
-      commitControl();
-      syncSliderAria(target, control, port);
+      if (control.value !== previousValue) {
+        commitControl();
+        syncSliderAria(target, control, port);
+      }
     };
 
     const endDrag = endEvent => {
@@ -1411,11 +1421,16 @@ function bindRelativeControlGesture(row, control, port, commitControl) {
 
   target.addEventListener('pointerdown', e => {
     if (e.button !== undefined && e.button !== 0) return;
+    suppressMouseUntil = Date.now() + 800;
     beginDrag(e, target, target, 'pointermove', 'pointerup', 'pointercancel', e.pointerId);
   });
 
   target.addEventListener('mousedown', e => {
     if (e.button !== 0) return;
+    if (Date.now() < suppressMouseUntil) {
+      cancelRelativePointerEvent(e);
+      return;
+    }
     beginDrag(e, document, document, 'mousemove', 'mouseup', null);
   });
 
@@ -1444,6 +1459,12 @@ function bindRelativeControlGesture(row, control, port, commitControl) {
   });
 
   control.addEventListener('input', () => syncSliderAria(target, control, port));
+}
+
+function gestureTravelPastDeadzone(travel, deadzone) {
+  if (!Number.isFinite(travel)) return 0;
+  if (Math.abs(travel) <= deadzone) return 0;
+  return travel - Math.sign(travel) * deadzone;
 }
 
 function setSliderValue(control, nextValue) {
