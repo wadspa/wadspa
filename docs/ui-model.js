@@ -11,7 +11,7 @@ export const WADSPA_UI_MODEL = Object.freeze({
   artDirection: Object.freeze({
     knobs: 'Default continuous synth/effect controls to rotary knobs, matching Qt/LV2 dial-heavy native UIs.',
     faders: 'Reserve vertical faders for EQ gain strips, drawbars, and true gain banks where scanning parallel levels matters.',
-    menus: 'Use menus for enumerated mode/type/select controls, including integer controls with embedded numeric choice labels.',
+    menus: 'Use menus for enumerated mode/type/select controls, including integer controls with embedded numeric choice labels; keep visible labels concise once choices move into the menu.',
     panels: 'Promote coherent signal blocks into panels when they have enough controls, dense controls, or native group-box/panel hints; keep one/two-control groups compact and cap sparse plugins at two balanced columns.',
     canvas: 'Use canvas layouts only for real editable curve/envelope/wave editors exposed by the web port.',
   }),
@@ -336,6 +336,7 @@ function portId(port, index) {
 function portLabel(port) {
   return String(port.name ?? port.symbol ?? 'control')
     .replace(/\s*\[[^\]]+\]\s*/g, ' ')
+    .replace(/\s*\([^)]*-?\d+(?:\.\d+)?\s*(?:=|for)\s*[^)]*\)\s*/gi, ' ')
     .replace(/\s*\((?:dB|Hz|ms|sec|seconds?|bpm)\)\s*/gi, ' ')
     .replace(/\s+/g, ' ')
     .trim();

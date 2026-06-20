@@ -73,6 +73,9 @@ if (!WADSPA_UI_MODEL.artDirection?.knobs || !WADSPA_UI_MODEL.artDirection?.panel
 if (!WADSPA_UI_MODEL.artDirection?.menus?.includes('mode/type/select')) {
   fail('UI model art direction reserves menus for enumerated mode/type/select controls');
 }
+if (!WADSPA_UI_MODEL.artDirection?.menus?.includes('visible labels concise')) {
+  fail('UI model art direction keeps menu labels concise after parsing embedded choices');
+}
 if (!WADSPA_UI_MODEL.artDirection.panels.includes('one/two-control groups compact')) {
   fail('UI model art direction keeps tiny groups compact');
 }
@@ -213,6 +216,17 @@ for (const [id, portPattern, labels] of [
     if (!options.some(option => option.label === label)) {
       fail(`${id}/${field?.portName ?? portPattern}: inferred menu is missing ${label}`);
     }
+  }
+}
+
+for (const [id, portPattern, expectedLabel] of [
+  ['diode', /Mode \(0 for none/i, 'Mode'],
+  ['gate', /Output select/i, 'Output select'],
+  ['svf', /Filter type/i, 'Filter type'],
+]) {
+  const field = models.get(id)?.model.fields.find(item => portPattern.test(item.portName));
+  if (field?.label !== expectedLabel) {
+    fail(`${id}/${field?.portName ?? portPattern}: visible menu label should be ${expectedLabel}, got ${field?.label}`);
   }
 }
 
