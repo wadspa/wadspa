@@ -57,6 +57,8 @@ const layout = {
   faderHeight: cssNumber(/\.ctrl-row\[data-widget="fader"\] \.knob-face\s*\{[^}]*height:\s*(\d+)px/s, 'fader visual height'),
   controlMinHeight: cssNumber(/\.ctrl-row\[data-widget="knob"\],\s*\.ctrl-row\[data-widget="fader"\s*\]\s*\{[^}]*min-height:\s*(\d+)px/s, 'knob/fader row height'),
   sliderSpan: cssNumber(/\.ctrl-row\[data-widget="slider"\]\s*\{[^}]*grid-column:\s*span\s*(\d+)/s, 'slider grid span'),
+  denseMenuSpan: cssNumber(/\.ui-control-grid\[data-density="medium"\] \.ctrl-row\[data-widget="menu"\],[\s\S]*?\.ui-control-grid\[data-density="dense"\] \.ctrl-row\[data-widget="menu"\]\s*\{[^}]*grid-column:\s*span\s*(\d+)/s, 'dense menu grid span'),
+  denseMenuMin: cssNumber(/\.ui-control-grid\[data-density="medium"\] \.ctrl-row\[data-widget="menu"\],[\s\S]*?\.ui-control-grid\[data-density="dense"\] \.ctrl-row\[data-widget="menu"\]\s*\{[^}]*min-width:\s*min\(100%,\s*(\d+)px\)/s, 'dense menu minimum width'),
   mobileBreakpoint: cssNumber(/@media \(max-width:\s*(\d+)px\)/, 'mobile breakpoint'),
   synthSurface: cssClamp(/#synth-section\s*\{[^}]*flex:\s*0 0 clamp\((\d+)px,\s*(\d+)vw,\s*(\d+)px\)/s, 'desktop synth surface width'),
 };
@@ -88,6 +90,7 @@ const cssChecks = [
   ['stationary fader cap', /\.ctrl-row\[data-widget="fader"\] \.knob-face::after\s*\{[^}]*transform:\s*none;/s],
   ['full-width menu controls', /\.ctrl-row\[data-widget="menu"\] \.ctrl-line\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\);[\s\S]*\.ctrl-row\[data-widget="menu"\] select\s*\{[^}]*width:\s*100%;/s],
   ['menu duplicate value hidden', /\.ctrl-row\[data-widget="menu"\] \.val\s*\{[^}]*display:\s*none;/s],
+  ['dense menu cells span two tracks', /\.ui-control-grid\[data-density="medium"\] \.ctrl-row\[data-widget="menu"\],[\s\S]*?\.ui-control-grid\[data-density="dense"\] \.ctrl-row\[data-widget="menu"\]\s*\{[^}]*grid-column:\s*span\s*2;[\s\S]*min-width:\s*min\(100%,\s*132px\);/s],
   ['compact label clamp', /-webkit-line-clamp:\s*2/],
   ['mobile breakpoint', /@media \(max-width:\s*900px\)/],
 ];
@@ -111,6 +114,9 @@ if (!WADSPA_UI_MODEL.artDirection?.panels?.includes('one/two-control groups comp
 }
 if (!WADSPA_UI_MODEL.artDirection?.panels?.includes('cap sparse plugins at two balanced columns')) {
   fail('art direction caps sparse plugins at two balanced columns');
+}
+if (!WADSPA_UI_MODEL.artDirection?.menus?.includes('reserve wider cells')) {
+  fail('art direction reserves wider cells for dense menu banks');
 }
 if (!WADSPA_UI_MODEL.panelRules?.some(rule => rule.includes('native-tabbed-panel'))) {
   fail('UI model exposes native tab panel rule');
@@ -293,6 +299,12 @@ function validateLayoutContract() {
   if (layout.sliderSpan < 2) {
     fail(`true slider rows must span at least two columns, found span ${layout.sliderSpan}`);
   }
+  if (layout.denseMenuSpan < 2) {
+    fail(`dense menu rows must span at least two columns, found span ${layout.denseMenuSpan}`);
+  }
+  if (layout.denseMenuMin < 128) {
+    fail(`dense menu minimum width ${layout.denseMenuMin}px is too narrow for mode/type dropdowns`);
+  }
   if (layout.synthMatrixSection < layout.matrixSection) {
     fail(`synth matrix section ${layout.synthMatrixSection}px should be at least the generic matrix section ${layout.matrixSection}px`);
   }
@@ -318,6 +330,8 @@ function validateRepresentativeLayouts(models) {
   if (synthv1?.model.layout !== 'matrix') fail('synthv1 representative dense synth should use matrix layout');
   if (synthv1?.model.sectionColumns !== 3) fail('synthv1 representative dense synth should allow three balanced columns');
   if ((synthv1?.counts.knob ?? 0) < 100) fail('synthv1 representative dense synth should stay knob-dominant');
+  if ((synthv1?.counts.menu ?? 0) < 8) fail('synthv1 representative dense synth should expose dense menu banks');
+  validateDenseMenuGeometry(synthv1?.model, 'synthv1');
   if (columnsFor(layout.synthMatrixSection, layout.synthDenseColumn) < 3) {
     fail('minimum synth matrix section should fit at least three dense knob columns');
   }
@@ -345,6 +359,9 @@ function validateRepresentativeLayouts(models) {
   const geonkick = requireModel(models, 'geonkick');
   if (geonkick?.model.layout !== 'canvas') fail('geonkick representative envelope editor should keep canvas layout');
 
+  const padthv1 = requireModel(models, 'padthv1');
+  validateDenseMenuGeometry(padthv1?.model, 'padthv1');
+
   const wadspaSynth = requireModel(models, 'wadspa_synth');
   if (wadspaSynth?.model.sectionColumns !== 2) {
     fail('wadspa_synth representative sparse instrument should pack into two columns');
@@ -361,8 +378,8 @@ function validateRepresentativeLayouts(models) {
 function validateSectionGeometry(entry, model, section) {
   const column = sectionColumnWidth(model, section);
   for (const field of section.fields) {
-    const needed = widgetMinimumWidth(field.widget);
-    const available = field.widget === 'slider' ? column * layout.sliderSpan : column;
+    const needed = widgetMinimumWidth(field, section);
+    const available = column * widgetColumnSpan(field, section);
     if (needed > 0 && available < needed) {
       fail(`${entry.id}/${section.id}/${field.portName}: ${field.widget} needs ${needed}px but ${section.panel} column is ${available}px`);
     }
@@ -375,13 +392,33 @@ function sectionColumnWidth(model, section) {
   return model.family === 'instrument' ? layout.synthColumn : layout.controlColumn;
 }
 
-function widgetMinimumWidth(widget) {
-  if (widget === 'knob') return layout.knobHit + 8;
-  if (widget === 'fader') return layout.faderHit + 6;
-  if (widget === 'menu') return 64;
-  if (widget === 'toggle') return 42;
-  if (widget === 'slider') return 90;
+function widgetMinimumWidth(field, section) {
+  if (field.widget === 'knob') return layout.knobHit + 8;
+  if (field.widget === 'fader') return layout.faderHit + 6;
+  if (field.widget === 'menu') return section.density === 'medium' || section.density === 'dense' ? layout.denseMenuMin : 64;
+  if (field.widget === 'toggle') return 42;
+  if (field.widget === 'slider') return 90;
   return 0;
+}
+
+function widgetColumnSpan(field, section) {
+  if (field.widget === 'slider') return layout.sliderSpan;
+  if (field.widget === 'menu' && (section.density === 'medium' || section.density === 'dense')) return layout.denseMenuSpan;
+  return 1;
+}
+
+function validateDenseMenuGeometry(model, id) {
+  if (!model) return;
+  const denseMenus = model.sections.flatMap(section => (
+    section.density === 'medium' || section.density === 'dense'
+      ? section.fields.filter(field => field.widget === 'menu').map(field => ({ field, section }))
+      : []
+  ));
+  if (denseMenus.length === 0) return;
+  const minWidth = Math.min(...denseMenus.map(({ section }) => sectionColumnWidth(model, section) * layout.denseMenuSpan));
+  if (minWidth < layout.denseMenuMin) {
+    fail(`${id}: dense menu cells should reserve at least ${layout.denseMenuMin}px, got ${minWidth}px`);
+  }
 }
 
 function cssNumber(pattern, label) {

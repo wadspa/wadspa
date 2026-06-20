@@ -317,6 +317,11 @@
     .ctrl-row[data-widget="menu"] .ctrl-line { display: grid; grid-template-columns: minmax(0, 1fr); }
     .ctrl-row[data-widget="menu"] select { width: 100%; }
     .ctrl-row[data-widget="menu"] .val { display: none; }
+    .ui-control-grid[data-density="medium"] .ctrl-row[data-widget="menu"],
+    .ui-control-grid[data-density="dense"] .ctrl-row[data-widget="menu"] {
+      grid-column: span 2;
+      min-width: min(100%, 132px);
+    }
     .toggle-shell { display: inline-flex; align-items: center; gap: 0.35rem; cursor: pointer; }
     .toggle-shell input { position: absolute; opacity: 0; pointer-events: none; }
     .toggle-track {
