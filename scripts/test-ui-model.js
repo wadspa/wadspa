@@ -142,6 +142,29 @@ for (const id of ['obxd', 'padthv1', 'synthv1']) {
 const chorusModel = models.get('tap-chorusflanger')?.model;
 if ((widgetCount(chorusModel, 'knob') ?? 0) < 6) fail('tap-chorusflanger MOD knob panel renders primarily as knobs');
 
+for (const id of ['tap-eq', 'tap-eqbw', 'triple_para']) {
+  const model = models.get(id)?.model;
+  if (!model) continue;
+  const eqFreqFaders = model.fields.filter(field => (
+    field.section === 'equalizer'
+      && field.widget === 'fader'
+      && /freq|frequency|q\b|bandwidth|\bbw\b/i.test(`${field.portName} ${field.symbol ?? ''}`)
+  ));
+  if (eqFreqFaders.length > 0) {
+    fail(`${id}: EQ frequency/Q controls should render as knobs, not faders`);
+  }
+}
+
+for (const [id, portPattern] of [
+  ['amp', /gain/i],
+  ['mda_Ambience', /^Level$/i],
+  ['setBfree-overdrive', /Input Gain/i],
+]) {
+  const model = models.get(id)?.model;
+  const field = model?.fields.find(item => portPattern.test(item.portName));
+  if (field?.widget !== 'knob') fail(`${id}/${field?.portName ?? portPattern}: single level controls should render as knobs`);
+}
+
 if (failures > 0) {
   console.error(`wadspa UI model failed: ${failures} problem${failures === 1 ? '' : 's'}`);
   process.exit(1);

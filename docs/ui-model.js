@@ -10,7 +10,7 @@ export const WADSPA_UI_MODEL = Object.freeze({
   widgets: Object.freeze(['knob', 'slider', 'fader', 'toggle', 'menu', 'canvas']),
   artDirection: Object.freeze({
     knobs: 'Default continuous synth/effect controls to rotary knobs, matching Qt/LV2 dial-heavy native UIs.',
-    faders: 'Use vertical faders for EQ strips, drawbars, and primary gain banks where scanning levels matters.',
+    faders: 'Reserve vertical faders for EQ gain strips, drawbars, and true gain banks where scanning parallel levels matters.',
     panels: 'Promote coherent signal blocks into panels when a plugin has multiple sections, dense controls, or native group-box/panel hints.',
     canvas: 'Use canvas layouts only for real editable curve/envelope/wave editors exposed by the web port.',
   }),
@@ -209,16 +209,34 @@ function roleForPort(port, section) {
 function widgetForPort(port, section, role, ports, hint) {
   if (usesMenuControl(port)) return 'menu';
   if (port.toggled) return 'toggle';
-  if (/slider/i.test(hint?.modgui?.panel ?? '') && section === 'equalizer') return 'fader';
-  if (section === 'equalizer' && (role === 'level' || /band\s*\d|band\d/i.test(portText(port)))) return 'fader';
   if (section === 'drawbars' && /drawbar|harmonic|foot|[0-9]'/i.test(portText(port))) return 'fader';
-  if (hint?.assets?.includes('slider') && section === 'equalizer') return 'fader';
+  if (section === 'equalizer' && role === 'level' && isEqFaderBank(port, ports, hint)) return 'fader';
   if (/knobs/i.test(hint?.modgui?.panel ?? '')) return 'knob';
   if (role === 'envelope') return 'knob';
   if (role === 'frequency' || role === 'shape' || role === 'motion') return 'knob';
-  if (section === 'mixer' && /gain|level|volume/i.test(portText(port))) return 'fader';
+  if (section === 'mixer' && role === 'level' && isMixerFaderBank(port, ports)) return 'fader';
   if (/(?:sample|loop)\s*(?:start|end|position|offset)/i.test(portText(port))) return 'slider';
   return 'knob';
+}
+
+function isEqFaderBank(port, ports, hint) {
+  const text = portText(port);
+  if (!/gain|level|boost|cut/i.test(text)) return false;
+  if (/freq|frequency|q\b|bandwidth|\bbw\b|resonance|reso/i.test(text)) return false;
+  const eqGainPorts = ports.filter(other => isEqPort(other) && /gain|level|boost|cut/i.test(portText(other)));
+  return eqGainPorts.length >= 3 || hint?.assets?.includes('slider') || /slider|fader/i.test(hint?.modgui?.panel ?? '');
+}
+
+function isMixerFaderBank(port, ports) {
+  const text = portText(port);
+  if (!/gain|level|volume|trim/i.test(text)) return false;
+  const levelPorts = ports.filter(other => (
+    !usesMenuControl(other)
+      && !other.toggled
+      && /gain|level|volume|trim/i.test(portText(other))
+      && !/threshold|makeup|boost|cut/i.test(portText(other))
+  ));
+  return levelPorts.length >= 4;
 }
 
 function panelForSection(section, fields, hint) {

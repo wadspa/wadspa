@@ -36,20 +36,20 @@ const layout = {
   synthDenseColumn: cssNumber(/#synth-ctrls \.ui-control-grid\[data-density="dense"\]\s*\{[^}]*minmax\((\d+)px,\s*1fr\)/s, 'dense synth control column width'),
   matrixSection: cssNumber(/\.plugin-ui-sections\[data-ui-layout="matrix"\]\s*\{[^}]*minmax\((\d+)px,\s*1fr\)/s, 'matrix section width'),
   synthMatrixSection: cssNumber(/#synth-ctrls \.plugin-ui-sections\[data-ui-layout="matrix"\]\s*\{[^}]*minmax\((\d+)px,\s*1fr\)/s, 'synth matrix section width'),
-  knobHit: cssNumber(/\.ctrl-row\[data-widget="knob"\] input\[type=range\][\s\S]*width:\s*(\d+)px; height:\s*56px; opacity:\s*0/s, 'knob hitbox width'),
-  faderHit: cssNumber(/\.ctrl-row\[data-widget="fader"\] input\[type=range\][\s\S]*width:\s*(\d+)px; height:\s*56px; opacity:\s*0/s, 'fader hitbox width'),
+  knobHit: cssNumber(/\.ctrl-row\[data-widget="knob"\] input\[type=range\][\s\S]*width:\s*(\d+)px; height:\s*62px; opacity:\s*0/s, 'knob hitbox width'),
+  faderHit: cssNumber(/\.ctrl-row\[data-widget="fader"\] input\[type=range\][\s\S]*width:\s*(\d+)px; height:\s*62px; opacity:\s*0/s, 'fader hitbox width'),
   faderHeight: cssNumber(/\.ctrl-row\[data-widget="fader"\] \.knob-face\s*\{[^}]*height:\s*(\d+)px/s, 'fader visual height'),
   controlMinHeight: cssNumber(/\.ctrl-row\[data-widget="knob"\],\s*\.ctrl-row\[data-widget="fader"\s*\]\s*\{[^}]*min-height:\s*(\d+)px/s, 'knob/fader row height'),
   sliderSpan: cssNumber(/\.ctrl-row\[data-widget="slider"\]\s*\{[^}]*grid-column:\s*span\s*(\d+)/s, 'slider grid span'),
   mobileBreakpoint: cssNumber(/@media \(max-width:\s*(\d+)px\)/, 'mobile breakpoint'),
 };
 const cssChecks = [
-  ['matrix layout grid', /\.plugin-ui-sections\[data-ui-layout="matrix"\]\s*\{[^}]*minmax\(180px,\s*1fr\)/s],
+  ['matrix layout grid', /\.plugin-ui-sections\[data-ui-layout="matrix"\]\s*\{[^}]*minmax\(220px,\s*1fr\)/s],
   ['panel section chrome', /\.ui-section\[data-ui-panel="synth-panel"\][\s\S]*border:\s*1px solid rgba\(255,255,255,0\.08\)/],
-  ['dense grid sizing', /\.ui-control-grid\[data-density="dense"\]\s*\{[^}]*minmax\(68px,\s*1fr\)/s],
-  ['rack/drawbar strip sizing', /\.ui-control-grid\[data-ui-panel="rack-strip"\][\s\S]*minmax\(62px,\s*1fr\)/],
-  ['knob/fader stable cell', /\.ctrl-row\[data-widget="knob"\],\s*\.ctrl-row\[data-widget="fader"\s*\]\s*\{[^}]*min-height:\s*96px/s],
-  ['knob hit area', /\.ctrl-row\[data-widget="knob"\] input\[type=range\][\s\S]*width:\s*56px; height:\s*56px; opacity:\s*0/s],
+  ['dense grid sizing', /\.ui-control-grid\[data-density="dense"\]\s*\{[^}]*minmax\(84px,\s*1fr\)/s],
+  ['rack/drawbar strip sizing', /\.ui-control-grid\[data-ui-panel="rack-strip"\][\s\S]*minmax\(72px,\s*1fr\)/],
+  ['knob/fader stable cell', /\.ctrl-row\[data-widget="knob"\],\s*\.ctrl-row\[data-widget="fader"\s*\]\s*\{[^}]*min-height:\s*108px/s],
+  ['knob hit area', /\.ctrl-row\[data-widget="knob"\] input\[type=range\][\s\S]*width:\s*62px; height:\s*62px; opacity:\s*0/s],
   ['label clamp', /-webkit-line-clamp:\s*3/],
   ['mobile breakpoint', /@media \(max-width:\s*900px\)/],
 ];
@@ -60,6 +60,9 @@ for (const [label, pattern] of cssChecks) {
 
 if (!WADSPA_UI_MODEL.artDirection?.knobs?.includes('rotary knobs')) {
   fail('art direction explains rotary-knob default');
+}
+if (!WADSPA_UI_MODEL.artDirection?.faders?.includes('Reserve vertical faders')) {
+  fail('art direction reserves faders for parallel level banks');
 }
 if (!WADSPA_UI_MODEL.artDirection?.panels?.includes('signal blocks')) {
   fail('art direction explains when to make panels');
@@ -116,6 +119,15 @@ for (const entry of entries) {
   }
   if (model.layout === 'matrix' && (counts.knob ?? 0) < 40) {
     fail(`${entry.id}: matrix layout should be a knob-dominant dense panel`);
+  }
+
+  const eqFrequencyFaders = model.fields.filter(field => (
+    field.section === 'equalizer'
+      && field.widget === 'fader'
+      && /freq|frequency|q\b|bandwidth|\bbw\b|resonance|reso/i.test(`${field.portName} ${field.symbol ?? ''}`)
+  ));
+  if (eqFrequencyFaders.length > 0) {
+    fail(`${entry.id}: EQ frequency/shape controls should be knobs, not faders (${eqFrequencyFaders.map(field => field.portName).join(', ')})`);
   }
 
   const nativeKinds = hint.sourceKinds?.filter(kind => /qt|gtk|dpf|lv2-native|modgui/i.test(kind)) ?? [];

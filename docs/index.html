@@ -162,10 +162,10 @@
       border-radius: 6px; padding: 0.7rem 0.8rem; min-width: 180px; max-width: 260px;
       flex-shrink: 0; position: relative;
     }
-    .card[data-ui-layout="rack"], .card[data-ui-layout="drawbar"] { max-width: 640px; min-width: 360px; }
-    .card[data-ui-layout="matrix"] { max-width: 760px; min-width: 420px; }
-    .card[data-ui-layout="panel"], .card[data-ui-layout="instrument"] { max-width: 420px; min-width: 280px; }
-    .card.has-shaper { max-width: 240px; min-width: 200px; }
+    .card[data-ui-layout="rack"], .card[data-ui-layout="drawbar"] { max-width: 720px; min-width: 380px; }
+    .card[data-ui-layout="matrix"] { max-width: 900px; min-width: 460px; }
+    .card[data-ui-layout="panel"], .card[data-ui-layout="instrument"] { max-width: 560px; min-width: 320px; }
+    .card.has-shaper { max-width: 300px; min-width: 240px; }
     .card.loading { opacity: 0.5; }
     .card-title {
       font-size: 0.75rem; font-weight: bold; color: var(--accent);
@@ -192,10 +192,10 @@
     }
     .ctrl-row .val { font-size: 0.62rem; color: #aaa; min-width: 3rem; text-align: right; }
     .plugin-ui-sections {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(142px, 1fr));
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
       gap: 0.65rem 0.75rem; align-items: start;
     }
-    .plugin-ui-sections[data-ui-layout="matrix"] { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+    .plugin-ui-sections[data-ui-layout="matrix"] { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
     .plugin-ui-sections[data-ui-layout="rack"],
     .plugin-ui-sections[data-ui-layout="drawbar"] { grid-template-columns: 1fr; }
     .ui-section {
@@ -220,28 +220,28 @@
       letter-spacing: 0.06em; margin-bottom: 0.25rem;
     }
     .ui-control-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(76px, 1fr));
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
       gap: 0.46rem 0.5rem; align-items: start;
     }
     .ui-control-grid[data-ui-panel="rack-strip"],
     .ui-control-grid[data-ui-panel="drawbar-bank"] {
-      grid-template-columns: repeat(auto-fit, minmax(62px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
       gap: 0.35rem;
     }
     .ui-control-grid[data-density="dense"] {
-      grid-template-columns: repeat(auto-fit, minmax(68px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
       gap: 0.4rem;
     }
     #synth-ctrls .plugin-ui-sections { grid-column: 1 / -1; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
-    #synth-ctrls .plugin-ui-sections[data-ui-layout="matrix"] { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
-    #synth-ctrls .ui-control-grid { grid-template-columns: repeat(auto-fit, minmax(82px, 1fr)); }
-    #synth-ctrls .ui-control-grid[data-density="dense"] { grid-template-columns: repeat(auto-fit, minmax(72px, 1fr)); }
+    #synth-ctrls .plugin-ui-sections[data-ui-layout="matrix"] { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    #synth-ctrls .ui-control-grid { grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); }
+    #synth-ctrls .ui-control-grid[data-density="dense"] { grid-template-columns: repeat(auto-fit, minmax(86px, 1fr)); }
     .ctrl-row[data-widget="knob"], .ctrl-row[data-widget="fader"], .ctrl-row[data-widget="toggle"], .ctrl-row[data-widget="menu"] {
       margin-top: 0; min-width: 0;
     }
     .ctrl-row[data-widget="knob"], .ctrl-row[data-widget="fader"] {
       display: flex; flex-direction: column; align-items: stretch; gap: 0.22rem;
-      min-height: 96px;
+      min-height: 108px;
     }
     .ctrl-row[data-widget="knob"] label,
     .ctrl-row[data-widget="fader"] label {
@@ -258,26 +258,27 @@
     }
     .knob-face {
       grid-row: 1; grid-column: 1;
-      width: 48px; height: 48px; border-radius: 50%;
+      width: 52px; height: 52px; border-radius: 50%;
       border: 1px solid #424242;
       background:
         radial-gradient(circle at 35% 28%, rgba(255,255,255,0.22), transparent 18%),
         radial-gradient(circle, #32363a 0 48%, #111 52% 100%);
       box-shadow: inset 0 -6px 10px rgba(0,0,0,0.38), 0 1px 0 rgba(255,255,255,0.05);
-      position: relative; transform: rotate(var(--knob-angle, -135deg));
+      position: relative; transform: none;
     }
     .knob-face::after {
-      content: ""; position: absolute; left: 22px; top: 6px; width: 4px; height: 14px;
+      content: ""; position: absolute; left: calc(50% - 2px); top: 7px; width: 4px; height: 15px;
       background: var(--accent2); border-radius: 2px;
+      transform: rotate(var(--knob-angle, -135deg)); transform-origin: 50% 19px;
     }
     .ctrl-row[data-widget="knob"] .control-stack,
     .ctrl-row[data-widget="fader"] .control-stack {
       grid-row: 1; grid-column: 1; z-index: 2;
-      width: 56px; height: 56px; display: block;
+      width: 62px; height: 62px; display: block;
     }
     .ctrl-row[data-widget="knob"] input[type=range],
     .ctrl-row[data-widget="fader"] input[type=range] {
-      width: 56px; height: 56px; opacity: 0; cursor: ew-resize; display: block;
+      width: 62px; height: 62px; opacity: 0; cursor: ew-resize; display: block;
     }
     .ctrl-row[data-widget="knob"] .val,
     .ctrl-row[data-widget="fader"] .val {
@@ -286,7 +287,7 @@
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .ctrl-row[data-widget="fader"] .knob-face {
-      border-radius: 3px; width: 24px; height: 62px; margin: 0;
+      border-radius: 3px; width: 24px; height: 64px; margin: 0;
       background:
         linear-gradient(to right, transparent 0 43%, rgba(68,119,238,0.5) 43% 57%, transparent 57% 100%),
         linear-gradient(to bottom, #080808, #2b2f33);
@@ -294,7 +295,7 @@
     }
     .ctrl-row[data-widget="fader"] .knob-face::after {
       left: -4px; top: var(--fader-top, 34px); width: 30px; height: 5px;
-      background: var(--accent);
+      background: var(--accent); transform: none;
     }
     .control-stack { min-width: 0; display: grid; gap: 0.16rem; }
     .ctrl-row[data-widget="slider"] { grid-column: span 2; min-width: min(100%, 160px); }
