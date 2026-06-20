@@ -79,6 +79,7 @@ const cssChecks = [
 for (const [label, pattern] of cssChecks) {
   if (!pattern.test(html)) fail(`missing overlap-safe CSS hook: ${label}`);
 }
+validateLetterSpacing();
 
 if (!WADSPA_UI_MODEL.artDirection?.knobs?.includes('rotary knobs')) {
   fail('art direction explains rotary-knob default');
@@ -247,6 +248,15 @@ function validateLayoutContract() {
   }
   if (layout.synthSurface.min < 420 || layout.synthSurface.vw < 46 || layout.synthSurface.max < 800) {
     fail(`desktop synth surface ${layout.synthSurface.min}px/${layout.synthSurface.vw}vw/${layout.synthSurface.max}px is too narrow for dense native synth panels`);
+  }
+}
+
+function validateLetterSpacing() {
+  const nonZero = [...html.matchAll(/letter-spacing\s*:\s*([^;'"]+)/g)]
+    .map(match => match[1].trim())
+    .filter(value => !/^0(?:px|em|rem)?$/.test(value));
+  if (nonZero.length > 0) {
+    fail(`letter-spacing should stay zero in dense plugin UI (${[...new Set(nonZero)].join(', ')})`);
   }
 }
 

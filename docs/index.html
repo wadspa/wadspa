@@ -24,7 +24,7 @@
       display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
       padding: 0.9rem 1.4rem; border-bottom: 1px solid var(--border);
     }
-    header h1 { font-size: 1rem; letter-spacing: 0.05em; }
+    header h1 { font-size: 1rem; letter-spacing: 0; }
     header a   { font-size: 0.75rem; color: var(--muted); text-decoration: none; }
     header a:hover { color: var(--text); }
     #catalog-stats {
@@ -47,13 +47,13 @@
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       gap: 1rem;
     }
-    #start-overlay h2 { font-size: 1.5rem; letter-spacing: 0.1em; color: var(--text); }
+    #start-overlay h2 { font-size: 1.5rem; letter-spacing: 0; color: var(--text); }
     #start-overlay p  { font-size: 0.82rem; color: var(--muted); }
     #start-overlay-btn {
       margin-top: 0.5rem;
       padding: 0.9rem 2.8rem; font-family: monospace; font-size: 1.1rem;
       background: var(--accent); color: #fff; border: none; border-radius: 5px;
-      cursor: pointer; letter-spacing: 0.04em;
+      cursor: pointer; letter-spacing: 0;
     }
     #start-overlay-btn:hover { background: #5588ff; }
     #status { font-size: 0.75rem; color: var(--muted); }
@@ -74,7 +74,7 @@
       display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;
     }
     #synth-header .section-lbl {
-      font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em;
+      font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0;
     }
     #instrument-wrap { position: relative; display: inline-block; }
     #instrument-btn {
@@ -106,7 +106,7 @@
     #chain-header {
       display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.8rem;
     }
-    #chain-header h2 { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+    #chain-header h2 { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0; }
 
     .add-btn {
       position: relative; display: inline-block;
@@ -131,7 +131,7 @@
     .dropdown-item:hover { background: var(--border); color: #fff; }
     .dropdown-count {
       font-size: 0.62rem; color: var(--muted); padding: 0.45rem 0.8rem 0.25rem;
-      text-transform: uppercase; letter-spacing: 0.06em;
+      text-transform: uppercase; letter-spacing: 0;
     }
     .item-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
     .license-badge {
@@ -227,7 +227,7 @@
     }
     .ui-section-title {
       font-size: 0.58rem; color: var(--muted); text-transform: uppercase;
-      letter-spacing: 0.06em; margin-bottom: 0.16rem;
+      letter-spacing: 0; margin-bottom: 0.16rem;
     }
     .ui-control-grid {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
@@ -411,7 +411,7 @@
     .sf2-lib-row {
       display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.45rem;
     }
-    .sf2-lib-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .sf2-lib-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0; }
     .sf2-lib-item {
       padding: 0.2rem 0.55rem; font-family: monospace; font-size: 0.72rem;
       background: var(--surface); color: var(--text); border: 1px solid var(--border);
@@ -2048,7 +2048,7 @@ function buildDropdown() {
     const sep = document.createElement('div');
     sep.className = 'dropdown-sep';
     const lbl = document.createElement('div');
-    lbl.style.cssText = 'font-size:0.62rem;color:var(--muted);padding:0.3rem 0.8rem 0.1rem;text-transform:uppercase;letter-spacing:0.06em';
+    lbl.style.cssText = 'font-size:0.62rem;color:var(--muted);padding:0.3rem 0.8rem 0.1rem;text-transform:uppercase;letter-spacing:0';
     lbl.textContent = cat;
     dd.appendChild(sep); dd.appendChild(lbl);
     for (const eff of EFFECTS.filter(e => e.category === cat)) {
