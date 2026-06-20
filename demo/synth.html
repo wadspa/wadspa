@@ -297,6 +297,7 @@
       background: var(--accent);
     }
     .control-stack { min-width: 0; display: grid; gap: 0.16rem; }
+    .ctrl-row[data-widget="slider"] { grid-column: span 2; min-width: min(100%, 160px); }
     .ctrl-row[data-widget="slider"] .ctrl-line { display: grid; grid-template-columns: minmax(90px, 1fr) minmax(3rem, max-content); }
     .ctrl-row[data-widget="toggle"] .ctrl-line { justify-content: space-between; min-height: 22px; }
     .ctrl-row[data-widget="menu"] label,
