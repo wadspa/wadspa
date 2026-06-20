@@ -34,6 +34,8 @@ copy(join(DOCS, 'index.html'),       join(DEMO, 'index.html'));
 copy(join(DOCS, 'index.html'),       join(DEMO, 'synth.html'));
 copy(join(DOCS, 'core.js'),          join(DEMO, 'core.js'));
 copy(join(DOCS, 'control-utils.js'), join(DEMO, 'control-utils.js'));
+copy(join(DOCS, 'ui-model.js'),      join(DEMO, 'ui-model.js'));
+copy(join(DOCS, 'ui-hints.json'),    join(DEMO, 'ui-hints.json'));
 copy(join(DOCS, 'instruments.json'), join(DEMO, 'instruments.json'));
 
 const coi = join(DOCS, 'coi-serviceworker.js');

@@ -1,0 +1,1853 @@
+{
+  "schema": "wadspa-ui-hints-v1",
+  "plugins": {
+    "amp": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "amsynth": {
+      "sourceKinds": [
+        "lv2-native-ui"
+      ],
+      "nativeUiTypes": [
+        "X11UI"
+      ],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "bandpass_iir": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "butterworth": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "calf-monosynth": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "casynth": {
+      "sourceKinds": [
+        "lv2-native-ui"
+      ],
+      "nativeUiTypes": [
+        "X11UI"
+      ],
+      "assets": [
+        "canvas-editor",
+        "knob",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "chorus": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "chowkick": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "comb": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "crossover_dist": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "dc_remove": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "decimator": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "declip": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "delay": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "dexed": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "diode": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "dj_eq": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "drumkv1": {
+      "sourceKinds": [
+        "lv2-native-ui",
+        "qt-native-ui"
+      ],
+      "nativeUiTypes": [
+        "Qt6UI",
+        "QtUI",
+        "WindowsUI",
+        "X11UI"
+      ],
+      "assets": [
+        "canvas-editor",
+        "knob",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "dyson_compress": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "fast_lookahead_limiter": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "fil4": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "flanger": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "fm_synth": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "fomp-autowah": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "fomp-blvco": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor"
+      ],
+      "sourceFiles": []
+    },
+    "fomp-cs_chorus": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor"
+      ],
+      "sourceFiles": []
+    },
+    "fomp-cs_phaser": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor"
+      ],
+      "sourceFiles": []
+    },
+    "fomp-filters": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "fomp-mvchpf24": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "fomp-mvclpf24": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "fomp-reverbs": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor"
+      ],
+      "sourceFiles": []
+    },
+    "foverdrive": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "gate": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "geonkick": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "gverb": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "hard_limiter": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "helm": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "highpass_iir": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "juce-opl": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "lowpass_iir": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_Ambience": {
+      "brand": "MDA",
+      "label": "Ambience",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_Bandisto": {
+      "brand": "MDA",
+      "label": "Bandisto",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_BeatBox": {
+      "brand": "MDA",
+      "label": "BeatBox",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_Combo": {
+      "brand": "MDA",
+      "label": "Combo",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_DeEss": {
+      "brand": "MDA",
+      "label": "DeEss",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_Degrade": {
+      "brand": "MDA",
+      "label": "Degrade",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_Delay": {
+      "brand": "MDA",
+      "label": "Delay",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_Detune": {
+      "brand": "MDA",
+      "label": "Detune",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_Dither": {
+      "brand": "MDA",
+      "label": "Dither",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_DubDelay": {
+      "brand": "MDA",
+      "label": "DubDelay",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_DX10": {
+      "brand": "MDA",
+      "label": "DX10",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_Dynamics": {
+      "brand": "MDA",
+      "label": "Dynamics",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_EPiano": {
+      "brand": "MDA",
+      "label": "ePiano",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_Image": {
+      "brand": "MDA",
+      "label": "Image",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_JX10": {
+      "brand": "MDA",
+      "label": "JX10",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_Leslie": {
+      "brand": "MDA",
+      "label": "Leslie",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_Limiter": {
+      "brand": "MDA",
+      "label": "Limiter",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_Loudness": {
+      "brand": "MDA",
+      "label": "Loudness",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_MultiBand": {
+      "brand": "MDA",
+      "label": "MultiBand",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_Overdrive": {
+      "brand": "MDA",
+      "label": "Overdrive",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_Piano": {
+      "brand": "MDA",
+      "label": "Piano",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_RePsycho": {
+      "brand": "MDA",
+      "label": "RePsycho",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_RezFilter": {
+      "brand": "MDA",
+      "label": "RezFilter",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_RingMod": {
+      "brand": "MDA",
+      "label": "RingMod",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_RoundPan": {
+      "brand": "MDA",
+      "label": "RoundPan",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_Shepard": {
+      "brand": "MDA",
+      "label": "Shepard",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_Splitter": {
+      "brand": "MDA",
+      "label": "Splitter",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_Stereo": {
+      "brand": "MDA",
+      "label": "Stereo",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_SubSynth": {
+      "brand": "MDA",
+      "label": "SubSynth",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_TalkBox": {
+      "brand": "MDA",
+      "label": "TalkBox",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_TestTone": {
+      "brand": "MDA",
+      "label": "TestTone",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_ThruZero": {
+      "brand": "MDA",
+      "label": "ThruZero",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_Tracker": {
+      "brand": "MDA",
+      "label": "Tracker",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_Transient": {
+      "brand": "MDA",
+      "label": "Transient",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_VocInput": {
+      "brand": "MDA",
+      "label": "VocInput",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "mda_Vocoder": {
+      "brand": "MDA",
+      "label": "Vocoder",
+      "sourceKinds": [
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "nekobi": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "noise-repellent": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "notch_iir": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "obxd": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "knob",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "padthv1": {
+      "sourceKinds": [
+        "qt-native-ui"
+      ],
+      "nativeUiTypes": [
+        "QtUI"
+      ],
+      "assets": [
+        "canvas-editor",
+        "knob",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "plate": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "retro_flange": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "samplv1": {
+      "sourceKinds": [
+        "lv2-native-ui",
+        "qt-native-ui"
+      ],
+      "nativeUiTypes": [
+        "Qt6UI",
+        "QtUI",
+        "WindowsUI",
+        "X11UI"
+      ],
+      "assets": [
+        "canvas-editor",
+        "knob",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "satan_maximiser": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "sc4": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "setbfree": {
+      "brand": "x42",
+      "label": "setBfree",
+      "sourceKinds": [
+        "modgui"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "drawbar",
+        "knob",
+        "panel-art",
+        "switch"
+      ],
+      "sourceFiles": [
+        "setBfree/b_synth/b_synth.ui.ttl.in",
+        "setBfree/b_synth/manifest.ui.ttl.in",
+        "setBfree/b_synth/modgui/footswitch.png",
+        "setBfree/b_synth/modgui/icon-setbfree-dsp-tonewheel-organ.html",
+        "setBfree/b_synth/modgui/screenshot-setbfree-dsp-tonewheel-organ.png",
+        "setBfree/b_synth/modgui/stylesheet-setbfree-dsp-tonewheel-organ.css",
+        "setBfree/b_synth/modgui/thumbnail-setbfree-dsp-tonewheel-organ.png",
+        "setBfree/b_synth/modgui/wood3.png",
+        "setBfree/b_synth/ui.c"
+      ]
+    },
+    "setBfree-overdrive": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "setBfree-reverb": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "single_para": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "so-404": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "so-666": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "so-kl5": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "sorcer": {
+      "sourceKinds": [
+        "lv2-native-ui"
+      ],
+      "nativeUiTypes": [
+        "X11UI"
+      ],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "string-machine": {
+      "brand": "Jean Pierre Cimalando",
+      "label": "String machine",
+      "sourceKinds": [
+        "dpf-native-ui",
+        "lv2-mod-metadata",
+        "lv2-native-ui"
+      ],
+      "nativeUiTypes": [
+        "CocoaUI",
+        "DPFUI"
+      ],
+      "assets": [
+        "canvas-editor",
+        "knob",
+        "meter",
+        "slider",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "svf": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "synthv1": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "tap-autopan": {
+      "brand": "TAP",
+      "label": "Auto Panner",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "modgui"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "knob",
+        "panel-art",
+        "switch"
+      ],
+      "sourceFiles": [
+        "tap-lv2/autopan/modgui/icon-tap-autopanner.html",
+        "tap-lv2/autopan/modgui/knobs/boxy/black.png",
+        "tap-lv2/autopan/modgui/pedals/boxy/darkblue.png",
+        "tap-lv2/autopan/modgui/pedals/footswitch.png",
+        "tap-lv2/autopan/modgui/screenshot-tap-autopanner.png",
+        "tap-lv2/autopan/modgui/stylesheet-tap-autopanner.css",
+        "tap-lv2/autopan/modgui/thumbnail-tap-autopanner.png",
+        "tap-lv2/autopan/modgui/utils/dropdown-arrow-black.png",
+        "tap-lv2/autopan/modgui/utils/dropdown-arrow-white.png"
+      ]
+    },
+    "tap-chorusflanger": {
+      "brand": "TAP",
+      "label": "Chorus/Flanger",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "modgui"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "knob",
+        "panel-art",
+        "switch"
+      ],
+      "sourceFiles": [
+        "tap-lv2/chorusflanger/modgui/icon-tap-chorusflanger.html",
+        "tap-lv2/chorusflanger/modgui/knobs/japanese/cream.png",
+        "tap-lv2/chorusflanger/modgui/knobs/japanese/purple.png",
+        "tap-lv2/chorusflanger/modgui/pedals/japanese/purple.png",
+        "tap-lv2/chorusflanger/modgui/screenshot-tap-chorusflanger.png",
+        "tap-lv2/chorusflanger/modgui/stylesheet-tap-chorusflanger.css",
+        "tap-lv2/chorusflanger/modgui/thumbnail-tap-chorusflanger.png"
+      ]
+    },
+    "tap-deesser": {
+      "brand": "TAP",
+      "label": "DeEsser",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "modgui"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "knob",
+        "panel-art",
+        "switch"
+      ],
+      "sourceFiles": [
+        "tap-lv2/deesser/modgui/icon-tap-deesser.html",
+        "tap-lv2/deesser/modgui/knobs/boxy/black.png",
+        "tap-lv2/deesser/modgui/pedals/boxy/red.png",
+        "tap-lv2/deesser/modgui/pedals/footswitch.png",
+        "tap-lv2/deesser/modgui/screenshot-tap-deesser.png",
+        "tap-lv2/deesser/modgui/stylesheet-tap-deesser.css",
+        "tap-lv2/deesser/modgui/thumbnail-tap-deesser.png",
+        "tap-lv2/deesser/modgui/utils/dropdown-arrow-black.png",
+        "tap-lv2/deesser/modgui/utils/dropdown-arrow-white.png"
+      ]
+    },
+    "tap-doubler": {
+      "brand": "TAP",
+      "label": "Fractal Doubler",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "modgui"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "knob",
+        "panel-art",
+        "switch"
+      ],
+      "sourceFiles": [
+        "tap-lv2/doubler/modgui/icon-tap-fractal-doubler.html",
+        "tap-lv2/doubler/modgui/knobs/japanese/cream.png",
+        "tap-lv2/doubler/modgui/pedals/japanese/darkblue.png",
+        "tap-lv2/doubler/modgui/screenshot-tap-fractal-doubler.png",
+        "tap-lv2/doubler/modgui/stylesheet-tap-fractal-doubler.css",
+        "tap-lv2/doubler/modgui/thumbnail-tap-fractal-doubler.png"
+      ]
+    },
+    "tap-dynamics": {
+      "brand": "TAP",
+      "label": "Mono Dynamics",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "modgui"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "knob",
+        "panel-art",
+        "switch"
+      ],
+      "sourceFiles": [
+        "tap-lv2/dynamics/modgui/icon-tap-mono-dynamics.html",
+        "tap-lv2/dynamics/modgui/knobs/boxy/black.png",
+        "tap-lv2/dynamics/modgui/pedals/boxy/red.png",
+        "tap-lv2/dynamics/modgui/pedals/footswitch.png",
+        "tap-lv2/dynamics/modgui/screenshot-tap-mono-dynamics.png",
+        "tap-lv2/dynamics/modgui/stylesheet-tap-mono-dynamics.css",
+        "tap-lv2/dynamics/modgui/thumbnail-tap-mono-dynamics.png",
+        "tap-lv2/dynamics/modgui/utils/dropdown-arrow-black.png",
+        "tap-lv2/dynamics/modgui/utils/dropdown-arrow-white.png"
+      ]
+    },
+    "tap-dynamics-st": {
+      "brand": "TAP",
+      "label": "Stereo Dynamics",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "modgui"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "knob",
+        "panel-art",
+        "switch"
+      ],
+      "sourceFiles": [
+        "tap-lv2/dynamics-st/modgui/icon-tap-stereo-dynamics.html",
+        "tap-lv2/dynamics-st/modgui/knobs/boxy/black.png",
+        "tap-lv2/dynamics-st/modgui/pedals/boxy/red.png",
+        "tap-lv2/dynamics-st/modgui/pedals/footswitch.png",
+        "tap-lv2/dynamics-st/modgui/screenshot-tap-stereo-dynamics.png",
+        "tap-lv2/dynamics-st/modgui/stylesheet-tap-stereo-dynamics.css",
+        "tap-lv2/dynamics-st/modgui/thumbnail-tap-stereo-dynamics.png",
+        "tap-lv2/dynamics-st/modgui/utils/dropdown-arrow-black.png",
+        "tap-lv2/dynamics-st/modgui/utils/dropdown-arrow-white.png"
+      ]
+    },
+    "tap-echo": {
+      "brand": "TAP",
+      "label": "Stereo Echo",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "modgui"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "knob",
+        "panel-art",
+        "switch"
+      ],
+      "sourceFiles": [
+        "tap-lv2/echo/modgui/icon-tap-stereo-echo.html",
+        "tap-lv2/echo/modgui/knobs/japanese/cream.png",
+        "tap-lv2/echo/modgui/knobs/japanese/white.png",
+        "tap-lv2/echo/modgui/pedals/japanese/cream.png",
+        "tap-lv2/echo/modgui/pedals/japanese/white.png",
+        "tap-lv2/echo/modgui/screenshot-tap-stereo-echo.png",
+        "tap-lv2/echo/modgui/stylesheet-tap-stereo-echo.css",
+        "tap-lv2/echo/modgui/thumbnail-tap-stereo-echo.png"
+      ]
+    },
+    "tap-eq": {
+      "brand": "TAP",
+      "label": "Equalizer",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "modgui"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "knob",
+        "meter",
+        "panel-art",
+        "slider",
+        "switch"
+      ],
+      "sourceFiles": [
+        "tap-lv2/eq/modgui/footswitch.png",
+        "tap-lv2/eq/modgui/icon-tap-equalizer.html",
+        "tap-lv2/eq/modgui/red-light-off.png",
+        "tap-lv2/eq/modgui/red-light-on.png",
+        "tap-lv2/eq/modgui/screenshot-tap-equalizer.png",
+        "tap-lv2/eq/modgui/slider.png",
+        "tap-lv2/eq/modgui/tap-equalizer-background.png",
+        "tap-lv2/eq/modgui/tap-equalizer-knob.png",
+        "tap-lv2/eq/modgui/tap-equalizer.css",
+        "tap-lv2/eq/modgui/thumbnail-tap-equalizer.png"
+      ]
+    },
+    "tap-eqbw": {
+      "brand": "TAP",
+      "label": "Equalizer/BW",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "modgui"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "knob",
+        "meter",
+        "panel-art",
+        "slider",
+        "switch"
+      ],
+      "sourceFiles": [
+        "tap-lv2/eqbw/modgui/footswitch.png",
+        "tap-lv2/eqbw/modgui/icon-tap-equalizerbw.html",
+        "tap-lv2/eqbw/modgui/red-light-off.png",
+        "tap-lv2/eqbw/modgui/red-light-on.png",
+        "tap-lv2/eqbw/modgui/screenshot-tap-equalizerbw.png",
+        "tap-lv2/eqbw/modgui/slider.png",
+        "tap-lv2/eqbw/modgui/tap-eqbw-background.png",
+        "tap-lv2/eqbw/modgui/tap-equalizer-knob.png",
+        "tap-lv2/eqbw/modgui/tap-equalizerbw.css",
+        "tap-lv2/eqbw/modgui/thumbnail-tap-equalizerbw.png"
+      ]
+    },
+    "tap-limiter": {
+      "brand": "TAP",
+      "label": "Scaling Limiter",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "modgui"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "knob",
+        "panel-art",
+        "switch"
+      ],
+      "sourceFiles": [
+        "tap-lv2/limiter/modgui/icon-tap-scaling-limiter.html",
+        "tap-lv2/limiter/modgui/knobs/boxy/black.png",
+        "tap-lv2/limiter/modgui/pedals/boxy/red.png",
+        "tap-lv2/limiter/modgui/pedals/footswitch.png",
+        "tap-lv2/limiter/modgui/screenshot-tap-scaling-limiter.png",
+        "tap-lv2/limiter/modgui/stylesheet-tap-scaling-limiter.css",
+        "tap-lv2/limiter/modgui/thumbnail-tap-scaling-limiter.png",
+        "tap-lv2/limiter/modgui/utils/dropdown-arrow-black.png",
+        "tap-lv2/limiter/modgui/utils/dropdown-arrow-white.png"
+      ]
+    },
+    "tap-pinknoise": {
+      "brand": "TAP",
+      "label": "Pink Noise",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "modgui"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "knob",
+        "panel-art",
+        "switch"
+      ],
+      "sourceFiles": [
+        "tap-lv2/pinknoise/modgui/icon-tap-pinkfractal-noise.html",
+        "tap-lv2/pinknoise/modgui/knobs/boxy/black.png",
+        "tap-lv2/pinknoise/modgui/pedals/boxy/green.png",
+        "tap-lv2/pinknoise/modgui/pedals/boxy/pink.png",
+        "tap-lv2/pinknoise/modgui/pedals/footswitch.png",
+        "tap-lv2/pinknoise/modgui/screenshot-tap-pinkfractal-noise.png",
+        "tap-lv2/pinknoise/modgui/stylesheet-tap-pinkfractal-noise.css",
+        "tap-lv2/pinknoise/modgui/thumbnail-tap-pinkfractal-noise.png",
+        "tap-lv2/pinknoise/modgui/utils/dropdown-arrow-black.png",
+        "tap-lv2/pinknoise/modgui/utils/dropdown-arrow-white.png"
+      ]
+    },
+    "tap-pitch": {
+      "brand": "TAP",
+      "label": "Pitch Shifter",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "modgui"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "knob",
+        "panel-art",
+        "switch"
+      ],
+      "sourceFiles": [
+        "tap-lv2/pitch/modgui/icon-tap-pitch-shifter.html",
+        "tap-lv2/pitch/modgui/knobs/boxy/black.png",
+        "tap-lv2/pitch/modgui/pedals/boxy/darkblue.png",
+        "tap-lv2/pitch/modgui/pedals/footswitch.png",
+        "tap-lv2/pitch/modgui/screenshot-tap-pitch-shifter.png",
+        "tap-lv2/pitch/modgui/stylesheet-tap-pitch-shifter.css",
+        "tap-lv2/pitch/modgui/thumbnail-tap-pitch-shifter.png",
+        "tap-lv2/pitch/modgui/utils/dropdown-arrow-black.png",
+        "tap-lv2/pitch/modgui/utils/dropdown-arrow-white.png"
+      ]
+    },
+    "tap-reflector": {
+      "brand": "TAP",
+      "label": "Reflector",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "modgui"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "knob",
+        "panel-art",
+        "switch"
+      ],
+      "sourceFiles": [
+        "tap-lv2/reflector/modgui/icon-tap-reflector.html",
+        "tap-lv2/reflector/modgui/knobs/boxy/black.png",
+        "tap-lv2/reflector/modgui/pedals/boxy/white.png",
+        "tap-lv2/reflector/modgui/pedals/footswitch.png",
+        "tap-lv2/reflector/modgui/screenshot-tap-reflector.png",
+        "tap-lv2/reflector/modgui/stylesheet-tap-reflector.css",
+        "tap-lv2/reflector/modgui/thumbnail-tap-reflector.png",
+        "tap-lv2/reflector/modgui/utils/dropdown-arrow-black.png",
+        "tap-lv2/reflector/modgui/utils/dropdown-arrow-white.png"
+      ]
+    },
+    "tap-reverb": {
+      "brand": "TAP",
+      "label": "Reverberator",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "modgui"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "knob",
+        "panel-art",
+        "switch"
+      ],
+      "sourceFiles": [
+        "tap-lv2/reverb/modgui/icon-tap-reverberator.html",
+        "tap-lv2/reverb/modgui/knobs/boxy/black.png",
+        "tap-lv2/reverb/modgui/pedals/boxy/cream.png",
+        "tap-lv2/reverb/modgui/pedals/footswitch.png",
+        "tap-lv2/reverb/modgui/screenshot-tap-reverberator.png",
+        "tap-lv2/reverb/modgui/stylesheet-tap-reverberator.css",
+        "tap-lv2/reverb/modgui/thumbnail-tap-reverberator.png",
+        "tap-lv2/reverb/modgui/utils/dropdown-arrow-black.png",
+        "tap-lv2/reverb/modgui/utils/dropdown-arrow-white.png"
+      ]
+    },
+    "tap-rotspeak": {
+      "brand": "TAP",
+      "label": "Rotary Speaker",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "modgui"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "knob",
+        "panel-art",
+        "switch"
+      ],
+      "sourceFiles": [
+        "tap-lv2/rotspeak/modgui/icon-tap-rotary-speaker.html",
+        "tap-lv2/rotspeak/modgui/knobs/japanese/cream.png",
+        "tap-lv2/rotspeak/modgui/knobs/japanese/petrol.png",
+        "tap-lv2/rotspeak/modgui/pedals/japanese/purple.png",
+        "tap-lv2/rotspeak/modgui/screenshot-tap-rotary-speaker.png",
+        "tap-lv2/rotspeak/modgui/stylesheet-tap-rotary-speaker.css",
+        "tap-lv2/rotspeak/modgui/thumbnail-tap-rotary-speaker.png"
+      ]
+    },
+    "tap-sigmoid": {
+      "brand": "TAP",
+      "label": "Sigmoid Booster",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "modgui"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "knob",
+        "panel-art",
+        "switch"
+      ],
+      "sourceFiles": [
+        "tap-lv2/sigmoid/modgui/icon-tap-sigmoid-booster.html",
+        "tap-lv2/sigmoid/modgui/knobs/boxy/aluminium.png",
+        "tap-lv2/sigmoid/modgui/pedals/boxy/orange.png",
+        "tap-lv2/sigmoid/modgui/pedals/footswitch.png",
+        "tap-lv2/sigmoid/modgui/screenshot-tap-sigmoid-booster.png",
+        "tap-lv2/sigmoid/modgui/stylesheet-tap-sigmoid-booster.css",
+        "tap-lv2/sigmoid/modgui/thumbnail-tap-sigmoid-booster.png",
+        "tap-lv2/sigmoid/modgui/utils/dropdown-arrow-black.png",
+        "tap-lv2/sigmoid/modgui/utils/dropdown-arrow-white.png"
+      ]
+    },
+    "tap-tremolo": {
+      "brand": "TAP",
+      "label": "Tremolo",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "modgui"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "knob",
+        "panel-art",
+        "switch"
+      ],
+      "sourceFiles": [
+        "tap-lv2/tremolo/modgui/icon-tap-tremolo.html",
+        "tap-lv2/tremolo/modgui/knobs/boxy/black.png",
+        "tap-lv2/tremolo/modgui/pedals/boxy/purple.png",
+        "tap-lv2/tremolo/modgui/pedals/boxy/racing.png",
+        "tap-lv2/tremolo/modgui/pedals/footswitch.png",
+        "tap-lv2/tremolo/modgui/screenshot-tap-tremolo.png",
+        "tap-lv2/tremolo/modgui/stylesheet-tap-tremolo.css",
+        "tap-lv2/tremolo/modgui/thumbnail-tap-tremolo.png",
+        "tap-lv2/tremolo/modgui/utils/dropdown-arrow-black.png",
+        "tap-lv2/tremolo/modgui/utils/dropdown-arrow-white.png"
+      ]
+    },
+    "tap-tubewarmth": {
+      "brand": "TAP",
+      "label": "Tubewarmth",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "modgui"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "knob",
+        "panel-art",
+        "switch"
+      ],
+      "sourceFiles": [
+        "tap-lv2/tubewarmth/modgui/icon-tap-tubewarmth.html",
+        "tap-lv2/tubewarmth/modgui/knobs/boxy/black.png",
+        "tap-lv2/tubewarmth/modgui/pedals/boxy/brown.png",
+        "tap-lv2/tubewarmth/modgui/pedals/footswitch.png",
+        "tap-lv2/tubewarmth/modgui/screenshot-tap-tubewarmth.png",
+        "tap-lv2/tubewarmth/modgui/stylesheet-tap-tubewarmth.css",
+        "tap-lv2/tubewarmth/modgui/thumbnail-tap-tubewarmth.png",
+        "tap-lv2/tubewarmth/modgui/utils/dropdown-arrow-black.png",
+        "tap-lv2/tubewarmth/modgui/utils/dropdown-arrow-white.png"
+      ]
+    },
+    "tap-vibrato": {
+      "brand": "TAP",
+      "label": "Vibrato",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "modgui"
+      ],
+      "nativeUiTypes": [],
+      "assets": [
+        "knob",
+        "panel-art",
+        "switch"
+      ],
+      "sourceFiles": [
+        "tap-lv2/vibrato/modgui/icon-tap-vibrato.html",
+        "tap-lv2/vibrato/modgui/knobs/japanese/cream.png",
+        "tap-lv2/vibrato/modgui/knobs/japanese/green.png",
+        "tap-lv2/vibrato/modgui/knobs/japanese/purple.png",
+        "tap-lv2/vibrato/modgui/pedals/japanese/green.png",
+        "tap-lv2/vibrato/modgui/pedals/japanese/purple.png",
+        "tap-lv2/vibrato/modgui/screenshot-tap-vibrato.png",
+        "tap-lv2/vibrato/modgui/stylesheet-tap-vibrato.css",
+        "tap-lv2/vibrato/modgui/thumbnail-tap-vibrato.png"
+      ]
+    },
+    "tape_delay": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "triple_para": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "tsf": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "valve": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "vl1-emulator": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "vynil": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "wadspa_synth": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "wolf-shaper": {
+      "brand": "Wolf Plugins",
+      "label": "Wolf Shaper",
+      "sourceKinds": [
+        "dpf-native-ui",
+        "lv2-mod-metadata"
+      ],
+      "nativeUiTypes": [
+        "DPFUI"
+      ],
+      "assets": [
+        "canvas-editor",
+        "knob",
+        "switch"
+      ],
+      "sourceFiles": [
+        "plugins/wolf-shaper/libs/DSPFilters/include/DspFilters/Layout.h"
+      ]
+    },
+    "ZamAutoSat": {
+      "brand": "ZamAudio",
+      "label": "ZamAutoSat",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "lv2-native-ui"
+      ],
+      "nativeUiTypes": [
+        "CocoaUI"
+      ],
+      "assets": [],
+      "sourceFiles": []
+    },
+    "ZaMaximX2": {
+      "brand": "ZamAudio",
+      "label": "ZaMaximX2",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "lv2-native-ui"
+      ],
+      "nativeUiTypes": [
+        "CocoaUI"
+      ],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "ZamComp": {
+      "brand": "ZamAudio",
+      "label": "ZamComp",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "lv2-native-ui"
+      ],
+      "nativeUiTypes": [
+        "CocoaUI"
+      ],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "ZamCompX2": {
+      "brand": "ZamAudio",
+      "label": "ZamCompX2",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "lv2-native-ui"
+      ],
+      "nativeUiTypes": [
+        "CocoaUI"
+      ],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "ZamDelay": {
+      "brand": "ZamAudio",
+      "label": "ZamDelay",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "lv2-native-ui"
+      ],
+      "nativeUiTypes": [
+        "CocoaUI"
+      ],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "ZamDynamicEQ": {
+      "brand": "ZamAudio",
+      "label": "ZamDynamicEQ",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "lv2-native-ui"
+      ],
+      "nativeUiTypes": [
+        "CocoaUI"
+      ],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "ZamEcho": {
+      "brand": "ZamAudio",
+      "label": "ZamEcho",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "lv2-native-ui"
+      ],
+      "nativeUiTypes": [
+        "CocoaUI"
+      ],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "ZamEQ2": {
+      "brand": "ZamAudio",
+      "label": "ZamEQ2",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "lv2-native-ui"
+      ],
+      "nativeUiTypes": [
+        "CocoaUI"
+      ],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "ZamGate": {
+      "brand": "ZamAudio",
+      "label": "ZamGate",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "lv2-native-ui"
+      ],
+      "nativeUiTypes": [
+        "CocoaUI"
+      ],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "ZamGateX2": {
+      "brand": "ZamAudio",
+      "label": "ZamGateX2",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "lv2-native-ui"
+      ],
+      "nativeUiTypes": [
+        "CocoaUI"
+      ],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "ZamGEQ31": {
+      "brand": "ZamAudio",
+      "label": "ZamGEQ31",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "lv2-native-ui"
+      ],
+      "nativeUiTypes": [
+        "CocoaUI"
+      ],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "ZamGrains": {
+      "brand": "ZamAudio",
+      "label": "ZamGrains",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "lv2-native-ui"
+      ],
+      "nativeUiTypes": [
+        "CocoaUI"
+      ],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "ZamPhono": {
+      "brand": "ZamAudio",
+      "label": "ZamPhono",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "lv2-native-ui"
+      ],
+      "nativeUiTypes": [
+        "CocoaUI"
+      ],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "ZamTube": {
+      "brand": "ZamAudio",
+      "label": "ZamTube",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "lv2-native-ui"
+      ],
+      "nativeUiTypes": [
+        "CocoaUI"
+      ],
+      "assets": [
+        "canvas-editor",
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "ZaMultiComp": {
+      "brand": "ZamAudio",
+      "label": "ZaMultiComp",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "lv2-native-ui"
+      ],
+      "nativeUiTypes": [
+        "CocoaUI"
+      ],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "ZaMultiCompX2": {
+      "brand": "ZamAudio",
+      "label": "ZaMultiCompX2",
+      "sourceKinds": [
+        "lv2-mod-metadata",
+        "lv2-native-ui"
+      ],
+      "nativeUiTypes": [
+        "CocoaUI"
+      ],
+      "assets": [
+        "switch"
+      ],
+      "sourceFiles": []
+    },
+    "zynaddsubfx": {
+      "sourceKinds": [],
+      "nativeUiTypes": [],
+      "assets": [
+        "canvas-editor",
+        "knob",
+        "switch"
+      ],
+      "sourceFiles": []
+    }
+  }
+}

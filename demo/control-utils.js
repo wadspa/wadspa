@@ -645,6 +645,16 @@ function applyAudibleTapDelayDefaults(ports, values, sampleRate) {
       if (isMuteLikeValue(level, current)) setValue(values, level, audibleHighValue(level), sampleRate);
     }
   }
+
+  if (groups.size > 0) {
+    for (const port of ports) {
+      const text = controlText(port);
+      const current = values.get(port);
+      if (/dry/i.test(text) && /level|gain|volume/i.test(text) && isMuteLikeValue(port, current)) {
+        setValue(values, port, audibleHighValue(port), sampleRate);
+      }
+    }
+  }
 }
 
 function applyAudibleReverbDefaults(ports, values, sampleRate) {

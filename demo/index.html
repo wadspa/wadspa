@@ -162,6 +162,8 @@
       border-radius: 6px; padding: 0.7rem 0.8rem; min-width: 160px; max-width: 220px;
       flex-shrink: 0; position: relative;
     }
+    .card[data-ui-layout="rack"], .card[data-ui-layout="matrix"] { max-width: 460px; min-width: 300px; }
+    .card[data-ui-layout="panel"] { max-width: 340px; min-width: 240px; }
     .card.has-shaper { max-width: 240px; min-width: 200px; }
     .card.loading { opacity: 0.5; }
     .card-title {
@@ -185,6 +187,62 @@
       background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 2px;
     }
     .ctrl-row .val { font-size: 0.62rem; color: #aaa; min-width: 3rem; text-align: right; }
+    .plugin-ui-sections {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
+      gap: 0.55rem 0.65rem; align-items: start;
+    }
+    .ui-section {
+      min-width: 0; border-top: 1px solid var(--border); padding-top: 0.35rem;
+    }
+    .ui-section-title {
+      font-size: 0.58rem; color: var(--muted); text-transform: uppercase;
+      letter-spacing: 0.06em; margin-bottom: 0.25rem;
+    }
+    .ui-control-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(88px, 1fr));
+      gap: 0.38rem 0.48rem; align-items: start;
+    }
+    #synth-ctrls .plugin-ui-sections { grid-column: 1 / -1; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); }
+    #synth-ctrls .ui-control-grid { grid-template-columns: repeat(auto-fit, minmax(132px, 1fr)); }
+    .ctrl-row[data-widget="knob"], .ctrl-row[data-widget="fader"], .ctrl-row[data-widget="toggle"], .ctrl-row[data-widget="menu"] {
+      margin-top: 0; min-width: 0;
+    }
+    .ctrl-row[data-widget="knob"] .ctrl-line,
+    .ctrl-row[data-widget="fader"] .ctrl-line {
+      display: grid; grid-template-columns: 34px minmax(64px, 1fr) minmax(3rem, max-content); gap: 0.35rem;
+    }
+    .knob-face {
+      width: 30px; height: 30px; border-radius: 50%;
+      border: 1px solid var(--border); background: radial-gradient(circle at 35% 30%, #3b3b3b, #111);
+      position: relative; transform: rotate(var(--knob-angle, -135deg));
+    }
+    .knob-face::after {
+      content: ""; position: absolute; left: 13px; top: 4px; width: 3px; height: 10px;
+      background: var(--accent2); border-radius: 2px;
+    }
+    .ctrl-row[data-widget="fader"] .knob-face {
+      border-radius: 3px; width: 22px; height: 42px; margin-left: 4px;
+      background: linear-gradient(to top, #111, #333);
+      transform: none;
+    }
+    .ctrl-row[data-widget="fader"] .knob-face::after {
+      left: 4px; top: var(--fader-top, 22px); width: 12px; height: 3px;
+      background: var(--accent);
+    }
+    .control-stack { min-width: 0; display: grid; gap: 0.16rem; }
+    .ctrl-row[data-widget="toggle"] .ctrl-line { justify-content: space-between; }
+    .toggle-shell { display: inline-flex; align-items: center; gap: 0.35rem; cursor: pointer; }
+    .toggle-shell input { position: absolute; opacity: 0; pointer-events: none; }
+    .toggle-track {
+      width: 34px; height: 18px; border-radius: 10px; border: 1px solid var(--border);
+      background: #111; position: relative;
+    }
+    .toggle-track::after {
+      content: ""; position: absolute; width: 12px; height: 12px; border-radius: 50%;
+      top: 2px; left: 2px; background: var(--muted); transition: transform 120ms ease, background 120ms ease;
+    }
+    .toggle-shell input:checked + .toggle-track { border-color: var(--accent2); }
+    .toggle-shell input:checked + .toggle-track::after { transform: translateX(16px); background: var(--accent2); }
 
     /* ── Curve/shaper editor ─────────────────────────────────── */
     .shaper-wrap { margin-top: 0.5rem; }
@@ -239,7 +297,7 @@
     .bk.on { background: #2a4a99; }
 
     /* ── Synth sliders ────────────────────────────────────────── */
-    #synth-ctrls { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; margin-top: 0.4rem; }
+    #synth-ctrls { display: grid; grid-template-columns: 1fr; gap: 0.65rem; margin-top: 0.4rem; }
 
     /* ── SF2 library panel ───────────────────────────────────── */
     #sf2-panel { margin-top: 0.5rem; border-top: 1px solid var(--border); padding-top: 0.55rem; display: none; }
@@ -371,7 +429,6 @@ if ('serviceWorker' in navigator) {
 import { loadPlugin } from './core.js?wadspa_runtime=20260606_canvas_audio';
 import {
   defaultPortValuesForUi,
-  defaultPortValueForUi,
   exclusiveToggleGroupForPort,
   formatPortValue,
   portUiRange as computePortUiRange,
@@ -382,6 +439,7 @@ import {
   usesMenuControl,
   visibleControlPorts,
 } from './control-utils.js?wadspa_runtime=20260606_canvas_audio';
+import { WADSPA_UI_MODEL, createWadspaUiModel } from './ui-model.js?wadspa_runtime=20260620_ui_model';
 
 // ── Plugin catalog ────────────────────────────────────────────
 // meta.ports drives both the loadPlugin call and the UI sliders.
@@ -407,6 +465,16 @@ try {
   });
 } catch (e) {
   console.error('Failed to load catalog.json:', e);
+}
+
+let UI_HINTS = { plugins: {} };
+try {
+  UI_HINTS = await fetch('./ui-hints.json', { cache: 'no-cache' }).then(r => {
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  });
+} catch (e) {
+  console.warn('UI hints unavailable; using inferred wadspa UI model only:', e);
 }
 
 const catalogStats = document.getElementById('catalog-stats');
@@ -716,26 +784,8 @@ function buildSynthControls(node, inst) {
     samplePanel.style.display = 'none';
   }
 
-  const ctrlPorts = visibleControlPorts(inst.ports);
-  for (const p of ctrlPorts) {
-    const range = portUiRange(p);
-    const initialValue = defaultPortValueForUi(p, currentSampleRate());
-    const row = document.createElement('div');
-    row.className = 'ctrl-row';
-    row.innerHTML = `<label>${escapeHtml(p.name)}</label>
-      <div class="ctrl-line">
-        ${controlMarkup(p, range, initialValue)}
-        <span class="val">${formatPortValue(p, initialValue)}</span>
-      </div>`;
-    const control = row.querySelector('input, select');
-    const val    = row.querySelector('.val');
-    control.addEventListener(control.tagName === 'SELECT' ? 'change' : 'input', () => {
-      const v = readControlValue(p, control); val.textContent = formatPortValue(p, v);
-      node.set(p.name, portValueForSet(p, v, control));
-    });
-    ctrls.appendChild(row);
-    if (Number.isFinite(initialValue)) node.set(p.name, portValueForSet(p, initialValue, control));
-  }
+  const { model } = renderPluginControls(ctrls, node, inst, { target: 'instrument' });
+  document.getElementById('synth-card').dataset.uiLayout = model.layout;
   buildCanvasEditors(ctrls, node, inst);
 }
 
@@ -1045,20 +1095,95 @@ function portUiRange(p) {
   return computePortUiRange(p, currentSampleRate());
 }
 
-function controlMarkup(p, range, value = range.value) {
+function renderPluginControls(container, node, plugin, options = {}) {
+  const ctrlPorts = visibleControlPorts(plugin.ports);
+  const defaults = defaultPortValuesForUi(ctrlPorts, currentSampleRate(), {
+    activateEffectToggles: Boolean(options.activateEffectToggles),
+  });
+  const model = createWadspaUiModel(plugin, {
+    target: options.target,
+    hints: UI_HINTS,
+    ports: ctrlPorts,
+  });
+
+  const wrap = document.createElement('div');
+  wrap.className = 'plugin-ui-sections';
+  wrap.dataset.uiModel = WADSPA_UI_MODEL.schema;
+  wrap.dataset.uiLayout = model.layout;
+
+  for (const section of model.sections) {
+    const sectionEl = document.createElement('div');
+    sectionEl.className = 'ui-section';
+    sectionEl.dataset.uiSection = section.id;
+
+    const title = document.createElement('div');
+    title.className = 'ui-section-title';
+    title.textContent = section.title;
+    sectionEl.appendChild(title);
+
+    const grid = document.createElement('div');
+    grid.className = 'ui-control-grid';
+    for (const field of section.fields) {
+      const p = field.port;
+      const range = portUiRange(p);
+      const value = defaults.get(p);
+      const row = buildControlRow(field, range, value);
+      const control = row.querySelector('input, select');
+      const val = row.querySelector('.val');
+      control.addEventListener(control.tagName === 'SELECT' ? 'change' : 'input', () => {
+        const v = readControlValue(p, control);
+        applyExclusiveToggleUi(p, ctrlPorts, control, node);
+        val.textContent = formatPortValue(p, v);
+        syncControlVisual(control);
+        node.set(p.name, portValueForSet(p, v, control));
+      });
+      grid.appendChild(row);
+      syncControlVisual(control);
+      if (Number.isFinite(value)) node.set(p.name, portValueForSet(p, value, control));
+    }
+    sectionEl.appendChild(grid);
+    wrap.appendChild(sectionEl);
+  }
+
+  container.appendChild(wrap);
+  return { model, ctrlPorts, defaults };
+}
+
+function buildControlRow(field, range, value) {
+  const row = document.createElement('div');
+  row.className = 'ctrl-row ui-field';
+  row.dataset.widget = field.widget;
+  row.dataset.role = field.role;
+  row.dataset.section = field.section;
+  row.innerHTML = `<label title="${escapeAttr(field.portName)}">${escapeHtml(field.label)}</label>
+    <div class="ctrl-line">
+      ${controlMarkup(field.port, range, value, field)}
+      <span class="val">${formatPortValue(field.port, value)}</span>
+    </div>`;
+  return row;
+}
+
+function controlMarkup(p, range, value = range.value, field = null) {
   if (usesMenuControl(p)) {
     return `<select data-port="${escapeAttr(p.name)}">${scalePointOptions(p).map(point => `
           <option value="${point.value}"${Math.abs(point.value - value) < 1e-6 ? ' selected' : ''}>${escapeHtml(point.label)}</option>`).join('')}
         </select>`;
   }
   if (p.toggled) {
-    return `<input type="checkbox" value="1"${value >= 0.5 ? ' checked' : ''}
-                   data-port="${escapeAttr(p.name)}">`;
+    return `<label class="toggle-shell">
+          <input type="checkbox" value="1"${value >= 0.5 ? ' checked' : ''}
+                 data-port="${escapeAttr(p.name)}">
+          <span class="toggle-track"></span>
+        </label>`;
   }
   const slider = sliderRangeForPort(p, range, value);
-  return `<input type="range" min="${slider.min}" max="${slider.max}"
-                   step="${slider.step}" value="${slider.value}"
-                   data-port="${escapeAttr(p.name)}">`;
+  const input = `<input type="range" min="${slider.min}" max="${slider.max}"
+                     step="${slider.step}" value="${slider.value}"
+                     data-port="${escapeAttr(p.name)}">`;
+  if (field?.widget === 'knob' || field?.widget === 'fader') {
+    return `<span class="knob-face"></span><span class="control-stack">${input}</span>`;
+  }
+  return input;
 }
 
 function readControlValue(p, control) {
@@ -1066,6 +1191,24 @@ function readControlValue(p, control) {
   const raw = parseFloat(control.value);
   if (control.tagName === 'SELECT') return raw;
   return portValueFromSlider(p, raw, portUiRange(p));
+}
+
+function syncControlVisual(control) {
+  const row = control.closest('.ctrl-row');
+  const face = row?.querySelector('.knob-face');
+  if (!row || !face) return;
+  const min = Number(control.min);
+  const max = Number(control.max);
+  const value = Number(control.value);
+  const span = max - min;
+  const fraction = Number.isFinite(span) && Math.abs(span) > 1e-12
+    ? Math.max(0, Math.min(1, (value - min) / span))
+    : 0;
+  if (row.dataset.widget === 'fader') {
+    face.style.setProperty('--fader-top', `${4 + (1 - fraction) * 30}px`);
+  } else {
+    face.style.setProperty('--knob-angle', `${-135 + fraction * 270}deg`);
+  }
 }
 
 function escapeHtml(value) {
@@ -1508,26 +1651,11 @@ function renderChain() {
     const card = document.createElement('div');
     card.className = 'card' + (eff.shaper ? ' has-shaper' : '');
 
-    const ctrlPorts = visibleControlPorts(eff.ports);
-    const defaults = defaultPortValuesForUi(ctrlPorts, currentSampleRate(), { activateEffectToggles: true });
-
     card.innerHTML = `
       <div class="card-title">
         <span>${eff.name}</span>
         <button class="remove-btn" title="remove">×</button>
       </div>
-      ${ctrlPorts.map(p => {
-        const range = portUiRange(p);
-        const value = defaults.get(p);
-        return `
-        <div class="ctrl-row">
-          <label>${escapeHtml(p.name)}</label>
-          <div class="ctrl-line">
-            ${controlMarkup(p, range, value)}
-            <span class="val">${formatPortValue(p, value)}</span>
-          </div>
-        </div>`;
-      }).join('')}
     `;
 
     card.querySelector('.remove-btn').addEventListener('click', async () => {
@@ -1537,18 +1665,11 @@ function renderChain() {
       rewire();
     });
 
-    for (const p of ctrlPorts) {
-      const control = card.querySelector(`[data-port="${CSS.escape(p.name)}"]`);
-      const valEl  = control.closest('.ctrl-line').querySelector('.val');
-      control.addEventListener(control.tagName === 'SELECT' ? 'change' : 'input', () => {
-        const v = readControlValue(p, control);
-        applyExclusiveToggleUi(p, ctrlPorts, control, node);
-        valEl.textContent = formatPortValue(p, v);
-        node.set(p.name, portValueForSet(p, v, control));
-      });
-      const value = defaults.get(p);
-      if (Number.isFinite(value)) node.set(p.name, portValueForSet(p, value, control));
-    }
+    const { model } = renderPluginControls(card, node, eff, {
+      target: 'effect',
+      activateEffectToggles: true,
+    });
+    card.dataset.uiLayout = model.layout;
 
     // ── Curve editor (shaper plugins) ──────────────────────────
     if (eff.shaper) buildShaperCanvas(card, node);
@@ -1568,13 +1689,15 @@ function applyExclusiveToggleUi(port, ports, control, node) {
   if (control.type !== 'checkbox' || !control.checked) return;
   const group = exclusiveToggleGroupForPort(port, ports);
   if (group.length <= 1) return;
+  const scope = control.closest('.card, #synth-card, .plugin-ui-sections') ?? document;
   for (const peer of group) {
     if (peer === port) continue;
-    const peerControl = control.closest('.card').querySelector(`[data-port="${CSS.escape(peer.name)}"]`);
+    const peerControl = scope.querySelector(`[data-port="${CSS.escape(peer.name)}"]`);
     if (!peerControl || peerControl.type !== 'checkbox') continue;
     peerControl.checked = false;
     const peerValue = peerControl.closest('.ctrl-line')?.querySelector('.val');
     if (peerValue) peerValue.textContent = formatPortValue(peer, 0);
+    syncControlVisual(peerControl);
     node.set(peer.name, portValueForSet(peer, 0, peerControl));
   }
 }
