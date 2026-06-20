@@ -68,7 +68,7 @@
     #synth-section {
       border-right: 1px solid var(--border);
       display: flex; gap: 0; flex-wrap: wrap;
-      flex: 0 0 clamp(360px, 38vw, 620px); min-width: 0; overflow-y: auto;
+      flex: 0 0 clamp(420px, 46vw, 800px); min-width: 0; overflow-y: auto;
     }
     #synth-header {
       display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;
@@ -192,73 +192,82 @@
     }
     .ctrl-row .val { font-size: 0.62rem; color: #aaa; min-width: 3rem; text-align: right; }
     .plugin-ui-sections {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
-      gap: 0.65rem 0.75rem; align-items: start;
+      --ui-section-width: 150px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(var(--ui-section-width), 1fr));
+      gap: 0.42rem 0.6rem; align-items: start;
     }
-    .plugin-ui-sections[data-ui-layout="matrix"] { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    .plugin-ui-sections[data-ui-layout="matrix"] { --ui-section-width: 190px; }
     .plugin-ui-sections[data-ui-layout="rack"],
-    .plugin-ui-sections[data-ui-layout="drawbar"] { grid-template-columns: 1fr; }
+    .plugin-ui-sections[data-ui-layout="drawbar"] {
+      --ui-section-width: 100%;
+      grid-template-columns: 1fr;
+    }
+    .plugin-ui-column {
+      min-width: 0; display: flex; flex-direction: column; gap: 0.42rem;
+    }
     .ui-section {
-      min-width: 0; border-top: 1px solid var(--border); padding-top: 0.4rem;
+      min-width: 0; border-top: 1px solid var(--border); padding-top: 0.32rem;
+      break-inside: avoid; page-break-inside: avoid;
     }
     .ui-section[data-ui-panel="synth-panel"],
     .ui-section[data-ui-panel="dense-bank"],
     .ui-section[data-ui-panel="control-panel"],
     .ui-section[data-ui-panel="program-panel"] {
-      padding: 0.5rem 0.55rem 0.55rem;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 5px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(0,0,0,0.08));
+      padding: 0.32rem 0 0.38rem;
+      border: 0;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      border-radius: 0;
+      background: none;
     }
     .ui-section[data-ui-panel="rack-strip"],
     .ui-section[data-ui-panel="drawbar-bank"] {
-      padding-top: 0.45rem;
+      padding-top: 0.35rem;
       border-top-color: rgba(68,119,238,0.45);
     }
     .ui-section-title {
       font-size: 0.58rem; color: var(--muted); text-transform: uppercase;
-      letter-spacing: 0.06em; margin-bottom: 0.25rem;
+      letter-spacing: 0.06em; margin-bottom: 0.16rem;
     }
     .ui-control-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
-      gap: 0.46rem 0.5rem; align-items: start;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
+      gap: 0.3rem 0.36rem; align-items: start;
     }
     .ui-control-grid[data-ui-panel="rack-strip"],
     .ui-control-grid[data-ui-panel="drawbar-bank"] {
       grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
-      gap: 0.35rem;
+      gap: 0.28rem;
     }
     .ui-control-grid[data-density="dense"] {
-      grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
-      gap: 0.4rem;
+      grid-template-columns: repeat(auto-fit, minmax(78px, 1fr));
+      gap: 0.28rem;
     }
-    #synth-ctrls .plugin-ui-sections { grid-column: 1 / -1; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
-    #synth-ctrls .plugin-ui-sections[data-ui-layout="matrix"] { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-    #synth-ctrls .ui-control-grid { grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); }
-    #synth-ctrls .ui-control-grid[data-density="dense"] { grid-template-columns: repeat(auto-fit, minmax(86px, 1fr)); }
+    #synth-ctrls .plugin-ui-sections { --ui-section-width: 172px; }
+    #synth-ctrls .plugin-ui-sections[data-ui-layout="matrix"] { --ui-section-width: 238px; }
+    #synth-ctrls .ui-control-grid { grid-template-columns: repeat(auto-fit, minmax(84px, 1fr)); }
+    #synth-ctrls .ui-control-grid[data-density="dense"] { grid-template-columns: repeat(auto-fit, minmax(76px, 1fr)); }
     .ctrl-row[data-widget="knob"], .ctrl-row[data-widget="fader"], .ctrl-row[data-widget="toggle"], .ctrl-row[data-widget="menu"] {
       margin-top: 0; min-width: 0;
     }
     .ctrl-row[data-widget="knob"], .ctrl-row[data-widget="fader"] {
-      display: flex; flex-direction: column; align-items: stretch; gap: 0.22rem;
-      min-height: 108px;
+      display: flex; flex-direction: column; align-items: stretch; gap: 0.14rem;
+      min-height: 94px;
     }
     .ctrl-row[data-widget="knob"] label,
     .ctrl-row[data-widget="fader"] label {
-      order: 2; width: 100%; min-height: 2.25em; margin: 0;
-      text-align: center; font-size: 0.59rem; color: #858585;
-      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+      order: 2; width: 100%; min-height: 2.15em; margin: 0;
+      text-align: center; font-size: 0.57rem; color: #858585;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
       overflow: hidden;
     }
     .ctrl-row[data-widget="knob"] .ctrl-line,
     .ctrl-row[data-widget="fader"] .ctrl-line {
       order: 1; position: relative;
       display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; align-items: center;
-      gap: 0.12rem;
+      gap: 0.08rem;
     }
     .knob-face {
       grid-row: 1; grid-column: 1;
-      width: 52px; height: 52px; border-radius: 50%;
+      width: 46px; height: 46px; border-radius: 50%;
       border: 1px solid #424242;
       background:
         radial-gradient(circle at 35% 28%, rgba(255,255,255,0.22), transparent 18%),
@@ -267,34 +276,34 @@
       position: relative; transform: none;
     }
     .knob-face::after {
-      content: ""; position: absolute; left: calc(50% - 2px); top: 7px; width: 4px; height: 15px;
+      content: ""; position: absolute; left: calc(50% - 2px); top: 6px; width: 4px; height: 13px;
       background: var(--accent2); border-radius: 2px;
-      transform: rotate(var(--knob-angle, -135deg)); transform-origin: 50% 19px;
+      transform: rotate(var(--knob-angle, -135deg)); transform-origin: 50% 17px;
     }
     .ctrl-row[data-widget="knob"] .control-stack,
     .ctrl-row[data-widget="fader"] .control-stack {
       grid-row: 1; grid-column: 1; z-index: 2;
-      width: 62px; height: 62px; display: block;
+      width: 56px; height: 56px; display: block; touch-action: none; cursor: ns-resize;
     }
     .ctrl-row[data-widget="knob"] input[type=range],
     .ctrl-row[data-widget="fader"] input[type=range] {
-      width: 62px; height: 62px; opacity: 0; cursor: ew-resize; display: block;
+      width: 56px; height: 56px; opacity: 0; pointer-events: none; display: block;
     }
     .ctrl-row[data-widget="knob"] .val,
     .ctrl-row[data-widget="fader"] .val {
       grid-row: 2; grid-column: 1; width: 100%; min-width: 0;
-      text-align: center; font-size: 0.56rem; color: #a8a8a8;
+      text-align: center; font-size: 0.54rem; color: #a8a8a8;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .ctrl-row[data-widget="fader"] .knob-face {
-      border-radius: 3px; width: 24px; height: 64px; margin: 0;
+      border-radius: 3px; width: 22px; height: 58px; margin: 0;
       background:
         linear-gradient(to right, transparent 0 43%, rgba(68,119,238,0.5) 43% 57%, transparent 57% 100%),
         linear-gradient(to bottom, #080808, #2b2f33);
       transform: none;
     }
     .ctrl-row[data-widget="fader"] .knob-face::after {
-      left: -4px; top: var(--fader-top, 34px); width: 30px; height: 5px;
+      left: -4px; top: var(--fader-top, 31px); width: 30px; height: 5px;
       background: var(--accent); transform: none;
     }
     .control-stack { min-width: 0; display: grid; gap: 0.16rem; }
@@ -1198,12 +1207,14 @@ function renderPluginControls(container, node, plugin, options = {}) {
   wrap.dataset.uiModel = WADSPA_UI_MODEL.schema;
   wrap.dataset.uiLayout = model.layout;
 
+  const sectionEls = [];
   for (const section of model.sections) {
     const sectionEl = document.createElement('div');
     sectionEl.className = 'ui-section';
     sectionEl.dataset.uiSection = section.id;
     sectionEl.dataset.uiPanel = section.panel;
     sectionEl.dataset.density = section.density;
+    sectionEl.dataset.uiWeight = String(estimatedSectionWeight(section));
 
     const title = document.createElement('div');
     title.className = 'ui-section-title';
@@ -1221,23 +1232,56 @@ function renderPluginControls(container, node, plugin, options = {}) {
       const row = buildControlRow(field, range, value);
       const control = row.querySelector('input, select');
       const val = row.querySelector('.val');
-      control.addEventListener(control.tagName === 'SELECT' ? 'change' : 'input', () => {
+      const commitControl = () => {
         const v = readControlValue(p, control);
         applyExclusiveToggleUi(p, ctrlPorts, control, node);
         val.textContent = formatPortValue(p, v);
         syncControlVisual(control);
         node.set(p.name, portValueForSet(p, v, control));
-      });
+      };
+      control.addEventListener(control.tagName === 'SELECT' ? 'change' : 'input', commitControl);
+      bindRelativeControlGesture(row, control, p, commitControl);
       grid.appendChild(row);
       syncControlVisual(control);
       if (Number.isFinite(value)) node.set(p.name, portValueForSet(p, value, control));
     }
     sectionEl.appendChild(grid);
-    wrap.appendChild(sectionEl);
+    sectionEls.push(sectionEl);
   }
 
+  arrangePluginUiSections(wrap, sectionEls, model);
   container.appendChild(wrap);
   return { model, ctrlPorts, defaults };
+}
+
+function arrangePluginUiSections(wrap, sectionEls, model) {
+  if (sectionEls.length <= 1 || model.layout === 'rack' || model.layout === 'drawbar') {
+    for (const sectionEl of sectionEls) wrap.appendChild(sectionEl);
+    return;
+  }
+
+  const columnCount = Math.min(sectionEls.length, model.layout === 'compact' ? 2 : 3);
+  const columns = Array.from({ length: columnCount }, () => ({
+    weight: 0,
+    el: document.createElement('div'),
+  }));
+  wrap.dataset.uiFlow = 'balanced-columns';
+  for (const column of columns) column.el.className = 'plugin-ui-column';
+
+  for (const sectionEl of sectionEls) {
+    const target = columns.reduce((best, column) => column.weight < best.weight ? column : best, columns[0]);
+    target.el.appendChild(sectionEl);
+    target.weight += Number(sectionEl.dataset.uiWeight) || 1;
+  }
+
+  for (const column of columns) wrap.appendChild(column.el);
+}
+
+function estimatedSectionWeight(section) {
+  const fieldCount = section.fields.length;
+  if (section.panel === 'rack-strip' || section.panel === 'drawbar-bank') return Math.max(1, fieldCount / 2);
+  if (section.density === 'dense') return Math.max(1, fieldCount / 3);
+  return Math.max(1, fieldCount / 2);
 }
 
 function buildControlRow(field, range, value) {
@@ -1296,10 +1340,141 @@ function syncControlVisual(control) {
     ? Math.max(0, Math.min(1, (value - min) / span))
     : 0;
   if (row.dataset.widget === 'fader') {
-    face.style.setProperty('--fader-top', `${4 + (1 - fraction) * 30}px`);
+    face.style.setProperty('--fader-top', `${4 + (1 - fraction) * 27}px`);
   } else {
     face.style.setProperty('--knob-angle', `${-135 + fraction * 270}deg`);
   }
+}
+
+function bindRelativeControlGesture(row, control, port, commitControl) {
+  if (!row || !control || control.type !== 'range') return;
+  if (row.dataset.widget !== 'knob' && row.dataset.widget !== 'fader') return;
+  const target = row.querySelector('.control-stack');
+  if (!target) return;
+
+  target.tabIndex = 0;
+  target.setAttribute('role', 'slider');
+  target.setAttribute('aria-label', row.querySelector('label')?.textContent ?? port.name);
+  syncSliderAria(target, control, port);
+
+  let dragging = false;
+  const beginDrag = (startEvent, moveSource, endSource, moveName, endName, cancelName, pointerId = null) => {
+    if (dragging) return;
+    const min = Number(control.min);
+    const max = Number(control.max);
+    const startValue = Number(control.value);
+    const span = max - min;
+    if (!Number.isFinite(startValue) || !Number.isFinite(span) || Math.abs(span) <= 1e-12) return;
+
+    startEvent.preventDefault();
+    target.focus({ preventScroll: true });
+    if (pointerId !== null) target.setPointerCapture?.(pointerId);
+    dragging = true;
+
+    const startX = startEvent.clientX;
+    const startY = startEvent.clientY;
+    const widget = row.dataset.widget;
+
+    const handleMove = moveEvent => {
+      if (pointerId !== null && 'pointerId' in moveEvent && moveEvent.pointerId !== pointerId) return;
+      moveEvent.preventDefault();
+      const dx = moveEvent.clientX - startX;
+      const dy = moveEvent.clientY - startY;
+      const pixels = moveEvent.shiftKey ? 420 : widget === 'fader' ? 128 : 170;
+      const travel = widget === 'fader' ? -dy : dx - dy;
+      setSliderValue(control, startValue + (travel / pixels) * span);
+      commitControl();
+      syncSliderAria(target, control, port);
+    };
+
+    const endDrag = endEvent => {
+      if (pointerId !== null && 'pointerId' in endEvent && endEvent.pointerId !== pointerId) return;
+      if (pointerId !== null) target.releasePointerCapture?.(pointerId);
+      moveSource.removeEventListener(moveName, handleMove);
+      endSource.removeEventListener(endName, endDrag);
+      if (cancelName) endSource.removeEventListener(cancelName, endDrag);
+      if (pointerId !== null) {
+        document.removeEventListener('mousemove', handleMove);
+        document.removeEventListener('mouseup', endDrag);
+      }
+      dragging = false;
+    };
+
+    moveSource.addEventListener(moveName, handleMove);
+    endSource.addEventListener(endName, endDrag);
+    if (cancelName) endSource.addEventListener(cancelName, endDrag);
+    if (pointerId !== null) {
+      document.addEventListener('mousemove', handleMove);
+      document.addEventListener('mouseup', endDrag);
+    }
+  };
+
+  target.addEventListener('pointerdown', e => {
+    if (e.button !== undefined && e.button !== 0) return;
+    beginDrag(e, target, target, 'pointermove', 'pointerup', 'pointercancel', e.pointerId);
+  });
+
+  target.addEventListener('mousedown', e => {
+    if (e.button !== 0) return;
+    beginDrag(e, document, document, 'mousemove', 'mouseup', null);
+  });
+
+  target.addEventListener('keydown', e => {
+    const direction = {
+      ArrowUp: 1,
+      ArrowRight: 1,
+      ArrowDown: -1,
+      ArrowLeft: -1,
+      PageUp: 10,
+      PageDown: -10,
+      Home: 'min',
+      End: 'max',
+    }[e.key];
+    if (direction === undefined) return;
+    e.preventDefault();
+    const min = Number(control.min);
+    const max = Number(control.max);
+    const span = max - min;
+    const baseStep = sliderStepSize(control, span);
+    if (direction === 'min') setSliderValue(control, min);
+    else if (direction === 'max') setSliderValue(control, max);
+    else setSliderValue(control, Number(control.value) + baseStep * direction);
+    commitControl();
+    syncSliderAria(target, control, port);
+  });
+
+  control.addEventListener('input', () => syncSliderAria(target, control, port));
+}
+
+function setSliderValue(control, nextValue) {
+  const min = Number(control.min);
+  const max = Number(control.max);
+  if (!Number.isFinite(nextValue) || !Number.isFinite(min) || !Number.isFinite(max)) return;
+  const low = Math.min(min, max);
+  const high = Math.max(min, max);
+  const clamped = Math.max(low, Math.min(high, nextValue));
+  const stepped = applySliderStep(clamped, control.step, min);
+  control.value = String(Math.max(low, Math.min(high, stepped)));
+}
+
+function sliderStepSize(control, span) {
+  const explicit = Number(control.step);
+  if (Number.isFinite(explicit) && explicit > 0) return explicit;
+  return Math.max(Math.abs(span) / 100, 0.000001);
+}
+
+function applySliderStep(value, step, min) {
+  const size = Number(step);
+  if (!Number.isFinite(size) || size <= 0) return value;
+  return min + Math.round((value - min) / size) * size;
+}
+
+function syncSliderAria(target, control, port) {
+  const value = readControlValue(port, control);
+  target.setAttribute('aria-valuemin', control.min);
+  target.setAttribute('aria-valuemax', control.max);
+  target.setAttribute('aria-valuenow', control.value);
+  target.setAttribute('aria-valuetext', formatPortValue(port, value));
 }
 
 function escapeHtml(value) {

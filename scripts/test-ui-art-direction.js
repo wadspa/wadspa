@@ -28,29 +28,47 @@ const PANEL_TYPES = new Set([
 const DENSITY_TYPES = new Set(['open', 'medium', 'dense']);
 const widgetTotals = new Map();
 const failures = [];
+const modelsById = new Map();
 const layout = {
   controlColumn: cssNumber(/\.ui-control-grid\s*\{[^}]*minmax\((\d+)px,\s*1fr\)/s, 'base control column width'),
   denseColumn: cssNumber(/\.ui-control-grid\[data-density="dense"\]\s*\{[^}]*minmax\((\d+)px,\s*1fr\)/s, 'dense control column width'),
-  rackColumn: cssNumber(/\.ui-control-grid\[data-ui-panel="rack-strip"\][\s\S]*minmax\((\d+)px,\s*1fr\)/, 'rack/drawbar strip column width'),
+  rackColumn: cssNumber(/\.ui-control-grid\[data-ui-panel="rack-strip"\][^{]*\{[^}]*minmax\((\d+)px,\s*1fr\)/s, 'rack/drawbar strip column width'),
   synthColumn: cssNumber(/#synth-ctrls \.ui-control-grid\s*\{[^}]*minmax\((\d+)px,\s*1fr\)/s, 'synth control column width'),
   synthDenseColumn: cssNumber(/#synth-ctrls \.ui-control-grid\[data-density="dense"\]\s*\{[^}]*minmax\((\d+)px,\s*1fr\)/s, 'dense synth control column width'),
-  matrixSection: cssNumber(/\.plugin-ui-sections\[data-ui-layout="matrix"\]\s*\{[^}]*minmax\((\d+)px,\s*1fr\)/s, 'matrix section width'),
-  synthMatrixSection: cssNumber(/#synth-ctrls \.plugin-ui-sections\[data-ui-layout="matrix"\]\s*\{[^}]*minmax\((\d+)px,\s*1fr\)/s, 'synth matrix section width'),
-  knobHit: cssNumber(/\.ctrl-row\[data-widget="knob"\] input\[type=range\][\s\S]*width:\s*(\d+)px; height:\s*62px; opacity:\s*0/s, 'knob hitbox width'),
-  faderHit: cssNumber(/\.ctrl-row\[data-widget="fader"\] input\[type=range\][\s\S]*width:\s*(\d+)px; height:\s*62px; opacity:\s*0/s, 'fader hitbox width'),
+  sectionColumn: cssNumber(/\.plugin-ui-sections\s*\{[^}]*--ui-section-width:\s*(\d+)px/s, 'base section column width'),
+  matrixSection: cssNumber(/\.plugin-ui-sections\[data-ui-layout="matrix"\]\s*\{[^}]*--ui-section-width:\s*(\d+)px/s, 'matrix section width'),
+  synthSection: cssNumber(/#synth-ctrls \.plugin-ui-sections\s*\{[^}]*--ui-section-width:\s*(\d+)px/s, 'synth section column width'),
+  synthMatrixSection: cssNumber(/#synth-ctrls \.plugin-ui-sections\[data-ui-layout="matrix"\]\s*\{[^}]*--ui-section-width:\s*(\d+)px/s, 'synth matrix section width'),
+  rackCardMin: cssNumber(/\.card\[data-ui-layout="rack"\][^{]*\{[^}]*min-width:\s*(\d+)px/s, 'rack card minimum width'),
+  knobFace: cssNumber(/\.knob-face\s*\{[^}]*width:\s*(\d+)px; height:\s*46px/s, 'knob face width'),
+  knobHit: cssNumber(/\.ctrl-row\[data-widget="knob"\] input\[type=range\][\s\S]*width:\s*(\d+)px; height:\s*56px; opacity:\s*0/s, 'knob hitbox width'),
+  faderHit: cssNumber(/\.ctrl-row\[data-widget="fader"\] input\[type=range\][\s\S]*width:\s*(\d+)px; height:\s*56px; opacity:\s*0/s, 'fader hitbox width'),
   faderHeight: cssNumber(/\.ctrl-row\[data-widget="fader"\] \.knob-face\s*\{[^}]*height:\s*(\d+)px/s, 'fader visual height'),
   controlMinHeight: cssNumber(/\.ctrl-row\[data-widget="knob"\],\s*\.ctrl-row\[data-widget="fader"\s*\]\s*\{[^}]*min-height:\s*(\d+)px/s, 'knob/fader row height'),
   sliderSpan: cssNumber(/\.ctrl-row\[data-widget="slider"\]\s*\{[^}]*grid-column:\s*span\s*(\d+)/s, 'slider grid span'),
   mobileBreakpoint: cssNumber(/@media \(max-width:\s*(\d+)px\)/, 'mobile breakpoint'),
+  synthSurface: cssClamp(/#synth-section\s*\{[^}]*flex:\s*0 0 clamp\((\d+)px,\s*(\d+)vw,\s*(\d+)px\)/s, 'desktop synth surface width'),
 };
 const cssChecks = [
-  ['matrix layout grid', /\.plugin-ui-sections\[data-ui-layout="matrix"\]\s*\{[^}]*minmax\(220px,\s*1fr\)/s],
-  ['panel section chrome', /\.ui-section\[data-ui-panel="synth-panel"\][\s\S]*border:\s*1px solid rgba\(255,255,255,0\.08\)/],
-  ['dense grid sizing', /\.ui-control-grid\[data-density="dense"\]\s*\{[^}]*minmax\(84px,\s*1fr\)/s],
-  ['rack/drawbar strip sizing', /\.ui-control-grid\[data-ui-panel="rack-strip"\][\s\S]*minmax\(72px,\s*1fr\)/],
-  ['knob/fader stable cell', /\.ctrl-row\[data-widget="knob"\],\s*\.ctrl-row\[data-widget="fader"\s*\]\s*\{[^}]*min-height:\s*108px/s],
-  ['knob hit area', /\.ctrl-row\[data-widget="knob"\] input\[type=range\][\s\S]*width:\s*62px; height:\s*62px; opacity:\s*0/s],
-  ['label clamp', /-webkit-line-clamp:\s*3/],
+  ['wide instrument surface', /#synth-section\s*\{[^}]*flex:\s*0 0 clamp\(420px,\s*46vw,\s*800px\)/s],
+  ['compact section flow', /\.plugin-ui-sections\s*\{[^}]*--ui-section-width:\s*150px;[\s\S]*display:\s*grid;\s*grid-template-columns:\s*repeat\(auto-fit,\s*minmax\(var\(--ui-section-width\),\s*1fr\)\);[\s\S]*gap:\s*0\.42rem 0\.6rem/s],
+  ['matrix layout columns', /\.plugin-ui-sections\[data-ui-layout="matrix"\]\s*\{[^}]*--ui-section-width:\s*190px/s],
+  ['instrument matrix columns', /#synth-ctrls \.plugin-ui-sections\[data-ui-layout="matrix"\]\s*\{[^}]*--ui-section-width:\s*238px/s],
+  ['section band chrome', /\.ui-section\[data-ui-panel="synth-panel"\][\s\S]*border-top:\s*1px solid rgba\(255,255,255,0\.12\);[\s\S]*background:\s*none;/],
+  ['section column packing', /\.plugin-ui-column\s*\{[^}]*display:\s*flex;\s*flex-direction:\s*column;\s*gap:\s*0\.42rem/s],
+  ['balanced section renderer', /function arrangePluginUiSections\(wrap,\s*sectionEls,\s*model\)[\s\S]*wrap\.dataset\.uiFlow = 'balanced-columns'[\s\S]*target\.weight \+= Number\(sectionEl\.dataset\.uiWeight\)/],
+  ['dense grid sizing', /\.ui-control-grid\[data-density="dense"\]\s*\{[^}]*minmax\(78px,\s*1fr\)/s],
+  ['rack/drawbar strip sizing', /\.ui-control-grid\[data-ui-panel="rack-strip"\][^{]*\{[^}]*minmax\(72px,\s*1fr\)/s],
+  ['knob/fader stable cell', /\.ctrl-row\[data-widget="knob"\],\s*\.ctrl-row\[data-widget="fader"\s*\]\s*\{[^}]*min-height:\s*94px/s],
+  ['knob hit area', /\.ctrl-row\[data-widget="knob"\] input\[type=range\][\s\S]*width:\s*56px; height:\s*56px; opacity:\s*0; pointer-events:\s*none/s],
+  ['relative knob drag', /function bindRelativeControlGesture\(row,\s*control,\s*port,\s*commitControl\)[\s\S]*const beginDrag = \(startEvent[\s\S]*target\.addEventListener\('pointerdown'/],
+  ['mouse drag fallback', /target\.addEventListener\('mousedown'[\s\S]*beginDrag\(e,\s*document,\s*document,\s*'mousemove',\s*'mouseup'/],
+  ['pointer-start mousemove fallback', /if \(pointerId !== null\) \{[\s\S]*document\.addEventListener\('mousemove',\s*handleMove\);[\s\S]*document\.addEventListener\('mouseup',\s*endDrag\);/],
+  ['no click-to-position knob jump', /const beginDrag = \(startEvent[\s\S]*const startValue = Number\(control\.value\)[\s\S]*startEvent\.preventDefault\(\);[\s\S]*startValue \+ \(travel \/ pixels\) \* span/],
+  ['stationary knob body', /\.knob-face\s*\{[^}]*transform:\s*none;/s],
+  ['rotating knob indicator', /\.knob-face::after\s*\{[^}]*transform:\s*rotate\(var\(--knob-angle,\s*-135deg\)\)/s],
+  ['stationary fader cap', /\.ctrl-row\[data-widget="fader"\] \.knob-face::after\s*\{[^}]*transform:\s*none;/s],
+  ['compact label clamp', /-webkit-line-clamp:\s*2/],
   ['mobile breakpoint', /@media \(max-width:\s*900px\)/],
 ];
 
@@ -75,6 +93,7 @@ for (const entry of entries) {
   const model = createWadspaUiModel(entry, { target: entry.target, hints, ports });
   const hint = hints.plugins?.[entry.id] ?? {};
   const counts = countWidgets(model);
+  modelsById.set(entry.id, { entry, model, hint, counts });
 
   for (const [widget, count] of Object.entries(counts)) {
     widgetTotals.set(widget, (widgetTotals.get(widget) ?? 0) + count);
@@ -148,6 +167,8 @@ for (const entry of entries) {
   }
 }
 
+validateRepresentativeLayouts(modelsById);
+
 const sliders = widgetTotals.get('slider') ?? 0;
 const knobs = widgetTotals.get('knob') ?? 0;
 const faders = widgetTotals.get('fader') ?? 0;
@@ -192,6 +213,15 @@ function validateLayoutContract() {
   if (layout.controlMinHeight < layout.faderHeight + 30) {
     fail(`knob/fader row height ${layout.controlMinHeight}px is too short for ${layout.faderHeight}px faders plus label/value text`);
   }
+  if (layout.controlMinHeight > 98) {
+    fail(`knob/fader row height ${layout.controlMinHeight}px wastes vertical control-surface space`);
+  }
+  if (layout.knobHit < layout.knobFace + 10) {
+    fail(`knob hitbox ${layout.knobHit}px is too close to ${layout.knobFace}px knob face`);
+  }
+  if (layout.sectionColumn > 160 || layout.synthSection > 180) {
+    fail(`section columns ${layout.sectionColumn}px/${layout.synthSection}px are too wide for compact instrument panels`);
+  }
   if (layout.sliderSpan < 2) {
     fail(`true slider rows must span at least two columns, found span ${layout.sliderSpan}`);
   }
@@ -200,6 +230,48 @@ function validateLayoutContract() {
   }
   if (layout.mobileBreakpoint < 720) {
     fail(`mobile breakpoint ${layout.mobileBreakpoint}px is too narrow for dense plugin panels`);
+  }
+  if (layout.synthSurface.min < 420 || layout.synthSurface.vw < 46 || layout.synthSurface.max < 800) {
+    fail(`desktop synth surface ${layout.synthSurface.min}px/${layout.synthSurface.vw}vw/${layout.synthSurface.max}px is too narrow for dense native synth panels`);
+  }
+}
+
+function validateRepresentativeLayouts(models) {
+  const synthv1 = requireModel(models, 'synthv1');
+  if (synthv1?.model.layout !== 'matrix') fail('synthv1 representative dense synth should use matrix layout');
+  if ((synthv1?.counts.knob ?? 0) < 100) fail('synthv1 representative dense synth should stay knob-dominant');
+  if (columnsFor(layout.synthMatrixSection, layout.synthDenseColumn) < 3) {
+    fail('minimum synth matrix section should fit at least three dense knob columns');
+  }
+  if (columnsFor(synthSurfaceWidthAt(1440) - 64, layout.synthMatrixSection, 12) < 2) {
+    fail('wide desktop synth surface should show at least two matrix sections per row');
+  }
+
+  const tapEq = requireModel(models, 'tap-eq');
+  const tapEqRack = tapEq?.model.sections.find(section => section.panel === 'rack-strip');
+  if (!tapEqRack) fail('tap-eq representative EQ should use a rack strip');
+  if ((tapEq?.counts.fader ?? 0) !== 8 || (tapEq?.counts.knob ?? 0) !== 8) {
+    fail('tap-eq representative EQ should render gains as faders and frequencies as knobs');
+  }
+  if (columnsFor(layout.rackCardMin - 32, layout.rackColumn) < 4) {
+    fail('minimum rack card should fit at least four EQ/drawbar columns');
+  }
+
+  const setbfree = requireModel(models, 'setbfree');
+  if (setbfree?.model.layout !== 'drawbar') fail('setbfree representative organ should use drawbar layout');
+  if ((setbfree?.counts.fader ?? 0) < 9) fail('setbfree drawbar bank should expose nine faders');
+  if (columnsFor(synthSurfaceWidthAt(1280) - 64, layout.rackColumn) < 6) {
+    fail('desktop synth surface should fit a readable drawbar bank');
+  }
+
+  const geonkick = requireModel(models, 'geonkick');
+  if (geonkick?.model.layout !== 'canvas') fail('geonkick representative envelope editor should keep canvas layout');
+
+  const stringMachine = requireModel(models, 'string-machine');
+  if (stringMachine?.model.layout === 'drawbar') fail('string-machine representative synth should not become a drawbar organ');
+
+  if (columnsFor(312, layout.synthDenseColumn) < 3) {
+    fail('mobile synth controls should still fit at least three dense knob columns without horizontal overflow');
   }
 }
 
@@ -236,6 +308,29 @@ function cssNumber(pattern, label) {
     return 0;
   }
   return Number(match[1]);
+}
+
+function cssClamp(pattern, label) {
+  const match = html.match(pattern);
+  if (!match) {
+    fail(`missing CSS clamp: ${label}`);
+    return { min: 0, vw: 0, max: 0 };
+  }
+  return { min: Number(match[1]), vw: Number(match[2]), max: Number(match[3]) };
+}
+
+function columnsFor(width, columnWidth, gap = 5) {
+  return Math.max(1, Math.floor((width + gap) / (columnWidth + gap)));
+}
+
+function synthSurfaceWidthAt(viewportWidth) {
+  return Math.min(layout.synthSurface.max, Math.max(layout.synthSurface.min, viewportWidth * layout.synthSurface.vw / 100));
+}
+
+function requireModel(models, id) {
+  const model = models.get(id);
+  if (!model) fail(`${id}: missing representative UI model`);
+  return model;
 }
 
 function isRegistrationField(field) {
