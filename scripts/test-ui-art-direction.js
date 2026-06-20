@@ -85,6 +85,9 @@ if (!WADSPA_UI_MODEL.artDirection?.faders?.includes('Reserve vertical faders')) 
 if (!WADSPA_UI_MODEL.artDirection?.panels?.includes('signal blocks')) {
   fail('art direction explains when to make panels');
 }
+if (!WADSPA_UI_MODEL.artDirection?.panels?.includes('one/two-control groups compact')) {
+  fail('art direction keeps tiny groups compact');
+}
 
 validateLayoutContract();
 
@@ -113,6 +116,13 @@ for (const entry of entries) {
     }
     if (hasNativeGroupedPanels(hint) && section.fields.length > 1 && section.panel === 'compact-panel') {
       fail(`${entry.id}/${section.id}: native grouped/tabbed UI should render multi-control sections as panels`);
+    }
+    if (!hasNativeGroupedPanels(hint)
+      && section.fields.length <= 2
+      && section.panel !== 'compact-panel'
+      && section.panel !== 'rack-strip'
+      && section.panel !== 'drawbar-bank') {
+      fail(`${entry.id}/${section.id}: tiny sections without native group evidence should stay compact, not ${section.panel}`);
     }
     validateSectionGeometry(entry, model, section);
   }

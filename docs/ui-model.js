@@ -11,7 +11,7 @@ export const WADSPA_UI_MODEL = Object.freeze({
   artDirection: Object.freeze({
     knobs: 'Default continuous synth/effect controls to rotary knobs, matching Qt/LV2 dial-heavy native UIs.',
     faders: 'Reserve vertical faders for EQ gain strips, drawbars, and true gain banks where scanning parallel levels matters.',
-    panels: 'Promote coherent signal blocks into panels when a plugin has multiple sections, dense controls, or native group-box/panel hints.',
+    panels: 'Promote coherent signal blocks into panels when they have enough controls, dense controls, or native group-box/panel hints; keep one/two-control groups compact.',
     canvas: 'Use canvas layouts only for real editable curve/envelope/wave editors exposed by the web port.',
   }),
   sections: Object.freeze([
@@ -243,11 +243,13 @@ function panelForSection(section, fields, hint) {
   if (section === 'drawbars') return 'drawbar-bank';
   if (section === 'equalizer' && fields.filter(field => field.widget === 'fader').length >= 6) return 'rack-strip';
   if (fields.length >= 18) return 'dense-bank';
-  if (hasNativeGroupedPanels(hint) && fields.length > 1) {
+  const nativeGrouped = hasNativeGroupedPanels(hint);
+  if (nativeGrouped && fields.length > 1) {
     if (section === 'playback') return 'program-panel';
     if (section === 'envelopes' || section === 'oscillators' || section === 'filter' || section === 'modulation') return 'synth-panel';
     return 'control-panel';
   }
+  if (fields.length <= 2) return 'compact-panel';
   if (section === 'envelopes' || section === 'oscillators' || section === 'filter' || section === 'modulation') return 'synth-panel';
   if (section === 'playback') return 'program-panel';
   return fields.length <= 3 ? 'compact-panel' : 'control-panel';

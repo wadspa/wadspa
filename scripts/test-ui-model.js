@@ -61,6 +61,9 @@ for (const entry of entries) {
 if (!WADSPA_UI_MODEL.artDirection?.knobs || !WADSPA_UI_MODEL.artDirection?.panels) {
   fail('UI model exposes art direction for knob and panel decisions');
 }
+if (!WADSPA_UI_MODEL.artDirection.panels.includes('one/two-control groups compact')) {
+  fail('UI model art direction keeps tiny groups compact');
+}
 
 const tapEq = hints.plugins?.['tap-eq'];
 if (!tapEq?.sourceKinds?.includes('modgui')) fail('tap-eq hint includes MOD GUI source metadata');
@@ -120,6 +123,21 @@ if (!geonkickHint?.nativeLayouts?.includes('canvas-editor')
 
 const geonkick = models.get('geonkick')?.model;
 if (geonkick?.layout !== 'canvas') fail('geonkick keeps canvas layout for implemented envelope editors');
+
+const wadspaSynthFilter = models.get('wadspa_synth')?.model.sections.find(section => section.id === 'filter');
+if (wadspaSynthFilter?.panel !== 'compact-panel') {
+  fail('wadspa_synth one-control filter section stays compact without native group evidence');
+}
+
+const fmSynthOsc = models.get('fm_synth')?.model.sections.find(section => section.id === 'oscillators');
+if (fmSynthOsc?.panel !== 'compact-panel') {
+  fail('fm_synth one-control oscillator section stays compact without native group evidence');
+}
+
+const sorcerFilter = models.get('sorcer')?.model.sections.find(section => section.id === 'filter');
+if (sorcerFilter?.panel !== 'synth-panel') {
+  fail('sorcer native tabbed/grouped two-control filter section preserves panel intent');
+}
 
 const setbfreeModel = models.get('setbfree')?.model;
 if (setbfreeModel?.layout !== 'drawbar') fail('setbfree uses a drawbar bank layout');
